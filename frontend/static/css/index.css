@@ -211,6 +211,86 @@ Custom File Input Styling
 }
 
 
+/*==========================
+Bootstrap Overrides (Brand Colors)
+==========================*/
+
+/* Text Colors */
+.text-primary { color: var(--brand-primary) !important; }
+.text-secondary { color: var(--brand-secondary) !important; }
+.text-success { color: var(--brand-success) !important; }
+.text-danger { color: var(--brand-danger) !important; }
+.text-dark { color: var(--brand-dark) !important; }
+.text-light { color: var(--brand-light) !important; }
+
+/* Background Colors */
+.bg-primary { background-color: var(--brand-primary) !important; }
+.bg-secondary { background-color: var(--brand-secondary) !important; }
+.bg-success { background-color: var(--brand-success) !important; }
+.bg-danger { background-color: var(--brand-danger) !important; }
+.bg-dark { background-color: var(--brand-dark) !important; }
+.bg-light { background-color: var(--brand-light) !important; }
+
+/* Button Primary */
+.btn-primary {
+    background-color: var(--brand-primary) !important;
+    border-color: var(--brand-primary) !important;
+    color: var(--brand-secondary) !important;
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--brand-primary) !important;
+    background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)) !important;
+    border-color: transparent !important;
+    color: var(--brand-secondary) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.btn-primary:active {
+    background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)) !important;
+    transform: translateY(0);
+}
+
+/* Button Secondary */
+.btn-secondary {
+    background-color: var(--brand-secondary) !important;
+    border-color: var(--brand-secondary) !important;
+    color: white !important;
+}
+.btn-secondary:hover {
+    background-color: var(--brand-dark) !important;
+    border-color: var(--brand-dark) !important;
+    color: white !important;
+}
+
+/* Button Outline Primary */
+.btn-outline-primary {
+    color: var(--brand-primary) !important;
+    border-color: var(--brand-primary) !important;
+}
+.btn-outline-primary:hover {
+    background-color: var(--brand-primary) !important;
+    color: var(--brand-secondary) !important;
+}
+
+/* Form Controls Focus */
+.form-control:focus, .form-select:focus {
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 214, 90, 0.25) !important;
+}
+
+/* Alert Overrides */
+.alert-primary {
+    background-color: var(--brand-light) !important;
+    border-color: var(--brand-primary) !important;
+    color: var(--brand-dark) !important;
+}
+
+/* List Groups & Dropdowns */
+.dropdown-item.active, .dropdown-item:active {
+    background-color: var(--brand-primary) !important;
+    color: var(--brand-secondary) !important;
+}
+
 body {
   font-family: 'Cairo', sans-serif;
   background-color: var(--brand-light);
@@ -301,26 +381,6 @@ body {
 }
 
 /* Button Styles */
-.btn-primary {
-  background-color: var(--brand-primary);
-  border-color: var(--brand-primary);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: var(--brand-primary); /* Keep same base */
-  background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)); /* Layer dark */
-  border-color: rgba(0,0,0,0.1);
-  transform: translateY(-1px);
-}
-
-.btn-primary:active {
-  background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)); /* Deepen layer */
-  transform: translateY(0);
-}
-
 .btn-outline-primary {
   color: var(--brand-primary);
   border-color: var(--brand-primary);
@@ -407,8 +467,9 @@ footer p {
 /* Table Styles */
 .table thead th {
   background-color: var(--brand-primary);
-  color: var(--white-accent);
+  color: var(--brand-secondary);
 }
+
 
 /* Language Switcher */
 .language-switcher-top {

@@ -9,21 +9,44 @@
 {% endblock extra_css %}
 
 {% block nav %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 fixed-top" id="landingNav">
+    <nav class="navbar navbar-expand-lg bg-white navbar-light fixed-top transition-all" id="landingNav">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="/">
-                <span class="fw-black fs-4 text-dark">
+                {% if site_config.logo %}
+                    <img src="{{ site_config.logo }}" alt="Logo" style="height: 40px;" class="rounded">
+                {% endif %}
+                <span class="fw-black fs-4 {% if not site_config.logo %}text-dark{% endif %}">
                     {% if IS_RTL %}{{ site_config.ar_name }}{% else %}{{ site_config.name }}{% endif %}
                 </span>
             </a>
-            <div class="ms-auto d-flex align-items-center gap-3">
-                {% include 'partials/language_switcher.html' %}
-                {% if user.is_authenticated %}
-                    <a href="{% url 'dash:dash_home' %}" class="btn btn-dark rounded-pill px-4 fw-bold">{% trans "Dashboard" %}</a>
-                {% else %}
-                    <a href="{% url 'user_auth:login' %}" class="btn btn-link text-dark fw-bold text-decoration-none d-none d-md-block">{% trans "Login" %}</a>
-                    <a href="{% url 'user_auth:signup' %}" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">{% trans "Get Started" %}</a>
-                {% endif %}
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="#about">{% trans "About" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="#categories">{% trans "Services" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="#products">{% trans "Products" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="#contact">{% trans "Contact" %}</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        {% include 'partials/language_switcher.html' %}
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'dash:dash_home' %}" class="btn btn-dark rounded-pill px-4 fw-bold">{% trans "Dashboard" %}</a>
+                        {% else %}
+                            <a href="{% url 'user_auth:signup' %}" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">{% trans "Get Started" %}</a>
+                        {% endif %}
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -33,159 +56,326 @@
 
 {% block content %}
     <!-- 1. Hero Section -->
-    <section class="custom-hero">
-        <div class="container">
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-10" data-aos="fade-up" data-aos-duration="1000">
-                    <span class="hero-tag">{{ site_config.tagline }}</span>
-                    <h1 class="hero-title-main">
-                        {% if IS_RTL %}
-                            تخطى حدود <span>الإبداع</span> في مشاريعك القادمة
-                        {% else %}
-                            Build <span>Extraordinary</span> Apps at Light Speed
-                        {% endif %}
-                    </h1>
-                    <p class="fs-4 text-muted mb-5 mx-auto" style="max-width: 800px;">
-                        {{ site_config.seo.description }}
-                    </p>
-                    <div class="d-flex flex-wrap justify-content-center gap-3">
-                        <a href="{% url 'user_auth:signup' %}" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-lg">
-                            {% trans "Launch Now" %}
-                        </a>
-                        <a href="#features" class="btn btn-white btn-lg rounded-pill px-5 fw-bold border">
-                            {% trans "See Features" %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 2. Bento Grid Features -->
-    <section id="features" class="section-bento">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="fw-black display-5 mb-3">{% trans "Supercharged Features" %}</h2>
-                <p class="text-muted">{% trans "Designed for modern developers and scaling startups." %}</p>
-            </div>
-            <div class="bento-grid">
-                <div class="bento-item bento-1" data-aos="fade-right">
-                    <i class="fas fa-layer-group fa-3x text-primary mb-4"></i>
-                    <h3 class="fw-bold">{% trans "Scalable Architecture" %}</h3>
-                    <p class="text-muted">{% trans "A clean, modular structure that grows with your team and complexity." %}</p>
-                </div>
-                <div class="bento-item bento-2" data-aos="fade-left">
-                    <i class="fas fa-shield-alt fa-3x text-primary mb-4"></i>
-                    <h3 class="fw-bold">{% trans "Auth Ready" %}</h3>
-                    <p class="text-muted">{% trans "Secure login and signup out of the box." %}</p>
-                </div>
-                <div class="bento-item bento-3" data-aos="fade-up">
-                    <i class="fas fa-language fa-3x text-primary mb-4"></i>
-                    <h3 class="fw-bold">{% trans "Global i18n" %}</h3>
-                    <p class="text-muted">{% trans "Built-in RTL support for Arabic markets." %}</p>
-                </div>
-                <div class="bento-item bento-4" data-aos="fade-up" data-aos-delay="100">
-                    <i class="fas fa-code fa-3x text-primary mb-4"></i>
-                    <h3 class="fw-bold">{% trans "Developer Friendly" %}</h3>
-                    <p class="text-muted">{% trans "Written in clean Python with extensive documentation and helper utilities." %}</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. Stats Bar -->
-    <section class="section-stats">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-3 col-6" data-aos="zoom-in">
-                    <div class="stat-box">
-                        <div class="stat-number">99%</div>
-                        <div class="small text-uppercase opacity-75">{% trans "Code Quality" %}</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="stat-box">
-                        <div class="stat-number">24/7</div>
-                        <div class="small text-uppercase opacity-75">{% trans "Support" %}</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="stat-box">
-                        <div class="stat-number">10x</div>
-                        <div class="small text-uppercase opacity-75">{% trans "Speed" %}</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="stat-box">
-                        <div class="stat-number">∞</div>
-                        <div class="small text-uppercase opacity-75">{% trans "Possibilities" %}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. How It Works -->
-    <section class="section-steps">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="fw-black display-5">{% trans "Get Started in Minutes" %}</h2>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="step-card" data-aos="fade-right">
-                        <div class="step-number">1</div>
-                        <div>
-                            <h4 class="fw-bold">{% trans "Clone the Repository" %}</h4>
-                            <p class="text-muted">{% trans "Grab the source code and install the dependencies with a single command." %}</p>
-                        </div>
-                    </div>
-                    <div class="step-card" data-aos="fade-left">
-                        <div class="step-number">2</div>
-                        <div>
-                            <h4 class="fw-bold">{% trans "Customize Branding" %}</h4>
-                            <p class="text-muted">{% trans "Update your colors and site details in the central context processor." %}</p>
-                        </div>
-                    </div>
-                    <div class="step-card" data-aos="fade-right">
-                        <div class="step-number">3</div>
-                        <div>
-                            <h4 class="fw-bold">{% trans "Deploy & Shine" %}</h4>
-                            <p class="text-muted">{% trans "Push your application to production and start welcoming users." %}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 5. Final CTA -->
-    <section class="section-final">
-        <div class="container">
-            <div class="glass-card shadow-2xl" data-aos="zoom-out">
-                <h2 class="fw-black display-4 mb-4">{% trans "Ready to Start Building?" %}</h2>
-                <p class="fs-5 text-muted mb-5 mx-auto" style="max-width: 600px;">
-                    {% blocktrans with site_name=site_config.name %}Join the elite group of developers using {{ site_name }} to ship faster and cleaner code.{% endblocktrans %}
+    <header class="hero-section" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1920&q=80');">
+        <div class="container h-100 d-flex align-items-center justify-content-center text-center">
+            <div class="hero-content" data-aos="fade-up">
+                <span class="badge bg-primary text-secondary px-3 py-2 rounded-pill mb-3 fw-bold text-uppercase tracking-wider">
+                    {{ site_config.tagline }}
+                </span>
+                <h1 class="display-1 fw-black text-white mb-4">
+                    {% if IS_RTL %}
+                        حوّل مساحتك إلى <span>تحفة فنية</span>
+                    {% else %}
+                        Transform Your Space Into a <span>Masterpiece</span>
+                    {% endif %}
+                </h1>
+                <p class="lead text-white-50 mb-5 mx-auto fs-4" style="max-width: 800px;">
+                    {% trans "We combine elegance, functionality, and modern aesthetics to create living environments that reflect your personality." %}
                 </p>
-                <div class="d-flex justify-content-center gap-3">
-                    <a href="{% url 'user_auth:signup' %}" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold">
-                        {% trans "Get Started Now" %}
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="#contact" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-lg">
+                        {% trans "Book a Consultation" %}
+                    </a>
+                    <a href="#products" class="btn btn-outline-light btn-lg rounded-pill px-5 fw-bold">
+                        {% trans "Explore Gallery" %}
                     </a>
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- 2. Why Choose Us Section -->
+    <section id="about" class="py-10 bg-white">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="text-primary fw-bold text-uppercase tracking-widest mb-2 d-block">{% trans "Our Philosophy" %}</span>
+                <h2 class="display-3 fw-black mb-4">{% trans "Crafting Spaces, Shaping Emotions" %}</h2>
+                <div class="mx-auto bg-primary" style="height: 4px; width: 80px;"></div>
+            </div>
+            
+            <div class="row g-4 mt-4">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="about-card p-5 border-0 rounded-4 h-100 transition-all hover-lift">
+                        <div class="mb-4 d-inline-block p-4 bg-light rounded-circle text-primary">
+                            <i class="fas fa-magic fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">{% trans "Visionary Design" %}</h4>
+                        <p class="text-muted fs-6 line-height-relaxed">
+                            {% trans "We don't just follow trends; we create timeless environments that speak to your soul and elevate your daily experience." %}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="about-card p-5 border-0 rounded-4 h-100 transition-all hover-lift">
+                        <div class="mb-4 d-inline-block p-4 bg-light rounded-circle text-primary">
+                            <i class="fas fa-hand-holding-heart fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">{% trans "Personal Touch" %}</h4>
+                        <p class="text-muted fs-6 line-height-relaxed">
+                            {% trans "Every client is unique. We dive deep into your lifestyle to ensure every corner of your space is functional and personalized." %}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="about-card p-5 border-0 rounded-4 h-100 transition-all hover-lift">
+                        <div class="mb-4 d-inline-block p-4 bg-light rounded-circle text-primary">
+                            <i class="fas fa-medal fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">{% trans "Master Craftsmanship" %}</h4>
+                        <p class="text-muted fs-6 line-height-relaxed">
+                            {% trans "We partner with the best artisans and use premium materials to guarantee an exquisite finish that lasts a lifetime." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 row align-items-center g-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80" alt="Exquisite Interior" class="img-fluid rounded-4 shadow-2xl">
+                        <div class="stats-float bg-primary text-secondary p-4 rounded-4 shadow-lg position-absolute top-0 end-0 m-n4 d-none d-md-block">
+                            <span class="h1 fw-black mb-0">500+</span>
+                            <p class="mb-0 small fw-bold">{% trans "Projects Completed" %}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <h3 class="display-5 fw-bold mb-4">{% trans "Redefining the standards of modern luxury." %}</h3>
+                    <p class="text-muted fs-5 mb-4">
+                        {% trans "Our journey began with a simple belief: that everyone deserves a space that inspires them. Today, LOFT Design is a leader in high-end architectural solutions, blending tradition with innovation." %}
+                    </p>
+                    <ul class="list-unstyled d-flex flex-column gap-3 mb-5">
+                        <li class="d-flex align-items-center gap-3">
+                            <i class="fas fa-check-circle text-primary"></i>
+                            <span class="fw-bold text-dark">{% trans "Eco-friendly and sustainable material sourcing." %}</span>
+                        </li>
+                        <li class="d-flex align-items-center gap-3">
+                            <i class="fas fa-check-circle text-primary"></i>
+                            <span class="fw-bold text-dark">{% trans "Smart home integration and architectural lighting." %}</span>
+                        </li>
+                        <li class="d-flex align-items-center gap-3">
+                            <i class="fas fa-check-circle text-primary"></i>
+                            <span class="fw-bold text-dark">{% trans "Dedicated project managers for a stress-free journey." %}</span>
+                        </li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline-dark rounded-pill px-5 py-3 fw-bold">{% trans "Discover Our Process" %}</a>
+                </div>
+            </div>
+        </div>
     </section>
+
+    <!-- 3. Categories Section -->
+    <section id="categories" class="py-10 bg-light">
+        <div class="container text-center">
+            <h2 class="display-4 fw-black mb-5" data-aos="fade-up">{% trans "Our Design Specialties" %}</h2>
+            <div class="row g-4">
+                <div class="col-md-6" data-aos="zoom-in">
+                    <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group">
+                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Residential" class="img-fluid transition-all group-hover-scale">
+                        <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
+                            <h3 class="fw-black mb-2">{% trans "Residential Design" %}</h3>
+                            <p class="opacity-75">{% trans "Homes, Apartments, and Villas" %}</p>
+                            <a href="#" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80" alt="Commercial" class="img-fluid transition-all group-hover-scale">
+                        <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
+                            <h3 class="fw-black mb-2">{% trans "Commercial Design" %}</h3>
+                            <p class="opacity-75">{% trans "Offices, Retail, and Restaurants" %}</p>
+                            <a href="#" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Featured Products Section -->
+    <section id="products" class="py-10 bg-white">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
+                <div>
+                    <h2 class="display-4 fw-black mb-2">{% trans "Featured Collections" %}</h2>
+                    <p class="text-muted">{% trans "Handpicked pieces from our latest interior projects." %}</p>
+                </div>
+                <a href="#" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Products" %}</a>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                    <div class="product-card border rounded-4 overflow-hidden shadow-sm">
+                        <div class="position-relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=800&q=80" alt="Lounge Chair" class="img-fluid">
+                            <div class="product-badge bg-primary text-secondary px-3 py-1 fw-bold position-absolute top-0 end-0 m-3 rounded-pill">{% trans "New" %}</div>
+                        </div>
+                        <div class="p-4">
+                            <h5 class="fw-bold mb-1">{% trans "Nordic Lounge Chair" %}</h5>
+                            <p class="text-muted small">{% trans "Minimalist & Comfortable" %}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="fw-black text-primary fs-5">$450.00</span>
+                                <button class="btn btn-light rounded-circle"><i class="fas fa-shopping-cart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="product-card border rounded-4 overflow-hidden shadow-sm">
+                        <div class="position-relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80" alt="Oak Dining Table" class="img-fluid">
+                        </div>
+                        <div class="p-4">
+                            <h5 class="fw-bold mb-1">{% trans "Oak Dining Table" %}</h5>
+                            <p class="text-muted small">{% trans "Solid Wood, 6-Seater" %}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="fw-black text-primary fs-5">$1,200.00</span>
+                                <button class="btn btn-light rounded-circle"><i class="fas fa-shopping-cart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="product-card border rounded-4 overflow-hidden shadow-sm">
+                        <div class="position-relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80" alt="Minimalist Lamp" class="img-fluid">
+                        </div>
+                        <div class="p-4">
+                            <h5 class="fw-bold mb-1">{% trans "Golden Arc Lamp" %}</h5>
+                            <p class="text-muted small">{% trans "Ambient Lighting" %}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="fw-black text-primary fs-5">$180.00</span>
+                                <button class="btn btn-light rounded-circle"><i class="fas fa-shopping-cart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="product-card border rounded-4 overflow-hidden shadow-sm">
+                        <div class="position-relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=800&q=80" alt="Modern Sofa" class="img-fluid">
+                        </div>
+                        <div class="p-4">
+                            <h5 class="fw-bold mb-1">{% trans "Velvet Master Bed" %}</h5>
+                            <p class="text-muted small">{% trans "Luxury Sleep Experience" %}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="fw-black text-primary fs-5">$2,800.00</span>
+                                <button class="btn btn-light rounded-circle"><i class="fas fa-shopping-cart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Contact Section -->
+    <section id="contact" class="py-10 bg-dark text-white">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h2 class="display-4 fw-black mb-4">{% trans "Start Your Project Today" %}</h2>
+                    <p class="text-white-50 fs-5 mb-5">
+                        {% trans "Ready to redefine your space? Fill out the form and our design specialists will get back to you within 24 hours." %}
+                    </p>
+                    <div class="d-flex flex-column gap-4">
+                        <div class="d-flex gap-3 align-items-center">
+                            <div class="bg-primary text-secondary p-3 rounded-circle">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">{% trans "Call Us" %}</h6>
+                                <p class="mb-0 text-white-50">{{ site_config.phone }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 align-items-center">
+                            <div class="bg-primary text-secondary p-3 rounded-circle">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">{% trans "Email Us" %}</h6>
+                                <p class="mb-0 text-white-50">{{ site_config.contact_email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="bg-white p-5 rounded-4 shadow-2xl">
+                        <form class="form">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-dark">{% trans "Full Name" %}</label>
+                                    <input type="text" class="form-control" placeholder="John Doe">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-dark">{% trans "Phone Number" %}</label>
+                                    <input type="tel" class="form-control" placeholder="+213 000 000">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-dark">{% trans "Project Type" %}</label>
+                                    <select class="form-select">
+                                        <option>{% trans "Residential" %}</option>
+                                        <option>{% trans "Commercial" %}</option>
+                                        <option>{% trans "Other" %}</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-dark">{% trans "Message" %}</label>
+                                    <textarea class="form-control" rows="4" placeholder="{% trans 'Tell us about your dream space...' %}"></textarea>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-lg">
+                                        {% trans "Send Inquiry" %}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 {% endblock content %}
 
 {% block footer %}
-    <footer class="bg-white py-5 border-top">
-        <div class="container text-center">
-            <p class="mb-2 fw-bold text-dark">
-                {% if IS_RTL %}{{ site_config.ar_name }}{% else %}{{ site_config.name }}{% endif %}
-            </p>
-            <p class="text-muted small mb-0">
-                &copy; {% now "Y" %}. {% trans "All rights reserved." %}
-            </p>
+    <footer class="bg-dark py-5 border-top border-secondary border-opacity-10">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4">
+                    <a class="navbar-brand d-flex align-items-center gap-2 mb-4" href="/">
+                        {% if site_config.logo %}
+                            <img src="{{ site_config.logo }}" alt="Logo" style="height: 40px;" class="rounded filter-grayscale">
+                        {% endif %}
+                        <span class="fw-black fs-4 text-white">{% if IS_RTL %}{{ site_config.ar_name }}{% else %}{{ site_config.name }}{% endif %}</span>
+                    </a>
+                    <p class="text-white-50">
+                        {% trans "Redefining modern living through innovative design and premium craftsmanship." %}
+                    </p>
+                </div>
+                <div class="col-lg-2 offset-lg-2">
+                    <h6 class="text-white fw-bold mb-4 text-uppercase tracking-wider">{% trans "Quick Links" %}</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 text-white-50">
+                        <li><a href="#about" class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "About" %}</a></li>
+                        <li><a href="#categories" class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "Services" %}</a></li>
+                        <li><a href="#products" class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "Projects" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-4 text-uppercase tracking-wider">{% trans "Follow Us" %}</h6>
+                    <div class="d-flex gap-3">
+                        <a href="{{ site_config.social.facebook }}" class="btn btn-outline-light rounded-circle p-2" style="width: 40px; height: 40px;"><i class="fab fa-facebook-f"></i></a>
+                        <a href="{{ site_config.social.instagram }}" class="btn btn-outline-light rounded-circle p-2" style="width: 40px; height: 40px;"><i class="fab fa-instagram"></i></a>
+                        <a href="{{ site_config.social.twitter }}" class="btn btn-outline-light rounded-circle p-2" style="width: 40px; height: 40px;"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-secondary border-opacity-25 mb-4">
+            <div class="text-center">
+                <p class="text-white-50 small mb-0">
+                    &copy; {% now "Y" %} {{ site_config.name }}. {% trans "All rights reserved." %}
+                </p>
+            </div>
         </div>
     </footer>
 {% endblock footer %}
@@ -195,11 +385,11 @@
     document.addEventListener('scroll', () => {
         const nav = document.getElementById('landingNav');
         if (window.scrollY > 50) {
-            nav.classList.add('bg-white', 'shadow-sm');
-            nav.classList.remove('bg-transparent');
+            nav.classList.add('bg-white', 'shadow-sm', 'py-2');
+            nav.classList.remove('navbar-dark', 'py-4');
         } else {
-            nav.classList.remove('bg-white', 'shadow-sm');
-            nav.classList.add('bg-transparent');
+            nav.classList.remove('shadow-sm', 'py-2');
+            nav.classList.add('py-4');
         }
     });
 </script>

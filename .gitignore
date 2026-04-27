@@ -3,5 +3,6 @@
 .env
 *.sqlite3
 *.pyc
+staticfiles/*
 media/*
 */migrations

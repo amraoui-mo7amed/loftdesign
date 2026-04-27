@@ -13,6 +13,9 @@ if [ "$DB_HOST" = "db" ]; then
 fi
 
 # Apply database migrations
+echo "Generating database migrations..."
+python manage.py makemigrations user_auth dashboard frontend
+
 echo "Applying database migrations..."
 python manage.py migrate --noinput
 

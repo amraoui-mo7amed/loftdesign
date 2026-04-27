@@ -6,35 +6,36 @@ def site_settings(request):
     """
     Returns global site configuration and branding details.
     """
+    static_url = settings.STATIC_URL
     return {
         "site_config": {
-            "name": _("SnapStore"),
-            "ar_name": "سناب ستور",  # Keep for title fallback logic
-            "tagline": _("AI-Powered Landing Pages"),
-            "logo": None,  # Add custom logo path here
-            "favicon": None,  # Add custom favicon path here
-            "contact_email": "info@snapstore.com",
-            "phone": "+213 555 000 000",
+            "name": _("LOFT Design"),
+            "ar_name": "لوفت ديزاين",  # Keep for title fallback logic
+            "tagline": _("Elevate Your Space with Modern Design"),
+            "logo": f"{static_url}img/icon.jpeg",
+            "favicon": f"{static_url}img/icon.jpeg",
+            "contact_email": "info@loftdesign.com",
+            "phone": "+213 555 123 456",
             "social": {
-                "facebook": "https://facebook.com/snapstore",
-                "twitter": "https://twitter.com/snapstore",
-                "instagram": "https://instagram.com/snapstore",
+                "facebook": "https://facebook.com/loftdesign",
+                "twitter": "https://twitter.com/loftdesign",
+                "instagram": "https://instagram.com/loftdesign",
             },
             "seo": {
                 "description": _(
-                    _("Generate high-converting landing pages in seconds with Gemini AI.")
+                    _("LOFT Design - High-end interior design and architectural solutions.")
                 ),
                 "keywords": _(
-                    _("landing page, ai, gemini, merchant, ecommerce, conversion")
+                    _("interior design, loft, architecture, modern furniture, decor")
                 ),
             },
             "branding": {
-                "primary_color": "#0d6efd",
-                "secondary_color": "#6c757d",
-                "accent_color": "#ffc107",
-                "success_color": "#198754",
+                "primary_color": "#FFD65A",  # Soft Yellow from logo
+                "secondary_color": "#212121", # Dark Box from logo
+                "accent_color": "#FFFFFF",    # White text
+                "success_color": "#28a745",
                 "danger_color": "#dc3545",
-                "dark_color": "#212529",
+                "dark_color": "#1a1a1a",
                 "light_color": "#f8f9fa",
             },
         }

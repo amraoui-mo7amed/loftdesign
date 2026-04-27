@@ -1,0 +1,90 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}
+    {% trans "Product Inventory" %}
+{% endblock dashTitle %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+{% endblock extra_css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+    {% csrf_token %}
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-4 mb-5" data-aos="fade-down">
+        <div>
+            <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Commerce" %}</h6>
+            <h1 class="fw-black display-4 mb-0">{% trans "Products" %}</h1>
+        </div>
+        <a href="{% url 'dash:product_create' %}" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-lg">
+            <i class="fas fa-plus me-2 text-primary"></i> {% trans "Add Product" %}
+        </a>
+    </div>
+
+    <div class="row mb-5" data-aos="fade-up">
+        <div class="col-lg-5">
+            <form method="GET" class="form position-relative">
+                <input type="text" name="q" value="{{ query }}" class="form-control rounded-4 border-0 shadow-sm py-3 ps-5" placeholder="{% trans 'Search by product title...' %}">
+                <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-4 text-muted opacity-50"></i>
+            </form>
+        </div>
+    </div>
+
+    <div class="editorial-list">
+        {% for product in page_obj %}
+        <div class="editorial-item" data-aos="fade-up">
+            <div class="editorial-img-container shadow-sm">
+                <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}">
+                {% if product.is_active %}
+                    <span class="vr-badge-icon bg-success text-white" title="Active"><i class="fas fa-check"></i></span>
+                {% else %}
+                    <span class="vr-badge-icon bg-danger text-white" title="Inactive"><i class="fas fa-times"></i></span>
+                {% endif %}
+            </div>
+            
+            <div class="editorial-content">
+                <div class="editorial-meta">
+                    <span class="text-primary fw-bold fs-5">${{ product.price }}</span>
+                    <span><i class="fas fa-shopping-bag me-1"></i> {{ product.orders.count }} {% trans "Leads" %}</span>
+                    {% if product.external_link %}
+                    <span class="badge bg-light text-dark border"><i class="fas fa-external-link-alt me-1"></i> {% trans "Affiliate" %}</span>
+                    {% endif %}
+                </div>
+                <h3 class="editorial-title">{{ product.title }}</h3>
+                <p class="text-muted mb-3">{{ product.description|truncatechars:100 }}</p>
+                <div class="editorial-tags">
+                    {% for tag in product.tags.split %}
+                        <span class="badge bg-light text-secondary border rounded-pill px-3 py-2 small fw-bold">{{ tag|cut:"," }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="editorial-actions">
+                <a href="{% url 'dash:product_update' product.pk %}" class="editorial-btn" title="Edit"><i class="fas fa-edit"></i></a>
+                <button type="button" class="editorial-btn delete delete-btn" 
+                        data-url="{% url 'dash:product_delete' product.pk %}"
+                        data-name="{{ product.title }}"
+                        data-swal-title="{% trans 'Remove Product?' %}"
+                        data-swal-text="{% trans 'Are you sure you want to delete' %} '{{ product.title }}'?"
+                        title="Delete"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-10">
+            <h3 class="fw-bold text-muted">{% trans "No products found." %}</h3>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-5 d-flex justify-content-center">
+        {% include "components/pagination.html" with page_obj=page_obj %}
+    </div>
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

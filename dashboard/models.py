@@ -89,3 +89,61 @@ class PortfolioGallery(models.Model):
 
     def __str__(self):
         return f"Image for {self.portfolio.title}"
+
+
+class Product(models.Model):
+    """Product model with external links for affiliate/direct sales"""
+
+    title = models.CharField(max_length=255, verbose_name=_("Title"))
+    thumbnail = models.ImageField(upload_to="products/thumbnails/", verbose_name=_("Thumbnail"))
+    description = models.TextField(verbose_name=_("Description"))
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"), default=0.00)
+    external_link = models.URLField(verbose_name=_("External Buy Link"), blank=True, null=True)
+    tags = models.CharField(max_length=500, verbose_name=_("Tags"), blank=True)
+    is_active = models.BooleanField(default=True, verbose_name=_("Is Active"))
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title
+
+
+class Order(models.Model):
+    """Simple order model for lead generation/direct orders"""
+
+    class OrderStatus(models.TextChoices):
+        PENDING = "pending", _("Pending")
+        PROCESSING = "processing", _("Processing")
+        COMPLETED = "completed", _("Completed")
+        CANCELLED = "cancelled", _("Cancelled")
+
+    product = models.ForeignKey(
+        Product, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        related_name="orders",
+        verbose_name=_("Product")
+    )
+    customer_name = models.CharField(max_length=255, verbose_name=_("Customer Name"))
+    customer_phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
+    customer_address = models.TextField(verbose_name=_("Address"), blank=True)
+    status = models.CharField(
+        max_length=20, 
+        choices=OrderStatus.choices, 
+        default=OrderStatus.PENDING,
+        verbose_name=_("Status")
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Order")
+        verbose_name_plural = _("Orders")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Order #{self.id} - {self.customer_name}"

@@ -1,0 +1,821 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-28 10:44+0100\n"
+"PO-Revision-Date: 2026-03-28 12:00+0100\n"
+"Last-Translator: Mohamed <mohamed@example.com>\n"
+"Language-Team: Arabic <ar@li.org>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: core/context_processors.py:11
+msgid "SnapStore"
+msgstr "سناب ستور"
+
+#: core/context_processors.py:13
+msgid "AI-Powered Landing Pages"
+msgstr "صفحات هبوط مدعومة بالذكاء الاصطناعي"
+
+#: core/context_processors.py:25
+msgid "Generate high-converting landing pages in seconds with Gemini AI."
+msgstr "أنشئ صفحات هبوط عالية التحويل في ثوانٍ باستخدام ذكاء Gemini الاصطناعي."
+
+#: core/context_processors.py:28
+msgid "landing page, ai, gemini, merchant, ecommerce, conversion"
+msgstr "صفحة هبوط، ذكاء اصطناعي، جيميناي، تاجر، تجارة إلكترونية، تحويل"
+
+#: core/settings.py:127
+msgid "العربية"
+msgstr "العربية"
+
+#: core/settings.py:127
+msgid "English"
+msgstr "English"
+
+#: core/settings.py:127
+msgid "French"
+msgstr "French"
+
+#: dashboard/context_processors.py:11
+#: dashboard/templates/dash/dash_index.html:86 frontend/templates/home.html:22
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+#: dashboard/context_processors.py:17
+msgid "users"
+msgstr "المستخدمون"
+
+#: dashboard/templates/components/notification_dropdown.html:12
+msgid "Notifications"
+msgstr "الإشعارات"
+
+#: dashboard/templates/components/notification_dropdown.html:13
+#: dashboard/templates/dash/dash_index.html:30
+msgid "New"
+msgstr "جديد"
+
+#: dashboard/templates/components/notification_dropdown.html:37
+msgid "You're all caught up!"
+msgstr "أنت متابع لكل شيء!"
+
+#: dashboard/templates/components/notification_dropdown.html:42
+msgid "Mark all as read"
+msgstr "تحديد الكل كمقروء"
+
+#: dashboard/templates/components/pagination.html:9
+msgid "Previous"
+msgstr "السابق"
+
+#: dashboard/templates/components/pagination.html:39
+msgid "Next"
+msgstr "التالي"
+
+#: dashboard/templates/dash/dash_home.html:7
+msgid "Overview"
+msgstr "نظرة عامة"
+
+#: dashboard/templates/dash/dash_home.html:21
+msgid "Welcome back,"
+msgstr "مرحباً بعودتك،"
+
+#: dashboard/templates/dash/dash_home.html:25
+msgid "Platform management and system health overview."
+msgstr "إدارة المنصة ونظرة عامة على صحة النظام."
+
+#: dashboard/templates/dash/dash_home.html:27
+msgid "Your project metrics and activity are looking great today."
+msgstr "مقاييس مشروعك ونشاطه تبدو رائعة اليوم."
+
+#: dashboard/templates/dash/dash_home.html:37
+msgid "Manage Users"
+msgstr "إدارة المستخدمين"
+
+#: dashboard/templates/dash/dash_home.html:41
+msgid "New Entry"
+msgstr "إدخال جديد"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Sat"
+msgstr "السبت"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Sun"
+msgstr "الأحد"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Mon"
+msgstr "الاثنين"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Tue"
+msgstr "الثلاثاء"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Wed"
+msgstr "الأربعاء"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Thu"
+msgstr "الخميس"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Fri"
+msgstr "الجمعة"
+
+#: dashboard/templates/dash/dash_home.html:86
+msgid "Last 7 Days"
+msgstr "آخر 7 أيام"
+
+#: dashboard/templates/dash/dash_home.html:89
+msgid "Last 30 Days"
+msgstr "آخر 30 يوماً"
+
+#: dashboard/templates/dash/dash_home.html:120
+#: dashboard/templates/dash/dash_index.html:114
+#: dashboard/templates/users/list.html:101
+msgid "User"
+msgstr "مستخدم"
+
+#: dashboard/templates/dash/dash_home.html:139
+#: dashboard/templates/users/list.html:106
+msgid "Active"
+msgstr "نشط"
+
+#: dashboard/templates/dash/dash_home.html:149
+#: dashboard/templates/dash/dash_home.html:151
+msgid "View Full List"
+msgstr "عرض القائمة الكاملة"
+
+#: dashboard/templates/dash/dash_home.html:166
+msgid "Smart Insights"
+msgstr "رؤى ذكية"
+
+#: dashboard/templates/dash/dash_home.html:169
+msgid ""
+"System performance is optimal. All 5 services are running within expected "
+"latency bounds."
+msgstr "أداء النظام مثالي. جميع الخدمات الـ 5 تعمل ضمن حدود زمن الاستجابة المتوقعة."
+
+#: dashboard/templates/dash/dash_home.html:171
+msgid ""
+"AI has detected a growth trend in your user engagement. Consider launching a "
+"new campaign to capitalize on this traffic."
+msgstr "اكتشف الذكاء الاصطناعي اتجاهاً للنمو في تفاعل المستخدمين. فكر في إطلاق حملة جديدة للاستفادة من هذا الزخم."
+
+#: dashboard/templates/dash/dash_home.html:174
+msgid "Take Action"
+msgstr "اتخاذ إجراء"
+
+#: dashboard/templates/dash/dash_index.html:26
+msgid "Just now"
+msgstr "الآن"
+
+#: dashboard/templates/dash/dash_index.html:27
+msgid "minutes ago"
+msgstr "منذ %d دقائق"
+
+#: dashboard/templates/dash/dash_index.html:28
+msgid "hours ago"
+msgstr "منذ %d ساعات"
+
+#: dashboard/templates/dash/dash_index.html:29
+msgid "No notifications"
+msgstr "لا توجد إشعارات"
+
+#: dashboard/templates/dash/dash_index.html:72
+#: dashboard/templates/dash/dash_index.html:144
+msgid "Logout"
+msgstr "تسجيل الخروج"
+
+#: dashboard/templates/dash/dash_index.html:112
+msgid "Administrator"
+msgstr "مدير النظام"
+
+#: dashboard/templates/dash/dash_index.html:131
+msgid "My Profile"
+msgstr "ملفي الشخصي"
+
+#: dashboard/templates/dash/dash_index.html:134
+#: frontend/templates/index.html:105
+msgid "Settings"
+msgstr "الإعدادات"
+
+#: dashboard/templates/dash/dash_index.html:137
+msgid "Help & Support"
+msgstr "المساعدة والدعم"
+
+#: dashboard/templates/users/details.html:6
+msgid "User Details"
+msgstr "تفاصيل المستخدم"
+
+#: dashboard/templates/users/details.html:18
+msgid "Back to List"
+msgstr "العودة للقائمة"
+
+#: dashboard/templates/users/details.html:24
+msgid "Approve User?"
+msgstr "قبول المستخدم؟"
+
+#: dashboard/templates/users/details.html:25
+#, python-format
+msgid "Are you sure you want to approve %(name)s?"
+msgstr "هل أنت متأكد أنك تريد قبول %(name)s؟"
+
+#: dashboard/templates/users/details.html:26
+msgid "Yes, approve!"
+msgstr "نعم، قبول!"
+
+#: dashboard/templates/users/details.html:27
+#: dashboard/templates/users/details.html:45
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: dashboard/templates/users/details.html:28
+msgid "Success!"
+msgstr "تم بنجاح!"
+
+#: dashboard/templates/users/details.html:30
+msgid "Approve User"
+msgstr "قبول المستخدم"
+
+#: dashboard/templates/users/details.html:42
+msgid "Are you sure?"
+msgstr "هل أنت متأكد؟"
+
+#: dashboard/templates/users/details.html:43
+#, python-format
+msgid "You are about to delete %(name)s. This action cannot be undone!"
+msgstr "أنت على وشك حذف %(name)s. لا يمكن التراجع عن هذا الإجراء!"
+
+#: dashboard/templates/users/details.html:44
+msgid "Yes, delete it!"
+msgstr "نعم، احذف!"
+
+#: dashboard/templates/users/details.html:46
+msgid "Deleted!"
+msgstr "تم الحذف!"
+
+#: dashboard/templates/users/details.html:48
+msgid "Delete User"
+msgstr "حذف المستخدم"
+
+#: dashboard/templates/users/details.html:73
+#: dashboard/templates/users/list.html:75
+msgid "Account Status"
+msgstr "حالة الحساب"
+
+#: dashboard/templates/users/details.html:75 dashboard/views/users.py:42
+msgid "Approved"
+msgstr "مقبول"
+
+#: dashboard/templates/users/details.html:77 dashboard/views/dashboard.py:54
+msgid "Pending Approval"
+msgstr "قيد الانتظار"
+
+#: dashboard/templates/users/details.html:81
+msgid "Member Since"
+msgstr "عضو منذ"
+
+#: dashboard/templates/users/details.html:85
+msgid "User ID"
+msgstr "معرف المستخدم"
+
+#: dashboard/templates/users/details.html:98
+msgid "Detailed Information"
+msgstr "معلومات تفصيلية"
+
+#: dashboard/templates/users/details.html:104
+#: dashboard/templates/users/list.html:133
+#: user_auth/templates/auth/signup.html:81
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#: dashboard/templates/users/details.html:108
+#: dashboard/templates/users/list.html:143 user_auth/models.py:28
+#: user_auth/templates/auth/signup.html:94
+msgid "Phone Number"
+msgstr "رقم الهاتف"
+
+#: dashboard/templates/users/details.html:112 user_auth/models.py:24
+#: user_auth/templates/auth/signup.html:105
+msgid "Birth Date"
+msgstr "تاريخ الميلاد"
+
+#: dashboard/templates/users/details.html:116
+msgid "Gender"
+msgstr "الجنس"
+
+#: dashboard/templates/users/details.html:123 user_auth/models.py:29
+msgid "Address"
+msgstr "العنوان"
+
+#: dashboard/templates/users/details.html:127 user_auth/models.py:23
+msgid "Bio"
+msgstr "نبذة شخصية"
+
+#: dashboard/templates/users/details.html:128
+msgid "No bio provided."
+msgstr "لم يتم توفير نبذة شخصية."
+
+#: dashboard/templates/users/list.html:7
+msgid "Users List"
+msgstr "قائمة المستخدمين"
+
+#: dashboard/templates/users/list.html:22
+msgid "Filter Users"
+msgstr "تصفية المستخدمين"
+
+#: dashboard/templates/users/list.html:30
+msgid "Clear All"
+msgstr "مسح الكل"
+
+#: dashboard/templates/users/list.html:31
+msgid "Clear"
+msgstr "مسح"
+
+#: dashboard/templates/users/list.html:40
+msgid "Quick search..."
+msgstr "بحث سريع..."
+
+#: dashboard/templates/users/list.html:56
+msgid "Advanced Filter"
+msgstr "تصفية متقدمة"
+
+#: dashboard/templates/users/list.html:65
+msgid "Search Keyword"
+msgstr "كلمة البحث"
+
+#: dashboard/templates/users/list.html:69
+msgid "Name, Username, Email..."
+msgstr "الاسم، اسم المستخدم، البريد..."
+
+#: dashboard/templates/users/list.html:81
+msgid "Reset All"
+msgstr "إعادة تعيين الكل"
+
+#: dashboard/templates/users/list.html:84
+msgid "Apply Filters"
+msgstr "تطبيق التصفية"
+
+#: dashboard/templates/users/list.html:110 dashboard/views/users.py:43
+msgid "Pending"
+msgstr "قيد الانتظار"
+
+#: dashboard/templates/users/list.html:151
+msgid "View Full Profile"
+msgstr "عرض الملف الشخصي الكامل"
+
+#: dashboard/templates/users/list.html:156
+msgid "Registered"
+msgstr "تاريخ التسجيل"
+
+#: dashboard/templates/users/list.html:167
+msgid "No users found"
+msgstr "لم يتم العثور على مستخدمين"
+
+#: dashboard/templates/users/list.html:168
+msgid "Try adjusting your filters"
+msgstr "حاول تعديل خيارات التصفية"
+
+#: dashboard/utils.py:18
+msgid "Your SOC Account has been Activated!"
+msgstr "تم تفعيل حسابك!"
+
+#: dashboard/views/dashboard.py:19
+msgid "System Alert"
+msgstr "تنبيه النظام"
+
+#: dashboard/views/dashboard.py:20
+msgid "New security update available."
+msgstr "يتوفر تحديث أمني جديد."
+
+#: dashboard/views/dashboard.py:25
+msgid "Welcome"
+msgstr "مرحباً"
+
+#: dashboard/views/dashboard.py:26
+msgid "Welcome to your new dashboard!"
+msgstr "مرحباً بك في لوحة تحكمك الجديدة!"
+
+#: dashboard/views/dashboard.py:42
+msgid "Total Users"
+msgstr "إجمالي المستخدمين"
+
+#: dashboard/views/dashboard.py:48
+msgid "Approved Users"
+msgstr "المستخدمون المقبولون"
+
+#: dashboard/views/dashboard.py:60
+msgid "Staff Members"
+msgstr "أعضاء الفريق"
+
+#: dashboard/views/dashboard.py:65
+msgid "Registration Trends"
+msgstr "اتجاهات التسجيل"
+
+#: dashboard/views/dashboard.py:67
+msgid "Jan"
+msgstr "يناير"
+
+#: dashboard/views/dashboard.py:67
+msgid "Feb"
+msgstr "فبراير"
+
+#: dashboard/views/dashboard.py:67
+msgid "Mar"
+msgstr "مارس"
+
+#: dashboard/views/dashboard.py:72
+msgid "Recent Registrations"
+msgstr "التسجيلات الأخيرة"
+
+#: dashboard/views/dashboard.py:83
+msgid "Active Projects"
+msgstr "المشاريع النشطة"
+
+#: dashboard/views/dashboard.py:90
+msgid "Completed Tasks"
+msgstr "المهام المكتملة"
+
+#: dashboard/views/dashboard.py:97
+msgid "Pending Actions"
+msgstr "إجراءات معلقة"
+
+#: dashboard/views/dashboard.py:104
+msgid "Total Hours"
+msgstr "إجمالي الساعات"
+
+#: dashboard/views/dashboard.py:109
+msgid "Weekly Activity"
+msgstr "النشاط الأسبوعي"
+
+#: dashboard/views/dashboard.py:111
+msgid "Upcoming Tasks"
+msgstr "المهام القادمة"
+
+#: dashboard/views/dashboard.py:113
+msgid "Launch Website"
+msgstr "إطلاق الموقع"
+
+#: dashboard/views/dashboard.py:114
+msgid "Database Migration"
+msgstr "ترحيل قاعدة البيانات"
+
+#: dashboard/views/dashboard.py:115
+msgid "Client Meeting"
+msgstr "اجتماع العميل"
+
+#: dashboard/views/users.py:41 dashboard/views/users.py:46
+msgid "All Status"
+msgstr "جميع الحالات"
+
+#: dashboard/views/users.py:80
+#, python-format
+msgid "User %(name)s deleted successfully."
+msgstr "تم حذف المستخدم %(name)s بنجاح."
+
+#: dashboard/views/users.py:107
+msgid "Failed to send activation email. Approval cancelled."
+msgstr "فشل إرسال بريد التفعيل. تم إلغاء القبول."
+
+#: dashboard/views/users.py:113
+#, python-format
+msgid "User %(name)s approved successfully."
+msgstr "تم قبول المستخدم %(name)s بنجاح."
+
+#: dashboard/views/users.py:121
+#, python-format
+msgid "An error occurred during approval: %(error)s"
+msgstr "حدث خطأ أثناء القبول: %(error)s"
+
+#: frontend/templates/home.html:24 user_auth/templates/auth/login.html:10
+#: user_auth/templates/auth/login.html:92
+#: user_auth/templates/auth/signup.html:182
+msgid "Login"
+msgstr "تسجيل الدخول"
+
+#: frontend/templates/home.html:25
+msgid "Get Started"
+msgstr "ابدأ الآن"
+
+#: frontend/templates/home.html:53
+msgid "Launch Now"
+msgstr "انطلق الآن"
+
+#: frontend/templates/home.html:56
+msgid "See Features"
+msgstr "مشاهدة المميزات"
+
+#: frontend/templates/home.html:68
+msgid "Supercharged Features"
+msgstr "مميزات خارقة"
+
+#: frontend/templates/home.html:69
+msgid "Designed for modern developers and scaling startups."
+msgstr "مصمم للمطورين العصريين والشركات الناشئة الطموحة."
+
+#: frontend/templates/home.html:74
+msgid "Scalable Architecture"
+msgstr "بنية قابلة للتوسع"
+
+#: frontend/templates/home.html:75
+msgid "A clean, modular structure that grows with your team and complexity."
+msgstr "بنية نظيفة ومنظمة تنمو مع نمو فريقك وتعقيد مشروعك."
+
+#: frontend/templates/home.html:79
+msgid "Auth Ready"
+msgstr "جاهز للمصادقة"
+
+#: frontend/templates/home.html:80
+msgid "Secure login and signup out of the box."
+msgstr "تسجيل دخول وإنشاء حساب آمن وجاهز للاستخدام الفوري."
+
+#: frontend/templates/home.html:84
+msgid "Global i18n"
+msgstr "دعم لغوي عالمي"
+
+#: frontend/templates/home.html:85
+msgid "Built-in RTL support for Arabic markets."
+msgstr ""
+"دعم مدمج للغات التي تكتب من اليمين إلى اليسار (RTL) لخدمة الأسواق العربية."
+
+#: frontend/templates/home.html:89
+msgid "Developer Friendly"
+msgstr "صديق للمطورين"
+
+#: frontend/templates/home.html:90
+msgid ""
+"Written in clean Python with extensive documentation and helper utilities."
+msgstr "مكتوب بلغة بايثون نظيفة مع توثيق شامل وأدوات مساعدة متنوعة."
+
+#: frontend/templates/home.html:103
+msgid "Code Quality"
+msgstr "جودة الكود"
+
+#: frontend/templates/home.html:109
+msgid "Support"
+msgstr "الدعم"
+
+#: frontend/templates/home.html:115
+msgid "Speed"
+msgstr "السرعة"
+
+#: frontend/templates/home.html:121
+msgid "Possibilities"
+msgstr "الإمكانيات"
+
+#: frontend/templates/home.html:132
+msgid "Get Started in Minutes"
+msgstr "ابدأ في دقائق"
+
+#: frontend/templates/home.html:139
+msgid "Clone the Repository"
+msgstr "استنسخ المستودع"
+
+#: frontend/templates/home.html:140
+msgid ""
+"Grab the source code and install the dependencies with a single command."
+msgstr "احصل على الكود المصدري وقم بتثبيت المكتبات اللازمة بأمر واحد فقط."
+
+#: frontend/templates/home.html:146
+msgid "Customize Branding"
+msgstr "خصص هويتك البصرية"
+
+#: frontend/templates/home.html:147
+msgid "Update your colors and site details in the central context processor."
+msgstr "قم بتحديث ألوانك وتفاصيل موقعك في معالج السياق المركزي."
+
+#: frontend/templates/home.html:153
+msgid "Deploy & Shine"
+msgstr "انشر وتألق"
+
+#: frontend/templates/home.html:154
+msgid "Push your application to production and start welcoming users."
+msgstr "ارفع تطبيقك للإنتاج وابدأ في استقبال المستخدمين."
+
+#: frontend/templates/home.html:166
+msgid "Ready to Start Building?"
+msgstr "جاهز للبدء في البناء؟"
+
+#: frontend/templates/home.html:168
+#, python-format
+msgid ""
+"Join the elite group of developers using %(site_name)s to ship faster and "
+"cleaner code."
+msgstr ""
+"انضم إلى نخبة المطورين الذين يستخدمون %(site_name)s لإطلاق مشاريعهم بكود "
+"أسرع وأنظف."
+
+#: frontend/templates/home.html:172
+msgid "Get Started Now"
+msgstr "ابدأ الآن"
+
+#: frontend/templates/home.html:187
+msgid "All rights reserved."
+msgstr "جميع الحقوق محفوظة."
+
+#: frontend/templates/index.html:96
+msgid "Home"
+msgstr "الرئيسية"
+
+#: frontend/templates/index.html:99
+msgid "Products"
+msgstr "المنتجات"
+
+#: frontend/templates/index.html:102
+msgid "Reports"
+msgstr "التقارير"
+
+#: frontend/templates/index.html:118
+msgid "Main Menu"
+msgstr "القائمة الرئيسية"
+
+#: frontend/templates/partials/custom_file_input.html:6
+msgid "Choose a file..."
+msgstr "اختر ملفاً..."
+
+#: user_auth/models.py:9
+msgid "Male"
+msgstr "ذكر"
+
+#: user_auth/models.py:10
+msgid "Female"
+msgstr "أنثى"
+
+#: user_auth/models.py:11
+msgid "Other"
+msgstr "آخر"
+
+#: user_auth/models.py:21
+msgid "Profile Picture"
+msgstr "صورة الملف الشخصي"
+
+#: user_auth/models.py:26 user_auth/templates/auth/signup.html:114
+msgid "Sex"
+msgstr "الجنس"
+
+#: user_auth/models.py:32
+msgid "Is Approved"
+msgstr "تمت الموافقة"
+
+#: user_auth/models.py:33
+msgid "Created At"
+msgstr "تاريخ الإنشاء"
+
+#: user_auth/models.py:39
+msgid "User Profile"
+msgstr "ملف المستخدم"
+
+#: user_auth/models.py:40
+msgid "User Profiles"
+msgstr "ملفات المستخدمين"
+
+#: user_auth/templates/auth/login.html:41
+msgid "Login to your account"
+msgstr "تسجيل الدخول إلى حسابك"
+
+#: user_auth/templates/auth/login.html:53
+msgid "username"
+msgstr "اسم المستخدم"
+
+#: user_auth/templates/auth/login.html:59
+msgid "Enter your username"
+msgstr "أدخل اسم المستخدم الخاص بك"
+
+#: user_auth/templates/auth/login.html:65
+#: user_auth/templates/auth/signup.html:119
+msgid "Password"
+msgstr "كلمة المرور"
+
+#: user_auth/templates/auth/login.html:72
+msgid "Enter your password"
+msgstr "أدخل كلمة المرور"
+
+#: user_auth/templates/auth/login.html:86
+msgid "Remember me"
+msgstr "تذكرني"
+
+#: user_auth/templates/auth/login.html:89
+msgid "Forgot password?"
+msgstr "نسيت كلمة المرور؟"
+
+#: user_auth/templates/auth/login.html:96
+msgid "Don't have an account?"
+msgstr "ليس لديك حساب؟"
+
+#: user_auth/templates/auth/login.html:97
+msgid "Create new account"
+msgstr "إنشاء حساب جديد"
+
+#: user_auth/templates/auth/signup.html:9
+#: user_auth/templates/auth/signup.html:37
+#: user_auth/templates/auth/signup.html:176
+msgid "Create Account"
+msgstr "إنشاء حساب"
+
+#: user_auth/templates/auth/signup.html:40
+#, python-format
+msgid "Join the community and start your journey with %(site_name)s"
+msgstr "انضم إلى المجتمع وابدأ رحلتك مع %(site_name)s"
+
+#: user_auth/templates/auth/signup.html:55
+msgid "First Name"
+msgstr "الاسم الأول"
+
+#: user_auth/templates/auth/signup.html:61
+msgid "Enter your first name"
+msgstr "أدخل اسمك الأول"
+
+#: user_auth/templates/auth/signup.html:68
+msgid "Last Name"
+msgstr "اسم العائلة"
+
+#: user_auth/templates/auth/signup.html:74
+msgid "Enter your last name"
+msgstr "أدخل اسم العائلة"
+
+#: user_auth/templates/auth/signup.html:114
+msgid "Select sex"
+msgstr "اختر الجنس"
+
+#: user_auth/templates/auth/signup.html:126
+msgid "Enter password"
+msgstr "أدخل كلمة المرور"
+
+#: user_auth/templates/auth/signup.html:140
+msgid "Confirm Password"
+msgstr "تأكيد كلمة المرور"
+
+#: user_auth/templates/auth/signup.html:147
+msgid "Re-enter password"
+msgstr "أعد إدخال كلمة المرور"
+
+#: user_auth/templates/auth/signup.html:170
+msgid "I agree to"
+msgstr "أوافق على"
+
+#: user_auth/templates/auth/signup.html:170
+msgid "Terms of Service"
+msgstr "شروط الخدمة"
+
+#: user_auth/templates/auth/signup.html:170
+msgid "and"
+msgstr "و"
+
+#: user_auth/templates/auth/signup.html:170
+msgid "Privacy Policy"
+msgstr "سياسة الخصوصية"
+
+#: user_auth/templates/auth/signup.html:181
+msgid "Already have an account?"
+msgstr "لديك حساب بالفعل؟"
+
+#: user_auth/views.py:25
+msgid "Please fill in all required fields."
+msgstr "يرجى ملء جميع الحقول المطلوبة."
+
+#: user_auth/views.py:42
+msgid "Invalid username or password. Please try again."
+msgstr "اسم المستخدم أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى."
+
+#: user_auth/views.py:76
+msgid "First name is required."
+msgstr "الاسم الأول مطلوب."
+
+#: user_auth/views.py:78
+msgid "Last name is required."
+msgstr "اسم العائلة مطلوب."
+
+#: user_auth/views.py:80
+msgid "Email is required."
+msgstr "البريد الإلكتروني مطلوب."
+
+#: user_auth/views.py:82
+msgid "Password is required."
+msgstr "كلمة المرور مطلوب."
+
+#: user_auth/views.py:84
+msgid "Passwords do not match."
+msgstr "كلمات المرور غير متطابقة."
+
+#: user_auth/views.py:86
+msgid "Password must be at least 8 characters long."
+msgstr "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل."
+
+#: user_auth/views.py:94
+msgid "This email is already registered."
+msgstr "هذا البريد الإلكتروني مسجل بالفعل."
+
+#: user_auth/views.py:116
+msgid "Your account has been created successfully."
+msgstr "تم إنشاء حسابك بنجاح."

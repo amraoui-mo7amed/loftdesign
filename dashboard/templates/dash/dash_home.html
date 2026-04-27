@@ -1,0 +1,191 @@
+{% extends "dash/dash_index.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}
+    {% trans "Overview" %}
+{% endblock dashTitle %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/dash_home.css" %}?v={% now "U" %}">
+{% endblock extra_css %}
+
+{% block dashContent %}
+    <div class="container-fluid py-4">
+        <!-- ======= Welcome Section ======= -->
+        <div class="welcome-section mb-4" data-aos="fade-down">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h2 class="mb-1">
+                        {% trans "Welcome back," %} {{ request.user.first_name|default:request.user.username }}! 👋
+                    </h2>
+                    <p class="text-muted mb-0">
+                        {% if role == 'admin' %}
+                            {% trans "Platform management and system health overview." %}
+                        {% else %}
+                            {% trans "Your project metrics and activity are looking great today." %}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-white shadow-sm border-0 rounded-3 px-3 py-2">
+                        <i class="far fa-calendar-alt me-2"></i> {% now "D, d M Y" %}
+                    </button>
+                    {% if role == 'admin' %}
+                        <a href="{% url 'dash:user_list' %}" class="btn btn-primary shadow-sm rounded-3 px-3 py-2">
+                            <i class="fas fa-users me-2"></i> {% trans "Manage Users" %}
+                        </a>
+                    {% else %}
+                        <button class="btn btn-primary shadow-sm rounded-3 px-3 py-2">
+                            <i class="fas fa-plus me-2"></i> {% trans "New Entry" %}
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ======= Stats Cards ======= -->
+        <div class="row mb-4" data-aos="fade-up">
+            {% include "components/stat_card.html" with title=stat_1.title value=stat_1.value icon=stat_1.icon color=stat_1.color trend=stat_1.trend trend_dir="up" %}
+            
+            {% include "components/stat_card.html" with title=stat_2.title value=stat_2.value icon=stat_2.icon color=stat_2.color trend=stat_2.trend trend_dir="up" %}
+            
+            {% include "components/stat_card.html" with title=stat_3.title value=stat_3.value icon=stat_3.icon color=stat_3.color trend=stat_3.trend trend_dir=stat_3.trend_dir|default:"down" trend_color=stat_3.trend_color|default:"success" %}
+            
+            {% include "components/stat_card.html" with title=stat_4.title value=stat_4.value icon=stat_4.icon color=stat_4.color %}
+        </div>
+
+        <!-- ======= Main Section ======= -->
+        <div class="row g-4 mb-4">
+            <!-- Dynamic Chart -->
+            <div class="col-12 col-lg-8" data-aos="fade-right">
+                {% if role == 'admin' %}
+                    <div class="card shadow-sm chart-card h-100"
+                         id="userDistChartCard"
+                         data-bs-labels='{{ user_dist_labels|safe }}'
+                         data-bs-values='{{ user_dist_values|safe }}'>
+                        <div class="card-header bg-transparent border-0 pt-4 px-4">
+                            <h6 class="fw-bold mb-0 text-dark">{{ chart_title }}</h6>
+                        </div>
+                        <div class="card-body d-flex align-items-center justify-content-center">
+                            <div style="height: 280px; width: 100%;">
+                                <canvas id="userDistChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card shadow-sm chart-card h-100"
+                         id="salesWeekChartCard"
+                         data-bs-labels='["{% trans "Sat" %}", "{% trans "Sun" %}", "{% trans "Mon" %}", "{% trans "Tue" %}", "{% trans "Wed" %}", "{% trans "Thu" %}", "{% trans "Fri" %}"]'
+                         data-bs-values='{{ chart_values|safe }}'>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">{{ chart_title }}</h6>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    {% trans "Last 7 Days" %}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">{% trans "Last 30 Days" %}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="height: 300px;">
+                                <canvas id="salesWeekChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- List Section -->
+            <div class="col-12 col-lg-4" data-aos="fade-left">
+                <div class="card shadow-sm border-0 rounded-4 h-100 bg-white">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4">
+                        <h6 class="fw-bold mb-0 text-primary">{{ list_title }}</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <ul class="list-group list-group-flush">
+                            {% if role == 'admin' %}
+                                {% for profile in recent_users %}
+                                <li class="list-group-item px-0 py-3 bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-circle bg-light text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
+                                            {{ profile.user.username|slice:":1"|upper }}
+                                        </div>
+                                        <div>
+                                            <p class="mb-0 fw-bold small text-dark">{{ profile.user.get_full_name|default:profile.user.username }}</p>
+                                            <p class="mb-0 smaller text-muted">
+                                                {{ profile.get_sex_display|default:_("User") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <a href="{% url 'dash:user_details' profile.pk %}" class="btn btn-link p-0 text-muted">
+                                        <i class="fas fa-chevron-right smaller"></i>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            {% else %}
+                                {% for item in list_items %}
+                                <li class="list-group-item px-0 py-3 bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-circle bg-light text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-rocket"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-0 fw-bold small text-dark">{{ item }}</p>
+                                            <p class="mb-0 smaller text-muted">
+                                                {% trans "Active" %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-chevron-right smaller text-muted opacity-50"></i>
+                                </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                        {% if role == 'admin' %}
+                            <a href="{% url 'dash:user_list' %}" class="btn btn-light w-100 mt-3 btn-sm">{% trans "View Full List" %}</a>
+                        {% else %}
+                            <a href="#" class="btn btn-light w-100 mt-3 btn-sm">{% trans "View Full List" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======= Smart Recommendations Section ======= -->
+        {% if role != 'admin' %}
+        <div class="row" data-aos="fade-up">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4" style="background: linear-gradient(to right, var(--brand-primary), var(--brand-secondary));">
+                    <div class="card-body p-4 p-md-5 text-white">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h4 class="fw-bold mb-3">{% trans "Smart Insights" %} ✨</h4>
+                                <p class="opacity-75 mb-4">
+                                    {% if role == 'admin' %}
+                                        {% trans "System performance is optimal. All 5 services are running within expected latency bounds." %}
+                                    {% else %}
+                                        {% trans "AI has detected a growth trend in your user engagement. Consider launching a new campaign to capitalize on this traffic." %}
+                                    {% endif %}
+                                </p>
+                                <button class="btn btn-light rounded-3 px-4 fw-bold">{% trans "Take Action" %}</button>
+                            </div>
+                            <div class="col-md-4 d-none d-md-block text-center">
+                                <i class="fas fa-brain fa-5x opacity-25"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static "js/dash_home.js" %}?v={% now "U" %}"></script>
+{% endblock extra_js %}

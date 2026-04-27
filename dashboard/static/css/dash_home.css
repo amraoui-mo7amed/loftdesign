@@ -1,0 +1,74 @@
+/* Dashboard Home Specific Styles */
+
+.welcome-section {
+    padding: 1.5rem 0;
+}
+
+.welcome-section h2 {
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
+/* Modern Stat Cards */
+.stat-card-new {
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+.stat-card-new:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05) !important;
+}
+
+.icon-shape {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.25rem;
+}
+
+/* Brand-aligned soft colors */
+.bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
+.text-primary { color: var(--brand-primary) !important; }
+
+.bg-success-soft { background-color: rgba(25, 135, 84, 0.1); }
+.text-success { color: var(--brand-success) !important; }
+
+.bg-info-soft { background-color: rgba(13, 110, 253, 0.1); } 
+.text-info { color: var(--brand-secondary) !important; }
+
+.bg-warning-soft { background-color: rgba(255, 193, 7, 0.1); } 
+.text-warning { color: var(--brand-accent) !important; }
+
+.bg-danger-soft { background-color: rgba(220, 53, 69, 0.1); } 
+.text-danger { color: var(--brand-danger) !important; }
+
+/* Chart Containers */
+.chart-card {
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.chart-card .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 1.25rem;
+}
+
+.chart-card .card-header h6 {
+    color: var(--brand-primary);
+    font-weight: 700;
+    margin: 0;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .welcome-section h2 {
+        font-size: 1.5rem;
+    }
+}

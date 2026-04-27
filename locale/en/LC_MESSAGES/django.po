@@ -1,0 +1,817 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-28 10:44+0100\n"
+"PO-Revision-Date: 2026-03-28 12:00+0100\n"
+"Last-Translator: Mohamed <mohamed@example.com>\n"
+"Language-Team: English <en@li.org>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: core/context_processors.py:11
+msgid "SnapStore"
+msgstr "SnapStore"
+
+#: core/context_processors.py:13
+msgid "AI-Powered Landing Pages"
+msgstr "AI-Powered Landing Pages"
+
+#: core/context_processors.py:25
+msgid "Generate high-converting landing pages in seconds with Gemini AI."
+msgstr "Generate high-converting landing pages in seconds with Gemini AI."
+
+#: core/context_processors.py:28
+msgid "landing page, ai, gemini, merchant, ecommerce, conversion"
+msgstr "landing page, ai, gemini, merchant, ecommerce, conversion"
+
+#: core/settings.py:127
+msgid "العربية"
+msgstr "Arabic"
+
+#: core/settings.py:127
+msgid "English"
+msgstr "English"
+
+#: core/settings.py:127
+msgid "French"
+msgstr "French"
+
+#: dashboard/context_processors.py:11
+#: dashboard/templates/dash/dash_index.html:86 frontend/templates/home.html:22
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: dashboard/context_processors.py:17
+msgid "users"
+msgstr "Users"
+
+#: dashboard/templates/components/notification_dropdown.html:12
+msgid "Notifications"
+msgstr "Notifications"
+
+#: dashboard/templates/components/notification_dropdown.html:13
+#: dashboard/templates/dash/dash_index.html:30
+msgid "New"
+msgstr "New"
+
+#: dashboard/templates/components/notification_dropdown.html:37
+msgid "You're all caught up!"
+msgstr "You're all caught up!"
+
+#: dashboard/templates/components/notification_dropdown.html:42
+msgid "Mark all as read"
+msgstr "Mark all as read"
+
+#: dashboard/templates/components/pagination.html:9
+msgid "Previous"
+msgstr "Previous"
+
+#: dashboard/templates/components/pagination.html:39
+msgid "Next"
+msgstr "Next"
+
+#: dashboard/templates/dash/dash_home.html:7
+msgid "Overview"
+msgstr "Overview"
+
+#: dashboard/templates/dash/dash_home.html:21
+msgid "Welcome back,"
+msgstr "Welcome back,"
+
+#: dashboard/templates/dash/dash_home.html:25
+msgid "Platform management and system health overview."
+msgstr "Platform management and system health overview."
+
+#: dashboard/templates/dash/dash_home.html:27
+msgid "Your project metrics and activity are looking great today."
+msgstr "Your project metrics and activity are looking great today."
+
+#: dashboard/templates/dash/dash_home.html:37
+msgid "Manage Users"
+msgstr "Manage Users"
+
+#: dashboard/templates/dash/dash_home.html:41
+msgid "New Entry"
+msgstr "New Entry"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Sat"
+msgstr "Sat"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Sun"
+msgstr "Sun"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Mon"
+msgstr "Mon"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Tue"
+msgstr "Tue"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Wed"
+msgstr "Wed"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Thu"
+msgstr "Thu"
+
+#: dashboard/templates/dash/dash_home.html:80
+msgid "Fri"
+msgstr "Fri"
+
+#: dashboard/templates/dash/dash_home.html:86
+msgid "Last 7 Days"
+msgstr "Last 7 Days"
+
+#: dashboard/templates/dash/dash_home.html:89
+msgid "Last 30 Days"
+msgstr "Last 30 Days"
+
+#: dashboard/templates/dash/dash_home.html:120
+#: dashboard/templates/dash/dash_index.html:114
+#: dashboard/templates/users/list.html:101
+msgid "User"
+msgstr "User"
+
+#: dashboard/templates/dash/dash_home.html:139
+#: dashboard/templates/users/list.html:106
+msgid "Active"
+msgstr "Active"
+
+#: dashboard/templates/dash/dash_home.html:149
+#: dashboard/templates/dash/dash_home.html:151
+msgid "View Full List"
+msgstr "View Full List"
+
+#: dashboard/templates/dash/dash_home.html:166
+msgid "Smart Insights"
+msgstr "Smart Insights"
+
+#: dashboard/templates/dash/dash_home.html:169
+msgid ""
+"System performance is optimal. All 5 services are running within expected "
+"latency bounds."
+msgstr "System performance is optimal. All 5 services are running within expected latency bounds."
+
+#: dashboard/templates/dash/dash_home.html:171
+msgid ""
+"AI has detected a growth trend in your user engagement. Consider launching a "
+"new campaign to capitalize on this traffic."
+msgstr "AI has detected a growth trend in your user engagement. Consider launching a new campaign to capitalize on this traffic."
+
+#: dashboard/templates/dash/dash_home.html:174
+msgid "Take Action"
+msgstr "Take Action"
+
+#: dashboard/templates/dash/dash_index.html:26
+msgid "Just now"
+msgstr "Just now"
+
+#: dashboard/templates/dash/dash_index.html:27
+msgid "minutes ago"
+msgstr "minutes ago"
+
+#: dashboard/templates/dash/dash_index.html:28
+msgid "hours ago"
+msgstr "hours ago"
+
+#: dashboard/templates/dash/dash_index.html:29
+msgid "No notifications"
+msgstr "No notifications"
+
+#: dashboard/templates/dash/dash_index.html:72
+#: dashboard/templates/dash/dash_index.html:144
+msgid "Logout"
+msgstr "Logout"
+
+#: dashboard/templates/dash/dash_index.html:112
+msgid "Administrator"
+msgstr "Administrator"
+
+#: dashboard/templates/dash/dash_index.html:131
+msgid "My Profile"
+msgstr "My Profile"
+
+#: dashboard/templates/dash/dash_index.html:134
+#: frontend/templates/index.html:105
+msgid "Settings"
+msgstr "Settings"
+
+#: dashboard/templates/dash/dash_index.html:137
+msgid "Help & Support"
+msgstr "Help & Support"
+
+#: dashboard/templates/users/details.html:6
+msgid "User Details"
+msgstr "User Details"
+
+#: dashboard/templates/users/details.html:18
+msgid "Back to List"
+msgstr "Back to List"
+
+#: dashboard/templates/users/details.html:24
+msgid "Approve User?"
+msgstr "Approve User?"
+
+#: dashboard/templates/users/details.html:25
+#, python-format
+msgid "Are you sure you want to approve %(name)s?"
+msgstr "Are you sure you want to approve %(name)s?"
+
+#: dashboard/templates/users/details.html:26
+msgid "Yes, approve!"
+msgstr "Yes, approve!"
+
+#: dashboard/templates/users/details.html:27
+#: dashboard/templates/users/details.html:45
+msgid "Cancel"
+msgstr "Cancel"
+
+#: dashboard/templates/users/details.html:28
+msgid "Success!"
+msgstr "Success!"
+
+#: dashboard/templates/users/details.html:30
+msgid "Approve User"
+msgstr "Approve User"
+
+#: dashboard/templates/users/details.html:42
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+#: dashboard/templates/users/details.html:43
+#, python-format
+msgid "You are about to delete %(name)s. This action cannot be undone!"
+msgstr "You are about to delete %(name)s. This action cannot be undone!"
+
+#: dashboard/templates/users/details.html:44
+msgid "Yes, delete it!"
+msgstr "Yes, delete it!"
+
+#: dashboard/templates/users/details.html:46
+msgid "Deleted!"
+msgstr "Deleted!"
+
+#: dashboard/templates/users/details.html:48
+msgid "Delete User"
+msgstr "Delete User"
+
+#: dashboard/templates/users/details.html:73
+#: dashboard/templates/users/list.html:75
+msgid "Account Status"
+msgstr "Account Status"
+
+#: dashboard/templates/users/details.html:75 dashboard/views/users.py:42
+msgid "Approved"
+msgstr "Approved"
+
+#: dashboard/templates/users/details.html:77 dashboard/views/dashboard.py:54
+msgid "Pending Approval"
+msgstr "Pending Approval"
+
+#: dashboard/templates/users/details.html:81
+msgid "Member Since"
+msgstr "Member Since"
+
+#: dashboard/templates/users/details.html:85
+msgid "User ID"
+msgstr "User ID"
+
+#: dashboard/templates/users/details.html:98
+msgid "Detailed Information"
+msgstr "Detailed Information"
+
+#: dashboard/templates/users/details.html:104
+#: dashboard/templates/users/list.html:133
+#: user_auth/templates/auth/signup.html:81
+msgid "Email"
+msgstr "Email"
+
+#: dashboard/templates/users/details.html:108
+#: dashboard/templates/users/list.html:143 user_auth/models.py:28
+#: user_auth/templates/auth/signup.html:94
+msgid "Phone Number"
+msgstr "Phone Number"
+
+#: dashboard/templates/users/details.html:112 user_auth/models.py:24
+#: user_auth/templates/auth/signup.html:105
+msgid "Birth Date"
+msgstr "Birth Date"
+
+#: dashboard/templates/users/details.html:116
+msgid "Gender"
+msgstr "Gender"
+
+#: dashboard/templates/users/details.html:123 user_auth/models.py:29
+msgid "Address"
+msgstr "Address"
+
+#: dashboard/templates/users/details.html:127 user_auth/models.py:23
+msgid "Bio"
+msgstr "Bio"
+
+#: dashboard/templates/users/details.html:128
+msgid "No bio provided."
+msgstr "No bio provided."
+
+#: dashboard/templates/users/list.html:7
+msgid "Users List"
+msgstr "Users List"
+
+#: dashboard/templates/users/list.html:22
+msgid "Filter Users"
+msgstr "Filter Users"
+
+#: dashboard/templates/users/list.html:30
+msgid "Clear All"
+msgstr "Clear All"
+
+#: dashboard/templates/users/list.html:31
+msgid "Clear"
+msgstr "Clear"
+
+#: dashboard/templates/users/list.html:40
+msgid "Quick search..."
+msgstr "Quick search..."
+
+#: dashboard/templates/users/list.html:56
+msgid "Advanced Filter"
+msgstr "Advanced Filter"
+
+#: dashboard/templates/users/list.html:65
+msgid "Search Keyword"
+msgstr "Search Keyword"
+
+#: dashboard/templates/users/list.html:69
+msgid "Name, Username, Email..."
+msgstr "Name, Username, Email..."
+
+#: dashboard/templates/users/list.html:81
+msgid "Reset All"
+msgstr "Reset All"
+
+#: dashboard/templates/users/list.html:84
+msgid "Apply Filters"
+msgstr "Apply Filters"
+
+#: dashboard/templates/users/list.html:110 dashboard/views/users.py:43
+msgid "Pending"
+msgstr "Pending"
+
+#: dashboard/templates/users/list.html:151
+msgid "View Full Profile"
+msgstr "View Full Profile"
+
+#: dashboard/templates/users/list.html:156
+msgid "Registered"
+msgstr "Registered"
+
+#: dashboard/templates/users/list.html:167
+msgid "No users found"
+msgstr "No users found"
+
+#: dashboard/templates/users/list.html:168
+msgid "Try adjusting your filters"
+msgstr "Try adjusting your filters"
+
+#: dashboard/utils.py:18
+msgid "Your SOC Account has been Activated!"
+msgstr "Your Account has been Activated!"
+
+#: dashboard/views/dashboard.py:19
+msgid "System Alert"
+msgstr "System Alert"
+
+#: dashboard/views/dashboard.py:20
+msgid "New security update available."
+msgstr "New security update available."
+
+#: dashboard/views/dashboard.py:25
+msgid "Welcome"
+msgstr "Welcome"
+
+#: dashboard/views/dashboard.py:26
+msgid "Welcome to your new dashboard!"
+msgstr "Welcome to your new dashboard!"
+
+#: dashboard/views/dashboard.py:42
+msgid "Total Users"
+msgstr "Total Users"
+
+#: dashboard/views/dashboard.py:48
+msgid "Approved Users"
+msgstr "Approved Users"
+
+#: dashboard/views/dashboard.py:60
+msgid "Staff Members"
+msgstr "Staff Members"
+
+#: dashboard/views/dashboard.py:65
+msgid "Registration Trends"
+msgstr "Registration Trends"
+
+#: dashboard/views/dashboard.py:67
+msgid "Jan"
+msgstr "Jan"
+
+#: dashboard/views/dashboard.py:67
+msgid "Feb"
+msgstr "Feb"
+
+#: dashboard/views/dashboard.py:67
+msgid "Mar"
+msgstr "Mar"
+
+#: dashboard/views/dashboard.py:72
+msgid "Recent Registrations"
+msgstr "Recent Registrations"
+
+#: dashboard/views/dashboard.py:83
+msgid "Active Projects"
+msgstr "Active Projects"
+
+#: dashboard/views/dashboard.py:90
+msgid "Completed Tasks"
+msgstr "Completed Tasks"
+
+#: dashboard/views/dashboard.py:97
+msgid "Pending Actions"
+msgstr "Pending Actions"
+
+#: dashboard/views/dashboard.py:104
+msgid "Total Hours"
+msgstr "Total Hours"
+
+#: dashboard/views/dashboard.py:109
+msgid "Weekly Activity"
+msgstr "Weekly Activity"
+
+#: dashboard/views/dashboard.py:111
+msgid "Upcoming Tasks"
+msgstr "Upcoming Tasks"
+
+#: dashboard/views/dashboard.py:113
+msgid "Launch Website"
+msgstr "Launch Website"
+
+#: dashboard/views/dashboard.py:114
+msgid "Database Migration"
+msgstr "Database Migration"
+
+#: dashboard/views/dashboard.py:115
+msgid "Client Meeting"
+msgstr "Client Meeting"
+
+#: dashboard/views/users.py:41 dashboard/views/users.py:46
+msgid "All Status"
+msgstr "All Status"
+
+#: dashboard/views/users.py:80
+#, python-format
+msgid "User %(name)s deleted successfully."
+msgstr "User %(name)s deleted successfully."
+
+#: dashboard/views/users.py:107
+msgid "Failed to send activation email. Approval cancelled."
+msgstr "Failed to send activation email. Approval cancelled."
+
+#: dashboard/views/users.py:113
+#, python-format
+msgid "User %(name)s approved successfully."
+msgstr "User %(name)s approved successfully."
+
+#: dashboard/views/users.py:121
+#, python-format
+msgid "An error occurred during approval: %(error)s"
+msgstr "An error occurred during approval: %(error)s"
+
+#: frontend/templates/home.html:24 user_auth/templates/auth/login.html:10
+#: user_auth/templates/auth/login.html:92
+#: user_auth/templates/auth/signup.html:182
+msgid "Login"
+msgstr "Login"
+
+#: frontend/templates/home.html:25
+msgid "Get Started"
+msgstr "Get Started"
+
+#: frontend/templates/home.html:53
+msgid "Launch Now"
+msgstr "Launch Now"
+
+#: frontend/templates/home.html:56
+msgid "See Features"
+msgstr "See Features"
+
+#: frontend/templates/home.html:68
+msgid "Supercharged Features"
+msgstr "Supercharged Features"
+
+#: frontend/templates/home.html:69
+msgid "Designed for modern developers and scaling startups."
+msgstr "Designed for modern developers and scaling startups."
+
+#: frontend/templates/home.html:74
+msgid "Scalable Architecture"
+msgstr "Scalable Architecture"
+
+#: frontend/templates/home.html:75
+msgid "A clean, modular structure that grows with your team and complexity."
+msgstr "A clean, modular structure that grows with your team and complexity."
+
+#: frontend/templates/home.html:79
+msgid "Auth Ready"
+msgstr "Auth Ready"
+
+#: frontend/templates/home.html:80
+msgid "Secure login and signup out of the box."
+msgstr "Secure login and signup out of the box."
+
+#: frontend/templates/home.html:84
+msgid "Global i18n"
+msgstr "Global i18n"
+
+#: frontend/templates/home.html:85
+msgid "Built-in RTL support for Arabic markets."
+msgstr "Built-in RTL support for Arabic markets."
+
+#: frontend/templates/home.html:89
+msgid "Developer Friendly"
+msgstr "Developer Friendly"
+
+#: frontend/templates/home.html:90
+msgid ""
+"Written in clean Python with extensive documentation and helper utilities."
+msgstr "Written in clean Python with extensive documentation and helper utilities."
+
+#: frontend/templates/home.html:103
+msgid "Code Quality"
+msgstr "Code Quality"
+
+#: frontend/templates/home.html:109
+msgid "Support"
+msgstr "Support"
+
+#: frontend/templates/home.html:115
+msgid "Speed"
+msgstr "Speed"
+
+#: frontend/templates/home.html:121
+msgid "Possibilities"
+msgstr "Possibilities"
+
+#: frontend/templates/home.html:132
+msgid "Get Started in Minutes"
+msgstr "Get Started in Minutes"
+
+#: frontend/templates/home.html:139
+msgid "Clone the Repository"
+msgstr "Clone the Repository"
+
+#: frontend/templates/home.html:140
+msgid ""
+"Grab the source code and install the dependencies with a single command."
+msgstr "Grab the source code and install the dependencies with a single command."
+
+#: frontend/templates/home.html:146
+msgid "Customize Branding"
+msgstr "Customize Branding"
+
+#: frontend/templates/home.html:147
+msgid "Update your colors and site details in the central context processor."
+msgstr "Update your colors and site details in the central context processor."
+
+#: frontend/templates/home.html:153
+msgid "Deploy & Shine"
+msgstr "Deploy & Shine"
+
+#: frontend/templates/home.html:154
+msgid "Push your application to production and start welcoming users."
+msgstr "Push your application to production and start welcoming users."
+
+#: frontend/templates/home.html:166
+msgid "Ready to Start Building?"
+msgstr "Ready to Start Building?"
+
+#: frontend/templates/home.html:168
+#, python-format
+msgid ""
+"Join the elite group of developers using %(site_name)s to ship faster and "
+"cleaner code."
+msgstr "Join the elite group of developers using %(site_name)s to ship faster and cleaner code."
+
+#: frontend/templates/home.html:172
+msgid "Get Started Now"
+msgstr "Get Started Now"
+
+#: frontend/templates/home.html:187
+msgid "All rights reserved."
+msgstr "All rights reserved."
+
+#: frontend/templates/index.html:96
+msgid "Home"
+msgstr "Home"
+
+#: frontend/templates/index.html:99
+msgid "Products"
+msgstr "Products"
+
+#: frontend/templates/index.html:102
+msgid "Reports"
+msgstr "Reports"
+
+#: frontend/templates/index.html:118
+msgid "Main Menu"
+msgstr "Main Menu"
+
+#: frontend/templates/partials/custom_file_input.html:6
+msgid "Choose a file..."
+msgstr "Choose a file..."
+
+#: user_auth/models.py:9
+msgid "Male"
+msgstr "Male"
+
+#: user_auth/models.py:10
+msgid "Female"
+msgstr "Female"
+
+#: user_auth/models.py:11
+msgid "Other"
+msgstr "Other"
+
+#: user_auth/models.py:21
+msgid "Profile Picture"
+msgstr "Profile Picture"
+
+#: user_auth/models.py:26 user_auth/templates/auth/signup.html:114
+msgid "Sex"
+msgstr "Sex"
+
+#: user_auth/models.py:32
+msgid "Is Approved"
+msgstr "Is Approved"
+
+#: user_auth/models.py:33
+msgid "Created At"
+msgstr "Created At"
+
+#: user_auth/models.py:39
+msgid "User Profile"
+msgstr "User Profile"
+
+#: user_auth/models.py:40
+msgid "User Profiles"
+msgstr "User Profiles"
+
+#: user_auth/templates/auth/login.html:41
+msgid "Login to your account"
+msgstr "Login to your account"
+
+#: user_auth/templates/auth/login.html:53
+msgid "username"
+msgstr "username"
+
+#: user_auth/templates/auth/login.html:59
+msgid "Enter your username"
+msgstr "Enter your username"
+
+#: user_auth/templates/auth/login.html:65
+#: user_auth/templates/auth/signup.html:119
+msgid "Password"
+msgstr "Password"
+
+#: user_auth/templates/auth/login.html:72
+msgid "Enter your password"
+msgstr "Enter your password"
+
+#: user_auth/templates/auth/login.html:86
+msgid "Remember me"
+msgstr "Remember me"
+
+#: user_auth/templates/auth/login.html:89
+msgid "Forgot password?"
+msgstr "Forgot password?"
+
+#: user_auth/templates/auth/login.html:96
+msgid "Don't have an account?"
+msgstr "Don't have an account?"
+
+#: user_auth/templates/auth/login.html:97
+msgid "Create new account"
+msgstr "Create new account"
+
+#: user_auth/templates/auth/signup.html:9
+#: user_auth/templates/auth/signup.html:37
+#: user_auth/templates/auth/signup.html:176
+msgid "Create Account"
+msgstr "Create Account"
+
+#: user_auth/templates/auth/signup.html:40
+#, python-format
+msgid "Join the community and start your journey with %(site_name)s"
+msgstr "Join the community and start your journey with %(site_name)s"
+
+#: user_auth/templates/auth/signup.html:55
+msgid "First Name"
+msgstr "First Name"
+
+#: user_auth/templates/auth/signup.html:61
+msgid "Enter your first name"
+msgstr "Enter your first name"
+
+#: user_auth/templates/auth/signup.html:68
+msgid "Last Name"
+msgstr "Last Name"
+
+#: user_auth/templates/auth/signup.html:74
+msgid "Enter your last name"
+msgstr "Enter your last name"
+
+#: user_auth/templates/auth/signup.html:114
+msgid "Select sex"
+msgstr "Select sex"
+
+#: user_auth/templates/auth/signup.html:126
+msgid "Enter password"
+msgstr "Enter password"
+
+#: user_auth/templates/auth/signup.html:140
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: user_auth/templates/auth/signup.html:147
+msgid "Re-enter password"
+msgstr "Re-enter password"
+
+#: user_auth/templates/auth/signup.html:170
+msgid "I agree to"
+msgstr "I agree to"
+
+#: user_auth/templates/auth/signup.html:170
+msgid "Terms of Service"
+msgstr "Terms of Service"
+
+#: user_auth/templates/auth/signup.html:170
+msgid "and"
+msgstr "and"
+
+#: user_auth/templates/auth/signup.html:170
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+#: user_auth/templates/auth/signup.html:181
+msgid "Already have an account?"
+msgstr "Already have an account?"
+
+#: user_auth/views.py:25
+msgid "Please fill in all required fields."
+msgstr "Please fill in all required fields."
+
+#: user_auth/views.py:42
+msgid "Invalid username or password. Please try again."
+msgstr "Invalid username or password. Please try again."
+
+#: user_auth/views.py:76
+msgid "First name is required."
+msgstr "First name is required."
+
+#: user_auth/views.py:78
+msgid "Last name is required."
+msgstr "Last name is required."
+
+#: user_auth/views.py:80
+msgid "Email is required."
+msgstr "Email is required."
+
+#: user_auth/views.py:82
+msgid "Password is required."
+msgstr "Password is required."
+
+#: user_auth/views.py:84
+msgid "Passwords do not match."
+msgstr "Passwords do not match."
+
+#: user_auth/views.py:86
+msgid "Password must be at least 8 characters long."
+msgstr "Password must be at least 8 characters long."
+
+#: user_auth/views.py:94
+msgid "This email is already registered."
+msgstr "This email is already registered."
+
+#: user_auth/views.py:116
+msgid "Your account has been created successfully."
+msgstr "Your account has been created successfully."

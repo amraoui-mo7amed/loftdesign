@@ -1,0 +1,180 @@
+{% extends "dash/dash_index.html" %}
+{% load i18n %}
+{% load static %}
+{% load tags %}
+
+{% block dashTitle %}
+    {% trans "Users List" %}
+{% endblock dashTitle %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/users.css" %}?v={% now "U" %}">
+{% endblock extra_css %}
+
+{% block dashContent %}
+    <div class="container-fluid">
+        <!-- Action Bar -->
+        <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap" data-aos="fade-down">
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-primary rounded-3 px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2" 
+                        data-bs-toggle="modal" data-bs-target="#filterModal" style="height: 45px;">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>{% trans "Filter Users" %}</span>
+                    {% if query or selected_activity or selected_status %}
+                        <span class="badge bg-white text-primary rounded-pill ms-1" style="font-size: 0.7rem;">!</span>
+                    {% endif %}
+                </button>
+                
+                {% if query or selected_activity or selected_status %}
+                    <a href="{% url 'dash:user_list' %}" class="btn btn-white rounded-3 text-muted px-3 border shadow-sm d-flex align-items-center justify-content-center" 
+                       style="height: 45px;" title="{% trans 'Clear All' %}">
+                        <i class="fas fa-times me-2"></i> {% trans "Clear" %}
+                    </a>
+                {% endif %}
+            </div>
+            
+            <div class="search-minimal ms-md-auto" style="min-width: 280px;">
+                <form method="get" action="{% url 'dash:user_list' %}" class="position-relative">
+                    <i class="fas fa-search position-absolute text-muted" style="left: 15px; top: 50%; transform: translateY(-50%); z-index: 5;"></i>
+                    <input type="text" name="q" value="{{ query }}" class="form-control rounded ps-5 border-0 shadow-sm" 
+                           placeholder="{% trans 'Quick search...' %}">
+                    {% if selected_activity %}<input type="hidden" name="activity_type" value="{{ selected_activity }}">{% endif %}
+                    {% if selected_status %}<input type="hidden" name="status" value="{{ selected_status }}">{% endif %}
+                </form>
+            </div>
+        </div>
+
+        <!-- Filter Modal -->
+        <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow-lg">
+                    <div class="modal-header border-0 pb-0 p-4">
+                        <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="filterModalLabel">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary">
+                                <i class="fas fa-filter"></i>
+                            </div>
+                            {% trans "Advanced Filter" %}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <form method="get" action="{% url 'dash:user_list' %}">
+                        <div class="modal-body p-4">
+                            <!-- Keyword Search -->
+                            <div class="mb-4">
+                                <label class="filter-label-modern">{% trans "Search Keyword" %}</label>
+                                <div class="position-relative">
+                                    <input type="text" name="q" value="{{ query }}" 
+                                           class="form-control modern-input" 
+                                           placeholder="{% trans 'Name, Username, Email...' %}">
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="mb-2">
+                                {% include "components/custom_select.html" with id="modalStatusSelect" name="status" label=_("Account Status") choices=status_choices value=selected_status select_title=selected_status_label %}
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer border-0 p-4 pt-0 gap-2">
+                            <a href="{% url 'dash:user_list' %}" class="btn btn-light rounded-3 px-4 fw-bold text-muted border-0 bg-light">
+                                {% trans "Reset All" %}
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm">
+                                {% trans "Apply Filters" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Grid -->
+        <div class="row g-4">
+            {% for profile in profiles %}
+            <div class="col-lg-4 col-md-3">
+                <div class="card h-100 shadow-sm border-0 rounded-4 user-card bg-white">
+                    <!-- Top Section with Gradient and Badges -->
+                    <div class="card-header-gradient">
+                        <div class="activity-badge-floating">
+                             <i class="fas fa-user me-1"></i>
+                             {% trans "User" %}
+                        </div>
+                        <div class="status-badge-premium">
+                            {% if profile.is_approved %}
+                                <span class="badge bg-success bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
+                                    <i class="fas fa-check-circle me-1"></i> {% trans "Active" %}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
+                                    <i class="fas fa-clock me-1"></i> {% trans "Pending" %}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="avatar-wrapper-floating">
+                            <div class="avatar-circle-premium">
+                                {{ profile.user.username|slice:":1"|upper }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body pt-5 text-center">
+                        <h5 class="fw-bold text-dark mb-1 mt-2 text-truncate px-2">{{ profile.user.get_full_name|default:profile.user.username }}</h5>
+                        <p class="text-muted small mb-4">
+                            <span class="opacity-50">@</span>{{ profile.user.username }}
+                        </p>
+                        
+                        <div class="info-grid-modern text-start">
+                            <div class="info-item-modern">
+                                <div class="info-icon-wrapper">
+                                    <i class="fas fa-envelope small"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <p class="smaller text-muted mb-0 lh-1">{% trans "Email" %}</p>
+                                    <p class="small text-dark fw-bold mb-0 text-truncate">{{ profile.user.email }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item-modern">
+                                <div class="info-icon-wrapper">
+                                    <i class="fas fa-phone-alt small"></i>
+                                </div>
+                                <div>
+                                    <p class="smaller text-muted mb-0 lh-1">{% trans "Phone Number" %}</p>
+                                    <p class="small text-dark fw-bold mb-0">{{ profile.phone_number|default:"-" }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto pt-2">
+                            <a href="{% url 'dash:user_details' profile.pk %}" class="btn-premium-action shadow-sm">
+                                <span>{% trans "View Full Profile" %}</span>
+                                <i class="fas fa-arrow-right small"></i>
+                            </a>
+                            <span class="joined-label-premium">
+                                <i class="far fa-calendar-alt me-1"></i> 
+                                {% trans "Registered" %}: {{ profile.created_at|date:"d M, Y" }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="card border-0 shadow-sm p-5 text-center rounded-4 bg-white">
+                    <div class="p-5">
+                        <i class="fas fa-users fa-4x text-light mb-4"></i>
+                        <h4 class="text-muted fw-bold">{% trans "No users found" %}</h4>
+                        <p class="text-muted mb-0">{% trans "Try adjusting your filters" %}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-5">
+            {% render_pagination page_obj %}
+        </div>
+    </div>
+{% endblock dashContent %}

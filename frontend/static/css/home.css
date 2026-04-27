@@ -1,0 +1,250 @@
+/* Custom Advanced Animations */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes revealLine {
+    0% { height: 0; }
+    100% { height: 100%; }
+}
+
+/* Base Landing Styling */
+.landing-page .main-content {
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+/* 1. Hero Section */
+.custom-hero {
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #ffffff, var(--brand-light), #ffffff, var(--brand-light));
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 120px 0;
+}
+
+.hero-tag {
+    background: rgba(var(--brand-primary-rgb, 13, 110, 253), 0.1);
+    color: var(--brand-primary);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.hero-title-main {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--brand-dark);
+    margin-bottom: 25px;
+}
+
+.hero-title-main span {
+    color: var(--brand-primary);
+    position: relative;
+}
+
+/* 2. Feature Grid (Bento Style) */
+.section-bento {
+    padding: 100px 0;
+    background: #fff;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 300px);
+    gap: 24px;
+}
+
+.bento-item {
+    background: #fff;
+    border-radius: 30px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+}
+
+.bento-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.bento-1 { grid-column: 1 / 3; }
+.bento-2 { grid-column: 3 / 4; }
+.bento-3 { grid-column: 1 / 2; }
+.bento-4 { grid-column: 2 / 4; }
+
+/* 3. Stats Section */
+.section-stats {
+    padding: 80px 0;
+    background: var(--brand-dark);
+    color: white;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-number {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--brand-primary);
+    margin-bottom: 10px;
+}
+
+/* 4. Steps Section */
+.section-steps {
+    padding: 120px 0;
+    position: relative;
+    background: var(--brand-light);
+}
+
+.step-card {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
+    align-items: center;
+    background: #fff;
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+[dir="rtl"] .step-card {
+    flex-direction: row;
+    text-align: right;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: var(--brand-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+[dir="rtl"] .step-number {
+    margin-left: 0;
+}
+
+
+/* 5. Pricing & CTA */
+.section-final {
+    padding: 100px 0;
+    background: var(--brand-light);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    padding: 60px;
+    text-align: center;
+}
+
+[dir="rtl"] .hero-title-main { 
+    font-family: 'Cairo', sans-serif; 
+    text-align: center;
+}
+
+[dir="rtl"] .custom-hero p {
+    text-align: center;
+}
+
+/* Bento Grid RTL Support */
+[dir="rtl"] .bento-item {
+    text-align: right;
+}
+
+[dir="rtl"] .bento-item i {
+    display: block;
+    margin-left: 0;
+}
+
+
+.hero-visual-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+.shadow-2xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+.fw-black {
+    font-weight: 900;
+}
+
+.text-primary {
+    color: var(--brand-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+.btn-outline-primary {
+    color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--brand-primary);
+    color: white;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 992px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    .bento-1, .bento-2, .bento-3, .bento-4 {
+        grid-column: auto;
+    }
+    
+    .step-card {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 20px;
+    }
+    
+    [dir="rtl"] .step-card {
+        flex-direction: column !important;
+    }
+}
+

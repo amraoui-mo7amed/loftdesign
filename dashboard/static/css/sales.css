@@ -1,0 +1,94 @@
+/* Card container */
+.card {
+    border: none;
+    border-radius: 1rem;
+    padding: 1.2rem 1.5rem;
+    color: #fff;
+    display: flex;
+    flex-direction: row;
+    /* icon + text in a row */
+    align-items: center;
+    justify-content: flex-start;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    min-height: 100px;
+}
+
+/* Card hover effect */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Card colors */
+.card-revenue {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+}
+
+.card-items {
+    background: linear-gradient(135deg, var(--brand-success), #1e7e34);
+}
+
+.card-count {
+    background: linear-gradient(135deg, var(--brand-accent), #e0a800);
+    color: var(--brand-dark);
+}
+
+
+/* Icon inside card */
+.card i {
+    font-size: 2.5rem;
+    margin-left: 1rem;
+    /* space between icon and text */
+    opacity: 0.9;
+}
+
+/* Card text container */
+.card .card-text {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Card title */
+.card h6 {
+    font-size: 1rem;
+    margin: 0 0 0.3rem 0;
+}
+
+/* Card value */
+.card p {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        min-height: 90px;
+        padding: 1rem;
+    }
+
+    .card i {
+        font-size: 2rem;
+        margin-right: 0.8rem;
+    }
+
+    .card p {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        min-height: auto;
+    }
+
+    .card i {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+}

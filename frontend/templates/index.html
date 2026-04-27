@@ -1,0 +1,173 @@
+{% load static %}
+{% load i18n %}
+{% load frontend_tags %}
+
+{% get_current_language as current_lang %}
+{% get_current_language_bidi as IS_RTL %}
+<!DOCTYPE html>
+<html lang="{{ current_lang }}"
+      dir="{% if IS_RTL %}rtl{% else %}ltr{% endif %}">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="{{ site_config.seo.description }}" />
+        <meta name="keywords" content="{{ site_config.seo.keywords }}" />
+        <link rel="icon" type="image/png" href="{% if site_config.favicon %}{{ site_config.favicon }}{% else %}{% static 'icons/logo.jpg' %}{% endif %}" />
+        <script>
+            window.SiteConfig = {
+                name: "{{ site_config.name|escapejs }}",
+                logo: "{% if site_config.logo %}{{ site_config.logo }}{% else %}{% static 'icons/logo.jpg' %}{% endif %}",
+                favicon: "{% if site_config.favicon %}{{ site_config.favicon }}{% else %}{% static 'icons/logo.jpg' %}{% endif %}"
+            };
+        </script>
+        <title>
+            {% if IS_RTL %}
+                {{ site_config.ar_name }}
+            {% else %}
+                {{ site_config.name }}
+            {% endif %} 
+            {% block title %}
+            {% endblock title %}
+        </title>
+        <style>
+            :root {
+                --primary-color: {{ site_config.branding.primary_color }};
+                --secondary-color: {{ site_config.branding.secondary_color }};
+                --accent-color: {{ site_config.branding.accent_color }};
+                --success-color: {{ site_config.branding.success_color }};
+                --danger-color: {{ site_config.branding.danger_color }};
+                --dark-color: {{ site_config.branding.dark_color }};
+                --light-color: {{ site_config.branding.light_color }};
+            }
+        </style>
+        <!-- Bootstrap CSS -->
+        {% if IS_RTL %}
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.rtl.min.css"
+                  rel="stylesheet" />
+        {% else %}
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+                  rel="stylesheet" />
+        {% endif %}
+        <!-- Font Awesome -->
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <!-- Google Fonts - Cairo (Arabic-friendly) -->
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap"
+              rel="stylesheet" />
+        {# AOS Library #}
+        <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+        {% block css %}
+        {% endblock css %}
+        <!-- Custom CSS -->
+        {% block extra_css %}
+        {% endblock extra_css %}
+        {# Core CSS #}
+        <link rel="stylesheet" href="{% static "css/index.css" %}?v={% now "U" %}" />
+    </head>
+    <body class="{% block body_class %}{% endblock body_class %}">
+        <!-- Navigation Bar -->
+        {% block nav %}
+            <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+                <div class="container-fluid px-3">
+                    <button class="btn btn-outline-secondary d-lg-none me-2"
+                            type="button"
+                            id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <a class="navbar-brand d-flex align-items-center" href="/">
+                        {% if site_config.logo %}
+                            <img src="{{ site_config.logo }}" alt="Logo" style="height: 30px;" class="me-2 rounded">
+                        {% else %}
+                            <div class="me-2">
+                                {% include "components/logo.html" with size=32 icon_size=18 %}
+                            </div>
+                        {% endif %}
+                        <span class="ms-1">{% if IS_RTL %}{{ site_config.ar_name }}{% else %}{{ site_config.name }}{% endif %}</span>
+                    </a>
+                    <button class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> {% trans "Home" %}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fas fa-boxes me-1"></i> {% trans "Products" %}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fas fa-chart-bar me-1"></i> {% trans "Reports" %}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i> {% trans "Settings" %}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        {% endblock nav %}
+        <div class="overlay" id="overlay">
+        </div>
+        {% block sidebar %}
+            <!-- Sidebar -->
+            <div class="sidebar p-3 col-lg-2 d-none d-lg-block" id="sidebar">
+                <h6 class="text-muted mb-3">
+                    {% trans "Main Menu" %}
+                </h6>
+                <ul class="nav flex-column">
+                    {% for item in dashboard_menu %}
+                        {% if not item.admin_only or request.user.is_superuser %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.resolver_match.view_name == item.url_name %}active{% endif %}" 
+                                   href="{% if item.url_name == '#' %}#{% else %}{% url item.url_name %}{% endif %}">
+                                    <i class="{{ item.icon }} me-2"></i>{{ item.title }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endblock sidebar %}
+        <!-- Main Content -->
+        <div class="main-content col-lg-12">
+            {% block content %}
+            {% endblock content %}
+        </div>
+        <!-- Footer -->
+        {% block footer %}
+            <footer class="bg-white py-4 mt-5 border-top">
+                <div class="container text-center">
+                    <p class="mb-0">
+                        © {% now "Y" %}
+                        {% if IS_RTL %}
+                            {{ site_config.ar_name }}
+                        {% else %}
+                            {{ site_config.name }}
+                        {% endif %}
+                    </p>
+                    <p class="mb-0 small">
+                        {% if site_config.contact_email %}
+                            {{ site_config.contact_email }}
+                        {% endif %}
+                    </p>
+                </div>
+            </footer>
+        {% endblock footer %}
+        {# Bootstrap JS #}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+                crossorigin="anonymous"></script>
+        {# AOS Library #}
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        {# Core JS #}
+        <script src="{% static "js/index.js" %}?v={% now "U" %}">
+        </script>
+        {% block js %}
+        {% endblock js %}
+        {% block extra_js %}
+        {% endblock extra_js %}
+    </body>
+</html>

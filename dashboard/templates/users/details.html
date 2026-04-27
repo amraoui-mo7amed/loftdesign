@@ -1,0 +1,137 @@
+{% extends "dash/dash_index.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block dashTitle %}
+    {% trans "User Details" %}
+{% endblock dashTitle %}
+
+{% block extra_js %}
+    <script src="{% static "js/users.js" %}?v={% now "U" %}"></script>
+{% endblock extra_js %}
+
+{% block dashContent %}
+    <div class="container-fluid">
+        <!-- Back Button & Actions -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{% url 'dash:user_list' %}" class="btn btn-dark shadow-sm border-0 rounded-3 px-3 py-2 text-light">
+                <i class="fas fa-arrow-left me-2"></i> {% trans "Back to List" %}
+            </a>
+            <div class="d-flex gap-2">
+                {% if not profile.is_approved %}
+                <button id="approveUserBtn"
+                        data-business-name="{{ profile.user.get_full_name|default:profile.user.username }}"
+                        data-swal-title="{% trans 'Approve User?' %}"
+                        data-swal-text="{% blocktrans with name=profile.user.get_full_name|default:profile.user.username %}Are you sure you want to approve {{ name }}?{% endblocktrans %}"
+                        data-swal-confirm="{% trans 'Yes, approve!' %}"
+                        data-swal-cancel="{% trans 'Cancel' %}"
+                        data-swal-success-title="{% trans 'Success!' %}"
+                        class="btn btn-success shadow-sm rounded-3 px-3 py-2 fw-bold">
+                    <i class="fas fa-check me-2"></i> {% trans "Approve User" %}
+                </button>
+                
+                <!-- Hidden form for approval -->
+                <form id="approveUserForm" method="post" action="{% url 'dash:user_approve' profile.pk %}" class="d-none">
+                    {% csrf_token %}
+                </form>
+                {% endif %}
+                
+                <button id="deleteUserBtn" 
+                        data-user-id="{{ profile.pk }}" 
+                        data-business-name="{{ profile.user.get_full_name|default:profile.user.username }}"
+                        data-swal-title="{% trans 'Are you sure?' %}"
+                        data-swal-text="{% blocktrans with name=profile.user.get_full_name|default:profile.user.username %}You are about to delete {{ name }}. This action cannot be undone!{% endblocktrans %}"
+                        data-swal-confirm="{% trans 'Yes, delete it!' %}"
+                        data-swal-cancel="{% trans 'Cancel' %}"
+                        data-swal-success-title="{% trans 'Deleted!' %}"
+                        class="btn btn-danger shadow-sm rounded-3 px-3 py-2 fw-bold">
+                    <i class="fas fa-trash-alt me-2"></i> {% trans "Delete User" %}
+                </button>
+                
+                <!-- Hidden form for deletion -->
+                <form id="deleteUserForm" method="post" action="{% url 'dash:user_delete' profile.pk %}" class="d-none">
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Profile Overview Card -->
+            <div class="col-12 col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-white">
+                    <div class="card-header bg-primary bg-opacity-10 border-0 p-5 text-center">
+                        <div class="avatar-circle bg-white text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm mx-auto mb-3" 
+                             style="width: 100px; height: 100px; font-size: 2.5rem; color: #fff !important;">
+                            {{ profile.user.username|slice:":1"|upper }}
+                        </div>
+                        <h4 class="fw-bold text-dark mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h4>
+                        <p class="text-muted mb-0">@{{ profile.user.username }}</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="list-group list-group-flush border-0">
+                            <div class="list-group-item px-0 py-3 bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">{% trans "Account Status" %}</span>
+                                {% if profile.is_approved %}
+                                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 border-0">{% trans "Approved" %}</span>
+                                {% else %}
+                                <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3 py-2 border-0">{% trans "Pending Approval" %}</span>
+                                {% endif %}
+                            </div>
+                            <div class="list-group-item px-0 py-3 bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">{% trans "Member Since" %}</span>
+                                <span class="fw-bold text-dark small">{{ profile.created_at|date:"d M Y" }}</span>
+                            </div>
+                            <div class="list-group-item px-0 py-3 bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">{% trans "User ID" %}</span>
+                                <span class="text-muted smaller">#{{ profile.user.id }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Information Card -->
+            <div class="col-12 col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+                    <div class="card-header bg-transparent border-bottom p-4">
+                        <h5 class="fw-bold mb-0 text-dark">
+                            <i class="fas fa-info-circle text-primary me-2"></i> {% trans "Detailed Information" %}
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Email" %}</label>
+                                <p class="text-dark fw-bold mb-0"><i class="far fa-envelope text-muted me-2"></i> {{ profile.user.email|default:"--" }}</p>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Phone Number" %}</label>
+                                <p class="text-dark fw-bold mb-0"><i class="fas fa-phone-alt text-muted me-2"></i> {{ profile.phone_number|default:"--" }}</p>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Birth Date" %}</label>
+                                <p class="text-dark fw-bold mb-0"><i class="fas fa-calendar-alt text-muted me-2"></i> {{ profile.birth_date|default:"--" }}</p>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Gender" %}</label>
+                                <p class="text-dark fw-bold mb-0">
+                                    <i class="fas {% if profile.sex == 'male' %}fa-mars{% else %}fa-venus{% endif %} text-muted me-2"></i> 
+                                    {{ profile.get_sex_display|default:"--" }}
+                                </p>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Address" %}</label>
+                                <p class="text-dark fw-bold mb-0"><i class="fas fa-map-marker-alt text-muted me-2"></i> {{ profile.address|default:"--" }}</p>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Bio" %}</label>
+                                <p class="text-dark mb-0 bg-light p-3 rounded-3 border-start border-4 border-primary">{{ profile.bio|default:_("No bio provided.") }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock dashContent %}
+

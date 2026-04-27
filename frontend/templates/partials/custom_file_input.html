@@ -1,0 +1,15 @@
+{% load i18n %}
+
+<div class="file-input-container" onclick="document.getElementById('{{ id }}').click()">
+    <div class="file-input-content">
+        <i class="fas fa-cloud-upload-alt file-icon"></i>
+        <span class="file-placeholder">{% if placeholder %}{{ placeholder }}{% else %}{% trans "Choose a file..." %}{% endif %}</span>
+        <span class="file-name d-none"></span>
+    </div>
+    <input type="file" 
+           id="{{ id }}" 
+           name="{{ name }}" 
+           class="visually-hidden-input custom-file-real-input" 
+           accept="{{ accept|default:'.jpg,.jpeg,.png,.pdf' }}"
+           {% if required %}required{% endif %}>
+</div>

@@ -1,0 +1,231 @@
+/*==========================
+Starter Kit Authentication Pages - Common Styles
+==========================*/
+
+/* Uses CSS variables from frontend/static/css/index.css */
+.main-content 
+{
+    padding: unset !important;
+}
+/* Main Auth Container */
+.auth-container {
+    min-height: 100vh;
+}
+
+.auth-page-bg {
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+}
+
+/* Card Styling */
+.auth-card {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Left Side Branding */
+.auth-branding {
+    background: linear-gradient(180deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+    min-height: 100%;
+}
+
+.brand-logo {
+    animation: float 3s ease-in-out infinite;
+}
+
+.brand-logo-icon {
+    color: var(--brand-light);
+}
+
+.brand-text {
+    font-weight: 800;
+}
+
+.feature-item {
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.feature-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(-5px);
+}
+
+.feature-icon {
+    color: var(--brand-light);
+    width: 24px;
+    text-align: center;
+}
+
+/* Right Side Form */
+.auth-form-section {
+    background: var(--white-accent);
+}
+
+.form-title {
+    color: var(--brand-primary);
+}
+
+/* Form Controls */
+.form-label {
+    color: var(--text-main);
+}
+
+.form-label i {
+    color: var(--brand-secondary);
+}
+
+.form-control,
+.form-select {
+    border-color: var(--border-color);
+    border-radius: 12px;
+    border-width: 2px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--brand-secondary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.05);
+}
+
+/* Input Group */
+.input-group-text {
+    border-color: var(--border-color);
+    border-width: 2px;
+    border-radius: 0 12px 12px 0;
+}
+
+.input-group .form-control {
+    border-radius: 12px;
+}
+
+/* Password Toggle Button */
+.password-toggle {
+    color: var(--brand-secondary);
+    background: none;
+    border: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.2s ease;
+}
+
+[dir="ltr"] .password-toggle {
+    right: 15px;
+    left: auto;
+}
+
+[dir="rtl"] .password-toggle {
+    left: 15px;
+    right: auto;
+}
+
+.password-toggle:hover {
+    color: var(--brand-primary);
+}
+
+.password-field {
+    position: relative;
+}
+
+[dir="ltr"] .password-field .form-control {
+    padding-right: 50px;
+    padding-left: 12px;
+}
+
+[dir="rtl"] .password-field .form-control {
+    padding-left: 50px;
+    padding-right: 12px;
+}
+
+/* Input Group Alignment */
+[dir="ltr"] .input-group-text {
+    border-radius: 12px 0 0 12px;
+}
+
+[dir="rtl"] .input-group-text {
+    border-radius: 0 12px 12px 0;
+}
+
+[dir="ltr"] .input-group .form-control {
+    border-radius: 0 12px 12px 0;
+}
+
+[dir="rtl"] .input-group .form-control {
+    border-radius: 12px 0 0 12px;
+}
+
+/* Checkbox Styling */
+.form-check-input {
+    border-color: var(--brand-secondary);
+}
+
+.form-check-input:checked {
+    background-color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+/* Submit Button */
+.submit-btn {
+    background-color: var(--brand-primary);
+    color: var(--white-accent);
+    border-radius: 12px;
+    border: none;
+    padding: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: var(--brand-secondary);
+    transform: translateY(-2px);
+}
+
+/* Links */
+.auth-link {
+    color: var(--brand-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-link:hover {
+    color: var(--brand-secondary);
+    text-decoration: underline;
+}
+
+/* Footer */
+.auth-footer {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+    .auth-branding {
+        display: none;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .auth-container {
+        padding: 1rem;
+    }
+
+    .auth-card {
+        border-radius: 16px;
+    }
+}

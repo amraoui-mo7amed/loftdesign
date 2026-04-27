@@ -1,0 +1,39 @@
+{% load i18n %}
+{% get_current_language as current_lang %}
+{% get_available_languages as languages %}
+
+<div class="dropdown language-dropdown">
+    <button class="btn btn-outline-secondary dropdown-toggle lang-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+        <i class="fas fa-globe me-1"></i>
+        <span>
+            {% for lang_code, lang_name in languages %}
+                {% if lang_code == current_lang %}{{ lang_name }}{% endif %}
+            {% endfor %}
+        </span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+        {% for lang_code, lang_name in languages %}
+            <li>
+                <form action="{% url 'set_language' %}" method="post" class="language-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="language" value="{{ lang_code }}">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" class="dropdown-item {% if current_lang == lang_code %}active{% endif %}">
+                        <span class="flag me-2">
+                            {% if lang_code == 'ar' %}🇩🇿
+                            {% elif lang_code == 'en' %}🇬🇧
+                            {% elif lang_code == 'fr' %}🇫🇷
+                            {% else %}🌐{% endif %}
+                        </span>
+                        {{ lang_name }}
+                    </button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+

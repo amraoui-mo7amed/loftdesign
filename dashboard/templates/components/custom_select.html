@@ -1,0 +1,26 @@
+{% load i18n %}
+{% get_current_language_bidi as IS_RTL %}
+
+<div class="custom-select-wrapper full-width" dir="{% if IS_RTL %}rtl{% else %}ltr{% endif %}" id="{{ id }}">
+    <label class="form-label" for="{{ id }}_input">
+        {{ label }}
+    </label>
+    <div class="custom-select-display">
+        {% if select_title %}
+            {{ select_title }}
+        {% else %}
+            اختر عنصراً
+        {% endif %}
+        <span class="arrow">
+            <i class="fas fa-caret-down"></i>
+        </span>
+    </div>
+    <ul class="custom-select-list">
+        {% for value, text in choices %}
+            <li data-value="{{ value }}">
+                {{ text }}
+            </li>
+        {% endfor %}
+    </ul>
+    <input type="hidden" id="{{ id }}_input" name="{{ name }}" value="{{ value|default:'' }}" />
+</div>

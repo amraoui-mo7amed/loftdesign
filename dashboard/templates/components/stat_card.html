@@ -1,0 +1,23 @@
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card h-100 border-0 shadow-sm stat-card-new">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="icon-shape bg-{{ color|default:'primary' }}-soft text-{{ color|default:'primary' }}">
+                    <i class="fas {{ icon }}"></i>
+                </div>
+                {% if trend %}
+                <div class="trend-indicator text-{{ trend_color|default:'success' }} small fw-bold">
+                    <i class="fas fa-arrow-{{ trend_dir|default:'up' }} me-1"></i> {{ trend }}%
+                </div>
+                {% endif %}
+            </div>
+            <h6 class="text-muted small text-uppercase fw-bold mb-1">{{ title }}</h6>
+            <h3 class="mb-0 fw-bold">{{ value }}</h3>
+            {% if sub_text %}
+            <p class="text-muted small mb-0 mt-2">
+                {{ sub_text }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>

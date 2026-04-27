@@ -1,0 +1,163 @@
+{% extends "index.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block css %}
+    <link rel="stylesheet"
+          href="{% static 'css/dash_index.css' %}?v={% now "U" %}" />
+    <link rel="stylesheet"
+          href="{% static 'css/notifications.css' %}?v={% now "U" %}" />
+{% endblock css %}
+{% block nav %}
+{% endblock nav %}
+{% block content %}
+    {% get_current_language as current_lang %}
+    <div class="d-flex align-items-start"
+         dir="{% if current_lang == 'ar' %}rtl{% else %}ltr{% endif %}"
+         id="dashboard-container"
+         data-is-authenticated="{{ request.user.is_authenticated }}"
+         data-user-id="{{ request.user.id }}"
+         data-url-stream="/events/"
+         data-url-unread-count="{% url 'dash:notifications_unread_count' %}"
+         data-url-list="{% url 'dash:notifications_list' %}"
+         data-url-mark-read-base="/dashboard/notifications/"
+         data-url-mark-all-read="{% url 'dash:notifications_mark_all_read' %}"
+         data-msg-just-now="{% trans 'Just now' %}"
+         data-msg-minutes-ago="{% trans 'minutes ago' %}"
+         data-msg-hours-ago="{% trans 'hours ago' %}"
+         data-msg-empty="{% trans 'No notifications' %}"
+         data-msg-new="{% trans 'New' %}">
+        {% block sidebar %}
+            <aside id="sidebar" class="sidebar">
+                <div class="sidebar-header">
+                    {% if site_config.logo %}
+                        <img src="{{ site_config.logo }}" alt="{{ site_config.name }} Logo" class="sidebar-logo me-2" />
+                    {% else %}
+                        <div class="me-2">
+                            {% include "components/logo.html" with size=40 icon_size=24 %}
+                        </div>
+                    {% endif %}
+                    <div class="sidebar-brand-text">
+                        <h5 class="text-white fw-bold mb-0 text-truncate">
+                            {% if IS_RTL %}
+                                {{ site_config.ar_name }}
+                            {% else %}
+                                {{ site_config.name }}
+                            {% endif %}
+                        </h5>
+                        <p class="text-light small mb-0" style="font-size: 0.7rem;">
+                            {{ site_config.tagline }}
+                        </p>
+                    </div>
+                </div>
+                <nav class="nav flex-column h-100 pb-3 pt-3">
+                    <div class="flex-grow-1 overflow-auto px-2">
+                        {% for item in dashboard_menu %}
+                            {% if not item.admin_only or request.user.is_superuser %}
+                                <a href="{% if item.url_name == '#' %}#{% else %}{% url item.url_name %}{% endif %}"
+                                   class="nav-link mb-2 rounded-3 {% if request.resolver_match.view_name == item.url_name or request.resolver_match.url_name in item.url_name %}active{% endif %}">
+                                    <i class="{{ item.icon }} fa-fw"></i>
+                                    <span>{{ item.title }}</span>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-auto p-3 border-top border-white-10">
+                        <a href="{% url "user_auth:logout" %}"
+                           class="btn btn-outline-danger w-100 border-0 d-flex align-items-center justify-content-center gap-2 py-2 rounded-3"
+                           style="background: rgba(var(--brand-danger-rgb, 220, 53, 69), 0.1)">
+                            <i class="fas fa-power-off"></i>
+                            <span>{% trans "Logout" %}</span>
+                        </a>
+                    </div>
+                </nav>
+            </aside>
+        {% endblock sidebar %}
+        <div class="dashContent">
+            <header class="dash-header d-flex align-items-center justify-content-between sticky-top shadow-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light rounded-3 d-lg-none" id="sidebarToggleBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h4 class="mb-0">
+                        {% block dashTitle %}
+                            {% trans "Dashboard" %}
+                        {% endblock dashTitle %}
+                    </h4>
+                </div>
+                <div class="d-flex align-items-center gap-2 gap-md-3">
+                    {% include "partials/language_switcher.html" %}
+                    {% include "components/notification_dropdown.html" %}
+
+                    <div class="vr mx-1 d-none d-md-block opacity-10">
+                    </div>
+                    <div class="dropdown">
+                        <a href="#"
+                           class="d-flex align-items-center gap-2 text-decoration-none text-dark dropdown-toggle no-caret user-dropdown-trigger"
+                           data-bs-toggle="dropdown">
+                            <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                 style="width: 38px;
+                                        height: 38px;
+                                        font-size: 0.9rem">
+                                {{ request.user.username|slice:":1"|upper }}
+                            </div>
+                            <div class="d-none d-md-block">
+                                <p class="small fw-bold mb-0 leading-tight">
+                                    {{ request.user.get_full_name|default:request.user.username }}
+                                </p>
+                                <p class="smaller text-muted mb-0" style="font-size: 0.65rem;">
+                                    {% if request.user.is_superuser %}
+                                        {% trans "Administrator" %}
+                                    {% else %}
+                                        {{ request.user.profile.activity_type|title|default:_("User") }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <i class="fas fa-chevron-down smaller text-muted ms-1 d-none d-md-block"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2 mt-2"
+                            style="min-width: 200px">
+                            <div class="px-3 py-2 border-bottom mb-2 d-md-none">
+                                <p class="small fw-bold mb-0 text-dark">
+                                    {{ request.user.get_full_name|default:request.user.username }}
+                                </p>
+                                <p class="smaller text-muted mb-0">
+                                    {{ request.user.email }}
+                                </p>
+                            </div>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2" href="#"><i class="far fa-user-circle text-muted"></i> {% trans "My Profile" %}</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2" href="#"><i class="fas fa-cog text-muted"></i> {% trans "Settings" %}</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2" href="#"><i class="fas fa-headset text-muted"></i> {% trans "Help & Support" %}</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider mx-2" />
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger d-flex align-items-center gap-2"
+                                   href="{% url "user_auth:logout" %}"><i class="fas fa-sign-out-alt"></i> {% trans "Logout" %}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+            <main class="p-3 p-md-4">
+                {% block dashContent %}
+                {% endblock dashContent %}
+            </main>
+        </div>
+    </div>
+{% endblock content %}
+{% block footer %}
+{% endblock footer %}
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'js/dash_index.js' %}?v={% now "U" %}"></script>
+    <script src="{% static 'js/notifications.js' %}?v={% now "U" %}"></script>
+{% endblock js %}

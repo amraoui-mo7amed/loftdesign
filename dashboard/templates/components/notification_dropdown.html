@@ -1,0 +1,45 @@
+{% load i18n %}
+<div class="dropdown notification-dropdown">
+    <a href="#" class="nav-link text-dark position-relative dropdown-toggle no-caret p-2 rounded-circle hover-bg-light" data-bs-toggle="dropdown">
+        <i class="fas fa-bell fa-lg text-muted"></i>
+        <span id="notification-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white border-2 {% if not notifications %}d-none{% endif %}">
+            {{ notifications|length }}
+        </span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-0 overflow-hidden">
+        <li class="p-3 bg-light border-bottom">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold text-dark">{% trans "Notifications" %}</h6>
+                <span id="notification-count" class="badge bg-primary-soft text-primary rounded-pill small px-2">{{ notifications|length }} {% trans "New" %}</span>
+            </div>
+        </li>
+        <div class="notification-list">
+            {% for note in notifications %}
+            <li>
+                <a class="dropdown-item p-3 border-bottom d-flex gap-3 align-items-start whitespace-normal" href="#">
+                    <div class="icon-circle bg-{{ note.type }}-soft text-{{ note.type }}">
+                        <i class="fas {% if note.type == 'warning' %}fa-exclamation-triangle{% elif note.type == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small fw-bold text-dark">{{ note.title }}</span>
+                            <span class="smaller text-muted">{{ note.time }}</span>
+                        </div>
+                        <p class="small text-muted mb-0 line-clamp-2">{{ note.message }}</p>
+                    </div>
+                </a>
+            </li>
+            {% empty %}
+            <li class="p-5 text-center text-muted notification-empty">
+                <div class="mb-3 opacity-20">
+                    <i class="fas fa-bell-slash fa-3x"></i>
+                </div>
+                <p class="small mb-0">{% trans "You're all caught up!" %}</p>
+            </li>
+            {% endfor %}
+        </div>
+        <li class="p-2 bg-light text-center border-top">
+            <a href="#" id="mark-all-read" class="small text-primary text-decoration-none fw-bold">{% trans "Mark all as read" %}</a>
+        </li>
+    </ul>
+</div>

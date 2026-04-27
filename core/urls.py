@@ -17,9 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from user_auth import views as user_views
+from django.conf import settings
+from django.conf.urls.static import static
+
 import django_eventstream
 
+from user_auth import views as user_views
 
 urlpatterns = [
     path("auth/", include("user_auth.urls", namespace="user_auth")),
@@ -28,5 +31,8 @@ urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
     # Notifications API
     path("events/", include(django_eventstream.urls)),
-
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

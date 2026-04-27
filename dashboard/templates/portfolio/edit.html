@@ -1,0 +1,147 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}
+    {{ title }}
+{% endblock dashTitle %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+{% endblock extra_css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+    <!-- ======= Header ======= -->
+    <div class="mb-5" data-aos="fade-down">
+        <a href="{% url 'dash:portfolio_list' %}" class="btn btn-link text-muted p-0 text-decoration-none mb-2">
+            <i class="fas fa-arrow-left me-1"></i> {% trans "Back to Gallery" %}
+        </a>
+        <h1 class="fw-black display-4 mb-0">{{ title }}</h1>
+    </div>
+
+    {% include "partials/errorList.html" with form_id="portfolioForm" %}
+
+    <form method="POST" enctype="multipart/form-data" class="form" id="portfolioForm">
+        {% csrf_token %}
+        <div class="row g-4">
+            <!-- Left Side: Project Details -->
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "General Information" %}</h5>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{% trans "Project Title" %}</label>
+                        <input type="text" name="title" class="form-control form-control-lg" value="{{ portfolio.title }}" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{% trans "Description" %}</label>
+                        <textarea name="description" class="form-control" rows="8" required>{{ portfolio.description }}</textarea>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-bold">{% trans "Tags" %}</label>
+                        <input type="text" name="tags" class="form-control" value="{{ portfolio.tags }}" placeholder="e.g. Modern, Luxury, Penthouse">
+                    </div>
+                </div>
+                
+                <!-- Project Gallery Management -->
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                        <h5 class="fw-bold mb-0">{% trans "Visual Gallery" %}</h5>
+                    </div>
+
+                    {% if portfolio.gallery_images.all %}
+                    <div class="mb-4">
+                        <h6 class="small fw-bold text-muted mb-3 text-uppercase tracking-wider">{% trans "Current Gallery" %}</h6>
+                        <div class="row g-3">
+                            {% for img in portfolio.gallery_images.all %}
+                            <div class="col-md-3 col-6">
+                                <div class="existing-image-wrapper border shadow-sm">
+                                    <img src="{{ img.image.url }}" alt="Gallery Item" class="img-fluid">
+                                    <div class="delete-checkbox-overlay">
+                                        <input type="checkbox" name="delete_images" value="{{ img.id }}" class="form-check-input bg-danger border-danger shadow-sm">
+                                    </div>
+                                    <div class="image-overlay-label">{% trans "Mark for Removal" %}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-text mt-3 text-danger d-flex align-items-center gap-2">
+                            <i class="fas fa-info-circle"></i> {% trans "Selected images will be permanently removed upon saving." %}
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    {% endif %}
+
+                    <div class="mb-0">
+                        <h6 class="small fw-bold text-muted mb-3 text-uppercase tracking-wider">{% trans "Upload More Photos" %}</h6>
+                        <div class="file-drop-zone" id="galleryDropZone">
+                            <i class="fas fa-plus-circle fa-2x mb-3"></i>
+                            <h6 class="fw-bold">{% trans "Add Project Photos" %}</h6>
+                            <p class="text-muted small">{% trans "Drop new images here or click to browse" %}</p>
+                            <input type="file" name="gallery_images" multiple class="d-none" accept="image/*">
+                        </div>
+                        <div id="galleryPreviewContainer" class="preview-grid mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Primary Media & Actions -->
+            <div class="col-lg-4" data-aos="fade-left">
+                <!-- Thumbnail -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Master Thumbnail" %}</h5>
+                    <div class="file-drop-zone p-2">
+                        <div id="thumbPreviewContainer">
+                            {% if portfolio.thumbnail %}
+                                <div class="preview-item w-100 mb-0" style="aspect-ratio: 16/9;">
+                                    <img src="{{ portfolio.thumbnail.url }}" alt="Thumbnail">
+                                </div>
+                            {% else %}
+                                <i class="fas fa-image fa-2x mb-2"></i>
+                                <p class="text-muted small mb-0">{% trans "Upload New Thumbnail" %}</p>
+                            {% endif %}
+                        </div>
+                        <input type="file" name="thumbnail" class="d-none" accept="image/*">
+                    </div>
+                    <div class="form-text mt-2 small">{% trans "Leave empty to keep current thumbnail." %}</div>
+                </div>
+
+                <!-- 360 View -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Interactive View" %}</h5>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="fas fa-vr-cardboard text-primary"></i></span>
+                        <input type="file" name="img_360" class="form-control" accept="image/*">
+                    </div>
+                    {% if portfolio.img_360 %}
+                        <div class="mt-2 p-2 bg-success bg-opacity-10 rounded border border-success border-opacity-25 d-flex align-items-center gap-2">
+                            <i class="fas fa-check-circle text-light"></i>
+                            <span class="text-light small fw-bold">{% trans "360° Image Active" %}</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Actions -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px; z-index: 10;">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Publish Updates" %}</h5>
+                    <div class="d-flex flex-column gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-lg py-3">
+                            <i class="fas fa-save me-2"></i> {% trans "Save Changes" %}
+                        </button>
+                        <a href="{% url 'dash:portfolio_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border py-3">
+                            {% trans "Cancel" %}
+                        </a>
+                    </div>
+                    <div class="mt-4 p-3 bg-light rounded-3 text-center">
+                        <small class="text-muted"><i class="fas fa-history me-1"></i> {% trans "Last updated" %}: {{ portfolio.updated_at|date:"M d, H:i" }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+    <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

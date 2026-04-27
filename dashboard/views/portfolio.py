@@ -81,49 +81,69 @@ def portfolio_create(request):
 
 @login_required
 def portfolio_update(request, pk):
-    """View to update an existing portfolio project with manual HTML form"""
+    """View to update an existing portfolio project with manual HTML form and AJAX"""
     portfolio = get_object_or_404(Portfolio, pk=pk)
     
     if request.method == "POST":
-        portfolio.title = request.POST.get("title")
-        portfolio.description = request.POST.get("description")
-        portfolio.tags = request.POST.get("tags")
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        tags = request.POST.get("tags")
+        thumbnail = request.FILES.get("thumbnail")
+        img_360 = request.FILES.get("img_360")
         
-        if request.FILES.get("thumbnail"):
-            portfolio.thumbnail = request.FILES.get("thumbnail")
-        if request.FILES.get("img_360"):
-            portfolio.img_360 = request.FILES.get("img_360")
-            
         # Gallery images (Add new ones)
         new_gallery_images = request.FILES.getlist("gallery_images")
-        
-        # Handle deletions if any (manual implementation)
+        # Handle deletions
         delete_images = request.POST.getlist("delete_images")
         
+        errors = {}
+        if not all([title, description]):
+            errors["title"] = _("Title and Description are required")
+
+        if errors:
+            return JsonResponse({
+                "success": False,
+                "errors": errors
+            })
+
         try:
             with transaction.atomic():
+                portfolio.title = title
+                portfolio.description = description
+                portfolio.tags = tags
+                
+                if thumbnail:
+                    portfolio.thumbnail = thumbnail
+                if img_360:
+                    portfolio.img_360 = img_360
+                
                 portfolio.save()
                 
+                # Delete selected images
                 if delete_images:
                     PortfolioGallery.objects.filter(id__in=delete_images, portfolio=portfolio).delete()
                     
+                # Add new images
                 for img in new_gallery_images:
                     PortfolioGallery.objects.create(
                         portfolio=portfolio,
                         image=img
                     )
                     
-                return redirect("dashboard:portfolio_list")
+                return JsonResponse({
+                    "success": True,
+                    "message": _("Project updated successfully"),
+                    "redirect_url": reverse("dash:portfolio_list")
+                })
         except Exception as e:
-            return render(request, "portfolio/form.html", {
-                "error": str(e),
-                "portfolio": portfolio,
-                "title": _("Update Project")
+            return JsonResponse({
+                "success": False,
+                "error": str(e)
             })
             
-    return render(request, "portfolio/form.html", {
+    return render(request, "portfolio/edit.html", {
         "portfolio": portfolio,
-        "title": _("Update Project")
+        "title": _("Edit Project")
     })
 
 @login_required

@@ -80,4 +80,64 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // 5. AJAX Deletion with SweetAlert2
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const url = this.getAttribute('data-url');
+            const name = this.getAttribute('data-name');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            // Get translations from data attrs or defaults
+            const title = this.getAttribute('data-swal-title') || 'Are you sure?';
+            const text = this.getAttribute('data-swal-text') || `You are about to delete "${name}".`;
+            const confirmText = this.getAttribute('data-swal-confirm') || 'Yes, delete it';
+            const cancelText = this.getAttribute('data-swal-cancel') || 'Cancel';
+
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--brand-danger)',
+                cancelButtonColor: 'var(--brand-secondary)',
+                confirmButtonText: confirmText,
+                cancelButtonText: cancelText,
+                reverseButtons: true,
+                background: '#fff',
+                customClass: {
+                    popup: 'rounded-4 border-0',
+                    confirmButton: 'rounded-pill px-4',
+                    cancelButton: 'rounded-pill px-4'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: data.message,
+                                icon: 'success',
+                                confirmButtonColor: 'var(--brand-primary)'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
+        });
+    });
 });

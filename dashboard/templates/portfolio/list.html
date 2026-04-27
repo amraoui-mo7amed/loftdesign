@@ -6,176 +6,104 @@
     {% trans "Portfolio" %}
 {% endblock dashTitle %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+{% endblock extra_css %}
+
 {% block dashContent %}
 <div class="container-fluid py-4">
-    <!-- ======= Header Section ======= -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4" data-aos="fade-down">
+    {% csrf_token %}
+    <!-- ======= Header ======= -->
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-4 mb-5" data-aos="fade-down">
         <div>
-            <h2 class="fw-black mb-1">{% trans "Project Portfolio" %}</h2>
-            <p class="text-muted mb-0">{% trans "Manage your interior design projects and gallery." %}</p>
+            <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Curated Content" %}</h6>
+            <h1 class="fw-black display-4 mb-0">{% trans "Portfolios" %}</h1>
         </div>
-        <a href="{% url 'dash:portfolio_create' %}" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">
-            <i class="fas fa-plus me-2"></i> {% trans "Add New Project" %}
-        </a>
+        <div class="d-flex gap-3">
+            <a href="{% url 'dash:portfolio_create' %}" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-lg">
+                <i class="fas fa-plus me-2 text-primary"></i> {% trans "New Masterpiece" %}
+            </a>
+        </div>
     </div>
 
-    <!-- ======= Search Section ======= -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4" data-aos="fade-up">
-        <div class="card-body p-3">
-            <form method="GET" class="form row g-2 align-items-center">
-                <div class="col-md-10">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-0"><i class="fas fa-search text-muted"></i></span>
-                        <input type="text" name="q" value="{{ query }}" class="form-control border-0 bg-light" placeholder="{% trans 'Search by project title...' %}">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-dark w-100 rounded-3">{% trans "Search" %}</button>
-                </div>
+    <!-- ======= Filters ======= -->
+    <div class="row mb-5" data-aos="fade-up">
+        <div class="col-lg-5">
+            <form method="GET" class="form position-relative">
+                <input type="text" name="q" value="{{ query }}" 
+                       class="form-control rounded-4 border-0 shadow-sm py-3 ps-5" 
+                       placeholder="{% trans 'Find a project by name...' %}">
+                <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-4 text-muted opacity-50"></i>
             </form>
         </div>
     </div>
 
-    <!-- ======= List Table ======= -->
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden" data-aos="fade-up">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-primary text-secondary">
-                    <tr>
-                        <th class="ps-4">{% trans "Project" %}</th>
-                        <th>{% trans "Tags" %}</th>
-                        <th>{% trans "Created" %}</th>
-                        <th>{% trans "360°" %}</th>
-                        <th class="text-end pe-4">{% trans "Actions" %}</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white">
-                    {% for portfolio in page_obj %}
-                    <tr>
-                        <td class="ps-4">
-                            <div class="d-flex align-items-center gap-3">
-                                <img src="{{ portfolio.thumbnail.url }}" alt="{{ portfolio.title }}" class="rounded-3" style="width: 60px; height: 60px; object-fit: cover;">
-                                <div>
-                                    <h6 class="fw-bold mb-0 text-dark">{{ portfolio.title }}</h6>
-                                    <small class="text-muted">{{ portfolio.description|truncatechars:50 }}</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            {% for tag in portfolio.tags.split %}
-                                <span class="badge bg-light text-primary rounded-pill px-2 py-1 small">{{ tag|cut:"," }}</span>
-                            {% endfor %}
-                        </td>
-                        <td>{{ portfolio.created_at|date:"d M Y" }}</td>
-                        <td>
-                            {% if portfolio.img_360 %}
-                                <span class="text-success" title="{% trans 'Has 360 image' %}"><i class="fas fa-vr-cardboard fs-5"></i></span>
-                            {% else %}
-                                <span class="text-muted opacity-50"><i class="fas fa-vr-cardboard fs-5"></i></span>
-                            {% endif %}
-                        </td>
-                        <td class="text-end pe-4">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{% url 'dash:portfolio_update' portfolio.pk %}" class="btn btn-sm btn-light rounded-circle shadow-sm" title="{% trans 'Edit' %}">
-                                    <i class="fas fa-edit text-primary"></i>
-                                </a>
-                                <button type="button" 
-                                        class="btn btn-sm btn-light rounded-circle shadow-sm delete-btn" 
-                                        data-url="{% url 'dash:portfolio_delete' portfolio.pk %}"
-                                        data-name="{{ portfolio.title }}"
-                                        title="{% trans 'Delete' %}">
-                                    <i class="fas fa-trash text-danger"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center py-5">
-                            <div class="text-muted opacity-50 mb-3">
-                                <i class="fas fa-folder-open fa-3x"></i>
-                            </div>
-                            <p class="mb-0">{% trans "No projects found." %}</p>
-                        </td>
-                    </tr>
+    <!-- ======= Editorial Project List ======= -->
+    <div class="editorial-list">
+        {% for portfolio in page_obj %}
+        <div class="editorial-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:1 }}00">
+            <div class="editorial-img-container shadow-sm">
+                <img src="{{ portfolio.thumbnail.url }}" alt="{{ portfolio.title }}">
+                {% if portfolio.img_360 %}
+                <div class="vr-badge-icon" title="{% trans '360° Enabled' %}">
+                    <i class="fas fa-vr-cardboard"></i>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="editorial-content">
+                <div class="editorial-meta">
+                    <span><i class="far fa-calendar-alt me-1"></i> {{ portfolio.created_at|date:"F d, Y" }}</span>
+                    <span><i class="far fa-image me-1"></i> {{ portfolio.gallery_images.count }} {% trans "Photos" %}</span>
+                    <span class="text-dark fw-bold">#{{ portfolio.pk }}</span>
+                </div>
+                <h3 class="editorial-title">{{ portfolio.title }}</h3>
+                <p class="text-muted mb-3 fs-6">{{ portfolio.description|truncatechars:120 }}</p>
+                
+                <div class="editorial-tags">
+                    {% for tag in portfolio.tags.split %}
+                        <span class="badge bg-light text-secondary border rounded-pill px-3 py-2 small fw-bold">
+                            {{ tag|cut:"," }}
+                        </span>
                     {% endfor %}
-                </tbody>
-            </table>
+                </div>
+            </div>
+
+            <div class="editorial-actions">
+                <a href="{% url 'dash:portfolio_update' portfolio.pk %}" class="editorial-btn" title="{% trans 'Edit' %}">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <button type="button" 
+                        class="editorial-btn delete delete-btn" 
+                        data-url="{% url 'dash:portfolio_delete' portfolio.pk %}"
+                        data-name="{{ portfolio.title }}"
+                        data-swal-title="{% trans 'Remove Masterpiece?' %}"
+                        data-swal-text="{% trans 'Are you sure you want to delete' %} '{{ portfolio.title }}'? {% trans 'This action is permanent.' %}"
+                        data-swal-confirm="{% trans 'Yes, delete it' %}"
+                        data-swal-cancel="{% trans 'Cancel' %}"
+                        title="{% trans 'Delete' %}">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
         </div>
-        
-        <!-- Pagination -->
-        <div class="card-footer bg-white border-0 py-3">
-            {% include "components/pagination.html" with page_obj=page_obj %}
+        {% empty %}
+        <div class="text-center py-10" data-aos="zoom-in">
+            <div class="display-1 text-muted opacity-10 mb-4"><i class="fas fa-drafting-compass"></i></div>
+            <h3 class="fw-bold text-muted">{% trans "Your portfolio is empty." %}</h3>
+            <p class="text-muted mb-4">{% trans "Start adding your projects to showcase your talent." %}</p>
+            <a href="{% url 'dash:portfolio_create' %}" class="btn btn-primary rounded-pill px-5">{% trans "Create First Project" %}</a>
         </div>
+        {% endfor %}
+    </div>
+
+    <!-- ======= Pagination ======= -->
+    <div class="mt-5 d-flex justify-content-center" data-aos="fade-up">
+        {% include "components/pagination.html" with page_obj=page_obj %}
     </div>
 </div>
 {% endblock dashContent %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Delete Confirmation with SweetAlert2 & AJAX
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    
-    deleteButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const url = this.getAttribute('data-url');
-            const name = this.getAttribute('data-name');
-            
-            Swal.fire({
-                title: '{% trans "Are you sure?" %}',
-                text: '{% trans "Do you really want to delete" %} "' + name + '"? {% trans "This action cannot be undone." %}',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: 'var(--brand-danger)',
-                cancelButtonColor: 'var(--brand-secondary)',
-                confirmButtonText: '{% trans "Yes, delete it!" %}',
-                cancelButtonText: '{% trans "Cancel" %}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Send AJAX request
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                title: '{% trans "Deleted!" %}',
-                                text: data.message,
-                                icon: 'success',
-                                confirmButtonColor: 'var(--brand-primary)'
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                title: '{% trans "Error!" %}',
-                                text: data.message,
-                                icon: 'error',
-                                confirmButtonColor: 'var(--brand-primary)'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            title: '{% trans "System Error" %}',
-                            text: '{% trans "An unexpected error occurred." %}',
-                            icon: 'error',
-                            confirmButtonColor: 'var(--brand-primary)'
-                        });
-                    });
-                }
-            });
-        });
-    });
-});
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

@@ -14,7 +14,7 @@ fi
 
 # Apply database migrations
 echo "Generating database migrations..."
-python manage.py makemigrations user_auth dashboard frontend
+python manage.py makemigrations --noinput
 
 echo "Applying database migrations..."
 python manage.py migrate --noinput

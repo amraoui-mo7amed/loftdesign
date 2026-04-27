@@ -34,6 +34,8 @@ if APP_ENV == "production":
     DEBUG = False
 else:
     DEBUG = True
+    # Relax COOP for development over HTTP
+    SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 ALLOWED_HOSTS = APP_ALLOWED_HOSTS
 

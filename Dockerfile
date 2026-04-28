@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     netcat-traditional \
+    gettext \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -33,6 +34,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     libpq5 \
     netcat-traditional \
+    gettext \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy installed python packages from builder

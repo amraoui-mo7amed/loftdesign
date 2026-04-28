@@ -4,8 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.utils.translation import gettext as _
 from ..models import Order
+from dashboard.decorator import admin_required
 
-@login_required
+@admin_required
 def order_list(request):
     """View to list all orders"""
     status_filter = request.GET.get("status", "")
@@ -26,7 +27,7 @@ def order_list(request):
     }
     return render(request, "orders/list.html", context)
 
-@login_required
+@admin_required
 def order_update_status(request, pk):
     """AJAX view to update order status"""
     if request.method == "POST":
@@ -38,7 +39,7 @@ def order_update_status(request, pk):
             return JsonResponse({"success": True, "message": _("Order status updated")})
     return JsonResponse({"success": False}, status=400)
 
-@login_required
+@admin_required
 def order_delete(request, pk):
     """AJAX delete for order"""
     if request.method == "POST":

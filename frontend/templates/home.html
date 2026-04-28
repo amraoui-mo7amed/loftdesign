@@ -65,11 +65,7 @@
                     {{ site_config.tagline }}
                 </span>
                 <h1 class="display-1 fw-black text-white mb-4">
-                    {% if IS_RTL %}
-                        حوّل مساحتك إلى <span>تحفة فنية</span>
-                    {% else %}
-                        Transform Your Space Into a <span>Masterpiece</span>
-                    {% endif %}
+                    {% trans "Transform Your Space Into a " %}<span>{% trans "Masterpiece" %}</span>
                 </h1>
                 <p class="lead text-white-50 mb-5 mx-auto fs-4" style="max-width: 800px;">
                     {% trans "We combine elegance, functionality, and modern aesthetics to create living environments that reflect your personality." %}

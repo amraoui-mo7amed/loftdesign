@@ -16,12 +16,6 @@ def get_dashboard_menu():
             "admin_only": False,
         },
         {
-            "title": _("Users"),
-            "icon": "fas fa-users",
-            "url_name": "dash:user_list",
-            "admin_only": True,
-        },
-        {
             "title": _("Portfolio"),
             "icon": "fas fa-briefcase",
             "url_name": "dash:portfolio_list",

@@ -223,6 +223,38 @@
     z-index: 2;
 }
 
+/* Modern Soft Product Cards */
+.soft-glass-card {
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+}
+
+.hover-scale {
+    transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.soft-glass-card:hover .hover-scale {
+    transform: scale(1.1);
+}
+
+.rounded-4 {
+    border-radius: 20px !important;
+}
+
+.btn-outline-primary {
+    border-color: var(--brand-primary);
+    color: var(--brand-dark);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--brand-primary);
+    color: var(--brand-dark);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .display-1 {

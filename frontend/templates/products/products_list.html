@@ -1,0 +1,69 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} | {% trans "Products" %}{% endblock title %}
+
+{% block nav %}
+    {% include 'partials/landing-nav.html' %}
+{% endblock nav %}
+
+{% block sidebar %}{% endblock sidebar %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/products_list.css" %}?v={% now "U" %}">
+{% endblock extra_css %}
+
+{% block extra_js %}
+    <script src="{% static "js/products_list.js" %}?v={% now "U" %}"></script>
+{% endblock extra_js %}
+
+{% block content %}
+<section class="products-section bg-light">
+    <div class="container">
+        <div class="page-header-brutalist" data-aos="fade-down">
+            <h1 class="display-1 fw-black text-uppercase mb-3">{% trans "Our" %} <span class="text-primary">{% trans "Collection" %}</span></h1>
+            <p class="fs-4 fw-bold text-muted mb-0">{% trans "Premium furniture and accessories crafted for modern living." %}</p>
+        </div>
+
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-6">
+                <div class="brutalist-card" data-aos="fade-up">
+                    <div class="brutalist-img">
+                        {% if product.thumbnail %}
+                        <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="brutalist-body">
+                        {% if product.price %}
+                        <div class="brutalist-price-tag">{{ product.price }} $</div>
+                        {% endif %}
+                        <h2 class="brutalist-title" style="font-size: 1.4rem;">{{ product.title }}</h2>
+                        <p class="text-muted small line-height-relaxed mb-3">{{ product.description|truncatewords:15 }}</p>
+                        <div class="d-flex flex-column gap-2 mt-3">
+                            <a href="{% url 'frontend:product_detail' product.pk %}" class="brutalist-btn justify-content-center py-2 text-uppercase" style="font-size: 0.8rem;">
+                                {% trans "VIEW DETAILS" %}
+                            </a>
+                            {% if product.external_link %}
+                            <a href="{{ product.external_link }}" target="_blank" class="brutalist-btn justify-content-center py-2 text-uppercase" style="font-size: 0.8rem; background: var(--brand-primary); color: var(--brand-dark);">
+                                {% trans "Show in your workspace" %}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-10">
+                <h3 class="fw-black text-uppercase">{% trans "Nothing to show yet." %}</h3>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-5">
+            {% include 'components/pagination.html' with page_obj=products %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

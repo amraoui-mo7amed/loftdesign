@@ -6,6 +6,8 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/home.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/portfolio_list.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/products_list.css" %}?v={% now "U" %}">
 {% endblock extra_css %}
 
 {% block nav %}
@@ -172,7 +174,7 @@
                     <h2 class="display-4 fw-black mb-2">{% trans "Our Best Works" %}</h2>
                     <p class="text-muted">{% trans "Check out our latest interior design projects." %}</p>
                 </div>
-                <a href="{% url 'frontend:portfolio_list' %}" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Projects" %}</a>
+                <a href="{% url 'frontend:portfolio_list' %}" target="_blank" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Projects" %}</a>
             </div>
             <div class="row g-4">
                 {% for portfolio in latest_portfolios %}
@@ -182,7 +184,7 @@
                         <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
                             <h3 class="fw-black mb-2">{{portfolio.title}}</h3>
                             <p class="opacity-75">{{portfolio.description|truncatewords:10}}</p>
-                            <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
+                            <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}" target="_blank" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
                         </div>
                     </div>
                 </div>
@@ -193,46 +195,43 @@
 
     <!-- 5. Featured Products Section -->
     <section id="products" class="py-10 bg-white">
-        <div class="container">
+        <div class="container text-center">
             <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
                 <div>
                     <h2 class="display-4 fw-black mb-2">{% trans "Featured Collections" %}</h2>
                     <p class="text-muted">{% trans "Handpicked pieces from our latest interior projects." %}</p>
                 </div>
-                <a href="{% url 'frontend:product_list' %}" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Products" %}</a>
+                <a href="{% url 'frontend:product_list' %}" target="_blank" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Products" %}</a>
             </div>
             <div class="row g-4">
                 {% for product in latest_products %}
                 <div class="col-lg-3 col-md-6" data-aos="fade-up">
-                    <div class="product-card-v2 bg-white rounded-4 overflow-hidden shadow-sm h-100 transition-all hover-shadow-lg border border-light">
-                        <div class="position-relative">
+                    <div class="soft-glass-card h-100 shadow-sm border-0 rounded-4 overflow-hidden bg-white transition-all hover-lift" style="text-align: initial;">
+                        <div class="position-relative overflow-hidden" style="aspect-ratio: 1/1;">
                             {% if product.thumbnail %}
-                            <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" class="img-fluid w-100" style="height: 300px; object-fit: cover;">
+                            <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;">
                             {% endif %}
-                            <div class="product-overlay-actions position-absolute top-0 end-0 p-3 d-flex flex-column gap-2">
-                                <a href="{% url 'frontend:product_detail' product.pk %}" class="btn btn-white btn-sm rounded-circle shadow-sm hover-bg-primary hover-text-white transition-all" title="{% trans 'Quick View' %}">
-                                    <i class="fas fa-expand-alt"></i>
-                                </a>
-                                {% if product.external_link %}
-                                <a href="{{ product.external_link }}" target="_blank" class="btn btn-white btn-sm rounded-circle shadow-sm hover-bg-success hover-text-white transition-all" title="{% trans 'Buy Now' %}">
-                                    <i class="fas fa-shopping-cart"></i>
-                                </a>
-                                {% endif %}
-                            </div>
                             {% if product.price %}
-                            <div class="product-price-badge position-absolute bottom-0 start-0 m-3">
-                                <span class="badge bg-dark text-white px-3 py-2 rounded-pill fw-bold fs-6">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-black">
                                     {{ product.price }} $
                                 </span>
                             </div>
                             {% endif %}
                         </div>
                         <div class="p-4">
-                            <div class="mb-2">
-                                <span class="text-primary fw-bold text-uppercase small tracking-wider">{% trans "Collection" %}</span>
+                            <h5 class="fw-black mb-2">{{ product.title }}</h5>
+                            <p class="text-muted small mb-4 line-height-relaxed">{{ product.description|truncatewords:10 }}</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'frontend:product_detail' product.pk %}" target="_blank" class="btn btn-dark rounded-3 py-2 fw-bold small text-uppercase">
+                                    {% trans "View Details" %}
+                                </a>
+                                {% if product.external_link %}
+                                <a href="{{ product.external_link }}" target="_blank" class="btn btn-primary rounded-3 py-2 fw-bold small text-uppercase border-2">
+                                    {% trans "Show in your workspace" %}
+                                </a>
+                                {% endif %}
                             </div>
-                            <h5 class="fw-black mb-2 text-dark">{{ product.title }}</h5>
-                            <p class="text-muted small mb-0 line-height-relaxed">{{ product.description|truncatewords:12 }}</p>
                         </div>
                     </div>
                 </div>

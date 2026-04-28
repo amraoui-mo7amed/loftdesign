@@ -24,42 +24,56 @@
     <form method="POST" enctype="multipart/form-data" class="form" id="portfolioForm">
         {% csrf_token %}
         <div class="row g-4">
+            <!-- Main Details -->
             <div class="col-lg-8" data-aos="fade-right">
                 <div class="card border-0 shadow-sm rounded-4 p-4">
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "General Information" %}</h5>
+                    
                     <div class="mb-3">
                         <label class="form-label fw-bold">{% trans "Project Title" %}</label>
                         <input type="text" name="title" class="form-control" value="{{ values.title|default:'' }}" placeholder="{% trans 'Enter project title' %}" required>
                     </div>
+                    
                     <div class="mb-3">
                         <label class="form-label fw-bold">{% trans "Description" %}</label>
                         <textarea name="description" class="form-control" rows="6" placeholder="{% trans 'Project description' %}" required>{{ values.description|default:'' }}</textarea>
                     </div>
+                    
                     <div class="mb-0">
                         <label class="form-label fw-bold">{% trans "Tags" %}</label>
                         <input type="text" name="tags" class="form-control" value="{{ values.tags|default:'' }}" placeholder="{% trans 'Modern, Luxury, Minimalist' %}">
+                        <div class="form-text">{% trans "Separate tags with commas." %}</div>
                     </div>
                 </div>
                 
+                <!-- Gallery Section -->
                 <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
                     <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
                         <h5 class="fw-bold mb-0">{% trans "Project Gallery" %}</h5>
+                        <span class="badge bg-light text-primary">{% trans "Multiple Images" %}</span>
                     </div>
-                    <div class="file-drop-zone mb-3">
+
+                    <div class="file-drop-zone mb-3" id="galleryDropZone">
                         <i class="fas fa-images fa-3x"></i>
-                        <h6 class="fw-bold">{% trans "Drop gallery images here" %}</h6>
+                        <h6 class="fw-bold">{% trans "Drop your gallery images here" %}</h6>
+                        <p class="text-muted small">{% trans "Or click to browse your files" %}</p>
                         <input type="file" name="gallery_images" multiple class="d-none" accept="image/*">
                     </div>
-                    <div id="galleryPreviewContainer" class="preview-grid"></div>
+
+                    <div id="galleryPreviewContainer" class="preview-grid">
+                        <!-- Previews will be injected here via JS -->
+                    </div>
                 </div>
             </div>
 
+            <!-- Media & Actions -->
             <div class="col-lg-4" data-aos="fade-left">
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Primary Media" %}</h5>
+                    
                     <div class="mb-4">
                         <label class="form-label fw-bold">{% trans "Thumbnail" %}</label>
-                        <div class="file-drop-zone p-4">
+                        <div class="file-drop-zone p-4" id="thumbDropZone">
                             <div id="thumbPreviewContainer">
                                 <i class="fas fa-image fa-2x mb-2"></i>
                                 <p class="text-muted small mb-0">{% trans "Upload Thumbnail" %}</p>
@@ -67,6 +81,7 @@
                             <input type="file" name="thumbnail" class="d-none" accept="image/*" required>
                         </div>
                     </div>
+                    
                     <div class="mb-0">
                         <label class="form-label fw-bold">{% trans "360° View Image" %}</label>
                         <div class="input-group">
@@ -82,7 +97,9 @@
                         <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-lg">
                             <i class="fas fa-paper-plane me-2"></i> {% trans "Publish Project" %}
                         </button>
-                        <a href="{% url 'dash:portfolio_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border">{% trans "Cancel" %}</a>
+                        <a href="{% url 'dash:portfolio_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border">
+                            {% trans "Cancel" %}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -92,5 +109,6 @@
 {% endblock dashContent %}
 
 {% block extra_js %}
-    <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+
 {% endblock extra_js %}

@@ -1,13 +1,14 @@
 from django.urls import path
-from django.utils.translation import activate
-from django.http import HttpResponseRedirect
-from django.conf.urls.i18n import i18n_patterns
-from django.templatetags.static import static
-from django.urls import reverse
-from .views import main
+from .views import main, portfolio, products
 
 app_name = "frontend"
 
 urlpatterns = [
-    path('', main.home_view, name='home'),
+    path("", main.home_view, name="home"),
+    # Portfolio
+    path("portfolio/", portfolio.portfolio_list, name="portfolio_list"),
+    path("portfolio/<int:pk>/", portfolio.portfolio_detail, name="portfolio_detail"),
+    # Products
+    path("products/", products.product_list, name="product_list"),
+    path("products/<int:pk>/", products.product_detail, name="product_detail"),
 ]

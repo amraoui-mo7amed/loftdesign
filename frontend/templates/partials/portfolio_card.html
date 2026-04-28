@@ -1,0 +1,10 @@
+<div class="col-md-6" data-aos="zoom-in">
+    <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group">
+        <img src="{{ portfolio.thumbnail.url }}?auto=format&fit=crop&w=800&q=80" alt="Residential" class="img-fluid transition-all group-hover-scale">
+        <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
+            <h3 class="fw-black mb-2">{{portfolio.title}}</h3>
+            <p class="opacity-75">{{portfolio.description|truncatewords:10}}</p>
+            <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
+        </div>
+    </div>
+</div>

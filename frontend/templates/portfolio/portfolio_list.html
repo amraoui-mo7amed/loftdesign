@@ -1,0 +1,57 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} | {% trans "Portfolio" %}{% endblock title %}
+{% block nav %}
+{% include 'partials/landing-nav.html' %}
+{% endblock nav %}
+{% block sidebar %}{% endblock sidebar %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/portfolio_list.css" %}?v={% now "U" %}">
+{% endblock extra_css %}
+
+{% block extra_js %}
+    <script src="{% static "js/portfolio_list.js" %}?v={% now "U" %}"></script>
+{% endblock extra_js %}
+
+{% block content %}
+<section class="py-10 bg-light" style="margin-top: 70px;">
+    <div class="container">
+        <div class="page-header-brutalist" data-aos="fade-down">
+            <h1 class="display-1 fw-black text-uppercase mb-3">{% trans "Our" %} <span class="text-primary">{% trans "Projects" %}</span></h1>
+            <p class="fs-4 fw-bold text-muted mb-0">{% trans "A showcase of high-end interior solutions and architectural excellence." %}</p>
+        </div>
+
+        <div class="row g-5">
+            {% for portfolio in portfolios %}
+            <div class="col-lg-6">
+                <div class="brutalist-card" data-aos="fade-up">
+                    <div class="brutalist-img">
+                        {% if portfolio.thumbnail %}
+                        <img src="{{ portfolio.thumbnail.url }}" alt="{{ portfolio.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="brutalist-body">
+                        <div class="brutalist-tag">{% trans "Interior Design" %}</div>
+                        <h2 class="brutalist-title text-uppercase">{{ portfolio.title }}</h2>
+                        <p class="text-muted line-height-relaxed">{{ portfolio.description|truncatewords:25 }}</p>
+                        <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}" class="brutalist-btn">
+                            {% trans "EXPLORE PROJECT" %} <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-10">
+                <h3 class="fw-black text-uppercase">{% trans "Nothing to show yet." %}</h3>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-5">
+            {% include 'components/pagination.html' with page_obj=portfolios %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

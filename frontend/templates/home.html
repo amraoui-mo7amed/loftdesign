@@ -25,16 +25,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center gap-2">
                     <li class="nav-item">
-                        <a class="nav-link fw-bold" href="#about">{% trans "About" %}</a>
+                        <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#about">{% trans "About" %}</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#portfolio">{% trans "Portfolio" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-bold" href="#categories">{% trans "Services" %}</a>
+                        <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#products">{% trans "Products" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-bold" href="#products">{% trans "Products" %}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold" href="#contact">{% trans "Contact" %}</a>
+                        <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#contact">{% trans "Contact" %}</a>
                     </li>
                     <li class="nav-item ms-lg-3">
                         {% include 'partials/language_switcher.html' %}
@@ -164,36 +164,34 @@
         </div>
     </section>
 
-    <!-- 3. Categories Section -->
-    <section id="categories" class="py-10 bg-light">
+    <!-- 3. Portfolio Section -->
+    <section id="portfolio" class="py-10 bg-light">
         <div class="container text-center">
-            <h2 class="display-4 fw-black mb-5" data-aos="fade-up">{% trans "Our Design Specialties" %}</h2>
+            <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
+                <div>
+                    <h2 class="display-4 fw-black mb-2">{% trans "Our Best Works" %}</h2>
+                    <p class="text-muted">{% trans "Check out our latest interior design projects." %}</p>
+                </div>
+                <a href="{% url 'frontend:portfolio_list' %}" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Projects" %}</a>
+            </div>
             <div class="row g-4">
+                {% for portfolio in latest_portfolios %}
                 <div class="col-md-6" data-aos="zoom-in">
                     <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group">
-                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Residential" class="img-fluid transition-all group-hover-scale">
+                        <img src="{{ portfolio.thumbnail.url }}?auto=format&fit=crop&w=800&q=80" alt="Residential" class="img-fluid transition-all group-hover-scale">
                         <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
-                            <h3 class="fw-black mb-2">{% trans "Residential Design" %}</h3>
-                            <p class="opacity-75">{% trans "Homes, Apartments, and Villas" %}</p>
-                            <a href="#" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
+                            <h3 class="fw-black mb-2">{{portfolio.title}}</h3>
+                            <p class="opacity-75">{{portfolio.description|truncatewords:10}}</p>
+                            <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group">
-                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80" alt="Commercial" class="img-fluid transition-all group-hover-scale">
-                        <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
-                            <h3 class="fw-black mb-2">{% trans "Commercial Design" %}</h3>
-                            <p class="opacity-75">{% trans "Offices, Retail, and Restaurants" %}</p>
-                            <a href="#" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
 
-    <!-- 4. Featured Products Section -->
+    <!-- 5. Featured Products Section -->
     <section id="products" class="py-10 bg-white">
         <div class="container">
             <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
@@ -201,70 +199,44 @@
                     <h2 class="display-4 fw-black mb-2">{% trans "Featured Collections" %}</h2>
                     <p class="text-muted">{% trans "Handpicked pieces from our latest interior projects." %}</p>
                 </div>
-                <a href="#" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Products" %}</a>
+                <a href="{% url 'frontend:product_list' %}" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Products" %}</a>
             </div>
             <div class="row g-4">
+                {% for product in latest_products %}
                 <div class="col-lg-3 col-md-6" data-aos="fade-up">
-                    <div class="product-card border rounded-4 overflow-hidden shadow-sm">
-                        <div class="position-relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=800&q=80" alt="Lounge Chair" class="img-fluid">
-                            <div class="product-badge bg-primary text-secondary px-3 py-1 fw-bold position-absolute top-0 end-0 m-3 rounded-pill">{% trans "New" %}</div>
+                    <div class="product-card-v2 bg-white rounded-4 overflow-hidden shadow-sm h-100 transition-all hover-shadow-lg border border-light">
+                        <div class="position-relative">
+                            {% if product.thumbnail %}
+                            <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" class="img-fluid w-100" style="height: 300px; object-fit: cover;">
+                            {% endif %}
+                            <div class="product-overlay-actions position-absolute top-0 end-0 p-3 d-flex flex-column gap-2">
+                                <a href="{% url 'frontend:product_detail' product.pk %}" class="btn btn-white btn-sm rounded-circle shadow-sm hover-bg-primary hover-text-white transition-all" title="{% trans 'Quick View' %}">
+                                    <i class="fas fa-expand-alt"></i>
+                                </a>
+                                {% if product.external_link %}
+                                <a href="{{ product.external_link }}" target="_blank" class="btn btn-white btn-sm rounded-circle shadow-sm hover-bg-success hover-text-white transition-all" title="{% trans 'Buy Now' %}">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                            {% if product.price %}
+                            <div class="product-price-badge position-absolute bottom-0 start-0 m-3">
+                                <span class="badge bg-dark text-white px-3 py-2 rounded-pill fw-bold fs-6">
+                                    {{ product.price }} $
+                                </span>
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="p-4">
-                            <h5 class="fw-bold mb-1">{% trans "Nordic Lounge Chair" %}</h5>
-                            <p class="text-muted small">{% trans "Minimalist & Comfortable" %}</p>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <span class="fw-black text-primary fs-5">$450.00</span>
-                                <button class="btn btn-light rounded-circle"><i class="fas fa-shopping-cart"></i></button>
+                            <div class="mb-2">
+                                <span class="text-primary fw-bold text-uppercase small tracking-wider">{% trans "Collection" %}</span>
                             </div>
+                            <h5 class="fw-black mb-2 text-dark">{{ product.title }}</h5>
+                            <p class="text-muted small mb-0 line-height-relaxed">{{ product.description|truncatewords:12 }}</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="product-card border rounded-4 overflow-hidden shadow-sm">
-                        <div class="position-relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80" alt="Oak Dining Table" class="img-fluid">
-                        </div>
-                        <div class="p-4">
-                            <h5 class="fw-bold mb-1">{% trans "Oak Dining Table" %}</h5>
-                            <p class="text-muted small">{% trans "Solid Wood, 6-Seater" %}</p>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <span class="fw-black text-primary fs-5">$1,200.00</span>
-                                <button class="btn btn-light rounded-circle"><i class="fas fa-shopping-cart"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="product-card border rounded-4 overflow-hidden shadow-sm">
-                        <div class="position-relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80" alt="Minimalist Lamp" class="img-fluid">
-                        </div>
-                        <div class="p-4">
-                            <h5 class="fw-bold mb-1">{% trans "Golden Arc Lamp" %}</h5>
-                            <p class="text-muted small">{% trans "Ambient Lighting" %}</p>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <span class="fw-black text-primary fs-5">$180.00</span>
-                                <button class="btn btn-light rounded-circle"><i class="fas fa-shopping-cart"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="product-card border rounded-4 overflow-hidden shadow-sm">
-                        <div class="position-relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=800&q=80" alt="Modern Sofa" class="img-fluid">
-                        </div>
-                        <div class="p-4">
-                            <h5 class="fw-bold mb-1">{% trans "Velvet Master Bed" %}</h5>
-                            <p class="text-muted small">{% trans "Luxury Sleep Experience" %}</p>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <span class="fw-black text-primary fs-5">$2,800.00</span>
-                                <button class="btn btn-light rounded-circle"><i class="fas fa-shopping-cart"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>

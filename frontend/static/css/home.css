@@ -169,6 +169,60 @@
     text-align: center;
 }
 
+/* 4. Product Cards v2 */
+.product-card-v2 {
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.product-card-v2:hover {
+    transform: translateY(-8px);
+}
+
+.hover-shadow-lg:hover {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.product-overlay-actions {
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+}
+
+.product-card-v2:hover .product-overlay-actions {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+[dir="rtl"] .product-overlay-actions {
+    transform: translateX(-10px);
+}
+
+[dir="rtl"] .product-card-v2:hover .product-overlay-actions {
+    transform: translateX(0);
+}
+
+.btn-white {
+    background: #ffffff;
+    color: var(--brand-dark);
+    border: none;
+}
+
+.hover-bg-primary:hover {
+    background-color: var(--brand-primary) !important;
+}
+
+.hover-bg-success:hover {
+    background-color: var(--brand-success) !important;
+}
+
+.hover-text-white:hover {
+    color: #ffffff !important;
+}
+
+.product-price-badge {
+    z-index: 2;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .display-1 {

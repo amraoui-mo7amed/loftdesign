@@ -1,0 +1,107 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} | {{ portfolio.title }}{% endblock title %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/portfolio_list.css" %}?v={% now "U" %}">
+{% endblock extra_css %}
+
+{% block extra_js %}
+    <script src="{% static "js/portfolio_list.js" %}?v={% now "U" %}"></script>
+{% endblock extra_js %}
+
+{% block nav %}
+    {% include 'partials/landing-nav.html' %}
+{% endblock nav %}
+
+{% block sidebar %}{% endblock sidebar %}
+
+{% block content %}
+<section class="portfolio-section bg-light">
+    <div class="container">
+        <div class="page-header-brutalist mb-5" data-aos="fade-down">
+            <div class="brutalist-tag mb-3">{% trans "Project Details" %}</div>
+            <h1 class="display-3 fw-black text-uppercase mb-0">{{ portfolio.title }}</h1>
+        </div>
+
+        <div class="row g-5">
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="detail-main-img shadow-sm">
+                    {% if portfolio.thumbnail %}
+                    <img src="{{ portfolio.thumbnail.url }}" class="img-fluid w-100" alt="{{ portfolio.title }}">
+                    {% endif %}
+                </div>
+                
+                {% if portfolio.gallery_images.all %}
+                <div class="row g-3 mb-5">
+                    {% for img in portfolio.gallery_images.all %}
+                    <div class="col-md-4">
+                        <div class="gallery-grid-item h-100 shadow-sm">
+                            <img src="{{ img.image.url }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Gallery image">
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="detail-description-box shadow-sm mb-5">
+                    <h2 class="sidebar-title">{% trans "The Concept" %}</h2>
+                    <div class="text-muted fs-5 line-height-relaxed">
+                        {{ portfolio.description|linebreaks }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="portfolio-sidebar sticky-top" style="top: 100px;">
+                    <div class="detail-sidebar-box shadow-sm">
+                        <h4 class="sidebar-title">{% trans "Overview" %}</h4>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-3 d-flex flex-column justify-content-between align-items-start">
+                                <span class="fw-bold text-uppercase small">{% trans "Project" %}</span>
+                                <span class="fw-black">{{ portfolio.title }}</span>
+                            </li>
+                            <li class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-uppercase small">{% trans "Completed" %}</span>
+                                <span class="fw-black">{{ portfolio.created_at|date:"M Y" }}</span>
+                            </li>
+                            {% if portfolio.tags %}
+                            <li class="mt-4">
+                                <span class="fw-bold text-uppercase small d-block mb-3">{% trans "Expertise" %}</span>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for tag in portfolio.tags.split %}
+                                    <span class="brutalist-tag m-0">{{ tag|cut:"," }}</span>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    {% if portfolio.img_360 %}
+                    <div class="detail-sidebar-box bg-dark text-white text-center shadow-sm">
+                        <i class="fas fa-vr-cardboard fa-3x mb-3 text-primary"></i>
+                        <h5 class="fw-black text-uppercase">{% trans "360° Vision" %}</h5>
+                        <p class="small text-white-50 mb-4">{% trans "Immerse yourself in the space with our virtual tour." %}</p>
+                        <a href="{{ portfolio.img_360.url }}" target="_blank" class="brutalist-btn w-100 justify-content-center text-uppercase">
+                            {% trans "Launch Tour" %}
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="detail-sidebar-box bg-primary shadow-sm text-center">
+                        <h5 class="fw-black text-uppercase mb-3">{% trans "Start Your Journey" %}</h5>
+                        <p class="small fw-bold mb-4">{% trans "Ready to transform your own space into a masterpiece?" %}</p>
+                        <a href="{% url 'frontend:home' %}#contact" class="brutalist-btn w-100 justify-content-center text-uppercase">
+                            {% trans "Get in Touch" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+{% block footer %}{% endblock footer %}

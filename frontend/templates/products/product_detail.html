@@ -21,84 +21,99 @@
 {% block content %}
 <section class="products-section bg-light" style="margin-top: 70px;">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <!-- Product Showcase Viewer -->
-                <div class="viewer-container" data-aos="zoom-out">
-                    {% if product.thumbnail %}
-                    <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal" alt="{{ product.title }}">
-                    {% endif %}
-                    
-                    {% if product.external_link %}
-                    <a href="{{ product.external_link }}" target="_blank" class="floating-visualize-btn">
-                        <i class="fas fa-vr-cardboard"></i> {% trans "Show in your workspace" %}
-                    </a>
-                    {% endif %}
-                </div>
+        <div class="row g-5">
+            <!-- 1. Interactive Product Gallery (Left) -->
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="product-sticky-gallery sticky-top" style="top: 100px;">
+                    <div class="viewer-container rounded-5 shadow-2xl overflow-hidden mb-4">
+                        {% if product.thumbnail %}
+                        <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal" style="height: 650px; object-fit: cover;" alt="{{ product.title }}">
+                        {% endif %}
+                        
+                        {% if product.external_link %}
+                        <a href="{{ product.external_link }}" target="_blank" class="luxury-visualize-btn">
+                            <i class="fas fa-vr-cardboard"></i> {% trans "Show in your workspace" %}
+                        </a>
+                        {% endif %}
+                    </div>
 
-                <!-- Product Details Card -->
-                <div class="product-details-card scroll-reveal" data-aos="fade-up">
-                    <div class="row g-5">
-                        <div class="col-lg-7">
-                            <div class="mb-4">
-                                <span class="text-primary fw-bold text-uppercase small tracking-widest d-block mb-2">{% trans "Product Details" %}</span>
-                                <h1 class="display-3 fw-black text-uppercase mb-4">{{ product.title }}</h1>
-                                <div class="bg-primary" style="height: 4px; width: 80px;"></div>
+                    <!-- Detail Spec Box under Image -->
+                    <div class="product-spec-box shadow-sm bg-white p-5 rounded-4 border-0 scroll-reveal">
+                        <div class="row align-items-center">
+                            <div class="col-md-6 border-end">
+                                <span class="text-muted text-uppercase smaller fw-bold d-block mb-1">{% trans "Market Valuation" %}</span>
+                                <span class="display-5 fw-black text-dark">{{ product.price }} $</span>
                             </div>
-                            
-                            <div class="text-muted fs-5 line-height-relaxed mb-5">
-                                {{ product.description|linebreaks }}
-                            </div>
-
-                            <div class="d-flex flex-wrap gap-3">
-                                <a href="{% url 'frontend:product_list' %}" class="brutalist-btn rounded-pill px-5 text-uppercase">
-                                    {% trans "Back to Catalog" %}
-                                </a>
-                                <a href="mailto:{{ site_config.contact_email }}?subject={% trans 'Purchase Inquiry:' %} {{ product.title }}" class="btn btn-outline-primary border-2 rounded-pill px-5 py-2 fw-bold text-uppercase">
-                                    {% trans "Inquire Now" %}
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-5">
-                            <div class="product-spec-box shadow-sm">
-                                <h4 class="fw-black text-uppercase small mb-4 border-bottom pb-2">{% trans "Specifications" %}</h4>
-                                <ul class="list-unstyled mb-0">
-                                    <li class="mb-4 d-flex justify-content-between align-items-center">
-                                        <span class="text-muted text-uppercase small fw-bold">{% trans "Market Price" %}</span>
-                                        <span class="display-6 fw-black text-dark">{{ product.price }} $</span>
-                                    </li>
-                                    <li class="mb-4 d-flex justify-content-between align-items-center">
-                                        <span class="text-muted text-uppercase small fw-bold">{% trans "Status" %}</span>
-                                        <span class="badge bg-success text-white px-3 py-2 rounded-pill fw-bold">{% trans "Available" %}</span>
-                                    </li>
-                                    {% if product.tags %}
-                                    <li>
-                                        <span class="text-muted text-uppercase small d-block mb-3 fw-bold">{% trans "Categories" %}</span>
-                                        <div class="d-flex flex-wrap gap-2">
-                                            {% for tag in product.tags.split %}
-                                            <span class="badge bg-white text-primary border border-dark rounded-pill px-3 py-2 small fw-bold" style="font-size: 0.65rem;">{{ tag|cut:"," }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                                
-                                <div class="mt-5 pt-4 border-top">
-                                    <h6 class="fw-black text-uppercase small mb-3">{% trans "Direct Contact" %}</h6>
-                                    <div class="d-flex flex-column gap-2">
-                                        <div class="d-flex align-items-center gap-2 small">
-                                            <i class="fas fa-phone text-primary"></i>
-                                            <span class="fw-bold">{{ site_config.phone }}</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2 small">
-                                            <i class="fas fa-clock text-primary"></i>
-                                            <span class="fw-bold">{{ site_config.working_hours }}</span>
-                                        </div>
-                                    </div>
+                            <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
+                                <span class="text-muted text-uppercase smaller fw-bold d-block mb-2">{% trans "Availability" %}</span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="dot-pulse"></span>
+                                    <span class="fw-black text-uppercase small text-dark">{% trans "Limited Edition" %}</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Product Narrative & Inquiries (Right) -->
+            <div class="col-lg-5" data-aos="fade-left">
+                <div class="product-details-content p-2">
+                    <div class="mb-5">
+                        <span class="text-primary fw-bold text-uppercase small tracking-widest d-block mb-3">
+                            {% if product.category %}{{ product.category.name }}{% else %}{% trans "Bespoke Collection" %}{% endif %}
+                        </span>
+                        <h1 class="display-3 fw-black text-uppercase mb-4" style="line-height: 0.9;">{{ product.title }}</h1>
+                        <div class="bg-primary" style="height: 5px; width: 80px;"></div>
+                    </div>
+
+                    <div class="description-narrative mb-10">
+                        <h4 class="fw-black text-uppercase small mb-4 tracking-widest text-muted">{% trans "The Narrative" %}</h4>
+                        <div class="text-muted fs-4 line-height-relaxed">
+                            {{ product.description|linebreaks }}
+                        </div>
+                    </div>
+
+                    {% if product.tags %}
+                    <div class="mb-10">
+                        <h4 class="fw-black text-uppercase small mb-4 tracking-widest text-muted">{% trans "Design DNA" %}</h4>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for tag in product.tags.split %}
+                            <span class="badge bg-white text-dark rounded-pill px-4 py-3 small fw-bold border shadow-sm">{{ tag|cut:"," }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Fixed Inquiry Panel -->
+                    <div class="inquiry-panel bg-dark text-white p-5 rounded-4 shadow-2xl">
+                        <h3 class="fw-black text-uppercase mb-4 h4">{% trans "Direct Concierge" %}</h3>
+                        <p class="text-white-50 small mb-5">{% trans "Connect with our design specialists for personalized acquisition support." %}</p>
+                        
+                        <div class="d-flex flex-column gap-4 mb-5">
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="bg-primary text-dark p-3 rounded-3">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block smaller text-white-50 text-uppercase fw-bold">{% trans "Call Us" %}</span>
+                                    <span class="fw-black">{{ site_config.phone }}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="bg-primary text-dark p-3 rounded-3">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block smaller text-white-50 text-uppercase fw-bold">{% trans "Email Us" %}</span>
+                                    <span class="fw-black small">{{ site_config.contact_email }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="mailto:{{ site_config.contact_email }}?subject={% trans 'Inquiry:' %} {{ product.title }}" class="btn btn-primary w-100 rounded-pill py-3 fw-black text-uppercase tracking-wider">
+                            {% trans "Request Private Viewing" %}
+                        </a>
                     </div>
                 </div>
             </div>

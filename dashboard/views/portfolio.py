@@ -42,9 +42,7 @@ def portfolio_create(request):
         gallery_images = request.FILES.getlist("gallery_images")
         
         errors = {}
-        
-        if not all([title, description, thumbnail, external_link, gallery_images]):
-            errors["title"] = _("All fields are required")
+
 
         if errors:
             return JsonResponse({
@@ -98,8 +96,6 @@ def portfolio_update(request, pk):
         delete_images = request.POST.getlist("delete_images")
         
         errors = {}
-        if not all([title, description]):
-            errors["title"] = _("Title and Description are required")
 
         if errors:
             return JsonResponse({

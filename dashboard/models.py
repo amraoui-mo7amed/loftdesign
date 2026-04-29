@@ -54,12 +54,7 @@ class Portfolio(models.Model):
     thumbnail = models.ImageField(upload_to="portfolio/thumbnails/", verbose_name=_("Thumbnail"))
     description = models.TextField(verbose_name=_("Description"))
     tags = models.CharField(max_length=500, verbose_name=_("Tags"), help_text=_("Comma separated tags"))
-    img_360 = models.FileField(
-        upload_to="portfolio/360_images/", 
-        verbose_name=_("360 Degree Image"),
-        blank=True,
-        null=True
-    )
+    external_link = models.URLField(verbose_name=_("External Link"), blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"), null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated At"), null=True, blank=True)
 

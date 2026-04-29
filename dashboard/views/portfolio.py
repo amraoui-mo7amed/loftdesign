@@ -36,14 +36,14 @@ def portfolio_create(request):
         description = request.POST.get("description")
         tags = request.POST.get("tags")
         thumbnail = request.FILES.get("thumbnail")
-        img_360 = request.FILES.get("img_360")
+        external_link = request.POST.get("external_link")
         
         # Gallery images
         gallery_images = request.FILES.getlist("gallery_images")
         
         errors = {}
         
-        if not all([title, description, thumbnail, img_360, gallery_images]):
+        if not all([title, description, thumbnail, external_link, gallery_images]):
             errors["title"] = _("All fields are required")
 
         if errors:
@@ -58,7 +58,7 @@ def portfolio_create(request):
                     description=description,
                     tags=tags,
                     thumbnail=thumbnail,
-                    img_360=img_360
+                    external_link=external_link
                 )
                 
                 for img in gallery_images:
@@ -90,7 +90,7 @@ def portfolio_update(request, pk):
         description = request.POST.get("description")
         tags = request.POST.get("tags")
         thumbnail = request.FILES.get("thumbnail")
-        img_360 = request.FILES.get("img_360")
+        external_link = request.POST.get("external_link")
         
         # Gallery images (Add new ones)
         new_gallery_images = request.FILES.getlist("gallery_images")
@@ -115,8 +115,8 @@ def portfolio_update(request, pk):
                 
                 if thumbnail:
                     portfolio.thumbnail = thumbnail
-                if img_360:
-                    portfolio.img_360 = img_360
+                if external_link:
+                    portfolio.external_link = external_link
                 
                 portfolio.save()
                 

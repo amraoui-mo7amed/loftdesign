@@ -113,11 +113,14 @@
                         <span class="input-group-text bg-light border-end-0"><i class="fas fa-vr-cardboard text-primary"></i></span>
                         <input type="file" name="img_360" class="form-control" accept="image/*">
                     </div>
-                    {% if portfolio.img_360 %}
-                        <div class="mt-2 p-2 bg-success bg-opacity-10 rounded border border-success border-opacity-25 d-flex align-items-center gap-2">
-                            <i class="fas fa-check-circle text-light"></i>
-                            <span class="text-light small fw-bold">{% trans "360° Image Active" %}</span>
+                    {% if portfolio.external_link %}
+                        <div class="mb-0">
+                        <label class="form-label fw-bold">{% trans "External Link" %}</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-link text-primary"></i></span>
+                            <input type="text" name="external_link" class="form-control" value="{{ portfolio.external_link|default:'' }}" placeholder="{% trans 'Enter external link' %}">
                         </div>
+                    </div>
                     {% endif %}
                 </div>
 

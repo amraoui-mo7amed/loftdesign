@@ -141,7 +141,8 @@ USE_TZ = True
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 
-
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1258291200  # 1200MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1258291200  # 1200MB
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

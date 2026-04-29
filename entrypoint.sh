@@ -14,21 +14,21 @@ fi
 
 # Apply database migrations
 echo "Generating database migrations..."
-python manage.py makemigrations --noinput
+python3 manage.py makemigrations --noinput
 
 echo "Applying database migrations..."
-python manage.py migrate --noinput
+python3 manage.py migrate --noinput
 
 # Create default superuser
 echo "Creating default superuser..."
-python manage.py init_admin
+python3 manage.py init_admin
 
 # Collect static files
 echo "Collecting static files..."
-python manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
 
 # Create cache table if needed (optional)
-# python manage.py createcachetable
+# python3 manage.py createcachetable
 
 # Start server
 if [ "$APP_ENV" = "production" ]; then
@@ -39,5 +39,5 @@ else
     # We use daphne even in dev as requested, but we could also use manage.py runserver
     # For dev, we might want auto-reload. Daphne doesn't have it built-in like runserver.
     # But django-admin runserver uses daphne if installed and ASGI_APPLICATION is set.
-    exec python manage.py runserver 0.0.0.0:8000
+    exec python3 manage.py runserver 0.0.0.0:8000
 fi

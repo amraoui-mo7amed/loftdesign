@@ -32,9 +32,10 @@ SECRET_KEY = APP_SECRET
 # SECURITY WARNING: don't run with debug turned on in production!
 if APP_ENV == "production":
     DEBUG = False
+    SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
 else:
     DEBUG = True
-    # Relax COOP for development over HTTP
+    # Relax COOP for development over untrustworthy origins (like plain IP)
     SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 ALLOWED_HOSTS = APP_ALLOWED_HOSTS
@@ -186,3 +187,5 @@ EVENTSTREAM_REDIS = {
     "port": int(os.getenv("REDIS_PORT", 6379)),
     "db": 0,
 }
+
+

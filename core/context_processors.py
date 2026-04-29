@@ -19,8 +19,8 @@ def site_settings(request):
             "mobile": "+213 541960603",
             "working_hours": _("Lun-Ven: 09h - 18h"),
             "social": {
-                "facebook": "https://facebook.com/loftdesign",
-                "twitter": "https://twitter.com/loftdesign",
+                "facebook": "https://www.facebook.com/profile.php?id=100067199886406",
+                "twitter": "https://www.instagram.com/loftdesign_dz",
                 "instagram": "https://instagram.com/loftdesign",
             },
             "seo": {

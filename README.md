@@ -63,6 +63,86 @@ python manage.py makemessages -l ar
 python manage.py compilemessages
 ```
 
+## 🚀 Production Deployment (Nginx + Gunicorn + Systemd)
+
+Follow these steps to deploy the application on a Linux server (Ubuntu/Debian).
+
+### 1. Prerequisites
+```bash
+sudo apt update
+sudo apt install python3-pip python3-venv nginx git gettext -y
+```
+
+### 2. Service Configuration (Systemd)
+Create a systemd service file to manage Gunicorn:
+`sudo nano /etc/systemd/system/loftdesign.service`
+
+**Paste the following:**
+```ini
+[Unit]
+Description=Gunicorn instance to serve LOFT Design
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/home/mohamed/github/loftdesign
+Environment="PATH=/home/mohamed/github/loftdesign/venv/bin"
+ExecStart=/home/mohamed/github/loftdesign/venv/bin/gunicorn \
+    --access-logfile - \
+    --workers 3 \
+    --bind unix:/home/mohamed/github/loftdesign/loftdesign.sock \
+    core.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### 3. Nginx Configuration
+Create an Nginx server block:
+`sudo nano /etc/nginx/sites-available/loftdesign`
+
+**Paste the following (Replace `yourdomain.com` with your IP or domain):**
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    
+    location /static/ {
+        root /home/mohamed/github/loftdesign;
+    }
+
+    location /media/ {
+        root /home/mohamed/github/loftdesign;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/mohamed/github/loftdesign/loftdesign.sock;
+    }
+}
+```
+
+**Enable the configuration:**
+```bash
+sudo ln -s /etc/nginx/sites-available/loftdesign /etc/nginx/sites-enabled
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+### 4. Finalizing Deployment
+```bash
+# Start and enable the service
+sudo systemctl start loftdesign
+sudo systemctl enable loftdesign
+
+# Update permissions for Nginx to access the socket and static files
+sudo usermod -a -G mohamed www-data
+chmod 710 /home/mohamed
+```
+
 ## 🐳 Docker Deployment
 The project includes a production-ready `Dockerfile` with all necessary dependencies, including `gettext` for runtime translations.
 

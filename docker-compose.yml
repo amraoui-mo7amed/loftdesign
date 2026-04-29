@@ -22,10 +22,7 @@ services:
 
   web:
     build: .
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
+    restart: unless-stopped
     environment:
       - APP_ENV=${APP_ENV:-development}
       - APP_SECRET=${APP_SECRET:-django-insecure-change-me}

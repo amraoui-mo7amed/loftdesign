@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (galleryInput) {
         galleryInput.addEventListener('change', function() {
             // Clear previous previews for new uploads
-            galleryPreviewContainer.innerHTML = '';
+            // galleryPreviewContainer.innerHTML = '';
             
             const files = Array.from(this.files);
             files.forEach((file, index) => {

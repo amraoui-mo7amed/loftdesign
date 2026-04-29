@@ -147,13 +147,13 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # WhiteNoise: Configure compression and caching for static files
-STATICFILES_STORAGE = "whitenoise.storage.WhiteNoiseMiddleware"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

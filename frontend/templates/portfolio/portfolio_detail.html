@@ -43,8 +43,8 @@
                             <i class="fas fa-info-circle"></i> {% trans "Project Details" %}
                         </button>
 
-                        {% if portfolio.img_360 %}
-                        <a href="{{ portfolio.img_360.url }}" target="_blank" class="fixed-360-btn btn btn-primary rounded-pill">
+                        {% if portfolio.external_link %}
+                        <a href="{{ portfolio.external_link }}" target="_blank" class="fixed-360-btn btn btn-primary rounded-pill">
                             <i class="fas fa-vr-cardboard"></i> {% trans "View 360" %}
                         </a>
                         {% endif %}

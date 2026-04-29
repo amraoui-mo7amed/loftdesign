@@ -1,3 +1,4 @@
+from decouple import config
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from user_auth.models import UserProfile
@@ -6,9 +7,9 @@ class Command(BaseCommand):
     help = "Creates a default superuser if it doesn't exist"
 
     def handle(self, *args, **options):
-        username = "admin"
-        password = "1234"
-        email = "admin@example.com"
+        username = config("ADMIN_USERNAME")
+        password = config("ADMIN_PASSWORD")
+        email = config("ADMIN_EMAIL")
 
         if not User.objects.filter(username=username).exists():
             self.stdout.write(f"Creating superuser {username}...")

@@ -45,7 +45,7 @@
                         {% if user.is_authenticated %}
                             <a href="{% url 'dash:dash_home' %}" class="btn btn-dark rounded-pill px-4 fw-bold">{% trans "Dashboard" %}</a>
                         {% else %}
-                            <a href="{% url 'user_auth:signup' %}" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">{% trans "Get Started" %}</a>
+                            <a href="{% url 'user_auth:login' %}" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">{% trans "Login" %}</a>
                         {% endif %}
                     </li>
                 </ul>

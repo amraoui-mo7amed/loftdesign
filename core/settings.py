@@ -32,11 +32,8 @@ SECRET_KEY = APP_SECRET
 # SECURITY WARNING: don't run with debug turned on in production!
 if APP_ENV == "production":
     DEBUG = False
-    SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
 else:
     DEBUG = True
-    # Relax COOP for development over untrustworthy origins (like plain IP)
-    SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 ALLOWED_HOSTS = APP_ALLOWED_HOSTS
 
@@ -61,7 +58,7 @@ LOGOUT_URL = "user_auth:logout"
 ASGI_APPLICATION = "core.asgi.application"
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add this right after SecurityMiddleware
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",  # i18n
     "django.middleware.common.CommonMiddleware",
@@ -145,14 +142,20 @@ USE_TZ = True
 LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 
 
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.2/howto/static-files/
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "/static/"
-
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -176,10 +179,10 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default=None)
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default=None)
 DEFAULT_FROM_EMAIL = config("EMAIL_HOST_USER", default="no-reply@example.com")
-
 # EventStream Configuration
 EVENTSTREAM_CHANNELMANAGER_CLASS = "dashboard.channelmanager.NotificationChannelManager"
 EVENTSTREAM_STORAGE_CLASS = "django_eventstream.storage.DjangoModelStorage"
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS").split(",")
 
 # Redis Configuration for EventStream
 EVENTSTREAM_REDIS = {
@@ -187,5 +190,3 @@ EVENTSTREAM_REDIS = {
     "port": int(os.getenv("REDIS_PORT", 6379)),
     "db": 0,
 }
-
-

@@ -3,8 +3,6 @@ services:
     image: postgres:15-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - "5433:5432"
     environment:
       - POSTGRES_DB=${DB_NAME:-loftdesign}
       - POSTGRES_USER=${DB_USER:-postgres}
@@ -14,22 +12,23 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "6380:6379"
+    networks:
+      - app-network
 
   web:
     build: .
-    ports:
-      - "80:8000"
-      - "443:8000"
     restart: unless-stopped
+    expose:
+      - "8000"
     environment:
-      - APP_ENV=${APP_ENV:-development}
+      - APP_ENV=production
       - APP_SECRET=${APP_SECRET:-django-insecure-change-me}
-      - APP_ALLOWED_HOSTS=localhost,127.0.0.1,194.164.72.208
+      - APP_ALLOWED_HOSTS=localhost,127.0.0.1,194.164.72.208,loft-design.bilnov.com
       - DB_NAME=${DB_NAME:-loftdesign}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
@@ -44,6 +43,43 @@ services:
         condition: service_started
     env_file:
       - .env
+    volumes:
+      - mediafiles:/app/media
+      - staticfiles:/app/staticfiles
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - staticfiles:/app/staticfiles:ro
+      - mediafiles:/app/media:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    depends_on:
+      - web
+    networks:
+      - app-network
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+  mediafiles:
+  staticfiles:
+
+networks:
+  app-network:
+    driver: bridge

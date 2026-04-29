@@ -22,11 +22,13 @@ services:
 
   web:
     build: .
+    ports:
+      - "80:8000"
     restart: unless-stopped
     environment:
       - APP_ENV=${APP_ENV:-development}
       - APP_SECRET=${APP_SECRET:-django-insecure-change-me}
-      - APP_ALLOWED_HOSTS=${APP_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      - APP_ALLOWED_HOSTS=localhost,127.0.0.1,194.164.72.208
       - DB_NAME=${DB_NAME:-loftdesign}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-postgres}

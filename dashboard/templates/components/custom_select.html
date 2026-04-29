@@ -6,21 +6,33 @@
         {{ label }}
     </label>
     <div class="custom-select-display">
-        {% if select_title %}
-            {{ select_title }}
-        {% else %}
-            اختر عنصراً
-        {% endif %}
+        <span class="selected-text">
+            {% if select_title %}
+                {{ select_title }}
+            {% elif placeholder %}
+                {{ placeholder }}
+            {% else %}
+                {% trans "Select an option" %}
+            {% endif %}
+        </span>
         <span class="arrow">
             <i class="fas fa-caret-down"></i>
         </span>
     </div>
     <ul class="custom-select-list">
-        {% for value, text in choices %}
-            <li data-value="{{ value }}">
-                {{ text }}
-            </li>
-        {% endfor %}
+        {% if options %}
+            {% for opt in options %}
+                <li data-value="{{ opt.value }}">
+                    {{ opt.label }}
+                </li>
+            {% endfor %}
+        {% else %}
+            {% for value, text in choices %}
+                <li data-value="{{ value }}">
+                    {{ text }}
+                </li>
+            {% endfor %}
+        {% endif %}
     </ul>
     <input type="hidden" id="{{ id }}_input" name="{{ name }}" value="{{ value|default:'' }}" />
 </div>

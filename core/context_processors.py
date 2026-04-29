@@ -14,8 +14,9 @@ def site_settings(request):
             "tagline": _("Elevate Your Space with Modern Design"),
             "logo": f"{static_url}img/icon.jpeg",
             "favicon": f"{static_url}img/icon.jpeg",
-            "contact_email": "contact@loftdesign.com",
-            "phone": "+213 555 123 456",
+            "contact_email": "Loftdesign@live.fr",
+            "phone": "+213 776139475",
+            "mobile": "+213 541960603",
             "working_hours": _("Lun-Ven: 09h - 18h"),
             "social": {
                 "facebook": "https://facebook.com/loftdesign",

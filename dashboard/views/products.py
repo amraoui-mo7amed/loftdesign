@@ -5,7 +5,27 @@ from django.core.paginator import Paginator
 from django.utils.translation import gettext as _
 from django.db import transaction
 from django.urls import reverse
-from ..models import Product
+from ..models import Product, Category
+
+@login_required
+def category_create(request):
+    """AJAX view to create a new category"""
+    if request.method == "POST":
+        name = request.POST.get("name")
+        if not name:
+            return JsonResponse({"success": False, "errors": [_("Category name is required")]})
+        
+        try:
+            category = Category.objects.create(name=name)
+            return JsonResponse({
+                "success": True,
+                "message": _("Category created successfully"),
+                "category": {"id": category.id, "name": category.name},
+                "redirect_url": reverse("dash:product_list")
+            })
+        except Exception as e:
+            return JsonResponse({"success": False, "errors": [str(e)]})
+    return JsonResponse({"success": False}, status=400)
 
 @login_required
 def product_list(request):
@@ -20,9 +40,11 @@ def product_list(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     
+    categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
     context = {
         "page_obj": page_obj,
         "query": query,
+        "categories": categories,
         "title": _("Product Management")
     }
     return render(request, "products/list.html", context)
@@ -32,6 +54,7 @@ def product_create(request):
     """View to create a new product with AJAX"""
     if request.method == "POST":
         title = request.POST.get("title")
+        category_id = request.POST.get("category")
         description = request.POST.get("description")
         price = request.POST.get("price")
         external_link = request.POST.get("external_link")
@@ -48,8 +71,13 @@ def product_create(request):
             return JsonResponse({"success": False, "errors": errors})
 
         try:
+            category = None
+            if category_id:
+                category = Category.objects.get(id=category_id)
+
             Product.objects.create(
                 title=title,
+                category=category,
                 description=description,
                 price=price,
                 external_link=external_link,
@@ -64,8 +92,9 @@ def product_create(request):
             })
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
-            
-    return render(request, "products/create.html", {"values": {}})
+    
+    categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
+    return render(request, "products/create.html", {"categories": categories, "values": {}})
 
 @login_required
 def product_update(request, pk):
@@ -74,12 +103,18 @@ def product_update(request, pk):
     
     if request.method == "POST":
         product.title = request.POST.get("title")
+        category_id = request.POST.get("category")
         product.description = request.POST.get("description")
         product.price = request.POST.get("price")
         product.external_link = request.POST.get("external_link")
         product.tags = request.POST.get("tags")
         product.is_active = request.POST.get("is_active") == "on"
         
+        if category_id:
+            product.category = Category.objects.get(id=category_id)
+        else:
+            product.category = None
+
         if request.FILES.get("thumbnail"):
             product.thumbnail = request.FILES.get("thumbnail")
             
@@ -93,7 +128,8 @@ def product_update(request, pk):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
             
-    return render(request, "products/edit.html", {"product": product})
+    categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
+    return render(request, "products/edit.html", {"product": product, "categories": categories})
 
 @login_required
 def product_delete(request, pk):

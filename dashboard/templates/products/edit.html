@@ -30,13 +30,17 @@
                         <input type="text" name="title" class="form-control form-control-lg" value="{{ product.title }}" required>
                     </div>
                     <div class="mb-4">
+                        <label class="form-label fw-bold">{% trans "Category" %}</label>
+                        {% include "components/custom_select.html" with name="category" options=categories value=product.category.id placeholder=_("Select Category") %}
+                    </div>
+                    <div class="mb-4">
                         <label class="form-label fw-bold">{% trans "Full Description" %}</label>
                         <textarea name="description" class="form-control" rows="8" required>{{ product.description }}</textarea>
                     </div>
                     <div class="row mb-0">
                         <div class="col-md-6">
                             <label class="form-label fw-bold">{% trans "Price ($)" %}</label>
-                            <input type="number" name="price" step="0.01" class="form-control" value="{{ product.price }}" required>
+                            <input type="number" name="price" step="0.01" class="form-control" value="{{ product.price|stringformat:'.2f' }}" lang="en" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold">{% trans "Tags" %}</label>
@@ -83,7 +87,7 @@
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Actions" %}</h5>
                     <div class="d-flex flex-column gap-2">
                         <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-lg py-3">
-                            <i class="fas fa-save me-2"></i> {% trans "Save Updates" %}
+                            <i class="fas fa-save me-2"></i> {% trans "Save" %}
                         </button>
                         <a href="{% url 'dash:product_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border py-3">
                             {% trans "Cancel" %}

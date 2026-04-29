@@ -18,9 +18,39 @@
             <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Commerce" %}</h6>
             <h1 class="fw-black display-4 mb-0">{% trans "Products" %}</h1>
         </div>
-        <a href="{% url 'dash:product_create' %}" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-lg">
-            <i class="fas fa-plus me-2 text-primary"></i> {% trans "Add Product" %}
-        </a>
+        <div class="d-flex gap-3">
+            <button type="button" class="btn btn-outline-dark rounded-pill px-4 py-3 fw-bold" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                <i class="fas fa-folder-plus me-2"></i> {% trans "New Category" %}
+            </button>
+            <a href="{% url 'dash:product_create' %}" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-lg">
+                <i class="fas fa-plus me-2 text-primary"></i> {% trans "Add Product" %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-0 pt-4 px-4">
+                    <h5 class="fw-black text-uppercase">{% trans "Create Category" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 pb-4">
+                    {% include "partials/errorList.html" with form_id="categoryForm" %}
+                    <form id="categoryForm" class="form" method="POST" action="{% url 'dash:category_create' %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">{% trans "Category Name" %}</label>
+                            <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g. Modern Chairs" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-3 shadow">
+                            {% trans "Create Category" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row mb-5" data-aos="fade-up">
@@ -48,6 +78,9 @@
                 <div class="editorial-meta">
                     <span class="text-primary fw-bold fs-5">${{ product.price }}</span>
                     <span><i class="fas fa-shopping-bag me-1"></i> {{ product.orders.count }} {% trans "Leads" %}</span>
+                    {% if product.category %}
+                        <span class="badge bg-light text-primary border"><i class="fas fa-folder me-1"></i> {{ product.category.name }}</span>
+                    {% endif %}
                     {% if product.external_link %}
                     <span class="badge bg-light text-dark border"><i class="fas fa-external-link-alt me-1"></i> {% trans "Affiliate" %}</span>
                     {% endif %}

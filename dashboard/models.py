@@ -91,10 +91,31 @@ class PortfolioGallery(models.Model):
         return f"Image for {self.portfolio.title}"
 
 
+class Category(models.Model):
+    """Category model for products"""
+    name = models.CharField(max_length=255, verbose_name=_("Category Name"))
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     """Product model with external links for affiliate/direct sales"""
 
     title = models.CharField(max_length=255, verbose_name=_("Title"))
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="products",
+        verbose_name=_("Category")
+    )
     thumbnail = models.ImageField(upload_to="products/thumbnails/", verbose_name=_("Thumbnail"))
     description = models.TextField(verbose_name=_("Description"))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"), default=0.00)

@@ -30,13 +30,17 @@
                         <input type="text" name="title" class="form-control form-control-lg" placeholder="e.g. Modern Sofa" required>
                     </div>
                     <div class="mb-4">
+                        <label class="form-label fw-bold">{% trans "Category" %}</label>
+                        {% include "components/custom_select.html" with name="category" options=categories placeholder=_("Select Category") %}
+                    </div>
+                    <div class="mb-4">
                         <label class="form-label fw-bold">{% trans "Full Description" %}</label>
                         <textarea name="description" class="form-control" rows="8" placeholder="Product details, dimensions, materials..." required></textarea>
                     </div>
                     <div class="row mb-0">
                         <div class="col-md-6">
                             <label class="form-label fw-bold">{% trans "Price ($)" %}</label>
-                            <input type="number" name="price" step="0.01" class="form-control" placeholder="0.00" required>
+                            <input type="number" name="price" step="0.01" class="form-control" placeholder="0.00" lang="en" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold">{% trans "Tags" %}</label>

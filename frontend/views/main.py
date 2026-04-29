@@ -3,7 +3,7 @@ from dashboard.models import Portfolio, Product
 
 
 def home_view(request):
-    latest_portfolios = Portfolio.objects.all()[:4]
+    latest_portfolios = Portfolio.objects.all()[:2]
     latest_products = Product.objects.filter(is_active=True)[:4]
     context = {
         "latest_portfolios": latest_portfolios,

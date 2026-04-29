@@ -66,6 +66,67 @@
 }
 
 
+/* Brutalist Insight Section */
+.insight-brutalist-card {
+    background: white;
+    border: 3px solid var(--brand-dark);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    overflow: hidden;
+}
+
+.insight-brutalist-card:hover {
+    transform: translate(-5px, -5px);
+    box-shadow: 10px 10px 0px var(--brand-dark);
+}
+
+.insight-icon-box {
+    width: 60px;
+    height: 60px;
+    background: var(--brand-primary);
+    border: 2px solid var(--brand-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-dark);
+}
+
+.border-start-brutalist {
+    border-left: 3px solid var(--brand-dark);
+    background: #fafafa;
+}
+
+.brutalist-btn {
+    background: var(--brand-dark);
+    color: white;
+    padding: 12px 30px;
+    font-weight: 900;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.brutalist-btn:hover {
+    background: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.fw-black { font-weight: 900 !important; }
+.tracking-wider { letter-spacing: 0.1em; }
+.tracking-widest { letter-spacing: 0.3em; }
+
+[dir="rtl"] .border-start-brutalist {
+    border-left: none;
+    border-right: 3px solid var(--brand-dark);
+}
+
+[dir="rtl"] .insight-brutalist-card:hover {
+    transform: translate(5px, -5px);
+    box-shadow: -10px 10px 0px var(--brand-dark);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .welcome-section h2 {

@@ -58,7 +58,7 @@
 
 {% block content %}
     <!-- 1. Hero Section -->
-    <header class="hero-section" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1920&q=80');">
+    <header class="hero-section">
         <div class="container h-100 d-flex align-items-center justify-content-center text-center">
             <div class="hero-content" data-aos="fade-up">
                 <span class="badge bg-primary text-secondary px-3 py-2 rounded-pill mb-3 fw-bold text-uppercase tracking-wider">
@@ -117,46 +117,51 @@
                 <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="about-card p-5 border-0 rounded-4 h-100 transition-all hover-lift">
                         <div class="mb-4 d-inline-block p-4 bg-light rounded-circle text-primary">
-                            <i class="fas fa-medal fa-2x"></i>
+                            <i class="fas fa-vr-cardboard fa-2x"></i>
                         </div>
-                        <h4 class="fw-bold mb-3">{% trans "Master Craftsmanship" %}</h4>
+                        <h4 class="fw-bold mb-3">{% trans "360° Immersion" %}</h4>
                         <p class="text-muted fs-6 line-height-relaxed">
-                            {% trans "We partner with the best artisans and use premium materials to guarantee an exquisite finish that lasts a lifetime." %}
+                            {% trans "Project yourself even before the build. Thanks to our immersive technologies, explore your future space in 360° and experience your project before it comes to life." %}
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-10 row align-items-center g-5">
+            <div class="mt-10 row align-items-start g-5">
                 <div class="col-lg-6" data-aos="fade-right">
                     <div class="position-relative">
                         <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80" alt="Exquisite Interior" class="img-fluid rounded-4 shadow-2xl">
                         <div class="stats-float bg-primary text-secondary p-4 rounded-4 shadow-lg position-absolute top-0 end-0 m-n4 d-none d-md-block">
-                            <span class="h1 fw-black mb-0">500+</span>
+                            <span class="h1 fw-black mb-0">130+</span>
                             <p class="mb-0 small fw-bold">{% trans "Projects Completed" %}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-left">
-                    <h3 class="display-5 fw-bold mb-4">{% trans "Redefining the standards of modern luxury." %}</h3>
+                    <h3 class="display-5 fw-bold mb-4">{% trans "Designing spaces crafted for your well-being" %}</h3>
                     <p class="text-muted fs-5 mb-4">
-                        {% trans "Our journey began with a simple belief: that everyone deserves a space that inspires them. Today, LOFT Design is a leader in high-end architectural solutions, blending tradition with innovation." %}
+                        {% trans "At LOFT Design, we craft spaces where design meets everyday comfort. Every project is designed to adapt to your lifestyle, optimize your spaces, and create a harmonious, functional, and pleasant atmosphere to live in." %}
                     </p>
                     <ul class="list-unstyled d-flex flex-column gap-3 mb-5">
                         <li class="d-flex align-items-center gap-3">
                             <i class="fas fa-check-circle text-primary"></i>
-                            <span class="fw-bold text-dark">{% trans "Eco-friendly and sustainable material sourcing." %}</span>
+                            <span class="fw-bold text-dark">{% trans "Optimized layout for maximum comfort." %}</span>
                         </li>
                         <li class="d-flex align-items-center gap-3">
                             <i class="fas fa-check-circle text-primary"></i>
-                            <span class="fw-bold text-dark">{% trans "Smart home integration and architectural lighting." %}</span>
+                            <span class="fw-bold text-dark">{% trans "Modern, clean, and functional design." %}</span>
                         </li>
                         <li class="d-flex align-items-center gap-3">
                             <i class="fas fa-check-circle text-primary"></i>
-                            <span class="fw-bold text-dark">{% trans "Dedicated project managers for a stress-free journey." %}</span>
+                            <span class="fw-bold text-dark">{% trans "Integration of smart and immersive solutions (360°, 3D visualization)." %}</span>
                         </li>
+                        <li class="d-flex align-items-center gap-3">
+                            <i class="fas fa-check-circle text-primary"></i>
+                            <span class="fw-bold text-dark">{% trans "Personalized support, from concept to completion" %}</span>
+                        </li>
+
                     </ul>
-                    <a href="#contact" class="btn btn-outline-dark rounded-pill px-5 py-3 fw-bold">{% trans "Discover Our Process" %}</a>
+                    <a href="{% url 'frontend:portfolio_list' %}" class="btn btn-outline-dark rounded-pill px-5 py-3 fw-bold">{% trans "Discover Our Process" %}</a>
                 </div>
             </div>
         </div>
@@ -166,8 +171,8 @@
     <section id="portfolio" class="py-10 bg-light">
         <div class="container text-center">
             <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
-                <div>
-                    <h2 class="display-4 fw-black mb-2">{% trans "Our Best Works" %}</h2>
+                <div class="d-flex flex-column align-items-start">
+                    <h2 class="display-4 fw-black mb-2">{% trans "Our Works" %}</h2>
                     <p class="text-muted">{% trans "Check out our latest interior design projects." %}</p>
                 </div>
                 <a href="{% url 'frontend:portfolio_list' %}" target="_blank" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Projects" %}</a>
@@ -178,8 +183,6 @@
                     <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group">
                         <img src="{{ portfolio.thumbnail.url }}?auto=format&fit=crop&w=800&q=80" alt="Residential" class="img-fluid transition-all group-hover-scale">
                         <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
-                            <h3 class="fw-black mb-2">{{portfolio.title}}</h3>
-                            <p class="opacity-75">{{portfolio.description|truncatewords:10}}</p>
                             <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}" target="_blank" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
                         </div>
                     </div>
@@ -193,7 +196,7 @@
     <section id="products" class="py-10 bg-white">
         <div class="container text-center">
             <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
-                <div>
+                <div class="d-flex flex-column align-items-start">
                     <h2 class="display-4 fw-black mb-2">{% trans "Featured Collections" %}</h2>
                     <p class="text-muted">{% trans "Handpicked pieces from our latest interior projects." %}</p>
                 </div>
@@ -247,16 +250,25 @@
                     </p>
                     <div class="d-flex flex-column gap-4">
                         <div class="d-flex gap-3 align-items-center">
-                            <div class="bg-primary text-secondary p-3 rounded-circle">
+                            <div class="bg-primary text-secondary p-3 rounded-3">
                                 <i class="fas fa-phone-alt"></i>
                             </div>
                             <div>
                                 <h6 class="mb-0 fw-bold">{% trans "Call Us" %}</h6>
                                 <p class="mb-0 text-white-50">{{ site_config.phone }}</p>
                             </div>
+                        </div><div class="d-flex gap-3 align-items-center">
+                            <div class="bg-primary text-secondary p-3 rounded-3">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">{% trans "Call Us" %}</h6>
+                                <p class="mb-0 text-white-50">{{ site_config.mobile }}</p>
+                            </div>
                         </div>
+
                         <div class="d-flex gap-3 align-items-center">
-                            <div class="bg-primary text-secondary p-3 rounded-circle">
+                            <div class="bg-primary text-secondary p-3 rounded-3">
                                 <i class="fas fa-envelope"></i>
                             </div>
                             <div>

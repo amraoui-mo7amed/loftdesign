@@ -1,0 +1,33 @@
+{% load i18n %}
+<div class="soft-glass-card h-100 shadow-sm border-0 rounded-4 overflow-hidden bg-white transition-all hover-lift"
+     style="text-align: initial">
+    <div class="position-relative overflow-hidden" style="aspect-ratio: 1/1;">
+        {% if product.thumbnail %}
+            <img src="{{ product.thumbnail.url }}"
+                 alt="{{ product.title }}"
+                 class="img-fluid w-100 h-100 transition-all hover-scale"
+                 style="object-fit: cover">
+        {% endif %}
+        {% if product.price %}
+            <div class="position-absolute bottom-0 width-100 m-3">
+                <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-black">{{ product.price }} $</span>
+            </div>
+        {% endif %}
+    </div>
+    <div class="p-4">
+        <h5 class="fw-black mb-2">{{ product.title }}</h5>
+        <p class="text-muted small mb-4 line-height-relaxed">{{ product.description|truncatewords:10 }}</p>
+        <div class="d-grid gap-2">
+            <a href="{% url 'frontend:product_detail' product.pk %}"
+               target="_blank"
+               class="btn btn-dark rounded-3 py-2 fw-bold small text-uppercase">{% trans "View Details" %}</a>
+            {% if product.external_link %}
+                <a href="{{ product.external_link }}"
+                   target="_blank"
+                   class="btn btn-primary rounded-3 py-2 fw-bold small text-uppercase border-2">
+                    {% trans "Show in your workspace" %}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -81,38 +81,8 @@
             <div class="col-lg-9">
                 <div class="row g-4">
                     {% for product in products %}
-                    <div class="col-md-6 col-xl-4" data-aos="fade-up">
-                        <div class="product-grid-card">
-                            <div class="product-grid-img">
-                                {% if product.thumbnail %}
-                                <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}">
-                                {% endif %}
-                                {% if product.price %}
-                                <div class="position-absolute top-0 end-0 m-3">
-                                    <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-black">
-                                        {{ product.price }} $
-                                    </span>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div class="p-4 text-center">
-                                <span class="text-primary fw-bold text-uppercase small tracking-widest d-block mb-2">
-                                    {% if product.category %}{{ product.category.name }}{% else %}{% trans "Exclusive" %}{% endif %}
-                                </span>
-                                <h4 class="fw-black mb-3 text-dark text-uppercase" style="font-size: 1.1rem; height: 2.2rem; overflow: hidden;">{{ product.title }}</h4>
-                                
-                                <div class="d-grid gap-2">
-                                    <a href="{% url 'frontend:product_detail' product.pk %}" class="btn btn-dark pill-btn py-2">
-                                        {% trans "View Details" %}
-                                    </a>
-                                    {% if product.external_link %}
-                                    <a href="{{ product.external_link }}" target="_blank" class="btn btn-outline-primary border-2 pill-btn py-2">
-                                        {% trans "Show in workspace" %}
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-lg-4 col-md-6">
+                        {% include "partials/product_card.html" %}
                     </div>
                     {% empty %}
                     <div class="col-12 text-center py-10">

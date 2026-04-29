@@ -1,27 +1,39 @@
 {% extends 'index.html' %}
 {% load i18n %}
 {% load static %}
-
-{% block body_class %}landing-page{% endblock body_class %}
-
+{% block body_class %}
+    landing-page
+{% endblock body_class %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/home.css" %}?v={% now "U" %}">
-    <link rel="stylesheet" href="{% static "css/portfolio_list.css" %}?v={% now "U" %}">
-    <link rel="stylesheet" href="{% static "css/products_list.css" %}?v={% now "U" %}">
+    <link rel="stylesheet"
+          href="{% static "css/portfolio_list.css" %}?v={% now "U" %}">
+    <link rel="stylesheet"
+          href="{% static "css/products_list.css" %}?v={% now "U" %}">
 {% endblock extra_css %}
-
 {% block nav %}
-    <nav class="navbar navbar-expand-lg bg-white navbar-light fixed-top transition-all" id="landingNav">
+    <nav class="navbar navbar-expand-lg bg-white navbar-light fixed-top transition-all"
+         id="landingNav">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="/">
                 {% if site_config.logo %}
-                    <img src="{{ site_config.logo }}" alt="Logo" style="height: 40px;" class="rounded">
+                    <img src="{{ site_config.logo }}"
+                         alt="Logo"
+                         style="height: 40px"
+                         class="rounded">
                 {% endif %}
                 <span class="fw-black fs-4 {% if not site_config.logo %}text-dark{% endif %}">
-                    {% if IS_RTL %}{{ site_config.ar_name }}{% else %}{{ site_config.name }}{% endif %}
+                    {% if IS_RTL %}
+                        {{ site_config.ar_name }}
+                    {% else %}
+                        {{ site_config.name }}
+                    {% endif %}
                 </span>
             </a>
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0 shadow-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -29,7 +41,7 @@
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#about">{% trans "About" %}</a>
                     </li>
-                     <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#portfolio">{% trans "Portfolio" %}</a>
                     </li>
                     <li class="nav-item">
@@ -38,14 +50,14 @@
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#contact">{% trans "Contact" %}</a>
                     </li>
-                    <li class="nav-item ms-lg-3">
-                        {% include 'partials/language_switcher.html' %}
-                    </li>
+                    <li class="nav-item ms-lg-3">{% include 'partials/language_switcher.html' %}</li>
                     <li class="nav-item ms-lg-2">
                         {% if user.is_authenticated %}
-                            <a href="{% url 'dash:dash_home' %}" class="btn btn-dark rounded-pill px-4 fw-bold">{% trans "Dashboard" %}</a>
+                            <a href="{% url 'dash:dash_home' %}"
+                               class="btn btn-dark rounded-pill px-4 fw-bold">{% trans "Dashboard" %}</a>
                         {% else %}
-                            <a href="{% url 'user_auth:login' %}" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">{% trans "Login" %}</a>
+                            <a href="{% url 'user_auth:login' %}"
+                               class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">{% trans "Login" %}</a>
                         {% endif %}
                     </li>
                 </ul>
@@ -53,9 +65,8 @@
         </div>
     </nav>
 {% endblock nav %}
-
-{% block sidebar %}{% endblock sidebar %}
-
+{% block sidebar %}
+{% endblock sidebar %}
 {% block content %}
     <!-- 1. Hero Section -->
     <header class="hero-section">
@@ -67,21 +78,20 @@
                 <h1 class="display-1 fw-black text-white mb-4">
                     {% trans "Transform Your Space Into a " %}<span>{% trans "Masterpiece" %}</span>
                 </h1>
-                <p class="lead text-white-50 mb-5 mx-auto fs-4" style="max-width: 800px;">
+                <p class="lead text-white-50 mb-5 mx-auto fs-4" style="max-width: 800px">
                     {% trans "We combine elegance, functionality, and modern aesthetics to create living environments that reflect your personality." %}
                 </p>
                 <div class="d-flex flex-wrap justify-content-center gap-3">
-                    <a href="#contact" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-lg">
+                    <a href="#contact"
+                       class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-lg">
                         {% trans "Book a Consultation" %}
                     </a>
-                    <a href="#products" class="btn btn-outline-light btn-lg rounded-pill px-5 fw-bold">
-                        {% trans "Explore Gallery" %}
-                    </a>
+                    <a href="#products"
+                       class="btn btn-outline-light btn-lg rounded-pill px-5 fw-bold">{% trans "Explore Gallery" %}</a>
                 </div>
             </div>
         </div>
     </header>
-
     <!-- 2. Why Choose Us Section -->
     <section id="about" class="py-10 bg-white">
         <div class="container">
@@ -90,7 +100,6 @@
                 <h2 class="display-3 fw-black mb-4">{% trans "Crafting Spaces, Shaping Emotions" %}</h2>
                 <div class="mx-auto bg-primary" style="height: 4px; width: 80px;"></div>
             </div>
-            
             <div class="row g-4 mt-4">
                 <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="about-card p-5 border-0 rounded-4 h-100 transition-all hover-lift">
@@ -126,11 +135,12 @@
                     </div>
                 </div>
             </div>
-
             <div class="mt-10 row align-items-start g-5">
                 <div class="col-lg-6" data-aos="fade-right">
                     <div class="position-relative">
-                        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80" alt="Exquisite Interior" class="img-fluid rounded-4 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80"
+                             alt="Exquisite Interior"
+                             class="img-fluid rounded-4 shadow-2xl">
                         <div class="stats-float bg-primary text-secondary p-4 rounded-4 shadow-lg position-absolute top-0 end-0 m-n4 d-none d-md-block">
                             <span class="h1 fw-black mb-0">130+</span>
                             <p class="mb-0 small fw-bold">{% trans "Projects Completed" %}</p>
@@ -159,86 +169,99 @@
                             <i class="fas fa-check-circle text-primary"></i>
                             <span class="fw-bold text-dark">{% trans "Personalized support, from concept to completion" %}</span>
                         </li>
-
                     </ul>
-                    <a href="{% url 'frontend:portfolio_list' %}" class="btn btn-outline-dark rounded-pill px-5 py-3 fw-bold">{% trans "Discover Our Process" %}</a>
+                    <a href="{% url 'frontend:portfolio_list' %}"
+                       class="btn btn-outline-dark rounded-pill px-5 py-3 fw-bold">{% trans "Discover Our Process" %}</a>
                 </div>
             </div>
         </div>
     </section>
-
     <!-- 3. Portfolio Section -->
     <section id="portfolio" class="py-10 bg-light">
         <div class="container text-center">
-            <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
+            <div class="d-flex justify-content-between align-items-end mb-5"
+                 data-aos="fade-up">
                 <div class="d-flex flex-column align-items-start">
                     <h2 class="display-4 fw-black mb-2">{% trans "Our Works" %}</h2>
                     <p class="text-muted">{% trans "Check out our latest interior design projects." %}</p>
                 </div>
-                <a href="{% url 'frontend:portfolio_list' %}" target="_blank" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Projects" %}</a>
+                <a href="{% url 'frontend:portfolio_list' %}"
+                   target="_blank"
+                   class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Projects" %}</a>
             </div>
             <div class="row g-4">
                 {% for portfolio in latest_portfolios %}
-                <div class="col-md-6" data-aos="zoom-in">
-                    <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group">
-                        <img src="{{ portfolio.thumbnail.url }}?auto=format&fit=crop&w=800&q=80" alt="Residential" class="img-fluid transition-all group-hover-scale">
-                        <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
-                            <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}" target="_blank" class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
+                    <div class="col-md-6" data-aos="zoom-in">
+                        <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group">
+                            <img src="{{ portfolio.thumbnail.url }}?auto=format&fit=crop&w=800&q=80"
+                                 alt="Residential"
+                                 class="img-fluid transition-all group-hover-scale">
+                            <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
+                                <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}"
+                                   target="_blank"
+                                   class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
+                            </div>
                         </div>
                     </div>
-                </div>
                 {% endfor %}
             </div>
         </div>
     </section>
-
     <!-- 5. Featured Products Section -->
     <section id="products" class="py-10 bg-white">
         <div class="container text-center">
-            <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
+            <div class="d-flex justify-content-between align-items-end mb-5"
+                 data-aos="fade-up">
                 <div class="d-flex flex-column align-items-start">
                     <h2 class="display-4 fw-black mb-2">{% trans "Featured Collections" %}</h2>
                     <p class="text-muted">{% trans "Handpicked pieces from our latest interior projects." %}</p>
                 </div>
-                <a href="{% url 'frontend:product_list' %}" target="_blank" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Products" %}</a>
+                <a href="{% url 'frontend:product_list' %}"
+                   target="_blank"
+                   class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">{% trans "View All Products" %}</a>
             </div>
             <div class="row g-4">
                 {% for product in latest_products %}
-                <div class="col-lg-3 col-md-6" data-aos="fade-up">
-                    <div class="soft-glass-card h-100 shadow-sm border-0 rounded-4 overflow-hidden bg-white transition-all hover-lift" style="text-align: initial;">
-                        <div class="position-relative overflow-hidden" style="aspect-ratio: 1/1;">
-                            {% if product.thumbnail %}
-                            <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;">
-                            {% endif %}
-                            {% if product.price %}
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-black">
-                                    {{ product.price }} $
-                                </span>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="p-4">
-                            <h5 class="fw-black mb-2">{{ product.title }}</h5>
-                            <p class="text-muted small mb-4 line-height-relaxed">{{ product.description|truncatewords:10 }}</p>
-                            <div class="d-grid gap-2">
-                                <a href="{% url 'frontend:product_detail' product.pk %}" target="_blank" class="btn btn-dark rounded-3 py-2 fw-bold small text-uppercase">
-                                    {% trans "View Details" %}
-                                </a>
-                                {% if product.external_link %}
-                                <a href="{{ product.external_link }}" target="_blank" class="btn btn-primary rounded-3 py-2 fw-bold small text-uppercase border-2">
-                                    {% trans "Show in your workspace" %}
-                                </a>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                        <div class="soft-glass-card h-100 shadow-sm border-0 rounded-4 overflow-hidden bg-white transition-all hover-lift"
+                             style="text-align: initial">
+                            <div class="position-relative overflow-hidden" style="aspect-ratio: 1/1;">
+                                {% if product.thumbnail %}
+                                    <img src="{{ product.thumbnail.url }}"
+                                         alt="{{ product.title }}"
+                                         class="img-fluid w-100 h-100 transition-all hover-scale"
+                                         style="object-fit: cover">
                                 {% endif %}
+                                {% if product.price %}
+                                    <div class="position-absolute top-0 end-0 m-3">
+                                        <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-black">{{ product.price }} $</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="p-4">
+                                <h5 class="fw-black mb-2">{{ product.title }}</h5>
+                                <p class="text-muted small mb-4 line-height-relaxed">{{ product.description|truncatewords:10 }}</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'frontend:product_detail' product.pk %}"
+                                       target="_blank"
+                                       class="btn btn-dark rounded-3 py-2 fw-bold small text-uppercase">
+                                        {% trans "View Details" %}
+                                    </a>
+                                    {% if product.external_link %}
+                                        <a href="{{ product.external_link }}"
+                                           target="_blank"
+                                           class="btn btn-primary rounded-3 py-2 fw-bold small text-uppercase border-2">
+                                            {% trans "Show in your workspace" %}
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 {% endfor %}
             </div>
         </div>
     </section>
-
     <!-- 5. Contact Section -->
     <section id="contact" class="py-10 bg-dark text-white">
         <div class="container">
@@ -257,7 +280,8 @@
                                 <h6 class="mb-0 fw-bold">{% trans "Call Us" %}</h6>
                                 <p class="mb-0 text-white-50">{{ site_config.phone }}</p>
                             </div>
-                        </div><div class="d-flex gap-3 align-items-center">
+                        </div>
+                        <div class="d-flex gap-3 align-items-center">
                             <div class="bg-primary text-secondary p-3 rounded-3">
                                 <i class="fas fa-phone-alt"></i>
                             </div>
@@ -266,7 +290,6 @@
                                 <p class="mb-0 text-white-50">{{ site_config.mobile }}</p>
                             </div>
                         </div>
-
                         <div class="d-flex gap-3 align-items-center">
                             <div class="bg-primary text-secondary p-3 rounded-3">
                                 <i class="fas fa-envelope"></i>
@@ -300,10 +323,13 @@
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label text-dark">{% trans "Message" %}</label>
-                                    <textarea class="form-control" rows="4" placeholder="{% trans 'Tell us about your dream space...' %}"></textarea>
+                                    <textarea class="form-control"
+                                              rows="4"
+                                              placeholder="{% trans 'Tell us about your dream space...' %}"></textarea>
                                 </div>
                                 <div class="col-12 mt-4">
-                                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-lg">
+                                    <button type="submit"
+                                            class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-lg">
                                         {% trans "Send Inquiry" %}
                                     </button>
                                 </div>
@@ -314,9 +340,7 @@
             </div>
         </div>
     </section>
-
 {% endblock content %}
-
 {% block footer %}
     <footer class="bg-dark py-5 border-top border-secondary border-opacity-10">
         <div class="container">
@@ -324,9 +348,18 @@
                 <div class="col-lg-4">
                     <a class="navbar-brand d-flex align-items-center gap-2 mb-4" href="/">
                         {% if site_config.logo %}
-                            <img src="{{ site_config.logo }}" alt="Logo" style="height: 40px;" class="rounded filter-grayscale">
+                            <img src="{{ site_config.logo }}"
+                                 alt="Logo"
+                                 style="height: 40px"
+                                 class="rounded filter-grayscale">
                         {% endif %}
-                        <span class="fw-black fs-4 text-white">{% if IS_RTL %}{{ site_config.ar_name }}{% else %}{{ site_config.name }}{% endif %}</span>
+                        <span class="fw-black fs-4 text-white">
+                            {% if IS_RTL %}
+                                {{ site_config.ar_name }}
+                            {% else %}
+                                {{ site_config.name }}
+                            {% endif %}
+                        </span>
                     </a>
                     <p class="text-white-50">
                         {% trans "Redefining modern living through innovative design and premium craftsmanship." %}
@@ -335,31 +368,43 @@
                 <div class="col-lg-2 offset-lg-2">
                     <h6 class="text-white fw-bold mb-4 text-uppercase tracking-wider">{% trans "Quick Links" %}</h6>
                     <ul class="list-unstyled d-flex flex-column gap-2 text-white-50">
-                        <li><a href="#about" class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "About" %}</a></li>
-                        <li><a href="#categories" class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "Services" %}</a></li>
-                        <li><a href="#products" class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "Projects" %}</a></li>
+                        <li>
+                            <a href="#about"
+                               class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "About" %}</a>
+                        </li>
+                        <li>
+                            <a href="#categories"
+                               class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "Services" %}</a>
+                        </li>
+                        <li>
+                            <a href="#products"
+                               class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "Projects" %}</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-lg-4">
                     <h6 class="text-white fw-bold mb-4 text-uppercase tracking-wider">{% trans "Follow Us" %}</h6>
                     <div class="d-flex gap-3">
-                        <a href="{{ site_config.social.facebook }}" class="btn btn-outline-light rounded-circle p-2" style="width: 40px; height: 40px;"><i class="fab fa-facebook-f"></i></a>
-                        <a href="{{ site_config.social.instagram }}" class="btn btn-outline-light rounded-circle p-2" style="width: 40px; height: 40px;"><i class="fab fa-instagram"></i></a>
+                        <a href="{{ site_config.social.facebook }}"
+                           class="btn btn-outline-light rounded-circle p-2"
+                           style="width: 40px;
+                                  height: 40px"><i class="fab fa-facebook-f"></i></a>
+                        <a href="{{ site_config.social.instagram }}"
+                           class="btn btn-outline-light rounded-circle p-2"
+                           style="width: 40px;
+                                  height: 40px"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
             <hr class="border-secondary border-opacity-25 mb-4">
             <div class="text-center">
-                <p class="text-white-50 small mb-0">
-                    &copy; {% now "Y" %} {{ site_config.name }}. {% trans "All rights reserved." %}
-                </p>
+                <p class="text-white-50 small mb-0">&copy; {% now "Y" %} {{ site_config.name }}. {% trans "All rights reserved." %}</p>
             </div>
         </div>
     </footer>
 {% endblock footer %}
-
 {% block extra_js %}
-<script>
+    <script>
     document.addEventListener('scroll', () => {
         const nav = document.getElementById('landingNav');
         if (window.scrollY > 50) {
@@ -370,5 +415,5 @@
             nav.classList.add('py-4');
         }
     });
-</script>
+    </script>
 {% endblock extra_js %}

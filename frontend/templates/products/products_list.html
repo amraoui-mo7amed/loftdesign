@@ -28,6 +28,20 @@
                 <div class="filter-sidebar mb-4">
                     <form method="GET" action="{% url 'frontend:product_list' %}">
                         <div class="mb-5">
+                            <h5 class="filter-title">{% trans "Search" %}</h5>
+                            <div class="input-group search-filter-group shadow-sm rounded-3 overflow-hidden">
+                                <span class="input-group-text border-0 bg-white">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" 
+                                       name="q" 
+                                       value="{{ query|default:'' }}" 
+                                       class="form-control border-0" 
+                                       placeholder="{% trans 'Search products...' %}">
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
                             <h5 class="filter-title">{% trans "Categories" %}</h5>
                             <ul class="category-filter-list">
                                 <li class="category-filter-item {% if not current_category %}active{% endif %}">
@@ -68,7 +82,7 @@
                         <button type="submit" class="btn btn-dark w-100 pill-btn py-3">
                             {% trans "Apply Filters" %}
                         </button>
-                        {% if current_category or min_price or max_price %}
+                        {% if current_category or min_price or max_price or query %}
                             <a href="{% url 'frontend:product_list' %}" class="btn btn-link text-muted w-100 mt-2 text-decoration-none small">
                                 {% trans "Clear All" %}
                             </a>

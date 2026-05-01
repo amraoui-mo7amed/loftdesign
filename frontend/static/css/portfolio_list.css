@@ -82,11 +82,6 @@
     box-shadow: 4px 4px 0px var(--brand-dark);
 }
 
-.page-header-brutalist {
-    border-bottom: 4px solid var(--brand-dark);
-    margin-bottom: 60px;
-    padding-bottom: 40px;
-}
 
 /* Viewer Styles - Modern Soft Update */
 .viewer-container {

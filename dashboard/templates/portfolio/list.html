@@ -43,7 +43,7 @@
         {% for portfolio in page_obj %}
         <div class="editorial-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:1 }}00">
             <div class="editorial-img-container shadow-sm">
-                <img src="{{ portfolio.thumbnail.url }}" alt="{{ portfolio.title }}">
+                <img src="{% if portfolio.thumbnail %}{{ portfolio.thumbnail.url }}{% else %}{% static 'img/default.png' %}{% endif %}" alt="{{ portfolio.title }}">
                 {% if portfolio.img_360 %}
                 <div class="vr-badge-icon" title="{% trans '360° Enabled' %}">
                     <i class="fas fa-vr-cardboard"></i>

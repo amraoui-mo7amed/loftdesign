@@ -10,6 +10,14 @@ def product_list(request):
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
     sort = request.GET.get('sort', '-created_at')
+    query = request.GET.get('q')
+    
+    if query:
+        products = products.filter(
+            Q(title__icontains=query) | 
+            Q(description__icontains=query) |
+            Q(tags__icontains=query)
+        )
     
     if category_id:
         products = products.filter(category_id=category_id)
@@ -29,6 +37,7 @@ def product_list(request):
         "min_price": min_price,
         "max_price": max_price,
         "sort": sort,
+        "query": query,
     }
     return render(request, "products/products_list.html", context)
 

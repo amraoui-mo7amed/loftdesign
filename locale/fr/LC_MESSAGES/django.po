@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-29 13:01+0000\n"
+"POT-Creation-Date: 2026-05-01 20:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,37 +40,35 @@ msgstr ""
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "design d'intérieur, loft, architecture, mobilier moderne, décoration"
 
-#: core/settings.py:133
+#: core/settings.py:132
 msgid "English"
 msgstr "Anglais"
 
-#: core/settings.py:133
+#: core/settings.py:132
 msgid "French"
 msgstr "Français"
 
 #: dashboard/context_processors.py:13
-#: dashboard/templates/dash/dash_index.html:86 frontend/templates/home.html:46
-#: frontend/templates/partials/landing-nav.html:34
+#: dashboard/templates/dash/dash_index.html:86 frontend/templates/home.html:57
+#: frontend/templates/partials/landing-nav.html:44
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: dashboard/context_processors.py:19 dashboard/models.py:67
-#: dashboard/models.py:82 dashboard/templates/portfolio/list.html:6
-#: frontend/templates/home.html:33
-#: frontend/templates/partials/landing-nav.html:21
+#: dashboard/context_processors.py:19 dashboard/models.py:62
+#: dashboard/models.py:77 dashboard/templates/portfolio/list.html:6
+#: frontend/templates/home.html:45
+#: frontend/templates/partials/landing-nav.html:32
 #: frontend/templates/portfolio/portfolio_list.html:5
 msgid "Portfolio"
 msgstr "Portfolio"
 
-#: dashboard/context_processors.py:25 dashboard/models.py:130
-#: dashboard/templates/products/list.html:19 frontend/templates/home.html:36
-#: frontend/templates/index.html:99
-#: frontend/templates/partials/landing-nav.html:24
+#: dashboard/context_processors.py:25 dashboard/models.py:125
+#: dashboard/templates/products/list.html:19 frontend/templates/index.html:99
 #: frontend/templates/products/products_list.html:5
 msgid "Products"
 msgstr "Produits"
 
-#: dashboard/context_processors.py:31 dashboard/models.py:166
+#: dashboard/context_processors.py:31 dashboard/models.py:161
 #: dashboard/templates/orders/list.html:26
 msgid "Orders"
 msgstr "Commandes"
@@ -131,22 +129,22 @@ msgstr "Lien de navigation optionnel"
 msgid "إشعار"
 msgstr "Notification"
 
-#: dashboard/models.py:53 dashboard/models.py:110
+#: dashboard/models.py:53 dashboard/models.py:105
 msgid "Title"
 msgstr "Titre"
 
-#: dashboard/models.py:54 dashboard/models.py:119
+#: dashboard/models.py:54 dashboard/models.py:114
 #: dashboard/templates/portfolio/create.html:75
 msgid "Thumbnail"
 msgstr "Vignette"
 
-#: dashboard/models.py:55 dashboard/models.py:120
+#: dashboard/models.py:55 dashboard/models.py:115
 #: dashboard/templates/portfolio/create.html:38
 #: dashboard/templates/portfolio/edit.html:37
 msgid "Description"
 msgstr "Description"
 
-#: dashboard/models.py:56 dashboard/models.py:123
+#: dashboard/models.py:56 dashboard/models.py:118
 #: dashboard/templates/portfolio/create.html:43
 #: dashboard/templates/portfolio/edit.html:41
 #: dashboard/templates/products/create.html:46
@@ -158,41 +156,44 @@ msgstr "Tags"
 msgid "Comma separated tags"
 msgstr "Tags séparés par des virgules"
 
-#: dashboard/models.py:59
-msgid "360 Degree Image"
-msgstr "Image à 360°"
+#: dashboard/models.py:57 dashboard/templates/portfolio/create.html:86
+#: dashboard/templates/portfolio/edit.html:114
+#, fuzzy
+#| msgid "External Buy Link"
+msgid "External Link"
+msgstr "Lien d'achat externe"
 
-#: dashboard/models.py:63 user_auth/models.py:33
+#: dashboard/models.py:58 user_auth/models.py:33
 msgid "Created At"
 msgstr "Créé le"
 
-#: dashboard/models.py:64
+#: dashboard/models.py:59
 msgid "Updated At"
 msgstr "Mis à jour le"
 
-#: dashboard/models.py:68 dashboard/templates/portfolio/list.html:20
+#: dashboard/models.py:63 dashboard/templates/portfolio/list.html:20
 msgid "Portfolios"
 msgstr "Portfolios"
 
-#: dashboard/models.py:84
+#: dashboard/models.py:79
 msgid "Image"
 msgstr "Image"
 
-#: dashboard/models.py:87
+#: dashboard/models.py:82
 msgid "Portfolio Image"
 msgstr "Image de portfolio"
 
-#: dashboard/models.py:88
+#: dashboard/models.py:83
 msgid "Portfolio Images"
 msgstr "Images de portfolio"
 
-#: dashboard/models.py:96 dashboard/templates/products/list.html:44
+#: dashboard/models.py:91 dashboard/templates/products/list.html:44
 #, fuzzy
 #| msgid "Categories"
 msgid "Category Name"
 msgstr "Catégories"
 
-#: dashboard/models.py:100 dashboard/models.py:117
+#: dashboard/models.py:95 dashboard/models.py:112
 #: dashboard/templates/products/create.html:33
 #: dashboard/templates/products/edit.html:33
 #, fuzzy
@@ -200,71 +201,73 @@ msgstr "Catégories"
 msgid "Category"
 msgstr "Catégories"
 
-#: dashboard/models.py:101 frontend/templates/products/products_list.html:31
+#: dashboard/models.py:96 frontend/templates/products/products_list.html:45
 msgid "Categories"
 msgstr "Catégories"
 
-#: dashboard/models.py:121
+#: dashboard/models.py:116
 msgid "Price"
 msgstr "Prix"
 
-#: dashboard/models.py:122
+#: dashboard/models.py:117
 msgid "External Buy Link"
 msgstr "Lien d'achat externe"
 
-#: dashboard/models.py:124
+#: dashboard/models.py:119
 msgid "Is Active"
 msgstr "Est actif"
 
-#: dashboard/models.py:129 dashboard/models.py:151
+#: dashboard/models.py:124 dashboard/models.py:146
 #: dashboard/templates/orders/list.html:42
 msgid "Product"
 msgstr "Produit"
 
-#: dashboard/models.py:141 dashboard/templates/users/list.html:110
+#: dashboard/models.py:136 dashboard/templates/users/list.html:110
 #: dashboard/views/users.py:43
 msgid "Pending"
 msgstr "En attente"
 
-#: dashboard/models.py:142
+#: dashboard/models.py:137
 msgid "Processing"
 msgstr "En cours"
 
-#: dashboard/models.py:143
+#: dashboard/models.py:138
 #: frontend/templates/portfolio/portfolio_detail.html:95
 msgid "Completed"
 msgstr "Terminé"
 
-#: dashboard/models.py:144
+#: dashboard/models.py:139
 msgid "Cancelled"
 msgstr "Annulé"
 
-#: dashboard/models.py:153
+#: dashboard/models.py:148
 msgid "Customer Name"
 msgstr "Nom du client"
 
-#: dashboard/models.py:154 dashboard/templates/users/details.html:108
-#: dashboard/templates/users/list.html:143 frontend/templates/home.html:290
+#: dashboard/models.py:149 dashboard/templates/users/details.html:108
+#: dashboard/templates/users/list.html:143 frontend/templates/home.html:325
 #: user_auth/models.py:28 user_auth/templates/auth/signup.html:94
 msgid "Phone Number"
 msgstr "Numéro de téléphone"
 
-#: dashboard/models.py:155 dashboard/templates/users/details.html:123
+#: dashboard/models.py:150 dashboard/templates/users/details.html:123
 #: user_auth/models.py:29
 msgid "Address"
 msgstr "Adresse"
 
-#: dashboard/models.py:160 dashboard/templates/orders/list.html:44
+#: dashboard/models.py:155 dashboard/templates/orders/list.html:44
 msgid "Status"
 msgstr "Statut"
 
-#: dashboard/models.py:165
+#: dashboard/models.py:160
 msgid "Order"
 msgstr "Commande"
 
 #: dashboard/templates/components/custom_select.html:15
 msgid "Select an option"
-msgstr "Sélectionnez une option"#: dashboard/templates/components/notification_dropdown.html:12
+msgstr "Sélectionnez une option"
+
+#: dashboard/templates/components/notification_dropdown.html:12
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -386,9 +389,13 @@ msgstr ""
 
 #: dashboard/templates/dash/dash_home.html:171
 msgid "OPTIMIZE NOW"
-msgstr "OPTIMISEZ MAINTENANT"#: dashboard/templates/dash/dash_home.html:177
+msgstr "OPTIMISEZ MAINTENANT"
+
+#: dashboard/templates/dash/dash_home.html:177
 msgid "Efficiency Score"
-msgstr "Score d'efficacité"#: dashboard/templates/dash/dash_index.html:26
+msgstr "Score d'efficacité"
+
+#: dashboard/templates/dash/dash_index.html:26
 msgid "Just now"
 msgstr "À l'instant"
 
@@ -528,16 +535,19 @@ msgstr "Média principal"
 msgid "Upload Thumbnail"
 msgstr "Importer la vignette"
 
-#: dashboard/templates/portfolio/create.html:86
-msgid "360° View Image"
-msgstr "Image de vue à 360°"
+#: dashboard/templates/portfolio/create.html:89
+#: dashboard/templates/portfolio/edit.html:117
+#, fuzzy
+#| msgid "External Buy Link"
+msgid "Enter external link"
+msgstr "Lien d'achat externe"
 
 #: dashboard/templates/portfolio/create.html:98
 msgid "Publish Project"
 msgstr "Publier le projet"
 
 #: dashboard/templates/portfolio/create.html:101
-#: dashboard/templates/portfolio/edit.html:132
+#: dashboard/templates/portfolio/edit.html:131
 #: dashboard/templates/portfolio/list.html:83
 #: dashboard/templates/products/create.html:92
 #: dashboard/templates/products/edit.html:93
@@ -592,23 +602,15 @@ msgstr "Importer une nouvelle vignette"
 msgid "Leave empty to keep current thumbnail."
 msgstr "Laissez vide pour conserver la vignette actuelle."
 
-#: dashboard/templates/portfolio/edit.html:111
-msgid "Interactive View"
-msgstr "Vue interactive"
-
-#: dashboard/templates/portfolio/edit.html:119
-msgid "360° Image Active"
-msgstr "Image 360° active"
-
-#: dashboard/templates/portfolio/edit.html:126
+#: dashboard/templates/portfolio/edit.html:125
 msgid "Publish Updates"
 msgstr "Publier les mises à jour"
 
-#: dashboard/templates/portfolio/edit.html:129
+#: dashboard/templates/portfolio/edit.html:128
 msgid "Save Changes"
 msgstr "Enregistrer les modifications"
 
-#: dashboard/templates/portfolio/edit.html:136
+#: dashboard/templates/portfolio/edit.html:135
 msgid "Last updated"
 msgstr "Dernière mise à jour"
 
@@ -759,7 +761,9 @@ msgstr "Cliquez pour changer l'image"
 
 #: dashboard/templates/products/edit.html:90
 msgid "Save"
-msgstr "Enregistrer"#: dashboard/templates/products/list.html:6
+msgstr "Enregistrer"
+
+#: dashboard/templates/products/list.html:6
 msgid "Product Inventory"
 msgstr "Inventaire des produits"
 
@@ -904,7 +908,7 @@ msgid "Filter Users"
 msgstr "Filtrer les utilisateurs"
 
 #: dashboard/templates/users/list.html:30
-#: frontend/templates/products/products_list.html:73
+#: frontend/templates/products/products_list.html:87
 msgid "Clear All"
 msgstr "Tout effacer"
 
@@ -933,7 +937,7 @@ msgid "Reset All"
 msgstr "Tout réinitialiser"
 
 #: dashboard/templates/users/list.html:84
-#: frontend/templates/products/products_list.html:69
+#: frontend/templates/products/products_list.html:83
 msgid "Apply Filters"
 msgstr "Appliquer les filtres"
 
@@ -1054,31 +1058,23 @@ msgstr "Commande supprimée"
 msgid "Portfolio Management"
 msgstr "Gestion du portfolio"
 
-#: dashboard/views/portfolio.py:47
-msgid "All fields are required"
-msgstr "Tous les champs sont obligatoires"
-
-#: dashboard/views/portfolio.py:72
+#: dashboard/views/portfolio.py:70
 msgid "Project created successfully"
 msgstr "Projet créé avec succès"
 
-#: dashboard/views/portfolio.py:102
-msgid "Title and Description are required"
-msgstr "Le titre et la description sont obligatoires"
-
-#: dashboard/views/portfolio.py:136
+#: dashboard/views/portfolio.py:132
 msgid "Project updated successfully"
 msgstr "Projet mis à jour avec succès"
 
-#: dashboard/views/portfolio.py:147
+#: dashboard/views/portfolio.py:143
 msgid "Edit Project"
 msgstr "Modifier le projet"
 
-#: dashboard/views/portfolio.py:158
+#: dashboard/views/portfolio.py:154
 msgid "Project deleted successfully"
 msgstr "Projet supprimé avec succès"
 
-#: dashboard/views/portfolio.py:160
+#: dashboard/views/portfolio.py:156
 msgid "Invalid request"
 msgstr "Requête invalide"
 
@@ -1145,32 +1141,38 @@ msgstr "L'utilisateur %(name)s a été approuvé avec succès."
 msgid "An error occurred during approval: %(error)s"
 msgstr "Une erreur est survenue lors de l'approbation : %(error)s"
 
-#: frontend/templates/home.html:30 frontend/templates/home.html:338
-#: frontend/templates/partials/landing-nav.html:18
+#: frontend/templates/home.html:42 frontend/templates/home.html:385
+#: frontend/templates/partials/landing-nav.html:29
 msgid "About"
 msgstr "À propos"
 
-#: frontend/templates/home.html:39
-#: frontend/templates/partials/landing-nav.html:27
+#: frontend/templates/home.html:48
+#: frontend/templates/partials/landing-nav.html:35
+msgid "Shop"
+msgstr "Boutique"#: frontend/templates/home.html:51
+#: frontend/templates/partials/landing-nav.html:38
 msgid "Contact"
 msgstr "Contact"
 
-#: frontend/templates/home.html:48
-#: frontend/templates/partials/landing-nav.html:36
-msgid "Get Started"
-msgstr "Commencer"
+#: frontend/templates/home.html:60
+#: frontend/templates/partials/landing-nav.html:47
+#: user_auth/templates/auth/login.html:10
+#: user_auth/templates/auth/login.html:92
+#: user_auth/templates/auth/signup.html:182
+msgid "Login"
+msgstr "Connexion"
 
-#: frontend/templates/home.html:68
+#: frontend/templates/home.html:91
 msgid "Transform Your Space Into a "
 msgstr "Transformez votre espace en un "
 
-#: frontend/templates/home.html:68
+#: frontend/templates/home.html:91
 #, fuzzy
 #| msgid "New Masterpiece"
 msgid "Masterpiece"
 msgstr "Nouveau chef-d'œuvre"
 
-#: frontend/templates/home.html:71
+#: frontend/templates/home.html:94
 msgid ""
 "We combine elegance, functionality, and modern aesthetics to create living "
 "environments that reflect your personality."
@@ -1178,27 +1180,27 @@ msgstr ""
 "Nous allions élégance, fonctionnalité et esthétique moderne pour créer des "
 "espaces de vie qui reflètent votre personnalité."
 
-#: frontend/templates/home.html:75
+#: frontend/templates/home.html:99
 msgid "Book a Consultation"
 msgstr "Réserver une consultation"
 
-#: frontend/templates/home.html:78
+#: frontend/templates/home.html:102
 msgid "Explore Gallery"
 msgstr "Explorer la galerie"
 
-#: frontend/templates/home.html:89
+#: frontend/templates/home.html:111
 msgid "Our Philosophy"
 msgstr "Notre philosophie"
 
-#: frontend/templates/home.html:90
+#: frontend/templates/home.html:112
 msgid "Crafting Spaces, Shaping Emotions"
 msgstr "Concevoir des espaces, façonner des émotions"
 
-#: frontend/templates/home.html:100
+#: frontend/templates/home.html:121
 msgid "Visionary Design"
 msgstr "Design visionnaire"
 
-#: frontend/templates/home.html:102
+#: frontend/templates/home.html:123
 msgid ""
 "We don't just follow trends; we create timeless environments that speak to "
 "your soul and elevate your daily experience."
@@ -1207,11 +1209,11 @@ msgstr ""
 "environnements intemporels qui parlent à votre âme et subliment votre "
 "quotidien."
 
-#: frontend/templates/home.html:111
+#: frontend/templates/home.html:132
 msgid "Personal Touch"
 msgstr "Une touche personnelle"
 
-#: frontend/templates/home.html:113
+#: frontend/templates/home.html:134
 msgid ""
 "Every client is unique. We dive deep into your lifestyle to ensure every "
 "corner of your space is functional and personalized."
@@ -1220,88 +1222,111 @@ msgstr ""
 "garantir que chaque recoin de votre espace soit à la fois fonctionnel et "
 "personnalisé."
 
-#: frontend/templates/home.html:122
+#: frontend/templates/home.html:143
 #, fuzzy
 #| msgid "360° Vision"
 msgid "360° Immersion"
 msgstr "Vision à 360°"
 
-#: frontend/templates/home.html:124
+#: frontend/templates/home.html:145
 msgid ""
 "Project yourself even before the build. Thanks to our immersive "
 "technologies, explore your future space in 360° and experience your project "
 "before it comes to life."
-msgstr "Projetez-vous avant même la construction. Grâce à nos technologies immersives, explorez votre futur espace à 360° et vivez votre projet avant qu'il ne prenne vie."#: frontend/templates/home.html:136
+msgstr ""
+"Projetez-vous avant même la construction. Grâce à nos technologies "
+"immersives, explorez votre futur espace à 360° et vivez votre projet avant "
+"qu'il ne prenne vie."
+
+#: frontend/templates/home.html:158
 msgid "Projects Completed"
 msgstr "Projets réalisés"
 
-#: frontend/templates/home.html:141
+#: frontend/templates/home.html:163
 msgid "Designing spaces crafted for your well-being"
-msgstr "Concevoir des espaces façonnés pour votre bien-être"#: frontend/templates/home.html:143
+msgstr "Concevoir des espaces façonnés pour votre bien-être"
+
+#: frontend/templates/home.html:165
 msgid ""
 "At LOFT Design, we craft spaces where design meets everyday comfort. Every "
 "project is designed to adapt to your lifestyle, optimize your spaces, and "
 "create a harmonious, functional, and pleasant atmosphere to live in."
-msgstr "Chez LOFT Design, nous créons des espaces où le design rencontre le confort quotidien. Chaque projet est conçu pour s'adapter à votre mode de vie, optimiser vos espaces et créer une atmosphère harmonieuse, fonctionnelle et agréable à vivre."#: frontend/templates/home.html:148
+msgstr ""
+"Chez LOFT Design, nous créons des espaces où le design rencontre le confort "
+"quotidien. Chaque projet est conçu pour s'adapter à votre mode de vie, "
+"optimiser vos espaces et créer une atmosphère harmonieuse, fonctionnelle et "
+"agréable à vivre."
+
+#: frontend/templates/home.html:170
 msgid "Optimized layout for maximum comfort."
-msgstr "Agencement optimisé pour un confort maximal."#: frontend/templates/home.html:152
+msgstr "Agencement optimisé pour un confort maximal."
+
+#: frontend/templates/home.html:174
 msgid "Modern, clean, and functional design."
-msgstr "Design moderne, épuré et fonctionnel."#: frontend/templates/home.html:156
+msgstr "Design moderne, épuré et fonctionnel."
+
+#: frontend/templates/home.html:178
 msgid "Integration of smart and immersive solutions (360°, 3D visualization)."
-msgstr "Intégration de solutions intelligentes et immersives (360°, visualisation 3D)."#: frontend/templates/home.html:160
+msgstr ""
+"Intégration de solutions intelligentes et immersives (360°, visualisation "
+"3D)."
+
+#: frontend/templates/home.html:182
 msgid "Personalized support, from concept to completion"
-msgstr "Accompagnement personnalisé, du concept à la réalisation"#: frontend/templates/home.html:164
+msgstr "Accompagnement personnalisé, du concept à la réalisation"
+
+#: frontend/templates/home.html:186
 msgid "Discover Our Process"
 msgstr "Découvrez notre processus"
 
-#: frontend/templates/home.html:175
+#: frontend/templates/home.html:197
 #, fuzzy
 #| msgid "Our Best Works"
 msgid "Our Works"
-msgstr "Nos plus belles réalisations"
+msgstr "Nos réalisations"
 
-#: frontend/templates/home.html:176
+#: frontend/templates/home.html:198
 msgid "Check out our latest interior design projects."
 msgstr "Découvrez nos derniers projets de design d'intérieur."
 
-#: frontend/templates/home.html:178
+#: frontend/templates/home.html:202
 #: frontend/templates/portfolio/portfolio_detail.html:82
 msgid "View All Projects"
 msgstr "Voir tous les projets"
 
-#: frontend/templates/home.html:186
-#: frontend/templates/partials/portfolio_card.html:10
+#: frontend/templates/home.html:214
+#: frontend/templates/partials/portfolio_card.html:11
 msgid "View Projects"
 msgstr "Voir les projets"
 
-#: frontend/templates/home.html:200
+#: frontend/templates/home.html:228
 msgid "Featured Collections"
 msgstr "Collections à la une"
 
-#: frontend/templates/home.html:201
+#: frontend/templates/home.html:229
 msgid "Handpicked pieces from our latest interior projects."
 msgstr "Des pièces sélectionnées avec soin issues de nos derniers projets."
 
-#: frontend/templates/home.html:203
+#: frontend/templates/home.html:233
 msgid "View All Products"
 msgstr "Voir tous les produits"
 
-#: frontend/templates/home.html:226
+#: frontend/templates/home.html:260
 #: frontend/templates/partials/product_card.html:23
 msgid "View Details"
 msgstr "Voir les détails"
 
-#: frontend/templates/home.html:230
+#: frontend/templates/home.html:266
 #: frontend/templates/partials/product_card.html:28
 #: frontend/templates/products/product_detail.html:35
 msgid "Show in your workspace"
 msgstr "Visualiser dans votre espace"
 
-#: frontend/templates/home.html:247
+#: frontend/templates/home.html:282
 msgid "Start Your Project Today"
 msgstr "Lancez votre projet dès aujourd'hui"
 
-#: frontend/templates/home.html:249
+#: frontend/templates/home.html:284
 msgid ""
 "Ready to redefine your space? Fill out the form and our design specialists "
 "will get back to you within 24 hours."
@@ -1309,73 +1334,73 @@ msgstr ""
 "Prêt à redéfinir votre espace ? Remplissez le formulaire et nos spécialistes "
 "en design vous recontacteront sous 24 heures."
 
-#: frontend/templates/home.html:257 frontend/templates/home.html:265
+#: frontend/templates/home.html:292 frontend/templates/home.html:301
 #: frontend/templates/products/product_detail.html:99
 msgid "Call Us"
 msgstr "Appelez-nous"
 
-#: frontend/templates/home.html:275
+#: frontend/templates/home.html:310
 #: frontend/templates/products/product_detail.html:108
 msgid "Email Us"
 msgstr "Contactez-nous par e-mail"
 
-#: frontend/templates/home.html:286
+#: frontend/templates/home.html:321
 msgid "Full Name"
 msgstr "Nom complet"
 
-#: frontend/templates/home.html:294
+#: frontend/templates/home.html:329
 msgid "Project Type"
 msgstr "Type de projet"
 
-#: frontend/templates/home.html:296
+#: frontend/templates/home.html:331
 msgid "Residential"
 msgstr "Résidentiel"
 
-#: frontend/templates/home.html:297
+#: frontend/templates/home.html:332
 msgid "Commercial"
 msgstr "Commercial"
 
-#: frontend/templates/home.html:298 user_auth/models.py:11
+#: frontend/templates/home.html:333 user_auth/models.py:11
 msgid "Other"
 msgstr "Autre"
 
-#: frontend/templates/home.html:302
+#: frontend/templates/home.html:337
 msgid "Message"
 msgstr "Message"
 
-#: frontend/templates/home.html:303
+#: frontend/templates/home.html:340
 msgid "Tell us about your dream space..."
 msgstr "Parlez-nous de l'espace de vos rêves..."
 
-#: frontend/templates/home.html:307
+#: frontend/templates/home.html:345
 msgid "Send Inquiry"
 msgstr "Envoyer une demande"
 
-#: frontend/templates/home.html:332
+#: frontend/templates/home.html:377
 msgid ""
 "Redefining modern living through innovative design and premium craftsmanship."
 msgstr ""
 "Redéfinir l'art de vivre moderne grâce à un design innovant et un savoir-"
 "faire d'exception."
 
-#: frontend/templates/home.html:336
+#: frontend/templates/home.html:381
 msgid "Quick Links"
 msgstr "Liens rapides"
 
-#: frontend/templates/home.html:339
+#: frontend/templates/home.html:389
 msgid "Services"
 msgstr "Services"
 
-#: frontend/templates/home.html:340
+#: frontend/templates/home.html:393
 #: frontend/templates/portfolio/portfolio_list.html:26
 msgid "Projects"
 msgstr "Projets"
 
-#: frontend/templates/home.html:344
+#: frontend/templates/home.html:398
 msgid "Follow Us"
 msgstr "Suivez-nous"
 
-#: frontend/templates/home.html:355
+#: frontend/templates/home.html:413
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
@@ -1401,7 +1426,9 @@ msgstr "Détails du projet"
 
 #: frontend/templates/portfolio/portfolio_detail.html:48
 msgid "View 360"
-msgstr "Vue 360°"#: frontend/templates/portfolio/portfolio_detail.html:71
+msgstr "Vue 360°"
+
+#: frontend/templates/portfolio/portfolio_detail.html:71
 #, fuzzy
 #| msgid "Projects"
 msgid "Project Showcase"
@@ -1409,7 +1436,9 @@ msgstr "Projets"
 
 #: frontend/templates/portfolio/portfolio_detail.html:85
 msgid "Request Similar Design"
-msgstr "Demander un design similaire"#: frontend/templates/portfolio/portfolio_detail.html:92
+msgstr "Demander un design similaire"
+
+#: frontend/templates/portfolio/portfolio_detail.html:92
 #, fuzzy
 #| msgid "Project Details"
 msgid "Technical Details"
@@ -1429,19 +1458,15 @@ msgstr "Envoyer une demande"
 msgid "Our"
 msgstr "Nos"
 
-#: frontend/templates/portfolio/portfolio_list.html:29
-msgid "A showcase of high-end interior solutions and architectural excellence."
-msgstr ""
-"Une vitrine de solutions d'aménagement intérieur haut de gamme et "
-"d'excellence architecturale."
-
-#: frontend/templates/portfolio/portfolio_list.html:37
+#: frontend/templates/portfolio/portfolio_list.html:34
 msgid "Nothing to show yet."
 msgstr "Rien à afficher pour le moment."
 
 #: frontend/templates/products/product_detail.html:44
 msgid "Market Valuation"
-msgstr "Estimation de marché"#: frontend/templates/products/product_detail.html:48
+msgstr "Estimation de marché"
+
+#: frontend/templates/products/product_detail.html:48
 #, fuzzy
 #| msgid "Visibility"
 msgid "Availability"
@@ -1449,7 +1474,9 @@ msgstr "Visibilité"
 
 #: frontend/templates/products/product_detail.html:51
 msgid "Limited Edition"
-msgstr "Édition limitée"#: frontend/templates/products/product_detail.html:64
+msgstr "Édition limitée"
+
+#: frontend/templates/products/product_detail.html:64
 #, fuzzy
 #| msgid "Collection"
 msgid "Bespoke Collection"
@@ -1457,11 +1484,17 @@ msgstr "Collection"
 
 #: frontend/templates/products/product_detail.html:71
 msgid "The Narrative"
-msgstr "Le récit"#: frontend/templates/products/product_detail.html:79
+msgstr "Le récit"
+
+#: frontend/templates/products/product_detail.html:79
 msgid "Design DNA"
-msgstr "L'ADN du design"#: frontend/templates/products/product_detail.html:90
+msgstr "L'ADN du design"
+
+#: frontend/templates/products/product_detail.html:90
 msgid "Direct Concierge"
-msgstr "Conciergerie directe"#: frontend/templates/products/product_detail.html:91
+msgstr "Conciergerie directe"
+
+#: frontend/templates/products/product_detail.html:91
 #, fuzzy
 #| msgid "Contact our design specialists for personalized advice."
 msgid ""
@@ -1476,35 +1509,59 @@ msgstr "Envoyer une demande"
 
 #: frontend/templates/products/product_detail.html:115
 msgid "Request Private Viewing"
-msgstr "Demander une visite privée"#: frontend/templates/products/products_list.html:34
+msgstr "Demander une visite privée"
+
+#: frontend/templates/products/products_list.html:31
+#, fuzzy
+#| msgid "Search Keyword"
+msgid "Search"
+msgstr "Mot-clé de recherche"
+
+#: frontend/templates/products/products_list.html:40
+#, fuzzy
+#| msgid "Search by product title..."
+msgid "Search products..."
+msgstr "Rechercher par titre de produit..."
+
+#: frontend/templates/products/products_list.html:48
 #, fuzzy
 #| msgid "Collection"
 msgid "All Collections"
 msgstr "Collection"
 
-#: frontend/templates/products/products_list.html:47
+#: frontend/templates/products/products_list.html:61
 #, fuzzy
 #| msgid "Price"
 msgid "Price Range"
 msgstr "Prix"
 
-#: frontend/templates/products/products_list.html:59
+#: frontend/templates/products/products_list.html:73
 msgid "Sort By"
-msgstr "Trier par"#: frontend/templates/products/products_list.html:61
+msgstr "Trier par"
+
+#: frontend/templates/products/products_list.html:75
 msgid "Newest First"
-msgstr "Les plus récents"#: frontend/templates/products/products_list.html:62
+msgstr "Les plus récents"
+
+#: frontend/templates/products/products_list.html:76
 msgid "Price: Low to High"
-msgstr "Prix : croissant"#: frontend/templates/products/products_list.html:63
+msgstr "Prix : croissant"
+
+#: frontend/templates/products/products_list.html:77
 msgid "Price: High to Low"
-msgstr "Prix : décroissant"#: frontend/templates/products/products_list.html:64
+msgstr "Prix : décroissant"
+
+#: frontend/templates/products/products_list.html:78
 msgid "Name: A-Z"
-msgstr "Nom : A-Z"#: frontend/templates/products/products_list.html:92
+msgstr "Nom : A-Z"
+
+#: frontend/templates/products/products_list.html:106
 #, fuzzy
 #| msgid "Try adjusting your filters"
 msgid "No products match your filters."
 msgstr "Essayez d'ajuster vos filtres"
 
-#: frontend/templates/products/products_list.html:93
+#: frontend/templates/products/products_list.html:107
 #, fuzzy
 #| msgid "Apply Filters"
 msgid "Clear Filters"
@@ -1538,12 +1595,6 @@ msgstr "Profil utilisateur"
 msgid "User Profiles"
 msgstr "Profils utilisateurs"
 
-#: user_auth/templates/auth/login.html:10
-#: user_auth/templates/auth/login.html:92
-#: user_auth/templates/auth/signup.html:182
-msgid "Login"
-msgstr "Connexion"
-
 #: user_auth/templates/auth/login.html:41
 msgid "Login to your account"
 msgstr "Connectez-vous à votre compte"
@@ -1572,14 +1623,6 @@ msgstr "Se souvenir de moi"
 #: user_auth/templates/auth/login.html:89
 msgid "Forgot password?"
 msgstr "Mot de passe oublié ?"
-
-#: user_auth/templates/auth/login.html:96
-msgid "Don't have an account?"
-msgstr "Vous n'avez pas de compte ?"
-
-#: user_auth/templates/auth/login.html:97
-msgid "Create new account"
-msgstr "Créer un nouveau compte"
 
 #: user_auth/templates/auth/signup.html:9
 #: user_auth/templates/auth/signup.html:37
@@ -1683,6 +1726,39 @@ msgstr "Cette adresse e-mail est déjà utilisée."
 #: user_auth/views.py:116
 msgid "Your account has been created successfully."
 msgstr "Votre compte a été créé avec succès."
+
+#~ msgid "360 Degree Image"
+#~ msgstr "Image à 360°"
+
+#~ msgid "360° View Image"
+#~ msgstr "Image de vue à 360°"
+
+#~ msgid "Interactive View"
+#~ msgstr "Vue interactive"
+
+#~ msgid "360° Image Active"
+#~ msgstr "Image 360° active"
+
+#~ msgid "All fields are required"
+#~ msgstr "Tous les champs sont obligatoires"
+
+#~ msgid "Title and Description are required"
+#~ msgstr "Le titre et la description sont obligatoires"
+
+#~ msgid "Get Started"
+#~ msgstr "Commencer"
+
+#~ msgid ""
+#~ "A showcase of high-end interior solutions and architectural excellence."
+#~ msgstr ""
+#~ "Une vitrine de solutions d'aménagement intérieur haut de gamme et "
+#~ "d'excellence architecturale."
+
+#~ msgid "Don't have an account?"
+#~ msgstr "Vous n'avez pas de compte ?"
+
+#~ msgid "Create new account"
+#~ msgstr "Créer un nouveau compte"
 
 #~ msgid "Users"
 #~ msgstr "Utilisateurs"

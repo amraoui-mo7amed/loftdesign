@@ -1280,7 +1280,6 @@ msgid "Discover Our Process"
 msgstr "Découvrez notre processus"
 
 #: frontend/templates/home.html:197
-#, fuzzy
 #| msgid "Our Best Works"
 msgid "Our Works"
 msgstr "Nos réalisations"

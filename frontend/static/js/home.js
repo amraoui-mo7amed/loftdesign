@@ -10,11 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleScroll = () => {
         if (window.scrollY > 50) {
             nav.classList.add('shadow-sm', 'py-2');
-            nav.classList.remove('navbar-dark', 'py-4');
-            nav.classList.add('navbar-light');
+            nav.classList.remove('py-4');
+            // nav.classList.add('navbar-light');
         } else {
             nav.classList.remove( 'shadow-sm', 'py-2', 'navbar-light');
-            nav.classList.add('navbar-dark', 'py-4');
         }
     };
 

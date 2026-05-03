@@ -20,8 +20,7 @@ def site_settings(request):
             "working_hours": _("Lun-Ven: 09h - 18h"),
             "social": {
                 "facebook": "https://www.facebook.com/profile.php?id=100067199886406",
-                "twitter": "https://www.instagram.com/loftdesign_dz",
-                "instagram": "https://instagram.com/loftdesign",
+                "instagram": "https://www.instagram.com/loftdesign_dz",
             },
             "seo": {
                 "description": _(

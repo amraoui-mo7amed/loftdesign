@@ -1,6 +1,4 @@
 
-// Initialise AOS once
-AOS.init({ duration: 400, once: true });
 
 // Dealing with forms
 document.addEventListener('DOMContentLoaded', () => {

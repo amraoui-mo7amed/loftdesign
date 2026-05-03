@@ -370,6 +370,7 @@ body {
 .navbar {
   background-color: var(--white-accent) !important;
   border-bottom: 2px solid var(--brand-primary);
+  width: 100vw;
 }
 
 .navbar-brand {

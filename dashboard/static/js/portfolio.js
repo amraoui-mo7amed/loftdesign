@@ -1,26 +1,103 @@
 /**
  * LOFT Design - Portfolio Management JS
- * Handles previews, drag & drop, and form animations
+ * Handles previews, drag & drop, image compression, and form animations
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    /**
+     * Compresses an image file using Canvas
+     * @param {File} file 
+     * @param {number} maxWidth 
+     * @param {number} maxHeight 
+     * @param {number} quality (0 to 1)
+     * @returns {Promise<Blob>}
+     */
+    const compressImage = (file, maxWidth = 1920, maxHeight = 1080, quality = 0.7) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/jpeg', quality);
+                };
+                img.onerror = (err) => reject(err);
+            };
+            reader.onerror = (err) => reject(err);
+        });
+    };
+
+    /**
+     * Replaces files in a FileList-like way for an input element
+     * @param {HTMLInputElement} input 
+     * @param {Array<File|Blob>} files 
+     */
+    const updateInputFiles = (input, files) => {
+        const dataTransfer = new DataTransfer();
+        files.forEach((file, index) => {
+            // If it's a blob from compression, we convert it back to a File
+            const newFile = file instanceof File ? file : new File([file], `compressed_${index}.jpg`, { type: 'image/jpeg' });
+            dataTransfer.items.add(newFile);
+        });
+        input.files = dataTransfer.files;
+    };
+
     // 1. Thumbnail Preview
     const thumbInput = document.querySelector('input[name="thumbnail"]');
     const thumbPreviewContainer = document.getElementById('thumbPreviewContainer');
     
     if (thumbInput) {
-        thumbInput.addEventListener('change', function() {
+        thumbInput.addEventListener('change', async function() {
             const file = this.files[0];
             if (file) {
+                // Compress if > 1MB
+                let fileToPreview = file;
+                if (file.size > 1024 * 1024) {
+                    try {
+                        const compressedBlob = await compressImage(file);
+                        updateInputFiles(this, [compressedBlob]);
+                        fileToPreview = this.files[0];
+                    } catch (e) {
+                        console.error('Compression failed', e);
+                    }
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     thumbPreviewContainer.innerHTML = `
                         <div class="preview-item w-100 mb-0" style="aspect-ratio: 16/9;">
                             <img src="${e.target.result}" alt="Thumbnail Preview">
+                            <div class="preview-info">
+                                ${(fileToPreview.size / 1024).toFixed(0)} KB (Reduced from ${(file.size / 1024).toFixed(0)} KB)
+                            </div>
                         </div>
                     `;
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(fileToPreview);
             }
         });
     }
@@ -30,27 +107,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const galleryPreviewContainer = document.getElementById('galleryPreviewContainer');
     
     if (galleryInput) {
-        galleryInput.addEventListener('change', function() {
-            // Clear previous previews for new uploads
-            // galleryPreviewContainer.innerHTML = '';
+        galleryInput.addEventListener('change', async function() {
+            const originalFiles = Array.from(this.files);
+            const compressedFiles = [];
             
-            const files = Array.from(this.files);
-            files.forEach((file, index) => {
+            galleryPreviewContainer.innerHTML = '<div class="col-12 text-center p-3"><span class="spinner-border spinner-border-sm me-2"></span>Optimizing images...</div>';
+
+            for (const file of originalFiles) {
                 if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const item = document.createElement('div');
-                        item.className = 'preview-item';
-                        item.innerHTML = `
-                            <img src="${e.target.result}" alt="Preview ${index}">
-                            <div class="preview-info">
-                                ${ (file.size / 1024).toFixed(0) } KB
-                            </div>
-                        `;
-                        galleryPreviewContainer.appendChild(item);
-                    };
-                    reader.readAsDataURL(file);
+                    if (file.size > 1024 * 1024) {
+                        try {
+                            const compressedBlob = await compressImage(file);
+                            compressedFiles.push(compressedBlob);
+                        } catch (e) {
+                            console.error('Compression failed', e);
+                            compressedFiles.push(file);
+                        }
+                    } else {
+                        compressedFiles.push(file);
+                    }
                 }
+            }
+
+            updateInputFiles(this, compressedFiles);
+            galleryPreviewContainer.innerHTML = '';
+
+            Array.from(this.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const item = document.createElement('div');
+                    item.className = 'preview-item';
+                    item.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${index}">
+                        <div class="preview-info">
+                            ${ (file.size / 1024).toFixed(0) } KB
+                        </div>
+                    `;
+                    galleryPreviewContainer.appendChild(item);
+                };
+                reader.readAsDataURL(file);
             });
         });
     }

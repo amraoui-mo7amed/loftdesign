@@ -10,7 +10,7 @@
         {% endif %}
         {% if product.price %}
             <div class="position-absolute bottom-0 start-0 end-0 m-3 d-grid gap-2">
-                <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-black">{{ product.price }} DZD</span>
+                <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-black">{{ product.price|floatformat:0 }} DZD</span>
             </div>
         {% endif %}
     </div>

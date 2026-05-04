@@ -8,6 +8,51 @@ from django.urls import reverse
 from ..models import Product, Category
 
 @login_required
+def category_list(request):
+    """View to list and manage categories with pagination"""
+    categories_list = Category.objects.all().order_by("-created_at")
+    paginator = Paginator(categories_list, 10)  # 10 categories per page
+    
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, "categories/list.html", {"categories": page_obj})
+
+@login_required
+def category_update(request, pk):
+    """AJAX view to update category name"""
+    if request.method == "POST":
+        category = get_object_or_404(Category, pk=pk)
+        name = request.POST.get("name")
+        if not name:
+            return JsonResponse({"success": False, "errors": [_("Category name is required")]})
+        
+        try:
+            category.name = name
+            category.save()
+            return JsonResponse({
+                "success": True,
+                "message": _("Category updated successfully"),
+                "redirect_url": reverse("dash:category_list")
+            })
+        except Exception as e:
+            return JsonResponse({"success": False, "errors": [str(e)]})
+    return JsonResponse({"success": False}, status=400)
+
+@login_required
+def category_delete(request, pk):
+    """AJAX view to delete category"""
+    if request.method == "POST":
+        category = get_object_or_404(Category, pk=pk)
+        category.delete()
+        return JsonResponse({
+            "success": True,
+            "message": _("Category deleted successfully"),
+            "redirect_url": reverse("dash:category_list")
+        })
+    return JsonResponse({"success": False}, status=400)
+
+@login_required
 def category_create(request):
     """AJAX view to create a new category"""
     if request.method == "POST":
@@ -21,7 +66,7 @@ def category_create(request):
                 "success": True,
                 "message": _("Category created successfully"),
                 "category": {"id": category.id, "name": category.name},
-                "redirect_url": reverse("dash:product_list")
+                "redirect_url": reverse("dash:category_list")
             })
         except Exception as e:
             return JsonResponse({"success": False, "errors": [str(e)]})
@@ -36,7 +81,7 @@ def product_list(request):
     if query:
         products = products.filter(title__icontains=query)
         
-    paginator = Paginator(products, 12)
+    paginator = Paginator(products, 10)  # 10 products per page
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     

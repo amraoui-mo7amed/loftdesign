@@ -1,0 +1,125 @@
+{% extends "dash/dash_index.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block dashTitle %}{% trans "Manage Categories" %}{% endblock dashTitle %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-5 reveal reveal-up">
+        <div>
+            <h1 class="fw-black display-4 mb-0">{% trans "Categories" %}</h1>
+            <p class="text-muted">{% trans "Manage product collections and categories." %}</p>
+        </div>
+        <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+            <i class="fas fa-plus-circle me-2"></i> {% trans "Add Category" %}
+        </button>
+    </div>
+
+    <div class="row g-4">
+        {% for cat in categories %}
+        <div class="col-xl-3 col-lg-4 col-md-6 reveal reveal-up delay-{{ forloop.counter }}00">
+            <div class="card border-0 shadow-sm rounded-4 transition-all hover-lift h-100 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="flex-shrink-0 p-3 bg-primary bg-opacity-10 rounded-3 text-primary">
+                            <i class="fas fa-tags fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-black mb-0 text-truncate">{{ cat.name }}</h5>
+                            <p class="text-muted small mb-0">{{ cat.products.count }} {% trans "Products" %}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-dark rounded-3 flex-grow-1 fw-bold py-2 shadow-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editCategoryModal{{ cat.id }}">
+                            <i class="fas fa-edit me-1"></i> {% trans "Edit" %}
+                        </button>
+                        <button class="btn btn-outline-danger rounded-3 px-3 delete-btn" 
+                                data-url="{% url 'dash:category_delete' cat.pk %}"
+                                data-name="{{ cat.name }}"
+                                data-swal-title="{% trans 'Delete Category?' %}"
+                                data-swal-text="{% trans 'All products in this category will become uncategorized.' %}"
+                                data-swal-confirm="{% trans 'Yes, delete it' %}"
+                                data-swal-cancel="{% trans 'Cancel' %}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Category Modal -->
+        <div class="modal fade" id="editCategoryModal{{ cat.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow">
+                    <div class="modal-header border-0 p-4 pb-0">
+                        <h5 class="fw-black mb-0">{% trans "Edit Category" %}</h5>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        {% include "partials/errorList.html" with form_id=cat.id %}
+                        <form action="{% url 'dash:category_update' cat.pk %}" 
+                              method="POST" 
+                              class="form" 
+                              id="{{ cat.id }}">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">{% trans "Category Name" %}</label>
+                                <input type="text" name="name" class="form-control form-control-lg" value="{{ cat.name }}" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
+                                {% trans "Save Changes" %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-folder-open fa-4x text-light mb-3"></i>
+            <h4 class="text-muted fw-bold">{% trans "No categories found." %}</h4>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-5">
+        {% include 'components/pagination.html' with page_obj=categories base_url='?' %}
+    </div>
+</div>
+
+<!-- Create Category Modal -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 p-4 pb-0">
+                <h5 class="fw-black mb-0">{% trans "New Category" %}</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                {% include "partials/errorList.html" with form_id="create" %}
+                <form action="{% url 'dash:category_create' %}" 
+                      method="POST" 
+                      class="form" 
+                      id="create">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{% trans "Category Name" %}</label>
+                        <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g. Modern Seating" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
+                        {% trans "Create Category" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

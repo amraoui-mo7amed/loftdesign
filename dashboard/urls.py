@@ -15,7 +15,11 @@ urlpatterns = [
     path("products/create/", products.product_create, name="product_create"),
     path("products/<int:pk>/update/", products.product_update, name="product_update"),
     path("products/<int:pk>/delete/", products.product_delete, name="product_delete"),
-    path("products/categories/create/", products.category_create, name="category_create"),
+    # Categories
+    path("categories/", products.category_list, name="category_list"),
+    path("categories/create/", products.category_create, name="category_create"),
+    path("categories/<int:pk>/update/", products.category_update, name="category_update"),
+    path("categories/<int:pk>/delete/", products.category_delete, name="category_delete"),
     # Orders
     path("orders/", orders.order_list, name="order_list"),
     path("orders/<int:pk>/status/", orders.order_update_status, name="order_update_status"),

@@ -28,6 +28,12 @@ def get_dashboard_menu():
             "admin_only": True,
         },
         {
+            "title": _("Categories"),
+            "icon": "fas fa-tags",
+            "url_name": "dash:category_list",
+            "admin_only": True,
+        },
+        {
             "title": _("Orders"),
             "icon": "fas fa-shopping-cart",
             "url_name": "dash:order_list",

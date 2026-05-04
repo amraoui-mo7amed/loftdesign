@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext as _
 from user_auth.models import UserProfile
+from dashboard.models import Portfolio, Product, Category, Order
 from django.contrib.auth.models import User
 import json
 
@@ -10,113 +11,69 @@ import json
 def dash_home(request):
     user_profile = getattr(request.user, "profile", None)
 
-    # Common Data
+    # Core Statistics
+    total_portfolios = Portfolio.objects.count()
+    total_products = Product.objects.count()
+    total_orders = Order.objects.count()
+    pending_orders = Order.objects.filter(status=Order.OrderStatus.PENDING).count()
+
     context = {
         "role": "admin" if request.user.is_superuser else "user",
-        "notifications": [
-            {
-                "type": "warning",
-                "title": _("System Alert"),
-                "message": _("New security update available."),
-                "time": "2h ago",
-            },
-            {
-                "type": "info",
-                "title": _("Welcome"),
-                "message": _("Welcome to your new dashboard!"),
-                "time": "5h ago",
-            },
-        ],
+        "stat_1": {
+            "title": _("Total Projects"),
+            "value": total_portfolios,
+            "icon": "fa-briefcase",
+            "color": "primary",
+        },
+        "stat_2": {
+            "title": _("Total Products"),
+            "value": total_products,
+            "icon": "fa-box-open",
+            "color": "success",
+        },
+        "stat_3": {
+            "title": _("Total Leads"),
+            "value": total_orders,
+            "icon": "fa-shopping-cart",
+            "color": "warning",
+        },
+        "stat_4": {
+            "title": _("Pending Leads"),
+            "value": pending_orders,
+            "icon": "fa-clock",
+            "color": "info",
+        },
     }
 
     if request.user.is_superuser:
-        # Platform Admin Statistics
-        total_users = User.objects.count()
-        approved_users = UserProfile.objects.filter(is_approved=True).count()
-        pending_approval = UserProfile.objects.filter(is_approved=False).count()
-        staff_count = User.objects.filter(is_staff=True).count()
-
+        # Admin List: Recent Orders
         context.update(
             {
-                "stat_1": {
-                    "title": _("Total Users"),
-                    "value": total_users,
-                    "icon": "fa-users",
-                    "color": "primary",
-                },
-                "stat_2": {
-                    "title": _("Approved Users"),
-                    "value": approved_users,
-                    "icon": "fa-user-check",
-                    "color": "success",
-                },
-                "stat_3": {
-                    "title": _("Pending Approval"),
-                    "value": pending_approval,
-                    "icon": "fa-user-clock",
-                    "color": "warning",
-                },
-                "stat_4": {
-                    "title": _("Staff Members"),
-                    "value": staff_count,
-                    "icon": "fa-user-shield",
-                    "color": "info",
-                },
-                "chart_title": _("Registration Trends"),
+                "chart_title": _("Portfolio Distribution"),
                 "user_dist_labels": json.dumps(
-                    [str(_("Jan")), str(_("Feb")), str(_("Mar"))]
+                    [str(_("Projects")), str(_("Products")), str(_("Total Leads"))]
                 ),
                 "user_dist_values": json.dumps(
-                    [total_users, approved_users, pending_approval]
+                    [total_portfolios, total_products, total_orders]
                 ),
-                "list_title": _("Recent Registrations"),
-                "recent_users": UserProfile.objects.select_related("user").order_by(
+                "list_title": _("Recent Leads"),
+                "recent_orders": Order.objects.select_related("product").order_by(
                     "-created_at"
                 )[:5],
             }
         )
     else:
-        # Generic User Dashboard with dummy data
+        # User Specific List (Placeholder for now as users don't own objects yet)
         context.update(
             {
-                "stat_1": {
-                    "title": _("Active Projects"),
-                    "value": "12",
-                    "trend": "2.4",
-                    "icon": "fa-rocket",
-                    "color": "primary",
-                },
-                "stat_2": {
-                    "title": _("Completed Tasks"),
-                    "value": "85",
-                    "trend": "1.1",
-                    "icon": "fa-check-double",
-                    "color": "success",
-                },
-                "stat_3": {
-                    "title": _("Pending Actions"),
-                    "value": "4",
-                    "trend": "0.5",
-                    "icon": "fa-clock",
-                    "color": "warning",
-                },
-                "stat_4": {
-                    "title": _("Total Hours"),
-                    "value": "320",
-                    "icon": "fa-stopwatch",
-                    "color": "info",
-                },
-                "chart_title": _("Weekly Activity"),
-                "chart_values": json.dumps([12, 15, 8, 19, 22, 18, 25]),
-                "list_title": _("Upcoming Tasks"),
+                "chart_title": _("Lead Activity"),
+                "chart_values": json.dumps([5, 8, 4, 12, 10, 15, total_orders]),
+                "list_title": _("Recent Activity"),
                 "list_items": [
-                    _("Launch Website"),
-                    _("Database Migration"),
-                    _("Client Meeting"),
+                    _("System stabilized"),
+                    _("Dashboard synchronized"),
                 ],
             }
         )
-
-    return render(request, "dash/dash_home.html", context)
 
     return render(request, "dash/dash_home.html", context)

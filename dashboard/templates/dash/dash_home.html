@@ -100,22 +100,22 @@
                     <div class="card-body p-4">
                         <ul class="list-group list-group-flush">
                             {% if role == 'admin' %}
-                                {% for profile in recent_users %}
+                                {% for order in recent_orders %}
                                 <li class="list-group-item px-0 py-3 bg-transparent border-bottom d-flex justify-content-between align-items-center">
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="avatar-circle bg-light text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
-                                            {{ profile.user.username|slice:":1"|upper }}
+                                            <i class="fas fa-shopping-cart"></i>
                                         </div>
                                         <div>
-                                            <p class="mb-0 fw-bold small text-dark">{{ profile.user.get_full_name|default:profile.user.username }}</p>
+                                            <p class="mb-0 fw-bold small text-dark">{{ order.customer_name }}</p>
                                             <p class="mb-0 smaller text-muted">
-                                                {{ profile.get_sex_display|default:_("User") }}
+                                                {{ order.product.title|truncatechars:20 }}
                                             </p>
                                         </div>
                                     </div>
-                                    <a href="{% url 'dash:user_details' profile.pk %}" class="btn btn-link p-0 text-muted">
-                                        <i class="fas fa-chevron-right smaller"></i>
-                                    </a>
+                                    <span class="badge bg-{% if order.status == 'pending' %}warning{% elif order.status == 'completed' %}success{% else %}info{% endif %} rounded-pill small">
+                                        {{ order.get_status_display }}
+                                    </span>
                                 </li>
                                 {% endfor %}
                             {% else %}
@@ -138,7 +138,7 @@
                             {% endif %}
                         </ul>
                         {% if role == 'admin' %}
-                            <a href="{% url 'dash:user_list' %}" class="btn btn-light w-100 mt-3 btn-sm">{% trans "View Full List" %}</a>
+                            <a href="{% url 'dash:order_list' %}" class="btn btn-light w-100 mt-3 btn-sm">{% trans "View Full List" %}</a>
                         {% else %}
                             <a href="#" class="btn btn-light w-100 mt-3 btn-sm">{% trans "View Full List" %}</a>
                         {% endif %}

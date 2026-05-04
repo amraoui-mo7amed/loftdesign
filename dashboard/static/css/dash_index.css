@@ -210,22 +210,83 @@
     .sidebar-logo { margin: 0 !important; }
 }
 
+/* Pagination Styles */
+.custom-pagination-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.pagination-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background: #fff;
+    padding: 0.5rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.pagination-pages {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pagination-item {
+    display: inline-block;
+}
+
+.pagination-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--brand-dark);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.pagination-item:not(.disabled):not(.active) .pagination-link:hover {
+    background-color: var(--brand-primary);
+    color: var(--brand-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(var(--brand-primary-rgb, 255, 214, 90), 0.3);
+}
+
+.pagination-item.active .pagination-link {
+    background-color: var(--brand-dark);
+    color: #fff;
+    cursor: default;
+}
+
+.pagination-item.disabled .pagination-link {
+    color: #ccc;
+    cursor: not-allowed;
+    background-color: #f8f9fa;
+}
+
+.pagination-item.prev .pagination-link,
+.pagination-item.next .pagination-link {
+    background-color: #f8f9fa;
+}
+
+/* Responsive */
 @media (max-width: 575.98px) {
-    .sidebar { 
-        transform: translateX(100%); 
-        left: auto;
-        right: 0;
+    .pagination-list {
+        gap: 0.25rem;
     }
-    [dir="ltr"] .sidebar { 
-        transform: translateX(-100%); 
-        right: auto;
-        left: 0;
+    .pagination-link {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
     }
-    .sidebar.show { transform: translateX(0); width: var(--sidebar-width); }
-    .sidebar.show span, .sidebar.show .sidebar-brand-text {
-        display: inline;
-    }
-    .dashContent { margin: 0 !important; }
-    .dash-header { padding: 0 1rem; }
 }
 

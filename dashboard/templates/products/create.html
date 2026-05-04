@@ -30,7 +30,12 @@
                         <input type="text" name="title" class="form-control form-control-lg" placeholder="e.g. Modern Sofa" required>
                     </div>
                     <div class="mb-4">
-                        <label class="form-label fw-bold">{% trans "Category" %}</label>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-bold mb-0">{% trans "Category" %}</label>
+                            <a href="{% url 'dash:category_list' %}" class="small text-primary fw-bold text-decoration-none">
+                                <i class="fas fa-cog me-1"></i> {% trans "Manage Categories" %}
+                            </a>
+                        </div>
                         {% include "components/custom_select.html" with name="category" options=categories placeholder=_("Select Category") %}
                     </div>
                     <div class="mb-4">

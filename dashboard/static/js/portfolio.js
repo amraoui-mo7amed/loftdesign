@@ -236,54 +236,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-    // 6. Category Creation AJAX
-    const categoryForm = document.getElementById('categoryForm');
-    if (categoryForm) {
-        categoryForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const url = this.getAttribute('action');
-            const submitBtn = this.querySelector('button[type="submit"]');
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
 
-            fetch(url, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonColor: 'var(--brand-primary)'
-                    }).then(() => {
-                        if (data.redirect_url) {
-                            window.location.href = data.redirect_url;
-                        } else {
-                            window.location.reload();
-                        }
-                    });
-                } else {
-                    // Handled by common errorList partial if used, 
-                    // but we can show a swal here too for modal context
-                    Swal.fire({
-                        title: 'Error',
-                        text: data.errors ? data.errors[0] : 'Something went wrong',
-                        icon: 'error'
-                    });
-                }
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Create Category';
-            });
-        });
-    }
 });

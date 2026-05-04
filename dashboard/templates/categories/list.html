@@ -22,11 +22,9 @@
             <div class="card border-0 shadow-sm rounded-4 transition-all hover-lift h-100 overflow-hidden">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center gap-3 mb-4">
-                        <div class="flex-shrink-0 p-3 bg-primary bg-opacity-10 rounded-3 text-primary">
-                            <i class="fas fa-tags fa-lg"></i>
-                        </div>
+                 
                         <div>
-                            <h5 class="fw-black mb-0 text-truncate">{{ cat.name }}</h5>
+                            <h5 class="fw-black mb-0 text-truncate">{{ cat.name|truncatechars:"21" }}</h5>
                             <p class="text-muted small mb-0">{{ cat.products.count }} {% trans "Products" %}</p>
                         </div>
                     </div>

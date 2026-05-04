@@ -19,83 +19,41 @@
 {% endblock extra_js %}
 
 {% block content %}
-<section class="products-section bg-light" >
+<section class="products-section bg-light py-5">
     <div class="container">
+        
+        <!-- Search & Filter Trigger -->
+        <div class="search-container reveal reveal-up mt-5">
+            <form method="GET" action="{% url 'frontend:product_list' %}" id="searchForm">
+                <div class="search-filter-wrapper">
+                    <div class="search-input-box">
+                        <i class="fas fa-search text-muted"></i>
+                        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="{% trans 'Search projects or pieces...' %}">
+                    </div>
+                    
+                    <!-- Hidden fields to preserve filters during search -->
+                    <input type="hidden" name="category" value="{{ current_category|default:'' }}">
+                    <input type="hidden" name="min_price" value="{{ min_price|default:'' }}">
+                    <input type="hidden" name="max_price" value="{{ max_price|default:'' }}">
+                    <input type="hidden" name="sort" value="{{ sort|default:'-created_at' }}">
+
+                    <button type="button" class="filter-trigger-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>{% trans "Filters" %}</span>
+                    </button>
+                    <button type="submit" class="search-submit-btn">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
 
         <div class="row g-4">
-            <!-- Filter Sidebar -->
-            <div class="col-lg-3">
-                <div class="filter-sidebar mb-4">
-                    <form method="GET" action="{% url 'frontend:product_list' %}">
-                        <div class="mb-5">
-                            <h5 class="filter-title">{% trans "Search" %}</h5>
-                            <div class="input-group search-filter-group shadow-sm rounded-3 overflow-hidden">
-                                <span class="input-group-text border-0 bg-white">
-                                    <i class="fas fa-search text-muted"></i>
-                                </span>
-                                <input type="text" 
-                                       name="q" 
-                                       value="{{ query|default:'' }}" 
-                                       class="form-control border-0" 
-                                       placeholder="{% trans 'Search products...' %}">
-                            </div>
-                        </div>
-
-                        <div class="mb-5">
-                            <h5 class="filter-title">{% trans "Categories" %}</h5>
-                            <ul class="category-filter-list">
-                                <li class="category-filter-item {% if not current_category %}active{% endif %}">
-                                    <a href="{% url 'frontend:product_list' %}">{% trans "All Collections" %}</a>
-                                </li>
-                                {% for cat in categories %}
-                                <li class="category-filter-item {% if current_category == cat.id %}active{% endif %}">
-                                    <a href="?category={{ cat.id }}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">
-                                        {{ cat.name }}
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-
-                        <div class="mb-5">
-                            <h5 class="filter-title">{% trans "Price Range" %}</h5>
-                            <div class="price-input-group row g-2">
-                                <div class="col-6">
-                                    <input type="number" name="min_price" value="{{ min_price }}" class="form-control" placeholder="Min">
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" name="max_price" value="{{ max_price }}" class="form-control" placeholder="Max">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-5">
-                            <h5 class="filter-title">{% trans "Sort By" %}</h5>
-                            <select name="sort" class="form-select border-0 shadow-sm rounded-3">
-                                <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>{% trans "Newest First" %}</option>
-                                <option value="price" {% if sort == 'price' %}selected{% endif %}>{% trans "Price: Low to High" %}</option>
-                                <option value="-price" {% if sort == '-price' %}selected{% endif %}>{% trans "Price: High to Low" %}</option>
-                                <option value="title" {% if sort == 'title' %}selected{% endif %}>{% trans "Name: A-Z" %}</option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-dark w-100 pill-btn py-3">
-                            {% trans "Apply Filters" %}
-                        </button>
-                        {% if current_category or min_price or max_price or query %}
-                            <a href="{% url 'frontend:product_list' %}" class="btn btn-link text-muted w-100 mt-2 text-decoration-none small">
-                                {% trans "Clear All" %}
-                            </a>
-                        {% endif %}
-                    </form>
-                </div>
-            </div>
-
             <!-- Product Grid -->
-            <div class="col-lg-9">
+            <div class="col-lg-12">
                 <div class="row g-4">
                     {% for product in products %}
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-xl-3 col-lg-4 col-md-6 reveal reveal-up">
                         {% include "partials/product_card.html" %}
                     </div>
                     {% empty %}
@@ -110,10 +68,60 @@
                 </div>
 
                 <div class="mt-5">
-                    {% include 'components/pagination.html' with page_obj=products %}
+                    {% include 'components/pagination.html' with page_obj=products base_url='?' %}
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Filter Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+            <div class="modal-header border-0 bg-dark text-white p-4">
+                <h5 class="modal-title fw-black text-uppercase" id="filterModalLabel">{% trans "Refine Collection" %}</h5>
+                <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form method="GET" action="{% url 'frontend:product_list' %}" id="filterModalForm">
+                    <!-- Carry over search query -->
+                    <input type="hidden" name="q" value="{{ query|default:'' }}">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase tracking-wider">{% trans "Collections" %}</label>
+                        {% include "components/custom_select.html" with id="categorySelect" name="category" options=category_options value=current_category select_title=current_category_label %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase tracking-wider">{% trans "Price Range (DZD)" %}</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="number" name="min_price" value="{{ min_price }}" class="form-control rounded-3 py-2" placeholder="{% trans 'Min' %}">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" name="max_price" value="{{ max_price }}" class="form-control rounded-3 py-2" placeholder="{% trans 'Max' %}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-bold small text-uppercase tracking-wider">{% trans "Sort Preferences" %}</label>
+                        {% include "components/custom_select.html" with id="sortSelect" name="sort" options=sort_options value=sort select_title=current_sort_label %}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'frontend:product_list' %}" class="btn btn-light rounded-pill flex-grow-1 py-3 fw-bold">
+                            {% trans "Reset" %}
+                        </a>
+                        <button type="submit" class="btn btn-primary rounded-pill flex-grow-1 py-3 fw-bold shadow">
+                            {% trans "Apply Filters" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}

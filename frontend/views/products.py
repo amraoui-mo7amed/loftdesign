@@ -65,6 +65,15 @@ def product_list(request):
     }
     return render(request, "products/products_list.html", context)
 
+from dashboard.utils import get_algeria_locations
+
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk, is_active=True)
-    return render(request, "products/product_detail.html", {"product": product})
+    wilaya_options, communes_data = get_algeria_locations()
+    
+    context = {
+        "product": product,
+        "wilaya_options": wilaya_options,
+        "communes_data": communes_data,
+    }
+    return render(request, "products/product_detail.html", context)

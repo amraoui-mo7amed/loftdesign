@@ -54,13 +54,11 @@
                 <nav class="nav flex-column h-100 pb-3 pt-3">
                     <div class="flex-grow-1 overflow-auto px-2">
                         {% for item in dashboard_menu %}
-                            {% if not item.admin_only or request.user.is_superuser %}
-                                <a href="{% if item.url_name == '#' %}#{% else %}{% url item.url_name %}{% endif %}"
-                                   class="nav-link mb-2 rounded-3 {% if request.resolver_match.view_name == item.url_name or request.resolver_match.url_name in item.url_name %}active{% endif %}">
-                                    <i class="{{ item.icon }} fa-fw"></i>
-                                    <span>{{ item.title }}</span>
-                                </a>
-                            {% endif %}
+                            <a href="{% if item.url_name == '#' %}#{% else %}{% url item.url_name %}{% endif %}"
+                               class="nav-link mb-2 rounded-3 {% if request.resolver_match.view_name == item.url_name or request.resolver_match.url_name in item.url_name %}active{% endif %}">
+                                <i class="{{ item.icon }} fa-fw"></i>
+                                <span>{{ item.title }}</span>
+                            </a>
                         {% endfor %}
                     </div>
 

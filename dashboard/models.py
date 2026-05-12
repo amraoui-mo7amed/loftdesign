@@ -102,6 +102,14 @@ class Category(models.Model):
 class Product(models.Model):
     """Product model with external links for affiliate/direct sales"""
 
+    user = models.ForeignKey(
+        userModel,
+        on_delete=models.CASCADE,
+        related_name="products",
+        verbose_name=_("User"),
+        null=True,
+        blank=True
+    )
     title = models.CharField(max_length=255, verbose_name=_("Title"))
     category = models.ForeignKey(
         Category,
@@ -134,7 +142,6 @@ class Order(models.Model):
 
     class OrderStatus(models.TextChoices):
         PENDING = "pending", _("Pending")
-        PROCESSING = "processing", _("Processing")
         COMPLETED = "completed", _("Completed")
         CANCELLED = "cancelled", _("Cancelled")
 
@@ -148,6 +155,8 @@ class Order(models.Model):
     customer_name = models.CharField(max_length=255, verbose_name=_("Customer Name"))
     customer_phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
     customer_address = models.TextField(verbose_name=_("Address"), blank=True)
+    wilaya = models.CharField(max_length=100, verbose_name=_("Wilaya"), blank=True)
+    commune = models.CharField(max_length=100, verbose_name=_("Commune"), blank=True)
     status = models.CharField(
         max_length=20, 
         choices=OrderStatus.choices, 

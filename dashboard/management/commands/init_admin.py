@@ -22,6 +22,7 @@ class Command(BaseCommand):
             UserProfile.objects.get_or_create(
                 user=user,
                 defaults={
+                    "role": UserProfile.roleChoices.ADMIN,
                     "is_approved": True,
                     "phone_number": "0000000000",
                     "address": "Default Admin Address"

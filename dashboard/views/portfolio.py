@@ -6,9 +6,10 @@ from django.utils.translation import gettext as _
 from django.db import transaction
 from ..models import Portfolio, PortfolioGallery
 from django.urls import reverse
-from dashboard.decorator import admin_required
+from dashboard.decorator import role_required
+from user_auth.models import UserProfile
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def portfolio_list(request):
     """View to list all portfolio projects"""
     query = request.GET.get("q", "")
@@ -28,7 +29,7 @@ def portfolio_list(request):
     }
     return render(request, "portfolio/list.html", context)
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def portfolio_create(request):
     """View to create a new portfolio project with manual HTML form"""
     if request.method == "POST":
@@ -78,7 +79,7 @@ def portfolio_create(request):
     
     return render(request, "portfolio/create.html")
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def portfolio_update(request, pk):
     """View to update an existing portfolio project with manual HTML form and AJAX"""
     portfolio = get_object_or_404(Portfolio, pk=pk)
@@ -143,7 +144,7 @@ def portfolio_update(request, pk):
         "title": _("Edit Project")
     })
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def portfolio_delete(request, pk):
     """AJAX view to delete a portfolio project"""
     if request.method == "POST":

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-04 10:35+0000\n"
+"POT-Creation-Date: 2026-05-04 10:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,7 +61,7 @@ msgid "Portfolio"
 msgstr "Portfolio"
 
 #: dashboard/context_processors.py:25 dashboard/models.py:125
-#: dashboard/templates/categories/list.html:30
+#: dashboard/templates/categories/list.html:28
 #: dashboard/templates/products/list.html:19 dashboard/views/dashboard.py:54
 #: frontend/templates/index.html:98
 #: frontend/templates/products/products_list.html:5
@@ -70,7 +70,6 @@ msgstr "Products"
 
 #: dashboard/context_processors.py:31 dashboard/models.py:96
 #: dashboard/templates/categories/list.html:11
-#: frontend/templates/products/products_list.html:45
 msgid "Categories"
 msgstr "Categories"
 
@@ -193,8 +192,8 @@ msgstr "Portfolio Image"
 msgid "Portfolio Images"
 msgstr "Portfolio Images"
 
-#: dashboard/models.py:91 dashboard/templates/categories/list.html:70
-#: dashboard/templates/categories/list.html:110
+#: dashboard/models.py:91 dashboard/templates/categories/list.html:68
+#: dashboard/templates/categories/list.html:108
 #: dashboard/templates/products/list.html:41
 #, fuzzy
 #| msgid "Categories"
@@ -276,31 +275,35 @@ msgstr "Categories"
 
 #: dashboard/templates/categories/list.html:12
 msgid "Manage product collections and categories."
-msgstr "Manage product collections and categories."#: dashboard/templates/categories/list.html:15
+msgstr "Manage product collections and categories."
+
+#: dashboard/templates/categories/list.html:15
 #, fuzzy
 #| msgid "Categories"
 msgid "Add Category"
 msgstr "Categories"
 
-#: dashboard/templates/categories/list.html:38
+#: dashboard/templates/categories/list.html:36
 #: dashboard/templates/portfolio/list.html:73
 msgid "Edit"
 msgstr "Edit"
 
-#: dashboard/templates/categories/list.html:43
+#: dashboard/templates/categories/list.html:41
 #, fuzzy
 #| msgid "Select sex"
 msgid "Delete Category?"
 msgstr "Select sex"
 
-#: dashboard/templates/categories/list.html:44
+#: dashboard/templates/categories/list.html:42
 msgid "All products in this category will become uncategorized."
-msgstr "All products in this category will become uncategorized."#: dashboard/templates/categories/list.html:45
+msgstr "All products in this category will become uncategorized."
+
+#: dashboard/templates/categories/list.html:43
 #: dashboard/templates/portfolio/list.html:82
 msgid "Yes, delete it"
 msgstr "Yes, delete it"
 
-#: dashboard/templates/categories/list.html:46
+#: dashboard/templates/categories/list.html:44
 #: dashboard/templates/portfolio/create.html:101
 #: dashboard/templates/portfolio/edit.html:131
 #: dashboard/templates/portfolio/list.html:83
@@ -311,30 +314,30 @@ msgstr "Yes, delete it"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: dashboard/templates/categories/list.html:59
+#: dashboard/templates/categories/list.html:57
 #, fuzzy
 #| msgid "Categories"
 msgid "Edit Category"
 msgstr "Categories"
 
-#: dashboard/templates/categories/list.html:74
+#: dashboard/templates/categories/list.html:72
 #: dashboard/templates/portfolio/edit.html:128
 msgid "Save Changes"
 msgstr "Save Changes"
 
-#: dashboard/templates/categories/list.html:84
+#: dashboard/templates/categories/list.html:82
 #, fuzzy
 #| msgid "No orders found."
 msgid "No categories found."
 msgstr "No orders found."
 
-#: dashboard/templates/categories/list.html:99
+#: dashboard/templates/categories/list.html:97
 #, fuzzy
 #| msgid "New Entry"
 msgid "New Category"
 msgstr "New Entry"
 
-#: dashboard/templates/categories/list.html:114
+#: dashboard/templates/categories/list.html:112
 #: dashboard/templates/products/list.html:33
 #: dashboard/templates/products/list.html:45
 #, fuzzy
@@ -423,12 +426,6 @@ msgstr "Last 7 Days"
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
 
-#: dashboard/templates/dash/dash_home.html:112
-#: dashboard/templates/dash/dash_index.html:114
-#: dashboard/templates/users/list.html:101
-msgid "User"
-msgstr "User"
-
 #: dashboard/templates/dash/dash_home.html:131
 #: dashboard/templates/users/list.html:106
 msgid "Active"
@@ -497,6 +494,11 @@ msgstr "Logout"
 #: dashboard/templates/dash/dash_index.html:112
 msgid "Administrator"
 msgstr "Administrator"
+
+#: dashboard/templates/dash/dash_index.html:114
+#: dashboard/templates/users/list.html:101
+msgid "User"
+msgstr "User"
 
 #: dashboard/templates/dash/dash_index.html:131
 msgid "My Profile"
@@ -953,7 +955,6 @@ msgid "Filter Users"
 msgstr "Filter Users"
 
 #: dashboard/templates/users/list.html:30
-#: frontend/templates/products/products_list.html:87
 msgid "Clear All"
 msgstr "Clear All"
 
@@ -982,7 +983,7 @@ msgid "Reset All"
 msgstr "Reset All"
 
 #: dashboard/templates/users/list.html:84
-#: frontend/templates/products/products_list.html:83
+#: frontend/templates/products/products_list.html:118
 msgid "Apply Filters"
 msgstr "Apply Filters"
 
@@ -1068,7 +1069,9 @@ msgstr "System Alert"
 
 #: dashboard/views/dashboard.py:74
 msgid "Dashboard synchronized"
-msgstr "Dashboard synchronized"#: dashboard/views/orders.py:39
+msgstr "Dashboard synchronized"
+
+#: dashboard/views/orders.py:39
 msgid "Order status updated"
 msgstr "Order status updated"
 
@@ -1538,59 +1541,87 @@ msgstr "Request Private Viewing"
 
 #: frontend/templates/products/products_list.html:31
 #, fuzzy
-#| msgid "Search Keyword"
-msgid "Search"
-msgstr "Search Keyword"
-
-#: frontend/templates/products/products_list.html:40
-#, fuzzy
 #| msgid "Search by product title..."
-msgid "Search products..."
+msgid "Search projects or pieces..."
 msgstr "Search by product title..."
 
-#: frontend/templates/products/products_list.html:48
+#: frontend/templates/products/products_list.html:42
 #, fuzzy
-#| msgid "Collection"
-msgid "All Collections"
-msgstr "Collection"
+#| msgid "Filter Users"
+msgid "Filters"
+msgstr "Filter Users"
 
-#: frontend/templates/products/products_list.html:61
-#, fuzzy
-#| msgid "Price"
-msgid "Price Range"
-msgstr "Price"
-
-#: frontend/templates/products/products_list.html:73
-msgid "Sort By"
-msgstr "Sort By"
-
-#: frontend/templates/products/products_list.html:75
-msgid "Newest First"
-msgstr "Newest First"
-
-#: frontend/templates/products/products_list.html:76
-msgid "Price: Low to High"
-msgstr "Price: Low to High"
-
-#: frontend/templates/products/products_list.html:77
-msgid "Price: High to Low"
-msgstr "Price: High to Low"
-
-#: frontend/templates/products/products_list.html:78
-msgid "Name: A-Z"
-msgstr "Name: A-Z"
-
-#: frontend/templates/products/products_list.html:106
+#: frontend/templates/products/products_list.html:64
 #, fuzzy
 #| msgid "Try adjusting your filters"
 msgid "No products match your filters."
 msgstr "Try adjusting your filters"
 
-#: frontend/templates/products/products_list.html:107
+#: frontend/templates/products/products_list.html:65
 #, fuzzy
 #| msgid "Apply Filters"
 msgid "Clear Filters"
 msgstr "Apply Filters"
+
+#: frontend/templates/products/products_list.html:83
+#, fuzzy
+#| msgid "Collection"
+msgid "Refine Collection"
+msgstr "Collection"
+
+#: frontend/templates/products/products_list.html:92
+#, fuzzy
+#| msgid "Collection"
+msgid "Collections"
+msgstr "Collection"
+
+#: frontend/templates/products/products_list.html:97
+#, fuzzy
+#| msgid "Price"
+msgid "Price Range (DZD)"
+msgstr "Price"
+
+#: frontend/templates/products/products_list.html:100
+#, fuzzy
+#| msgid "Mon"
+msgid "Min"
+msgstr "Mon"
+
+#: frontend/templates/products/products_list.html:103
+#, fuzzy
+#| msgid "Mar"
+msgid "Max"
+msgstr "Mar"
+
+#: frontend/templates/products/products_list.html:109
+msgid "Sort Preferences"
+msgstr "Sort Preferences"#: frontend/templates/products/products_list.html:115
+#, fuzzy
+#| msgid "Reset All"
+msgid "Reset"
+msgstr "Reset All"
+
+#: frontend/views/products.py:34 frontend/views/products.py:44
+#, fuzzy
+#| msgid "Collection"
+msgid "All Collections"
+msgstr "Collection"
+
+#: frontend/views/products.py:38 frontend/views/products.py:51
+msgid "Newest First"
+msgstr "Newest First"
+
+#: frontend/views/products.py:39
+msgid "Price: Low to High"
+msgstr "Price: Low to High"
+
+#: frontend/views/products.py:40
+msgid "Price: High to Low"
+msgstr "Price: High to Low"
+
+#: frontend/views/products.py:41
+msgid "Name: A-Z"
+msgstr "Name: A-Z"
 
 #: user_auth/models.py:9
 msgid "Male"
@@ -1752,6 +1783,14 @@ msgstr "This email is already registered."
 msgid "Your account has been created successfully."
 msgstr "Your account has been created successfully."
 
+#, fuzzy
+#~| msgid "Search Keyword"
+#~ msgid "Search"
+#~ msgstr "Search Keyword"
+
+#~ msgid "Sort By"
+#~ msgstr "Sort By"
+
 #~ msgid "New security update available."
 #~ msgstr "New security update available."
 
@@ -1775,9 +1814,6 @@ msgstr "Your account has been created successfully."
 
 #~ msgid "Feb"
 #~ msgstr "Feb"
-
-#~ msgid "Mar"
-#~ msgstr "Mar"
 
 #~ msgid "Active Projects"
 #~ msgstr "Active Projects"

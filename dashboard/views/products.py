@@ -6,8 +6,10 @@ from django.utils.translation import gettext as _
 from django.db import transaction
 from django.urls import reverse
 from ..models import Product, Category
+from dashboard.decorator import role_required
+from user_auth.models import UserProfile
 
-@login_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def category_list(request):
     """View to list and manage categories with pagination"""
     categories_list = Category.objects.all().order_by("-created_at")
@@ -18,7 +20,7 @@ def category_list(request):
     
     return render(request, "categories/list.html", {"categories": page_obj})
 
-@login_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def category_update(request, pk):
     """AJAX view to update category name"""
     if request.method == "POST":
@@ -39,7 +41,7 @@ def category_update(request, pk):
             return JsonResponse({"success": False, "errors": [str(e)]})
     return JsonResponse({"success": False}, status=400)
 
-@login_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def category_delete(request, pk):
     """AJAX view to delete category"""
     if request.method == "POST":
@@ -52,7 +54,7 @@ def category_delete(request, pk):
         })
     return JsonResponse({"success": False}, status=400)
 
-@login_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def category_create(request):
     """AJAX view to create a new category"""
     if request.method == "POST":
@@ -72,11 +74,15 @@ def category_create(request):
             return JsonResponse({"success": False, "errors": [str(e)]})
     return JsonResponse({"success": False}, status=400)
 
-@login_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_list(request):
-    """View to list all products"""
+    """View to list products (filtered by user if not admin)"""
     query = request.GET.get("q", "")
-    products = Product.objects.all()
+    
+    if request.user.is_superuser:
+        products = Product.objects.all()
+    else:
+        products = Product.objects.filter(user=request.user)
     
     if query:
         products = products.filter(title__icontains=query)
@@ -94,9 +100,9 @@ def product_list(request):
     }
     return render(request, "products/list.html", context)
 
-@login_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_create(request):
-    """View to create a new product with AJAX"""
+    """View to create a new product linked to the current user"""
     if request.method == "POST":
         title = request.POST.get("title")
         category_id = request.POST.get("category")
@@ -108,9 +114,9 @@ def product_create(request):
         is_active = request.POST.get("is_active") == "on"
         
         errors = {}
-        if not title: errors["title"] = _("Title is required")
-        if not price: errors["price"] = _("Price is required")
-        if not thumbnail: errors["thumbnail"] = _("Thumbnail is required")
+        if not title: errors["title"] = [_("Title is required")]
+        if not price: errors["price"] = [_("Price is required")]
+        if not thumbnail: errors["thumbnail"] = [_("Thumbnail is required")]
 
         if errors:
             return JsonResponse({"success": False, "errors": errors})
@@ -121,6 +127,7 @@ def product_create(request):
                 category = Category.objects.get(id=category_id)
 
             Product.objects.create(
+                user=request.user,
                 title=title,
                 category=category,
                 description=description,
@@ -136,15 +143,18 @@ def product_create(request):
                 "redirect_url": reverse("dash:product_list")
             })
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)})
+            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
     
     categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
     return render(request, "products/create.html", {"categories": categories, "values": {}})
 
-@login_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_update(request, pk):
-    """View to update product with AJAX"""
-    product = get_object_or_404(Product, pk=pk)
+    """View to update product (checks ownership)"""
+    if request.user.is_superuser:
+        product = get_object_or_404(Product, pk=pk)
+    else:
+        product = get_object_or_404(Product, pk=pk, user=request.user)
     
     if request.method == "POST":
         product.title = request.POST.get("title")
@@ -171,16 +181,20 @@ def product_update(request, pk):
                 "redirect_url": reverse("dash:product_list")
             })
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)})
+            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
             
     categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
     return render(request, "products/edit.html", {"product": product, "categories": categories})
 
-@login_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_delete(request, pk):
-    """AJAX delete for product"""
+    """AJAX delete for product (checks ownership)"""
     if request.method == "POST":
-        product = get_object_or_404(Product, pk=pk)
+        if request.user.is_superuser:
+            product = get_object_or_404(Product, pk=pk)
+        else:
+            product = get_object_or_404(Product, pk=pk, user=request.user)
+            
         product.delete()
         return JsonResponse({"success": True, "message": _("Product removed")})
     return JsonResponse({"success": False}, status=400)

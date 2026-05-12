@@ -22,6 +22,34 @@ def admin_required(view_func):
     return _wrapped_view
 
 
+def role_required(allowed_roles):
+    """
+    Decorator for views that checks if the user has one of the allowed roles.
+    allowed_roles: list of roles from UserProfile.roleChoices
+    """
+
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            if not request.user.is_authenticated:
+                return redirect(reverse("user_auth:login"))
+
+            # Check if user has a profile and if the role is allowed
+            # Superusers bypass the role check
+            if request.user.is_superuser:
+                return view_func(request, *args, **kwargs)
+
+            profile = getattr(request.user, "profile", None)
+            if profile and profile.role in allowed_roles:
+                return view_func(request, *args, **kwargs)
+
+            raise PermissionDenied
+
+        return _wrapped_view
+
+    return decorator
+
+
 def with_pagination(
     per_page=10, context_name="page_obj", queryset_name="queryset", template="list.html"
 ):

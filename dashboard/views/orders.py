@@ -1,16 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.utils.translation import gettext as _
 from ..models import Order
-from dashboard.decorator import admin_required
+from dashboard.decorator import role_required
+from user_auth.models import UserProfile
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def order_list(request):
-    """View to list all orders"""
+    """View to list all product inquiries (orders) - ADMIN ONLY"""
     status_filter = request.GET.get("status", "")
-    orders = Order.objects.all()
+    orders = Order.objects.all().select_related("product")
     
     if status_filter:
         orders = orders.filter(status=status_filter)
@@ -27,21 +28,23 @@ def order_list(request):
     }
     return render(request, "orders/list.html", context)
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def order_update_status(request, pk):
-    """AJAX view to update order status"""
+    """AJAX view to update order status - ADMIN ONLY"""
     if request.method == "POST":
         order = get_object_or_404(Order, pk=pk)
         new_status = request.POST.get("status")
+        
         if new_status in Order.OrderStatus.values:
             order.status = new_status
             order.save()
             return JsonResponse({"success": True, "message": _("Order status updated")})
+            
     return JsonResponse({"success": False}, status=400)
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def order_delete(request, pk):
-    """AJAX delete for order"""
+    """AJAX view to delete an order - ADMIN ONLY"""
     if request.method == "POST":
         order = get_object_or_404(Order, pk=pk)
         order.delete()

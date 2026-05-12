@@ -32,6 +32,14 @@
                     </a>
                 {% endif %}
             </div>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-dark rounded-3 px-4 fw-bold shadow-sm d-flex align-items-center gap-2" 
+                        data-bs-toggle="modal" data-bs-target="#providerModal" style="height: 45px;">
+                    <i class="fas fa-user-plus text-primary"></i>
+                    <span>{% trans "New Provider" %}</span>
+                </button>
+            </div>
             
             <div class="search-minimal ms-md-auto" style="min-width: 280px;">
                 <form method="get" action="{% url 'dash:user_list' %}" class="position-relative">
@@ -118,13 +126,13 @@
                         </div>
                     </div>
                     
-                    <div class="card-body pt-5 text-center">
-                        <h5 class="fw-bold text-dark mb-1 mt-2 text-truncate px-2">{{ profile.user.get_full_name|default:profile.user.username }}</h5>
+                    <div class="card-body pt-5 text-start">
+                        <h5 class="fw-black text-dark mb-1 mt-3 text-truncate">{{ profile.user.get_full_name|default:profile.user.username }}</h5>
                         <p class="text-muted small mb-4">
                             <span class="opacity-50">@</span>{{ profile.user.username }}
                         </p>
                         
-                        <div class="info-grid-modern text-start">
+                        <div class="info-grid-modern">
                             <div class="info-item-modern">
                                 <div class="info-icon-wrapper">
                                     <i class="fas fa-envelope small"></i>
@@ -175,6 +183,64 @@
         <!-- Pagination -->
         <div class="mt-5">
             {% render_pagination page_obj %}
+        </div>
+    </div>
+
+    <!-- New Provider Modal -->
+    <div class="modal fade" id="providerModal" tabindex="-1" aria-labelledby="providerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                <div class="modal-header border-0 bg-dark text-white p-4">
+                    <h5 class="modal-title fw-black text-uppercase" id="providerModalLabel">
+                        <i class="fas fa-user-shield me-2 text-primary"></i>{% trans "Add New Provider" %}
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    {% include "partials/errorList.html" with form_id="providerForm" %}
+                    
+                    <form method="POST" action="{% url 'dash:provider_create' %}" class="form" id="providerForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">{% trans "First Name" %}</label>
+                                <input type="text" name="first_name" class="form-control rounded-3" placeholder="John" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">{% trans "Last Name" %}</label>
+                                <input type="text" name="last_name" class="form-control rounded-3" placeholder="Doe">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase">{% trans "Email Address" %}</label>
+                                <input type="email" name="email" class="form-control rounded-3" placeholder="john@example.com" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase">{% trans "Phone Number" %}</label>
+                                <input type="tel" name="phone" class="form-control rounded-3" placeholder="+213 ...">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase">{% trans "Commission (%)" %}</label>
+                                <input type="number" name="commission" class="form-control rounded-3" step="0.01" min="0" max="100" placeholder="0.00" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase">{% trans "Office Address" %}</label>
+                                <textarea name="address" class="form-control rounded-3" rows="2" placeholder="Street, City, Country"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-4 rounded-3 border-0 small">
+                            <i class="fas fa-info-circle me-2"></i>
+                            {% trans "The provider will receive an email with their generated login credentials automatically." %}
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow">
+                                <i class="fas fa-paper-plane me-2"></i>{% trans "Create Provider & Send Credentials" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock dashContent %}

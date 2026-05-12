@@ -106,3 +106,28 @@ def notify_user(user, title, message, notification_type="info", link=""):
             f"Failed to create notification for user {user.username}: {str(e)}"
         )
         return None
+
+def get_algeria_locations():
+    """
+    Returns a dictionary of Wilayas and their corresponding Communes.
+    Format optimized for custom_select components.
+    """
+    # Using a simplified version for common wilayas, can be expanded.
+    locations = {
+        "01": {"name": "Adrar", "communes": ["Adrar", "Fenoughil", "Reggane"]},
+        "02": {"name": "Chlef", "communes": ["Chlef", "Ténès", "Boukadir"]},
+        "06": {"name": "Bejaia", "communes": ["Bejaia", "Amizour", "Akbou"]},
+        "09": {"name": "Blida", "communes": ["Blida", "Boufarik", "Ouled Yaïch"]},
+        "16": {"name": "Alger", "communes": ["Alger Centre", "Bab El Oued", "Bordj El Kiffan", "Cheraga", "Dely Ibrahim", "Hydra"]},
+        "19": {"name": "Sétif", "communes": ["Sétif", "El Eulma", "Ain Azel"]},
+        "25": {"name": "Constantine", "communes": ["Constantine", "El Khroub", "Hamma Bouziane"]},
+        "31": {"name": "Oran", "communes": ["Oran", "Bir El Djir", "Es Senia"]},
+        "35": {"name": "Boumerdès", "communes": ["Boumerdès", "Boudouaou", "Dellys"]},
+    }
+    
+    wilaya_options = [{"value": k, "label": f"{k} - {v['name']}"} for k, v in locations.items()]
+    
+    # Pre-format communes for each wilaya to be used by JS
+    communes_data = {k: [{"value": c, "label": c} for c in v["communes"]] for k, v in locations.items()}
+    
+    return wilaya_options, communes_data

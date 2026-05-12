@@ -1,23 +1,121 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from user_auth.models import UserProfile
 from django.db.models import Q
 from django.utils.translation import gettext as _
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.urls import reverse
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from django.conf import settings
 from dashboard.utils import send_account_activation_email
-from dashboard.decorator import admin_required
+from dashboard.decorator import role_required
 from django.db import transaction
+import secrets
+import string
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+def provider_create(request):
+    """AJAX view to create a new provider and send welcome email"""
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        address = request.POST.get("address")
+        commission = request.POST.get("commission")
+
+        errors = {}
+        if not first_name: errors["first_name"] = [_("First name is required")]
+        if not email: errors["email"] = [_("Email is required")]
+        if not commission: errors["commission"] = [_("Commission is required")]
+        if User.objects.filter(email=email).exists():
+            errors["email"] = [_("This email is already in use")]
+
+        if errors:
+            return JsonResponse({"success": False, "errors": errors})
+
+        try:
+            with transaction.atomic():
+                # Generate unique username and secure password
+                username = email.split('@')[0]
+                if User.objects.filter(username=username).exists():
+                    username = f"{username}_{secrets.token_hex(2)}"
+                
+                password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
+
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name
+                )
+
+                # Create Profile
+                profile = UserProfile.objects.create(
+                    user=user,
+                    phone_number=phone,
+                    address=address,
+                    commission=commission,
+                    is_approved=True,
+                    role=UserProfile.roleChoices.PROVIDER
+                )
+
+                # Prepare Email
+                login_url = request.build_absolute_uri(reverse('user_auth:login'))
+                email_html = render_to_string('emails/provider_account.html', {
+                    'first_name': first_name,
+                    'username': username,
+                    'password': password,
+                    'login_url': login_url
+                })
+
+                email_msg = EmailMessage(
+                    subject="LOFT Design - Your Account Credentials / Vos identifiants",
+                    body=email_html,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[email],
+                )
+                email_msg.content_subtype = "html"
+                
+                try:
+                    email_sent = email_msg.send(fail_silently=False)
+                    if not email_sent:
+                        raise Exception(_("Failed to send email. Account creation rolled back."))
+                except Exception as mail_err:
+                    # Rolling back transaction because email is mandatory
+                    transaction.set_rollback(True)
+                    print(f"Critical Mail error: {mail_err}")
+                    return JsonResponse({
+                        "success": False, 
+                        "errors": {
+                            "email": [_("Account could not be created because the invitation email failed to send. Please check your SMTP settings.")]
+                        }
+                    })
+
+                return JsonResponse({
+                    "success": True,
+                    "message": _("Provider account created and email sent successfully."),
+                    "redirect_url": reverse("dash:user_list")
+                })
+        except Exception as e:
+            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+
+    return JsonResponse({"success": False}, status=400)
 
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def user_list(request):
     query = request.GET.get("q", "")
     status = request.GET.get("status", "")
 
     profiles_list = (
-        UserProfile.objects.select_related("user").all().order_by("-created_at")
+        UserProfile.objects.select_related("user")
+        .filter(role=UserProfile.roleChoices.PROVIDER)
+        .order_by("-created_at")
     )
 
     if query:
@@ -61,13 +159,13 @@ def user_list(request):
     return render(request, "users/list.html", context)
 
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def user_details(request, pk):
     profile = get_object_or_404(UserProfile, pk=pk)
     return render(request, "users/details.html", {"profile": profile})
 
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def user_delete(request, pk):
     profile = get_object_or_404(UserProfile, pk=pk)
     if request.method == "POST":
@@ -86,7 +184,7 @@ def user_delete(request, pk):
     return redirect("dash:user_details", pk=pk)
 
 
-@admin_required
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def user_approve(request, pk):
     profile = get_object_or_404(UserProfile, pk=pk)
     if request.method == "POST":

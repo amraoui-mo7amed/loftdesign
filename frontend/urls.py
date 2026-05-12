@@ -1,10 +1,12 @@
 from django.urls import path
-from .views import main, portfolio, products
+from .views import main, portfolio, products, orders
 
 app_name = "frontend"
 
 urlpatterns = [
     path("", main.home_view, name="home"),
+    # Orders
+    path("place-order/", orders.place_order, name="place_order"),
     # Portfolio
     path("portfolio/", portfolio.portfolio_list, name="portfolio_list"),
     path("portfolio/<int:pk>/", portfolio.portfolio_detail, name="portfolio_detail"),

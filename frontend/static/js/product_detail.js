@@ -1,6 +1,6 @@
 /**
  * LOFT Design - Product Detail Page
- * Handles dynamic location selection for orders
+ * Handles custom searchable dropdowns for locations
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,67 +8,99 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!communesDataEl) return;
 
     const communesData = JSON.parse(communesDataEl.textContent);
-    const wilayaInput = document.querySelector('#wilayaSelect_input');
-    const communeContainer = document.getElementById('communeSelectContainer');
     
-    // Listen for changes on the hidden input of the custom select
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
-                const wilayaId = wilayaInput.value;
-                updateCommunes(wilayaId);
-            }
-        });
+    // Initialize Wilaya Select
+    initSearchableSelect('wilaya-searchable', (value) => {
+        updateCommunes(value);
     });
 
-    if (wilayaInput) {
-        observer.observe(wilayaInput, { attributes: true });
-    }
+    // Initialize Commune Select (empty initially)
+    initSearchableSelect('commune-searchable');
 
     function updateCommunes(wilayaId) {
+        const list = document.querySelector('#commune-searchable .searchable-select-list');
+        const display = document.querySelector('#commune-searchable .selected-text');
+        const hiddenInput = document.querySelector('#commune-searchable input[type="hidden"]');
+        
+        // Reset state
+        list.innerHTML = '';
+        display.textContent = window.L10N_STRINGS.selectCommune;
+        hiddenInput.value = '';
+
         if (!wilayaId || !communesData[wilayaId]) {
-            communeContainer.innerHTML = `<div class="alert alert-light border small py-2 mb-0">${window.L10N_STRINGS.selectWilayaFirst}</div>`;
             return;
         }
 
         const options = communesData[wilayaId];
-        let listHtml = options.map(opt => `<li data-value="${opt.value}">${opt.label}</li>`).join('');
-        
-        communeContainer.innerHTML = `
-            <div class="custom-select-wrapper full-width" id="communeSelect">
-                <div class="custom-select-display">
-                    <span class="selected-text">${window.L10N_STRINGS.selectCommune}</span>
-                    <span class="arrow"><i class="fas fa-caret-down"></i></span>
-                </div>
-                <ul class="custom-select-list">${listHtml}</ul>
-                <input type="hidden" id="communeSelect_input" name="commune" value="" required />
-            </div>
-        `;
-
-        attachCustomSelectLogic(communeContainer.querySelector('.custom-select-wrapper'));
-    }
-
-    function attachCustomSelectLogic(wrapper) {
-        const display = wrapper.querySelector('.custom-select-display');
-        const list = wrapper.querySelector('.custom-select-list');
-        const hiddenInput = wrapper.querySelector('input[type="hidden"]');
-
-        display.addEventListener('click', (e) => {
-            e.stopPropagation();
-            list.classList.toggle('show');
-            display.classList.toggle('active');
-            wrapper.classList.toggle('active');
+        options.forEach(opt => {
+            const li = document.createElement('li');
+            li.setAttribute('data-value', opt.value);
+            li.textContent = opt.label;
+            list.appendChild(li);
         });
 
-        list.querySelectorAll('li').forEach(item => {
+        // Re-bind listeners for the new list items
+        bindListItems('commune-searchable');
+    }
+
+    function initSearchableSelect(containerId, onChange) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const display = container.querySelector('.searchable-select-display');
+        const dropdown = container.querySelector('.searchable-select-dropdown');
+        const searchInput = container.querySelector('.search-input');
+        
+        display.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Close other dropdowns
+            document.querySelectorAll('.searchable-select-dropdown.show').forEach(d => {
+                if (d !== dropdown) d.classList.remove('show');
+            });
+            dropdown.classList.toggle('show');
+            if (dropdown.classList.contains('show')) {
+                searchInput.focus();
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const items = container.querySelectorAll('.searchable-select-list li');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.classList.toggle('d-none', !text.includes(term));
+            });
+        });
+
+        bindListItems(containerId, onChange);
+
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('show');
+        });
+    }
+
+    function bindListItems(containerId, onChange) {
+        const container = document.getElementById(containerId);
+        const display = container.querySelector('.selected-text');
+        const hiddenInput = container.querySelector('input[type="hidden"]');
+        const dropdown = container.querySelector('.searchable-select-dropdown');
+        const items = container.querySelectorAll('.searchable-select-list li');
+
+        items.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const selectedText = item.textContent;
-                hiddenInput.value = item.dataset.value;
-                list.classList.remove('show');
-                display.classList.remove('active');
-                wrapper.classList.remove('active');
-                display.innerHTML = `${selectedText} <span class="arrow"><i class="fas fa-caret-down"></i></span>`;
+                const value = item.getAttribute('data-value');
+                const text = item.textContent;
+
+                // Update UI
+                items.forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                display.textContent = text;
+                hiddenInput.value = value;
+                
+                dropdown.classList.remove('show');
+
+                if (onChange) onChange(value);
             });
         });
     }

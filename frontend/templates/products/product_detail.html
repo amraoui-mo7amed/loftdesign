@@ -116,13 +116,41 @@
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold small text-uppercase">{% trans "Wilaya" %}</label>
-                                {% include "components/custom_select.html" with id="wilayaSelect" name="wilaya" options=wilaya_options placeholder=_("Select Wilaya") %}
+                                <div class="searchable-select-wrapper" id="wilaya-searchable">
+                                    <div class="searchable-select-display">
+                                        <span class="selected-text">{% trans "Select Wilaya" %}</span>
+                                        <i class="fas fa-chevron-down opacity-50"></i>
+                                    </div>
+                                    <div class="searchable-select-dropdown">
+                                        <div class="searchable-select-search">
+                                            <input type="text" class="search-input" placeholder="{% trans 'Search wilaya...' %}">
+                                        </div>
+                                        <ul class="searchable-select-list">
+                                            {% for opt in wilaya_options %}
+                                                <li data-value="{{ opt.value }}">{{ opt.label }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="wilaya" id="wilayaSelect_input" required>
+                                </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold small text-uppercase">{% trans "Commune" %}</label>
-                                <div id="communeSelectContainer">
-                                     <div class="alert alert-light border small py-2 mb-0">{% trans "Please select a wilaya first" %}</div>
+                                <div class="searchable-select-wrapper" id="commune-searchable">
+                                    <div class="searchable-select-display">
+                                        <span class="selected-text">{% trans "Select Commune" %}</span>
+                                        <i class="fas fa-chevron-down opacity-50"></i>
+                                    </div>
+                                    <div class="searchable-select-dropdown">
+                                        <div class="searchable-select-search">
+                                            <input type="text" class="search-input" placeholder="{% trans 'Search commune...' %}">
+                                        </div>
+                                        <ul class="searchable-select-list">
+                                            <!-- Filled via JS -->
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="commune" id="communeSelect_input" required>
                                 </div>
                             </div>
 

@@ -58,7 +58,7 @@
         <div class="row g-4">
             <!-- Profile Overview Card -->
             <div class="col-12 col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-white">
+                <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden bg-white">
                     <div class="card-header bg-primary bg-opacity-10 border-0 p-5 text-center">
                         <div class="avatar-circle bg-white text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm mx-auto mb-3" 
                              style="width: 100px; height: 100px; font-size: 2.5rem; color: #fff !important;">
@@ -90,9 +90,33 @@
                 </div>
             </div>
 
-            <!-- Detailed Information Card -->
+            <!-- Financial Stats Row (Integrated in the same horizontal structure) -->
             <div class="col-12 col-lg-8">
-                <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+                            <label class="smaller text-muted fw-bold text-uppercase mb-2 d-block">{% trans "Commission Rate" %}</label>
+                            <h3 class="fw-black mb-0 text-primary">{{ profile.commission }}%</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+                            <label class="smaller text-muted fw-bold text-uppercase mb-2 d-block">{% trans "Confirmed Sales" %}</label>
+                            <h3 class="fw-black mb-0 text-dark">{{ confirmed_sales_count }}</h3>
+                            <span class="smaller text-muted fw-bold">{{ total_confirmed_price|floatformat:0 }} DZD</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 bg-dark p-4 h-100">
+                            <label class="smaller text-white-50 fw-bold text-uppercase mb-2 d-block">{% trans "Total Debt" %}</label>
+                            <h3 class="fw-black mb-0 text-primary">{{ total_debt|floatformat:0 }} DZD</h3>
+                            <span class="smaller text-white-50 fw-bold">{% trans "Platform Share" %}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Information Card -->
+                <div class="card border-0 shadow-sm rounded-4 bg-white">
                     <div class="card-header bg-transparent border-bottom p-4">
                         <h5 class="fw-bold mb-0 text-dark">
                             <i class="fas fa-info-circle text-primary me-2"></i> {% trans "Detailed Information" %}

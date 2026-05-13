@@ -5,22 +5,13 @@
 {% block dashTitle %}{% trans "Order Management" %}{% endblock dashTitle %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
-    <style>
-        .status-badge {
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .status-badge:hover {
-            transform: scale(1.1);
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}?v={% now 'U' %}">
 {% endblock extra_css %}
 
 {% block dashContent %}
 <div class="container-fluid py-4">
     {% csrf_token %}
-    <div class="d-flex justify-content-between align-items-end flex-wrap gap-4 mb-5" data-aos="fade-down">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-4 mb-5 reveal reveal-up">
         <div>
             <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Sales" %}</h6>
             <h1 class="fw-black display-4 mb-0">{% trans "Orders" %}</h1>
@@ -33,77 +24,91 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden" data-aos="fade-up">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light text-dark">
-                    <tr>
-                        <th class="ps-4">{% trans "Customer" %}</th>
-                        <th>{% trans "Product" %}</th>
-                        <th>{% trans "Date" %}</th>
-                        <th>{% trans "Status" %}</th>
-                        <th class="text-end pe-4">{% trans "Actions" %}</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white">
-                    {% for order in page_obj %}
-                    <tr>
-                        <td class="ps-4">
-                            <div class="fw-bold text-dark">{{ order.customer_name }}</div>
-                            <div class="small text-muted"><i class="fas fa-phone me-1"></i> {{ order.customer_phone }}</div>
-                        </td>
-                        <td>
-                            {% if order.product %}
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="{{ order.product.thumbnail.url }}" class="rounded-2" style="width: 32px; height: 32px; object-fit: cover;">
-                                    <span class="fw-bold">{{ order.product.title }}</span>
-                                </div>
+    <div class="row g-4 reveal reveal-up">
+        {% for order in page_obj %}
+        <div class="col-xl-4 col-md-6">
+            <div class="card order-card rounded-4 shadow-sm h-100">
+                <div class="card-body p-4 d-flex flex-column">
+                    <!-- Header: Product & Status -->
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            {% if order.product and order.product.thumbnail %}
+                                <img src="{{ order.product.thumbnail.url }}" class="product-thumb shadow-sm" alt="{{ order.product.title }}">
                             {% else %}
-                                <span class="text-muted">{% trans "Deleted Product" %}</span>
+                                <div class="product-thumb bg-light d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-box text-muted opacity-25"></i>
+                                </div>
                             {% endif %}
-                        </td>
-                        <td>
-                            <div class="small fw-bold">{{ order.created_at|date:"M d, Y" }}</div>
-                            <div class="smaller text-muted">{{ order.created_at|date:"H:i" }}</div>
-                        </td>
-                        <td>
-                            <div class="dropdown">
-                                <span class="badge rounded-pill px-3 py-2 status-badge 
-                                    {% if order.status == 'pending' %}bg-warning text-dark
-                                    {% elif order.status == 'processing' %}bg-info text-white
-                                    {% elif order.status == 'completed' %}bg-success text-white
-                                    {% else %}bg-danger text-white{% endif %}"
-                                    data-bs-toggle="dropdown">
-                                    {{ order.get_status_display }}
-                                </span>
-                                <ul class="dropdown-menu shadow border-0 rounded-3">
-                                    {% for status, label in status_choices %}
-                                    <li><button class="dropdown-item update-status-btn" data-url="{% url 'dash:order_update_status' order.pk %}" data-status="{{ status }}">{{ label }}</button></li>
-                                    {% endfor %}
-                                </ul>
+                            <div>
+                                <h6 class="fw-black mb-0 text-truncate" style="max-width: 150px;">
+                                    {% if order.product %}{{ order.product.title }}{% else %}{% trans "Deleted Product" %}{% endif %}
+                                </h6>
+                                <span class="smaller text-muted fw-bold">{{ order.created_at|date:"d M, Y" }}</span>
                             </div>
-                        </td>
-                        <td class="text-end pe-4">
-                            <button type="button" class="btn btn-light rounded-circle shadow-sm delete-btn" 
-                                    data-url="{% url 'dash:order_delete' order.pk %}"
-                                    data-name="Order #{{ order.id }}"
-                                    data-swal-title="{% trans 'Remove Order?' %}"
-                                    data-swal-text="{% trans 'This action cannot be undone.' %}">
-                                <i class="fas fa-trash text-danger"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center py-10 text-muted">{% trans "No orders found." %}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </div>
+
+                        <div class="dropdown">
+                            <span class="badge rounded-pill status-badge 
+                                {% if order.status == 'pending' %}bg-warning text-dark
+                                {% elif order.status == 'processing' %}bg-info text-white
+                                {% elif order.status == 'completed' %}bg-success text-white
+                                {% else %}bg-danger text-white{% endif %}"
+                                data-bs-toggle="dropdown">
+                                {{ order.get_status_display }}
+                            </span>
+                            <ul class="dropdown-menu shadow border-0 rounded-3">
+                                {% for status, label in status_choices %}
+                                <li><button class="dropdown-item update-status-btn" data-url="{% url 'dash:order_update_status' order.pk %}" data-status="{{ status }}">{{ label }}</button></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Customer Info -->
+                    <div class="bg-light rounded-4 p-3 mb-4">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="icon-box"><i class="fas fa-user small"></i></div>
+                            <div class="fw-bold text-dark">{{ order.customer_name }}</div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="icon-box"><i class="fas fa-map-marker-alt small"></i></div>
+                            <div class="small text-muted fw-bold">{{ order.wilaya }} - {{ order.commune }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-auto d-flex gap-2">
+                        <button class="view-details-btn d-flex align-items-center justify-content-center gap-2"
+                                data-name="{{ order.customer_name }}"
+                                data-phone="{{ order.customer_phone }}"
+                                data-location="{{ order.wilaya }} - {{ order.commune }}"
+                                data-address="{{ order.customer_address }}"
+                                data-product="{% if order.product %}{{ order.product.title }}{% else %}{% trans 'Deleted Product' %}{% endif %}"
+                                data-date="{{ order.created_at|date:'d M Y, H:i' }}">
+                            <i class="fas fa-eye"></i> {% trans "DETAILS" %}
+                        </button>
+                        
+                        <button type="button" class="delete-order-btn delete-btn" 
+                                data-url="{% url 'dash:order_delete' order.pk %}"
+                                data-name="Order #{{ order.id }}"
+                                data-swal-title="{% trans 'Remove Order?' %}"
+                                data-swal-text="{% trans 'This action cannot be undone.' %}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-footer bg-white border-0 py-3">
-            {% include "components/pagination.html" with page_obj=page_obj %}
+        {% empty %}
+        <div class="col-12 text-center py-10">
+            <i class="fas fa-shopping-bag fa-4x text-light mb-3"></i>
+            <h4 class="text-muted fw-bold">{% trans "No orders found." %}</h4>
         </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-5">
+        {% include "components/pagination.html" with page_obj=page_obj base_url='?' %}
     </div>
 </div>
 {% endblock dashContent %}

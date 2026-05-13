@@ -159,10 +159,34 @@ def user_list(request):
     return render(request, "users/list.html", context)
 
 
+from dashboard.models import Order
+from django.db.models import Sum, Count
+
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def user_details(request, pk):
     profile = get_object_or_404(UserProfile, pk=pk)
-    return render(request, "users/details.html", {"profile": profile})
+    
+    # Financial Analytics for Provider
+    confirmed_orders = Order.objects.filter(
+        product__user=profile.user, 
+        status=Order.OrderStatus.COMPLETED
+    )
+    
+    confirmed_sales_count = confirmed_orders.count()
+    total_confirmed_price = confirmed_orders.aggregate(total=Sum('product__price'))['total'] or 0
+    
+    # Debt: Total commission earned by the platform from this provider
+    # Formula: sum(product_price * provider_commission / 100)
+    # Since commission is per profile, we can calculate it from total sales
+    total_debt = (total_confirmed_price * profile.commission) / 100
+
+    context = {
+        "profile": profile,
+        "confirmed_sales_count": confirmed_sales_count,
+        "total_confirmed_price": total_confirmed_price,
+        "total_debt": total_debt,
+    }
+    return render(request, "users/details.html", context)
 
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])

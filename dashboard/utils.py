@@ -107,27 +107,42 @@ def notify_user(user, title, message, notification_type="info", link=""):
         )
         return None
 
+import json
+import os
+
 def get_algeria_locations():
     """
     Returns a dictionary of Wilayas and their corresponding Communes.
-    Format optimized for custom_select components.
+    Data is loaded from algeria.json.
     """
-    # Using a simplified version for common wilayas, can be expanded.
-    locations = {
-        "01": {"name": "Adrar", "communes": ["Adrar", "Fenoughil", "Reggane"]},
-        "02": {"name": "Chlef", "communes": ["Chlef", "Ténès", "Boukadir"]},
-        "06": {"name": "Bejaia", "communes": ["Bejaia", "Amizour", "Akbou"]},
-        "09": {"name": "Blida", "communes": ["Blida", "Boufarik", "Ouled Yaïch"]},
-        "16": {"name": "Alger", "communes": ["Alger Centre", "Bab El Oued", "Bordj El Kiffan", "Cheraga", "Dely Ibrahim", "Hydra"]},
-        "19": {"name": "Sétif", "communes": ["Sétif", "El Eulma", "Ain Azel"]},
-        "25": {"name": "Constantine", "communes": ["Constantine", "El Khroub", "Hamma Bouziane"]},
-        "31": {"name": "Oran", "communes": ["Oran", "Bir El Djir", "Es Senia"]},
-        "35": {"name": "Boumerdès", "communes": ["Boumerdès", "Boudouaou", "Dellys"]},
-    }
-    
-    wilaya_options = [{"value": k, "label": f"{k} - {v['name']}"} for k, v in locations.items()]
-    
-    # Pre-format communes for each wilaya to be used by JS
-    communes_data = {k: [{"value": c, "label": c} for c in v["communes"]] for k, v in locations.items()}
-    
+    json_path = os.path.join(settings.BASE_DIR, 'algeria.json')
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        return [], {}
+
+    wilayas_dict = {}
+    for item in data:
+        code = item['wilaya_code']
+        name = item['wilaya_name_ascii']
+        if code not in wilayas_dict:
+            wilayas_dict[code] = {
+                'name': name,
+                'communes': set()
+            }
+        wilayas_dict[code]['communes'].add(item['commune_name_ascii'])
+
+    wilaya_options = []
+    communes_data = {}
+
+    for code in sorted(wilayas_dict.keys()):
+        wilaya_options.append({
+            "value": code,
+            "label": f"{code} - {wilayas_dict[code]['name']}"
+        })
+        communes_data[code] = [
+            {"value": c, "label": c} for c in sorted(list(wilayas_dict[code]['communes']))
+        ]
+
     return wilaya_options, communes_data

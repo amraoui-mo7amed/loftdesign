@@ -50,6 +50,9 @@
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#contact">{% trans "Contact" %}</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="https://bilnov.com/promoter/login">{% trans "Bilnov" %}</a>
+                    </li>
                     <li class="nav-item ms-lg-3">{% include 'partials/language_switcher.html' %}</li>
                     <li class="nav-item ms-lg-2">
                         {% if user.is_authenticated %}
@@ -312,6 +315,18 @@
                                     <p class="mb-0 text-white-50">{{ site_config.contact_email }}</p>
                                 </div>
                             </div>
+                            <div class="d-flex gap-3 align-items-center">
+                                <div class="bg-primary text-secondary  rounded-3">
+                                    <img src="{% static 'images/bilnov.png' %}" class="rounded" width="48" alt="bilnov" />
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">{% trans "try Bilnov" %}</h6>
+                                    <a href="#" class="text-white-50 small text-decoration-none fw-bold hover-text-primary" data-bs-toggle="modal" data-bs-target="#testAccountModal">
+                                        {% trans "Access Details" %}
+                                    </a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -354,7 +369,36 @@
             </div>
         </div>
     </section>
+    <!-- Test Account Modal -->
+<div class="modal fade" id="testAccountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+            <div class="modal-header border-0 bg-dark text-white p-4">
+                <h5 class="modal-title fw-black text-uppercase">{% trans "Test Account Access" %}</h5>
+                <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="bg-light p-4 rounded-4 mb-4 border-2 border-dashed text-start">
+                    <p class="text-muted small text-uppercase fw-black mb-3" style="letter-spacing: 1px;">{% trans "Credentials" %}</p>
+                    <div class="mb-3">
+                        <span class="d-block smaller text-muted text-uppercase fw-bold">{% trans "USERNAME" %}</span>
+                        <span class="fs-5 fw-black text-dark">DAREB@live.fr</span>
+                    </div>
+                    <div>
+                        <span class="d-block smaller text-muted text-uppercase fw-bold">{% trans "PASSWORD" %}</span>
+                        <span class="fs-5 fw-black text-dark">123456789</span>
+                    </div>
+                </div>
+                <p class="text-muted small text-start">{% trans "Use these details to explore the provider dashboard features." %}</p>
+                <a href="https://bilnov.com/promoter/login" target="_blank" class="btn btn-primary w-100 rounded-pill py-3 fw-black text-uppercase tracking-wider mt-2">
+                    {% trans "Go to Login" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
+
 {% block footer %}
     <footer class="bg-dark py-5 border-top border-secondary border-opacity-10">
         <div class="container">
@@ -407,6 +451,8 @@
                            class="btn btn-outline-light rounded-circle p-2"
                            style="width: 40px;
                                   height: 40px"><i class="fab fa-instagram"></i></a>
+
+ 
                     </div>
                 </div>
             </div>

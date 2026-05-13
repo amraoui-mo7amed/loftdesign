@@ -2,7 +2,7 @@
 <div class="dropdown notification-dropdown">
     <a href="#" class="nav-link text-dark position-relative dropdown-toggle no-caret p-2 rounded-circle hover-bg-light" data-bs-toggle="dropdown">
         <i class="fas fa-bell fa-lg text-muted"></i>
-        <span id="notification-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white border-2 {% if not notifications %}d-none{% endif %}">
+        <span id="notification-badge" class="position-absolute translate-middle badge rounded-pill bg-danger border border-white border-2 {% if not notifications %}d-none{% endif %}">
             {{ notifications|length }}
         </span>
     </a>

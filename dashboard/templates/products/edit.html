@@ -27,7 +27,7 @@
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Product Details" %}</h5>
                     <div class="mb-4">
                         <label class="form-label fw-bold">{% trans "Product Name" %}</label>
-                        <input type="text" name="title" class="form-control form-control-lg" value="{{ product.title }}" required>
+                        <input type="text" name="title" class="form-control form-control-lg" value="{{ product.title }}" >
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-bold">{% trans "Category" %}</label>
@@ -35,12 +35,12 @@
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-bold">{% trans "Full Description" %}</label>
-                        <textarea name="description" class="form-control" rows="8" required>{{ product.description }}</textarea>
+                        <textarea name="description" class="form-control" rows="8" >{{ product.description }}</textarea>
                     </div>
                     <div class="row mb-0">
                         <div class="col-md-6">
                             <label class="form-label fw-bold">{% trans "Price ($)" %}</label>
-                            <input type="number" name="price" step="0.01" class="form-control" value="{{ product.price|stringformat:'.2f' }}" lang="en" required>
+                            <input type="number" name="price" step="0.01" class="form-control" value="{{ product.price|stringformat:'.2f' }}" lang="en" >
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold">{% trans "Tags" %}</label>

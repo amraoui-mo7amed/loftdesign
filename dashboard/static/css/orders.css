@@ -1,0 +1,75 @@
+/* Order Management Styles */
+
+.order-card {
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: none !important;
+    background: #fff;
+    overflow: hidden;
+}
+
+.order-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+}
+
+.order-card .status-badge {
+    cursor: pointer;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.7rem;
+    padding: 8px 16px !important;
+}
+
+.order-card .product-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.order-card .icon-box {
+    width: 36px;
+    height: 36px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-dark);
+    flex-shrink: 0;
+}
+
+.view-details-btn {
+    width: 100%;
+    background: var(--brand-light);
+    color: var(--brand-dark);
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.view-details-btn:hover {
+    background: var(--brand-primary);
+}
+
+.delete-order-btn {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.delete-order-btn:hover {
+    background: #dc3545;
+    color: #fff;
+}

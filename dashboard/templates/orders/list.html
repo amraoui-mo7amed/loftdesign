@@ -64,7 +64,8 @@
                         </div>
                     </div>
 
-                    <!-- Customer Info -->
+                    <!-- Customer Info — hidden from providers -->
+                    {% if not is_provider %}
                     <div class="bg-light rounded-4 p-3 mb-4">
                         <div class="d-flex align-items-center gap-3 mb-2">
                             <div class="icon-box"><i class="fas fa-user small"></i></div>
@@ -75,19 +76,25 @@
                             <div class="small text-muted fw-bold">{{ order.wilaya }} - {{ order.commune }}</div>
                         </div>
                     </div>
+                    {% endif %}
 
                     <!-- Actions -->
                     <div class="mt-auto d-flex gap-2">
                         <button class="view-details-btn d-flex align-items-center justify-content-center gap-2"
+                                data-product="{% if order.product %}{{ order.product.title }}{% else %}{% trans 'Deleted Product' %}{% endif %}"
+                                data-date="{{ order.created_at|date:'d M Y, H:i' }}"
+                                {% if is_provider %}
+                                data-limited="true"
+                                {% else %}
                                 data-name="{{ order.customer_name }}"
                                 data-phone="{{ order.customer_phone }}"
                                 data-location="{{ order.wilaya }} - {{ order.commune }}"
                                 data-address="{{ order.customer_address }}"
-                                data-product="{% if order.product %}{{ order.product.title }}{% else %}{% trans 'Deleted Product' %}{% endif %}"
-                                data-date="{{ order.created_at|date:'d M Y, H:i' }}">
+                                {% endif %}>
                             <i class="fas fa-eye"></i> {% trans "DETAILS" %}
                         </button>
                         
+                        {% if not is_provider %}
                         <button type="button" class="delete-order-btn delete-btn" 
                                 data-url="{% url 'dash:order_delete' order.pk %}"
                                 data-name="Order #{{ order.id }}"
@@ -95,6 +102,7 @@
                                 data-swal-text="{% trans 'This action cannot be undone.' %}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

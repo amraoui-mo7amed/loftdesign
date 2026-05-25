@@ -37,18 +37,17 @@ def get_dashboard_menu(user):
             "icon": "fas fa-tags",
             "url_name": "dash:category_list",
         })
-        menu.append({
-            "title": _("Orders"),
-            "icon": "fas fa-shopping-cart",
-            "url_name": "dash:order_list",
-        })
-
     # Both Admin and Provider links
     if is_admin or role == "provider":
         menu.append({
             "title": _("Products"),
             "icon": "fas fa-box-open",
             "url_name": "dash:product_list",
+        })
+        menu.append({
+            "title": _("Orders"),
+            "icon": "fas fa-shopping-cart",
+            "url_name": "dash:order_list",
         })
 
     return menu

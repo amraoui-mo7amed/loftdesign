@@ -24,6 +24,7 @@ urlpatterns = [
     path("orders/", orders.order_list, name="order_list"),
     path("orders/<int:pk>/status/", orders.order_update_status, name="order_update_status"),
     path("orders/<int:pk>/delete/", orders.order_delete, name="order_delete"),
+
     # Users
     path("users/", users.user_list, name="user_list"),
     path("users/provider/create/", users.provider_create, name="provider_create"),

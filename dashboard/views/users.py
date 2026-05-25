@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from user_auth.models import UserProfile
 from django.db.models import Q
 from django.utils.translation import gettext as _
@@ -14,7 +17,6 @@ from dashboard.utils import send_account_activation_email
 from dashboard.decorator import role_required
 from django.db import transaction
 import secrets
-import string
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def provider_create(request):
@@ -39,20 +41,19 @@ def provider_create(request):
 
         try:
             with transaction.atomic():
-                # Generate unique username and secure password
+                # Generate unique username
                 username = email.split('@')[0]
                 if User.objects.filter(username=username).exists():
                     username = f"{username}_{secrets.token_hex(2)}"
-                
-                password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
 
                 user = User.objects.create_user(
                     username=username,
                     email=email,
-                    password=password,
                     first_name=first_name,
                     last_name=last_name
                 )
+                user.set_unusable_password()
+                user.save()
 
                 # Create Profile
                 profile = UserProfile.objects.create(
@@ -64,23 +65,30 @@ def provider_create(request):
                     role=UserProfile.roleChoices.PROVIDER
                 )
 
+                # Generate password-set token
+                token_generator = PasswordResetTokenGenerator()
+                token = token_generator.make_token(user)
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                set_password_url = request.build_absolute_uri(
+                    reverse('user_auth:set_password', kwargs={'uidb64': uidb64, 'token': token})
+                )
+
                 # Prepare Email
-                login_url = request.build_absolute_uri(reverse('user_auth:login'))
-                email_html = render_to_string('emails/provider_account.html', {
+                email_html = render_to_string('emails/provider_set_password.html', {
                     'first_name': first_name,
                     'username': username,
-                    'password': password,
-                    'login_url': login_url
+                    'email': email,
+                    'set_password_url': set_password_url,
                 })
 
                 email_msg = EmailMessage(
-                    subject="LOFT Design - Your Account Credentials / Vos identifiants",
+                    subject="LOFT Design - Set Your Password / Définissez votre mot de passe",
                     body=email_html,
                     from_email=settings.EMAIL_HOST_USER,
                     to=[email],
                 )
                 email_msg.content_subtype = "html"
-                
+
                 try:
                     email_sent = email_msg.send(fail_silently=False)
                     if not email_sent:
@@ -98,7 +106,7 @@ def provider_create(request):
 
                 return JsonResponse({
                     "success": True,
-                    "message": _("Provider account created and email sent successfully."),
+                    "message": _("Provider account created and invitation sent successfully."),
                     "redirect_url": reverse("dash:user_list")
                 })
         except Exception as e:

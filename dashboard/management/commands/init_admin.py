@@ -7,9 +7,9 @@ class Command(BaseCommand):
     help = "Creates a default superuser if it doesn't exist"
 
     def handle(self, *args, **options):
-        username = config("ADMIN_USERNAME")
-        password = config("ADMIN_PASSWORD")
-        email = config("ADMIN_EMAIL")
+        username = config("ADMIN_USERNAME", default="admin")
+        password = config("ADMIN_PASSWORD", default="admin")
+        email = config("ADMIN_EMAIL", default="admin@admin.com")
 
         if not User.objects.filter(username=username).exists():
             self.stdout.write(f"Creating superuser {username}...")

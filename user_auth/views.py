@@ -17,17 +17,28 @@ def login_view(request):
         return redirect(reverse_lazy("dash:dash_home"))
 
     if request.method == "POST":
-        username = request.POST.get("username")
+        username_or_email = request.POST.get("username")
         password = request.POST.get("password")
         errors = []
 
-        if not username or not password:
+        if not username_or_email or not password:
             errors.append(_("Please fill in all required fields."))
 
         if errors:
             return JsonResponse({"success": False, "errors": errors})
 
         try:
+            # Check if username_or_email is an email
+            user_obj = None
+            if '@' in username_or_email:
+                try:
+                    user_obj = User.objects.get(email=username_or_email)
+                    username = user_obj.username
+                except User.DoesNotExist:
+                    username = username_or_email
+            else:
+                username = username_or_email
+
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
@@ -39,7 +50,7 @@ def login_view(request):
                     {
                         "success": False,
                         "errors": [
-                            _("Invalid username or password. Please try again.")
+                            _("Invalid username/email or password. Please try again.")
                         ],
                     }
                 )

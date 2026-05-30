@@ -50,13 +50,13 @@
                                 {% csrf_token %}
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold" for="username">
-                                        {% trans "username" %}
+                                        {% trans "Username or Email" %}
                                     </label>
                                     <input type="text"
                                            class="form-control"
                                            id="username"
                                            name="username"
-                                           placeholder="{% trans "Enter your username" %}"
+                                           placeholder="{% trans "Enter your username or email" %}"
                                            required
                                            autocomplete="username" />
                                 </div>
@@ -86,7 +86,7 @@
                                             {% trans "Remember me" %}
                                         </label>
                                     </div>
-                                    <a href="#" class="auth-link">{% trans "Forgot password?" %}</a>
+                                    <a href="{% url 'user_auth:password_reset' %}" class="auth-link">{% trans "Forgot password?" %}</a>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100 mb-3 btn-lg">
                                     {% trans "Login" %}

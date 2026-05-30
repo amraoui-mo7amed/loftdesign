@@ -4,6 +4,55 @@ from django.utils.translation import gettext_lazy as _
 
 userModel = get_user_model()
 
+class SiteSettings(models.Model):
+    """Global Settings model including home page header slider images"""
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Site Settings")
+        verbose_name_plural = _("Site Settings")
+
+    def __str__(self):
+        return "Global Site Settings"
+
+
+class SiteSettingsSliderImage(models.Model):
+    """Dynamic Slider Images linked to SiteSettings"""
+    settings = models.ForeignKey(
+        SiteSettings,
+        on_delete=models.CASCADE,
+        related_name="slider_images",
+        verbose_name=_("Settings")
+    )
+    image = models.ImageField(upload_to="settings/slider/", verbose_name=_("Slider Image"))
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Site Settings Slider Image")
+        verbose_name_plural = _("Site Settings Slider Images")
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"Slider Image #{self.id}"
+
+
+class ContactRequest(models.Model):
+    """Saves customer contact requests"""
+    full_name = models.CharField(max_length=255, verbose_name=_("Full Name"))
+    phone_number = models.CharField(max_length=50, verbose_name=_("Phone Number"))
+    project_type = models.CharField(max_length=100, verbose_name=_("Project Type"))
+    message = models.TextField(verbose_name=_("Message"))
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Contact Request")
+        verbose_name_plural = _("Contact Requests")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Contact Request - {self.full_name}"
+
+
 class Notification(models.Model):
     """Notification model for user notifications"""
 
@@ -55,6 +104,7 @@ class Portfolio(models.Model):
     description = models.TextField(verbose_name=_("Description"))
     tags = models.CharField(max_length=10000, verbose_name=_("Tags"), help_text=_("Comma separated tags"))
     external_link = models.URLField(verbose_name=_("External Link"), blank=True, null=True)
+    is_featured = models.BooleanField(default=False, verbose_name=_("Is Featured"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"), null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated At"), null=True, blank=True)
 
@@ -122,9 +172,11 @@ class Product(models.Model):
     thumbnail = models.ImageField(upload_to="products/thumbnails/", verbose_name=_("Thumbnail"))
     description = models.TextField(verbose_name=_("Description"))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"), default=0.00)
+    quantity = models.PositiveIntegerField(default=1, verbose_name=_("Available Quantity"))
     external_link = models.URLField(verbose_name=_("External Buy Link"), blank=True, null=True)
     tags = models.CharField(max_length=10000, verbose_name=_("Tags"), blank=True)
     is_active = models.BooleanField(default=True, verbose_name=_("Is Active"))
+    is_featured = models.BooleanField(default=False, verbose_name=_("Is Featured"))
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
@@ -157,6 +209,7 @@ class Order(models.Model):
     customer_address = models.TextField(verbose_name=_("Address"), blank=True)
     wilaya = models.CharField(max_length=100, verbose_name=_("Wilaya"), blank=True)
     commune = models.CharField(max_length=100, verbose_name=_("Commune"), blank=True)
+    quantity = models.PositiveIntegerField(default=1, verbose_name=_("Quantity"))
     status = models.CharField(
         max_length=20, 
         choices=OrderStatus.choices, 

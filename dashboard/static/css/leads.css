@@ -1,0 +1,66 @@
+/* Contact Leads Page Styling */
+
+.lead-card-premium {
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: none !important;
+    background: #fff;
+    overflow: hidden;
+}
+
+.lead-card-premium:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+}
+
+.lead-card-premium .icon-box {
+    width: 48px;
+    height: 48px;
+    background: rgba(var(--brand-primary-rgb, 255, 214, 90), 0.15);
+    color: var(--brand-dark);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lead-card-premium .info-grid-modern {
+    background: var(--brand-light);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.lead-card-premium .view-lead-details-btn {
+    width: 100%;
+    background: var(--brand-light);
+    color: var(--brand-dark);
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    margin-bottom: 10px;
+}
+
+.lead-card-premium .view-lead-details-btn:hover {
+    background: var(--brand-primary);
+}
+
+.lead-card-premium .delete-lead-btn {
+    width: 100%;
+    background: rgba(220, 53, 69, 0.08);
+    color: #dc3545;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.lead-card-premium .delete-lead-btn:hover {
+    background: #dc3545;
+    color: #fff;
+}

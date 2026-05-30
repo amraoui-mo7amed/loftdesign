@@ -66,9 +66,12 @@
 
                     <!-- Customer Info -->
                     <div class="bg-light rounded-4 p-3 mb-4">
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <div class="icon-box"><i class="fas fa-user small"></i></div>
-                            <div class="fw-bold text-dark">{{ order.customer_name }}</div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-box"><i class="fas fa-user small"></i></div>
+                                <div class="fw-bold text-dark">{{ order.customer_name }}</div>
+                            </div>
+                            <span class="badge bg-secondary font-weight-bold">x{{ order.quantity }}</span>
                         </div>
                         <div class="d-flex align-items-center gap-3">
                             <div class="icon-box"><i class="fas fa-map-marker-alt small"></i></div>
@@ -84,6 +87,7 @@
                                 data-location="{{ order.wilaya }} - {{ order.commune }}"
                                 data-address="{{ order.customer_address }}"
                                 data-product="{% if order.product %}{{ order.product.title }}{% else %}{% trans 'Deleted Product' %}{% endif %}"
+                                data-qty="{{ order.quantity }}"
                                 data-date="{{ order.created_at|date:'d M Y, H:i' }}">
                             <i class="fas fa-eye"></i> {% trans "DETAILS" %}
                         </button>

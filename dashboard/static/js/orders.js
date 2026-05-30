@@ -46,9 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: `<span class="fw-black text-uppercase">${name}</span>`,
                 html: `
                     <div class="text-start p-2">
-                        <div class="mb-3 p-3 bg-light rounded-4">
-                            <label class="smaller text-muted text-uppercase fw-bold d-block mb-1">Product Inquired</label>
-                            <div class="fw-black text-dark">${product}</div>
+                        <div class="mb-3 p-3 bg-light rounded-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <label class="smaller text-muted text-uppercase fw-bold d-block mb-1">Product Inquired</label>
+                                <div class="fw-black text-dark">${product}</div>
+                            </div>
+                            <span class="badge bg-dark fs-6 rounded-pill px-3 py-2">x${this.getAttribute('data-qty') || '1'}</span>
                         </div>
                         <div class="row g-3">
                             <div class="col-6">

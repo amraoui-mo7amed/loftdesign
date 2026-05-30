@@ -38,6 +38,7 @@ def portfolio_create(request):
         tags = request.POST.get("tags")
         thumbnail = request.FILES.get("thumbnail")
         external_link = request.POST.get("external_link")
+        is_featured = request.POST.get("is_featured") == "on"
         
         # Gallery images
         gallery_images = request.FILES.getlist("gallery_images")
@@ -57,7 +58,8 @@ def portfolio_create(request):
                     description=description,
                     tags=tags,
                     thumbnail=thumbnail,
-                    external_link=external_link
+                    external_link=external_link,
+                    is_featured=is_featured
                 )
                 
                 for img in gallery_images:
@@ -90,6 +92,7 @@ def portfolio_update(request, pk):
         tags = request.POST.get("tags")
         thumbnail = request.FILES.get("thumbnail")
         external_link = request.POST.get("external_link")
+        is_featured = request.POST.get("is_featured") == "on"
         
         # Gallery images (Add new ones)
         new_gallery_images = request.FILES.getlist("gallery_images")
@@ -109,6 +112,7 @@ def portfolio_update(request, pk):
                 portfolio.title = title
                 portfolio.description = description
                 portfolio.tags = tags
+                portfolio.is_featured = is_featured
                 
                 if thumbnail:
                     portfolio.thumbnail = thumbnail

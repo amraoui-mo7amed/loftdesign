@@ -71,19 +71,12 @@
 {% block sidebar %}
 {% endblock sidebar %}
 {% block content %}
-    <!-- 1. Hero Section -->
     <header class="hero-section">
         <div class="hero-slider">
-            <div class="hero-slide active"
-                 style="background-image: url('{% static "img/header_bg_1.jpeg" %}');"></div>
-            <div class="hero-slide"
-                 style="background-image: url('{% static "img/header_bg_2.jpeg" %}');"></div>
-            <div class="hero-slide"
-                 style="background-image: url('{% static "img/header_bg_3.jpeg" %}');"></div>
-            <div class="hero-slide"
-                 style="background-image: url('{% static "img/header_bg_4.jpeg" %}');"></div>
-            <div class="hero-slide"
-                 style="background-image: url('{% static "img/header_bg_5.jpeg" %}');"></div>
+            {% for img_url in slider_images %}
+            <div class="hero-slide {% if forloop.first %}active{% endif %}"
+                 style="background-image: url('{{ img_url }}');"></div>
+            {% endfor %}
         </div>
         <div class="container h-100 d-flex align-items-center justify-content-center text-center">
             <div class="hero-content reveal reveal-up">
@@ -332,33 +325,35 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="bg-white p-5 rounded-4 shadow-2xl reveal reveal-left">
-                        <form class="form">
+                        {% include "partials/errorList.html" with form_id="contactForm" %}
+                        <form class="form" method="POST" action="{% url 'frontend:contact_request_submit' %}" id="contactForm">
+                            {% csrf_token %}
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label text-dark">{% trans "Full Name" %}</label>
-                                    <input type="text" class="form-control" placeholder="John Doe">
+                                    <input type="text" name="name" class="form-control" placeholder="John Doe" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-dark">{% trans "Phone Number" %}</label>
-                                    <input type="tel" class="form-control" placeholder="+213 000 000">
+                                    <input type="tel" name="phone" class="form-control" placeholder="+213 000 000" required>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label text-dark">{% trans "Project Type" %}</label>
-                                    <select class="form-select">
-                                        <option>{% trans "Residential" %}</option>
-                                        <option>{% trans "Commercial" %}</option>
-                                        <option>{% trans "Other" %}</option>
+                                    <select name="project_type" class="form-select">
+                                        <option value="Residential">{% trans "Residential" %}</option>
+                                        <option value="Commercial">{% trans "Commercial" %}</option>
+                                        <option value="Other">{% trans "Other" %}</option>
                                     </select>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label text-dark">{% trans "Message" %}</label>
-                                    <textarea class="form-control"
+                                    <textarea name="message" class="form-control"
                                               rows="4"
-                                              placeholder="{% trans 'Tell us about your dream space...' %}"></textarea>
+                                              placeholder="{% trans 'Tell us about your dream space...' %}" required></textarea>
                                 </div>
                                 <div class="col-12 mt-4">
                                     <button type="submit"
-                                            class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-lg">
+                                             class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-lg">
                                         {% trans "Send Inquiry" %}
                                     </button>
                                 </div>

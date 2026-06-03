@@ -11,7 +11,7 @@ def site_settings(request):
         "site_config": {
             "name": _("LOFT Design"),
             "ar_name": "لوفت ديزاين",  # Keep for title fallback logic
-            "tagline": _("Elevate Your Space with Modern Design"),
+            "tagline": _("Elevate Your Space"),
             "logo": f"{static_url}img/icon.jpeg",
             "favicon": f"{static_url}img/icon.jpeg",
             "contact_email": "Loftdesign@live.fr",

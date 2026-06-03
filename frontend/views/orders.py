@@ -15,20 +15,35 @@ def place_order(request):
         address = request.POST.get("address")
         wilaya = request.POST.get("wilaya")
         commune = request.POST.get("commune")
+        quantity = request.POST.get("quantity", 1)
 
         errors = {}
         if not name: errors["name"] = [_("Name is required")]
         if not phone: errors["phone"] = [_("Phone is required")]
         if not wilaya: errors["wilaya"] = [_("Wilaya is required")]
         if not commune: errors["commune"] = [_("Commune is required")]
+        try:
+            quantity = int(quantity)
+            if quantity < 1:
+                errors["quantity"] = [_("Quantity must be at least 1")]
+        except ValueError:
+            errors["quantity"] = [_("Invalid quantity value")]
 
         if errors:
             return JsonResponse({"success": False, "errors": errors})
 
         product = get_object_or_404(Product, id=product_id)
+        
+        # Check stock availability
+        if product.quantity < quantity:
+            return JsonResponse({"success": False, "errors": {"quantity": [_("Requested quantity exceeds available stock.")]}})
 
         try:
             with transaction.atomic():
+                # Deduct stock
+                product.quantity -= quantity
+                product.save()
+
                 order = Order.objects.create(
                     product=product,
                     customer_name=name,
@@ -36,6 +51,7 @@ def place_order(request):
                     customer_address=address,
                     wilaya=wilaya,
                     commune=commune,
+                    quantity=quantity,
                     status=Order.OrderStatus.PENDING
                 )
 

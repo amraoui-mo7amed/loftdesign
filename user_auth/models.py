@@ -37,6 +37,8 @@ class UserProfile(models.Model):
 
     # System Fields
     is_approved = models.BooleanField(_("Is Approved"), default=False)
+    is_trusted = models.BooleanField(_("Is Trusted"), default=False)
+    is_blocked = models.BooleanField(_("Is Blocked"), default=False)
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
 
     def __str__(self):

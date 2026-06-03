@@ -38,11 +38,15 @@
                         <textarea name="description" class="form-control" rows="8" >{{ product.description }}</textarea>
                     </div>
                     <div class="row mb-0">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">{% trans "Price ($)" %}</label>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{% trans "Price (DZD)" %}</label>
                             <input type="number" name="price" step="0.01" class="form-control" value="{{ product.price|stringformat:'.2f' }}" lang="en" >
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{% trans "Available Quantity" %}</label>
+                            <input type="number" name="quantity" class="form-control" value="{{ product.quantity }}" min="1" required>
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label fw-bold">{% trans "Tags" %}</label>
                             <input type="text" name="tags" class="form-control" value="{{ product.tags }}">
                         </div>
@@ -77,9 +81,13 @@
 
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Visibility" %}</h5>
-                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
+                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center mb-3">
                         <label class="form-check-label fw-bold">{% trans "Active in Store" %}</label>
                         <input class="form-check-input ms-0 mt-0" type="checkbox" name="is_active" {% if product.is_active %}checked{% endif %} style="width: 50px; height: 24px;">
+                    </div>
+                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
+                        <label class="form-check-label fw-bold">{% trans "Is Featured" %}</label>
+                        <input class="form-check-input ms-0 mt-0" type="checkbox" name="is_featured" {% if product.is_featured %}checked{% endif %} style="width: 50px; height: 24px;">
                     </div>
                 </div>
 

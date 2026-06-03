@@ -108,10 +108,12 @@ def product_create(request):
         category_id = request.POST.get("category")
         description = request.POST.get("description")
         price = request.POST.get("price")
+        quantity = request.POST.get("quantity", 1)
         external_link = request.POST.get("external_link")
         tags = request.POST.get("tags")
         thumbnail = request.FILES.get("thumbnail")
         is_active = request.POST.get("is_active") == "on"
+        is_featured = request.POST.get("is_featured") == "on"
         
         errors = {}
         if not title: errors["title"] = [_("Title is required")]
@@ -132,10 +134,12 @@ def product_create(request):
                 category=category,
                 description=description,
                 price=price,
+                quantity=quantity,
                 external_link=external_link,
                 tags=tags,
                 thumbnail=thumbnail,
-                is_active=is_active
+                is_active=is_active,
+                is_featured=is_featured
             )
             return JsonResponse({
                 "success": True, 
@@ -161,9 +165,11 @@ def product_update(request, pk):
         category_id = request.POST.get("category")
         product.description = request.POST.get("description")
         product.price = request.POST.get("price")
+        product.quantity = request.POST.get("quantity", 1)
         product.external_link = request.POST.get("external_link")
         product.tags = request.POST.get("tags")
         product.is_active = request.POST.get("is_active") == "on"
+        product.is_featured = request.POST.get("is_featured") == "on"
         
         if category_id:
             product.category = Category.objects.get(id=category_id)

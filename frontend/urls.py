@@ -5,6 +5,7 @@ app_name = "frontend"
 
 urlpatterns = [
     path("", main.home_view, name="home"),
+    path("contact-submit/", main.contact_request_submit, name="contact_request_submit"),
     # Orders
     path("place-order/", orders.place_order, name="place_order"),
     # Portfolio

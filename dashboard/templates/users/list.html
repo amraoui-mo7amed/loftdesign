@@ -109,15 +109,26 @@
                              {% trans "User" %}
                         </div>
                         <div class="status-badge-premium">
-                            {% if profile.is_approved %}
-                                <span class="badge bg-success bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
-                                    <i class="fas fa-check-circle me-1"></i> {% trans "Active" %}
-                                </span>
-                            {% else %}
-                                <span class="badge bg-warning bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
-                                    <i class="fas fa-clock me-1"></i> {% trans "Pending" %}
-                                </span>
-                            {% endif %}
+                            <div class="d-flex flex-wrap gap-1">
+                                {% if profile.is_blocked %}
+                                    <span class="badge bg-danger bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
+                                        <i class="fas fa-ban me-1"></i> {% trans "Blocked" %}
+                                    </span>
+                                {% elif profile.is_approved %}
+                                    <span class="badge bg-success bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
+                                        <i class="fas fa-check-circle me-1"></i> {% trans "Active" %}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
+                                        <i class="fas fa-clock me-1"></i> {% trans "Pending" %}
+                                    </span>
+                                {% endif %}
+                                {% if profile.is_trusted %}
+                                    <span class="badge bg-info text-white border-0 rounded-pill px-3 py-2">
+                                        <i class="fas fa-star me-1"></i> {% trans "Trusted" %}
+                                    </span>
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="avatar-wrapper-floating">
                             <div class="avatar-circle-premium">
@@ -225,6 +236,14 @@
                             <div class="col-12">
                                 <label class="form-label fw-bold small text-uppercase">{% trans "Office Address" %}</label>
                                 <textarea name="address" class="form-control rounded-3" rows="2" placeholder="Street, City, Country"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch mt-2">
+                                    <input type="checkbox" name="is_trusted" class="form-check-input" id="isTrustedCheck" role="switch">
+                                    <label class="form-check-label fw-bold small text-uppercase" for="isTrustedCheck">
+                                        {% trans "Mark as Trusted Provider" %}
+                                    </label>
+                                </div>
                             </div>
                         </div>
 

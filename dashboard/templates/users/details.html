@@ -18,6 +18,11 @@
                 <i class="fas fa-arrow-left me-2"></i> {% trans "Back to List" %}
             </a>
             <div class="d-flex gap-2">
+                {% if profile.is_trusted %}
+                    <span class="badge bg-info text-white border-0 rounded-pill d-flex align-items-center px-3 py-2 shadow-sm">
+                        <i class="fas fa-star me-1"></i> {% trans "Trusted" %}
+                    </span>
+                {% endif %}
                 {% if not profile.is_approved %}
                 <button id="approveUserBtn"
                         data-business-name="{{ profile.user.get_full_name|default:profile.user.username }}"
@@ -35,8 +40,26 @@
                     {% csrf_token %}
                 </form>
                 {% endif %}
-                
-                <button id="deleteUserBtn" 
+
+                <button id="toggleBlockBtn"
+                        data-user-id="{{ profile.pk }}"
+                        data-business-name="{{ profile.user.get_full_name|default:profile.user.username }}"
+                        data-is-blocked="{{ profile.is_blocked|lower }}"
+                        data-swal-title="{% if profile.is_blocked %}{% trans 'Unblock User?' %}{% else %}{% trans 'Block User?' %}{% endif %}"
+                        data-swal-text="{% if profile.is_blocked %}{% blocktrans with name=profile.user.get_full_name|default:profile.user.username %}Are you sure you want to unblock {{ name }}? They will be able to log in again.{% endblocktrans %}{% else %}{% blocktrans with name=profile.user.get_full_name|default:profile.user.username %}Are you sure you want to block {{ name }}? They will not be able to log in until unblocked.{% endblocktrans %}{% endif %}"
+                        data-swal-confirm="{% if profile.is_blocked %}{% trans 'Yes, unblock!' %}{% else %}{% trans 'Yes, block!' %}{% endif %}"
+                        data-swal-cancel="{% trans 'Cancel' %}"
+                        data-swal-success-title="{% trans 'Success!' %}"
+                        class="btn {% if profile.is_blocked %}btn-success{% else %}btn-warning{% endif %} shadow-sm rounded-3 px-3 py-2 fw-bold">
+                    <i class="fas {% if profile.is_blocked %}fa-unlock{% else %}fa-ban{% endif %} me-2"></i>
+                    {% if profile.is_blocked %}{% trans "Unblock" %}{% else %}{% trans "Block" %}{% endif %}
+                </button>
+
+                <form id="toggleBlockForm" method="post" action="{% url 'dash:user_toggle_block' profile.pk %}" class="d-none">
+                    {% csrf_token %}
+                </form>
+
+                <button id="deleteUserBtn"
                         data-user-id="{{ profile.pk }}" 
                         data-business-name="{{ profile.user.get_full_name|default:profile.user.username }}"
                         data-swal-title="{% trans 'Are you sure?' %}"
@@ -71,7 +94,9 @@
                         <div class="list-group list-group-flush border-0">
                             <div class="list-group-item px-0 py-3 bg-transparent border-bottom d-flex justify-content-between align-items-center">
                                 <span class="text-muted small">{% trans "Account Status" %}</span>
-                                {% if profile.is_approved %}
+                                {% if profile.is_blocked %}
+                                <span class="badge bg-danger text-light rounded-pill px-3 py-2 border-0">{% trans "Blocked" %}</span>
+                                {% elif profile.is_approved %}
                                 <span class="badge bg-success bg-opacity-10 text-light rounded-pill px-3 py-2 border-0">{% trans "Approved" %}</span>
                                 {% else %}
                                 <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3 py-2 border-0">{% trans "Pending Approval" %}</span>

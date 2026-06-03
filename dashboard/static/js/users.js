@@ -72,4 +72,5 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize actions
     handleAction("deleteUserBtn", "deleteUserForm", "warning");
     handleAction("approveUserBtn", "approveUserForm", "question");
+    handleAction("toggleBlockBtn", "toggleBlockForm", "question");
 });

@@ -1,0 +1,80 @@
+{% extends "dash/dash_index.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block dashTitle %}{% trans "Contact Leads" %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/leads.css' %}?v={% now 'U' %}">
+{% endblock %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+    {% csrf_token %}
+    <div class="mb-5 reveal reveal-up">
+        <h1 class="fw-black display-4 mb-0">{% trans "Contact Leads" %}</h1>
+        <p class="text-muted">{% trans "Inquiries captured from landing page contact form." %}</p>
+    </div>
+
+    <div class="row g-4 reveal reveal-up">
+        {% for lead in leads %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card lead-card-premium rounded-4 shadow-sm h-100">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="icon-box">
+                            <i class="fas fa-envelope-open-text fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-black mb-0">{{ lead.full_name }}</h5>
+                            <span class="smaller text-muted fw-bold">{{ lead.created_at|date:"d M, Y - H:i" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-grid-modern">
+                        <div class="mb-2">
+                            <span class="smaller text-muted text-uppercase fw-bold d-block mb-1">{% trans "Phone" %}</span>
+                            <span class="fw-bold text-dark">{{ lead.phone_number }}</span>
+                        </div>
+                        <div>
+                            <span class="smaller text-muted text-uppercase fw-bold d-block mb-1">{% trans "Project Preference" %}</span>
+                            <span class="badge bg-dark rounded-pill">{{ lead.project_type }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto d-flex gap-2">
+                        <button type="button" class="view-lead-details-btn"
+                                data-name="{{ lead.full_name }}"
+                                data-phone="{{ lead.phone_number }}"
+                                data-project="{{ lead.project_type }}"
+                                data-message="{{ lead.message }}"
+                                data-date="{{ lead.created_at|date:'d M Y, H:i' }}">
+                            <i class="fas fa-eye me-1"></i> {% trans "DETAILS" %}
+                        </button>
+                        
+                        <button type="button" class="delete-lead-btn delete-btn" 
+                                data-url="{% url 'dash:contact_request_delete' lead.pk %}"
+                                data-name="{{ lead.full_name }}"
+                                data-swal-title="{% trans 'Remove Inquiry?' %}"
+                                data-swal-text="{% trans 'This action cannot be undone.' %}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-inbox fa-4x text-light mb-3"></i>
+            <h4 class="text-muted fw-bold">{% trans "No contact requests yet." %}</h4>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/leads.js' %}?v={% now 'U' %}"></script>
+{% endblock %}

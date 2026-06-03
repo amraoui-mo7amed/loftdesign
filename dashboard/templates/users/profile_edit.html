@@ -1,0 +1,164 @@
+{% extends "dash/dash_index.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block dashTitle %}
+    {% trans "My Profile" %}
+{% endblock dashTitle %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/users.css" %}?v={% now "U" %}">
+{% endblock extra_css %}
+
+{% block dashContent %}
+    <div class="container-fluid px-0">
+        <div class="row g-0">
+            <!-- Sidebar / Left Panel -->
+            <div class="col-12 col-lg-4 col-xl-3 profile-sidebar">
+                {% include "partials/errorList.html" with form_id="profileForm" %}
+
+                <div class="profile-sidebar-sticky">
+                    <!-- Avatar -->
+                    <div class="profile-avatar-block">
+                        <div class="profile-avatar-ring" id="avatarWrapper">
+                            <input type="file" name="profile_picture" id="profilePictureInput"
+                                   class="d-none" accept="image/*">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}"
+                                     alt="{% trans 'Profile' %}"
+                                     class="profile-avatar-img" id="avatarPreview">
+                            {% else %}
+                                <div class="profile-avatar-letter" id="avatarPreview">
+                                    {{ profile.user.username|slice:":1"|upper }}
+                                </div>
+                            {% endif %}
+                            <button type="button" class="profile-camera-btn" id="avatarTrigger"
+                                    title="{% trans 'Change photo' %}">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <h5 class="profile-sidebar-name">{{ profile.user.get_full_name|default:profile.user.username }}</h5>
+                        <span class="profile-sidebar-email">{{ profile.user.email }}</span>
+                        <span class="profile-sidebar-role">
+                            <i class="fas fa-circle" style="font-size:0.4rem;color:#2ecc71;vertical-align:middle"></i>
+                            {{ profile.get_role_display }}
+                        </span>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="profile-stats">
+                        <div class="profile-stat-item">
+                            <span class="profile-stat-value">{{ profile.created_at|date:"d M Y" }}</span>
+                            <span class="profile-stat-label">{% trans "Member Since" %}</span>
+                        </div>
+                        {% if profile.role == "provider" %}
+                        <div class="profile-stat-item">
+                            <span class="profile-stat-value">{{ profile.commission|default:"0" }}%</span>
+                            <span class="profile-stat-label">{% trans "Commission" %}</span>
+                        </div>
+                        {% endif %}
+                        <div class="profile-stat-item">
+                            <span class="profile-stat-value">
+                                {% if profile.is_approved %}
+                                    <span style="color:#2ecc71">{% trans "Active" %}</span>
+                                {% else %}
+                                    <span style="color:#f39c12">{% trans "Pending" %}</span>
+                                {% endif %}
+                            </span>
+                            <span class="profile-stat-label">{% trans "Status" %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main / Right Panel -->
+            <div class="col-12 col-lg-8 col-xl-9 profile-main">
+                <form method="POST" action="{% url 'dash:profile_update' %}" class="form" id="profileForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="profile-main-header">
+                        <div>
+                            <h3>{% trans "Account Information" %}</h3>
+                            <p class="text-muted mb-0">{% trans "Update your personal details below" %}</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-main-body">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="profile-field-label">
+                                    <i class="far fa-user me-2"></i>{% trans "First Name" %} <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="first_name" class="form-control profile-field"
+                                       value="{{ profile.user.first_name }}" placeholder="{% trans 'John' %}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="profile-field-label">
+                                    <i class="far fa-user me-2"></i>{% trans "Last Name" %}
+                                </label>
+                                <input type="text" name="last_name" class="form-control profile-field"
+                                       value="{{ profile.user.last_name }}" placeholder="{% trans 'Doe' %}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="profile-field-label">
+                                    <i class="fas fa-phone-alt me-2"></i>{% trans "Phone Number" %}
+                                </label>
+                                <input type="tel" name="phone" class="form-control profile-field"
+                                       value="{{ profile.phone_number|default:'' }}" placeholder="+213 ...">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="profile-field-label">
+                                    <i class="fas fa-map-marker-alt me-2"></i>{% trans "Address" %}
+                                </label>
+                                <input type="text" name="address" class="form-control profile-field"
+                                       value="{{ profile.address|default:'' }}" placeholder="{% trans 'Street, City' %}">
+                            </div>
+                            <div class="col-12">
+                                <label class="profile-field-label">
+                                    <i class="fas fa-quote-right me-2"></i>{% trans "Bio" %}
+                                </label>
+                                <textarea name="bio" class="form-control profile-field" rows="4"
+                                          placeholder="{% trans 'Tell us about yourself...' %}">{{ profile.bio|default:'' }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="profile-field-divider"></div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="profile-field-label text-muted">
+                                    <i class="far fa-envelope me-2"></i>{% trans "Email" %}
+                                </label>
+                                <div class="profile-field-disabled">
+                                    <i class="fas fa-lock me-2" style="font-size:0.7rem;opacity:0.5"></i>
+                                    {{ profile.user.email }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="profile-field-label text-muted">
+                                    <i class="far fa-calendar-alt me-2"></i>{% trans "Member Since" %}
+                                </label>
+                                <div class="profile-field-disabled">
+                                    {{ profile.created_at|date:"F Y" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-main-footer">
+                        <a href="{% url 'dash:dash_home' %}" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
+                            {% trans "Cancel" %}
+                        </a>
+                        <button type="submit" class="btn btn-dark rounded-pill px-5 fw-bold shadow-sm" id="saveProfileBtn">
+                            <i class="fas fa-check me-2"></i>{% trans "Save Changes" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+    <script src="{% static "js/profile.js" %}?v={% now "U" %}"></script>
+{% endblock extra_js %}

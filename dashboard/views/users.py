@@ -11,10 +11,11 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.urls import reverse
 from django.template.loader import render_to_string
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.conf import settings
-from dashboard.utils import send_account_activation_email
+from dashboard.utils import send_account_activation_email, notify_user
 from dashboard.decorator import role_required
+from dashboard.models import Notification
 from django.db import transaction
 import secrets
 
@@ -28,6 +29,7 @@ def provider_create(request):
         phone = request.POST.get("phone")
         address = request.POST.get("address")
         commission = request.POST.get("commission")
+        is_trusted = request.POST.get("is_trusted") == "on"
 
         errors = {}
         if not first_name: errors["first_name"] = [_("First name is required")]
@@ -62,6 +64,7 @@ def provider_create(request):
                     address=address,
                     commission=commission,
                     is_approved=True,
+                    is_trusted=is_trusted,
                     role=UserProfile.roleChoices.PROVIDER
                 )
 
@@ -254,3 +257,108 @@ def user_approve(request, pk):
             )
 
     return redirect("dash:user_details", pk=pk)
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER])
+def profile_update(request):
+    """AJAX view for providers to update their own profile"""
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
+        phone = request.POST.get("phone", "").strip()
+        address = request.POST.get("address", "").strip()
+        bio = request.POST.get("bio", "").strip()
+
+        errors = {}
+        if not first_name:
+            errors["first_name"] = [_("First name is required")]
+        if not last_name:
+            errors["last_name"] = [_("Last name is required")]
+
+        if errors:
+            return JsonResponse({"success": False, "errors": errors})
+
+        try:
+            user = profile.user
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+
+            profile.phone_number = phone
+            profile.address = address
+            profile.bio = bio
+
+            if request.FILES.get("profile_picture"):
+                profile.profile_picture = request.FILES["profile_picture"]
+
+            profile.save()
+
+            return JsonResponse({
+                "success": True,
+                "message": _("Profile updated successfully."),
+            })
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "errors": {"system": [str(e)]},
+            })
+
+    context = {
+        "profile": profile,
+    }
+    return render(request, "users/profile_edit.html", context)
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+def user_toggle_block(request, pk):
+    """AJAX view to block/unblock a user account"""
+    if request.method == "POST":
+        profile = get_object_or_404(UserProfile, pk=pk)
+        profile.is_blocked = not profile.is_blocked
+        profile.save()
+
+        status = _("blocked") if profile.is_blocked else _("unblocked")
+        full_name = profile.user.get_full_name() or profile.user.username
+
+        # Send email notification to user
+        if profile.is_blocked:
+            email_html = render_to_string("emails/account_blocked.html", {
+                "full_name": full_name,
+            })
+            email_msg = EmailMultiAlternatives(
+                subject=_("LOFT Design - Account Blocked"),
+                body=email_html,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[profile.user.email],
+            )
+            email_msg.content_subtype = "html"
+            try:
+                email_msg.send(fail_silently=True)
+            except Exception:
+                pass
+
+        # Notify admins
+        admins = User.objects.filter(is_superuser=True)
+        for admin in admins:
+            notify_user(
+                user=admin,
+                title=_("Account %(status)s") % {"status": status},
+                message=_(
+                    "%(name)s has been %(status)s by %(admin)s."
+                ) % {
+                    "name": full_name,
+                    "status": status,
+                    "admin": request.user.get_full_name() or request.user.username,
+                },
+                notification_type=Notification.NotificationType.WARNING if profile.is_blocked else Notification.NotificationType.INFO,
+                link=reverse("dash:user_details", kwargs={"pk": profile.pk}),
+            )
+
+        return JsonResponse({
+            "success": True,
+            "message": _("User %(name)s has been %(status)s.") % {"name": full_name, "status": status},
+        })
+
+    return JsonResponse({"success": False}, status=400)

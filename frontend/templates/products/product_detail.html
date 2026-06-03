@@ -48,15 +48,21 @@
                     <!-- Detail Spec Box under Image -->
                     <div class="product-spec-box shadow-sm bg-white p-5 rounded-4 border-0 scroll-reveal">
                         <div class="row align-items-center">
-                            <div class="col-md-6 border-end">
+                            <div class="col-md-4 border-end">
                                 <span class="text-muted text-uppercase smaller fw-bold d-block mb-1">{% trans "Market Valuation" %}</span>
                                 <span class="display-5 fw-black text-dark">{{ product.price|floatformat:0 }} DZD</span>
                             </div>
-                            <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
+                            <div class="col-md-4 border-end ps-md-4">
+                                <span class="text-muted text-uppercase smaller fw-bold d-block mb-1">{% trans "Stock" %}</span>
+                                <span class="display-5 fw-black text-dark">{{ product.quantity }} {% trans "pcs" %}</span>
+                            </div>
+                            <div class="col-md-4 ps-md-4 mt-4 mt-md-0">
                                 <span class="text-muted text-uppercase smaller fw-bold d-block mb-2">{% trans "Availability" %}</span>
                                 <div class="d-flex align-items-center gap-2">
                                     <span class="dot-pulse"></span>
-                                    <span class="fw-black text-uppercase small text-dark">{% trans "Limited Edition" %}</span>
+                                    <span class="fw-black text-uppercase small text-dark">
+                                        {% if product.quantity > 0 %}{% trans "In Stock" %}{% else %}{% trans "Out of Stock" %}{% endif %}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -109,9 +115,15 @@
                                 <input type="text" name="name" class="form-control rounded-3" placeholder="{% trans 'Your Name' %}" required>
                             </div>
                             
-                            <div class="mb-3">
-                                <label class="form-label fw-bold small text-uppercase">{% trans "Phone Number" %}</label>
-                                <input type="tel" name="phone" class="form-control rounded-3" placeholder="+213 ..." required>
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small text-uppercase">{% trans "Phone Number" %}</label>
+                                    <input type="tel" name="phone" class="form-control rounded-3" placeholder="+213 ..." required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small text-uppercase">{% trans "Quantity" %}</label>
+                                    <input type="number" name="quantity" class="form-control rounded-3" value="1" min="1" max="{{ product.quantity }}" required>
+                                </div>
                             </div>
 
                             <div class="mb-3">

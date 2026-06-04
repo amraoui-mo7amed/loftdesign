@@ -237,11 +237,6 @@
                                          class="img-fluid w-100 h-100 transition-all hover-scale"
                                          style="object-fit: cover">
                                 {% endif %}
-                                {% if product.price %}
-                                    <div class="position-absolute bottom-0 start-0 end-0 m-3 ">
-                                        <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-black w-100">{{ product.price|floatformat:0 }} DZD</span>
-                                    </div>
-                                {% endif %}
                                 <button type="button"
                                         class="btn btn-primary btn-add-to-cart position-absolute top-0 end-0 m-3"
                                         style="z-index: 100;"
@@ -250,6 +245,8 @@
                                 </button>
                             </div>
                             <div class="p-4">
+                                        {% if product.price %}<small class="fw-bold">{{ product.price|floatformat:0 }} DZD</small>{% endif %}
+
                                 <h5 class="fw-black mb-2">{{ product.title }}</h5>
                                 <p class="text-muted small mb-4 line-height-relaxed">{{ product.description|truncatewords:10 }}</p>
                                 <div class="d-grid gap-2">
@@ -258,8 +255,8 @@
                                        class="btn btn-dark rounded-3 py-2 fw-bold small text-uppercase">
                                         {% trans "View Details" %}
                                     </a>
-                                    {% if product.external_link %}
-                                        <a href="{{ product.external_link }}"
+                               {% if product.model_3d %}
+                                        <a href="{% url 'frontend:product_viewer_3d' product.pk %}"
                                            target="_blank"
                                            class="btn btn-primary rounded-3 py-2 fw-bold small text-uppercase border-2">
                                             {% trans "Show in your workspace" %}

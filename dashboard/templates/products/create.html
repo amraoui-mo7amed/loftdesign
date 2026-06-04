@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 
-                <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Sales Settings" %}</h5>
                     <div class="mb-0">
                         <label class="form-label fw-bold">{% trans "External Affiliate/Buy Link" %}</label>
@@ -69,6 +69,24 @@
                             <input type="url" name="external_link" class="form-control" placeholder="https://example.com/product">
                         </div>
                         <div class="form-text mt-2 small">{% trans "Leave empty if product is sold directly through this platform." %}</div>
+                    </div>
+                </div>
+
+                <!-- Gallery Section -->
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                        <h5 class="fw-bold mb-0">{% trans "Product Gallery" %}</h5>
+                        <span class="badge bg-light text-primary">{% trans "Multiple Images" %}</span>
+                    </div>
+
+                    <div class="file-drop-zone mb-3" id="galleryDropZone">
+                        <i class="fas fa-images fa-3x"></i>
+                        <h6 class="fw-bold">{% trans "Drop your gallery images here" %}</h6>
+                        <p class="text-muted small">{% trans "Or click to browse your files" %}</p>
+                        <input type="file" name="gallery_images" multiple class="d-none" accept="image/*">
+                    </div>
+
+                    <div id="galleryPreviewContainer" class="preview-grid">
                     </div>
                 </div>
             </div>
@@ -83,6 +101,18 @@
                         </div>
                         <input type="file" name="thumbnail" class="d-none" accept="image/*" required>
                     </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "3D Model" %}</h5>
+                    <div class="file-drop-zone p-2">
+                        <div id="modelPreviewContainer">
+                            <i class="fas fa-cube fa-2x mb-2"></i>
+                            <p class="text-muted small mb-0">{% trans "Upload GLB or GLTF 3D Model" %}</p>
+                        </div>
+                        <input type="file" name="model_3d" class="d-none" accept=".glb,.gltf,model/gltf-binary,model/gltf+json">
+                    </div>
+                    <div class="form-text mt-2 small">{% trans "Optional. Supported formats: GLB, GLTF" %}</div>
                 </div>
 
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">

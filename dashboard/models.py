@@ -170,6 +170,13 @@ class Product(models.Model):
         verbose_name=_("Category")
     )
     thumbnail = models.ImageField(upload_to="products/thumbnails/", verbose_name=_("Thumbnail"))
+    model_3d = models.FileField(
+        upload_to="products/models/",
+        verbose_name=_("3D Model"),
+        blank=True,
+        null=True,
+        help_text=_("Upload GLB or GLTF 3D model file")
+    )
     description = models.TextField(verbose_name=_("Description"))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"), default=0.00)
     quantity = models.PositiveIntegerField(default=1, verbose_name=_("Available Quantity"))
@@ -187,6 +194,25 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="gallery_images",
+        verbose_name=_("Product")
+    )
+    image = models.ImageField(upload_to="products/gallery/", verbose_name=_("Image"))
+    order = models.PositiveIntegerField(default=0, verbose_name=_("Order"))
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = _("Product Image")
+        verbose_name_plural = _("Product Images")
+
+    def __str__(self):
+        return f"{self.product.title} — {self.order}"
 
 
 class Order(models.Model):

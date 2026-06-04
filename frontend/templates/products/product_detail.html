@@ -13,11 +13,20 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/products_list.css" %}?v={% now "U" %}">
     <link rel="stylesheet" href="{% static "css/product_detail.css" %}?v={% now "U" %}">
+    {% if product.model_3d %}
+    <link rel="stylesheet" href="{% static "css/product_viewer.css" %}?v={% now "U" %}">
+    {% endif %}
+    {% if product.gallery_images.all %}
+    <link rel="stylesheet" href="{% static "css/gallery.css" %}?v={% now "U" %}">
+    {% endif %}
 {% endblock extra_css %}
 
 {% block extra_js %}
     <script src="{% static "js/products_list.js" %}?v={% now "U" %}"></script>
     <script src="{% static "js/product_detail.js" %}?v={% now "U" %}"></script>
+    {% if product.gallery_images.all %}
+    <script src="{% static "js/gallery.js" %}?v={% now "U" %}"></script>
+    {% endif %}
 {% endblock extra_js %}
 
     
@@ -29,12 +38,30 @@
             <div class="col-lg-7" data-aos="fade-right">
                 <div class="product-sticky-gallery sticky-top" style="top: 100px;">
                     <div class="viewer-container rounded-5 shadow-2xl overflow-hidden mb-4">
-                        {% if product.thumbnail %}
-                        <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal" style="height: 650px; object-fit: cover;" alt="{{ product.title }}">
+                        {% with all_images=product.gallery_images.all %}
+                        <div class="position-relative" id="productGallery" data-images="{{ product.thumbnail.url }}{% for img in all_images %},{{ img.image.url }}{% endfor %}">
+                            <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal gallery-main-img" style="height: 650px; object-fit: cover;" alt="{{ product.title }}" id="galleryMainImg">
+                            {% if all_images %}
+                            <button class="gallery-arrow gallery-prev" type="button" aria-label="{% trans 'Previous' %}"><i class="fas fa-chevron-left"></i></button>
+                            <button class="gallery-arrow gallery-next" type="button" aria-label="{% trans 'Next' %}"><i class="fas fa-chevron-right"></i></button>
+                            {% endif %}
+                        </div>
+                        {% if all_images %}
+                        <div class="gallery-thumbs" id="galleryThumbs">
+                            <div class="gallery-thumb active" data-index="0">
+                                <img src="{{ product.thumbnail.url }}" alt="">
+                            </div>
+                            {% for img in all_images %}
+                            <div class="gallery-thumb" data-index="{{ forloop.counter }}">
+                                <img src="{{ img.image.url }}" alt="">
+                            </div>
+                            {% endfor %}
+                        </div>
                         {% endif %}
+                        {% endwith %}
                         
-                        {% if product.external_link %}
-                        <a href="{{ product.external_link }}" target="_blank" class="luxury-visualize-btn">
+                        {% if product.model_3d or product.external_link %}
+                        <a href="{% if product.model_3d %}{% url 'frontend:product_viewer_3d' product.pk %}{% else %}{{ product.external_link }}{% endif %}" {% if not product.model_3d %}target="_blank"{% endif %} class="luxury-visualize-btn">
                             <i class="fas fa-vr-cardboard"></i> {% trans "Show in your workspace" %}
                         </a>
                         {% endif %}
@@ -43,15 +70,11 @@
                     <!-- Detail Spec Box under Image -->
                     <div class="product-spec-box shadow-sm bg-white p-5 rounded-4 border-0 scroll-reveal">
                         <div class="row align-items-center">
-                            <div class="col-md-4 border-end">
+                            <div class="col-md-6">
                                 <span class="text-muted text-uppercase smaller fw-bold d-block mb-1">{% trans "Market Valuation" %}</span>
                                 <span class="display-5 fw-black text-dark">{{ product.price|floatformat:0 }} DZD</span>
                             </div>
-                            <div class="col-md-4 border-end ps-md-4">
-                                <span class="text-muted text-uppercase smaller fw-bold d-block mb-1">{% trans "Stock" %}</span>
-                                <span class="display-5 fw-black text-dark">{{ product.quantity }} {% trans "pcs" %}</span>
-                            </div>
-                            <div class="col-md-4 ps-md-4 mt-4 mt-md-0">
+                            <div class="col-md-6 mt-4 mt-md-0">
                                 <span class="text-muted text-uppercase smaller fw-bold d-block mb-2">{% trans "Availability" %}</span>
                                 <div class="d-flex align-items-center gap-2">
                                     <span class="dot-pulse"></span>
@@ -62,6 +85,7 @@
                             </div>
                         </div>
                         {% if product.quantity > 0 %}
+                        
                         <div class="mt-4 pt-3 border-top">
                             <button type="button"
                                     class="btn btn-dark btn-lg rounded-pill px-5 fw-bold shadow-sm btn-add-to-cart w-100"

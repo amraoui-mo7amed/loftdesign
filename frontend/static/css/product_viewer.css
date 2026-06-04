@@ -1,0 +1,33 @@
+.model-viewer-wrapper {
+  position: relative;
+  width: 100%;
+  height: 650px;
+  background: #f8f9fa;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+model-viewer {
+  width: 100%;
+  height: 100%;
+  --progress-bar-color: #e3a51c;
+  --progress-bar-height: 3px;
+  --poster-color: transparent;
+}
+
+model-viewer::part(default-ar-button) {
+  bottom: 1rem;
+}
+
+[dir="rtl"] model-viewer::part(default-ar-button) {
+  left: 1rem;
+  right: auto;
+}
+
+@media (max-width: 768px) {
+  .model-viewer-wrapper { height: 400px; }
+}
+
+@media (max-width: 576px) {
+  .model-viewer-wrapper { height: 300px; }
+}

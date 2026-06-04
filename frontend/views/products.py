@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import Http404
 from dashboard.models import Product, Category
 from django.db.models import Q
 from django.utils.translation import gettext as _
@@ -77,3 +78,10 @@ def product_detail(request, pk):
         "communes_data": communes_data,
     }
     return render(request, "products/product_detail.html", context)
+
+
+def product_viewer_3d(request, pk):
+    product = get_object_or_404(Product, pk=pk, is_active=True)
+    if not product.model_3d:
+        raise Http404(_("No 3D model available for this product"))
+    return render(request, "products/product_viewer_3d.html", {"product": product})

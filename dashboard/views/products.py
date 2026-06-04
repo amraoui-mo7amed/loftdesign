@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.utils.translation import gettext as _
 from django.db import transaction
 from django.urls import reverse
-from ..models import Product, Category
+from ..models import Product, Category, ProductImage
 from dashboard.decorator import role_required
 from user_auth.models import UserProfile
 
@@ -112,6 +112,7 @@ def product_create(request):
         external_link = request.POST.get("external_link")
         tags = request.POST.get("tags")
         thumbnail = request.FILES.get("thumbnail")
+        model_3d = request.FILES.get("model_3d")
         is_active = request.POST.get("is_active") == "on"
         is_featured = request.POST.get("is_featured") == "on"
         
@@ -128,7 +129,7 @@ def product_create(request):
             if category_id:
                 category = Category.objects.get(id=category_id)
 
-            Product.objects.create(
+            product = Product.objects.create(
                 user=request.user,
                 title=title,
                 category=category,
@@ -138,9 +139,14 @@ def product_create(request):
                 external_link=external_link,
                 tags=tags,
                 thumbnail=thumbnail,
+                model_3d=model_3d,
                 is_active=is_active,
                 is_featured=is_featured
             )
+
+            for i, img in enumerate(request.FILES.getlist("gallery_images")):
+                ProductImage.objects.create(product=product, image=img, order=i)
+
             return JsonResponse({
                 "success": True, 
                 "message": _("Product added successfully"),
@@ -178,7 +184,20 @@ def product_update(request, pk):
 
         if request.FILES.get("thumbnail"):
             product.thumbnail = request.FILES.get("thumbnail")
-            
+
+        if request.FILES.get("model_3d"):
+            product.model_3d = request.FILES.get("model_3d")
+
+        remove_ids = request.POST.get("remove_gallery_ids", "")
+        if remove_ids:
+            ProductImage.objects.filter(
+                id__in=[int(x) for x in remove_ids.split(",") if x.strip()],
+                product=product
+            ).delete()
+
+        for i, img in enumerate(request.FILES.getlist("gallery_images")):
+            ProductImage.objects.create(product=product, image=img, order=i)
+
         try:
             product.save()
             return JsonResponse({

@@ -1,0 +1,99 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} | {% trans "Shopping Cart" %}{% endblock title %}
+
+{% block nav %}
+    {% include 'partials/landing-nav.html' %}
+{% endblock nav %}
+
+{% block sidebar %}{% endblock sidebar %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/cart.css" %}?v={% now "U" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<section class="cart-page-section bg-light" style="margin-top: 90px; min-height: 60vh;">
+    <div class="container py-5">
+        <div class="d-flex align-items-center justify-content-between mb-5">
+            <div>
+                <h1 class="fw-black display-5 mb-2">{% trans "Shopping Cart" %}</h1>
+                <p class="text-muted mb-0">{{ items|length }} {% trans "item(s) in your cart" %}</p>
+            </div>
+            <a href="{% url 'frontend:product_list' %}" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Continue Shopping" %}
+            </a>
+        </div>
+
+        {% if items %}
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <div class="cart-items-container">
+                    {% for item in items %}
+                    <div class="cart-page-item" data-item-id="{{ item.pk }}">
+                        <div class="cart-page-item-img">
+                            {% if item.product.thumbnail %}
+                            <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}">
+                            {% endif %}
+                        </div>
+                        <div class="cart-page-item-info">
+                            <h5 class="fw-black mb-1">{{ item.product.title }}</h5>
+                            <p class="text-muted small mb-2">{{ item.product.description|truncatewords:15 }}</p>
+                            <div class="d-flex align-items-center gap-3 mt-3">
+                                <div class="cart-page-qty">
+                                    <button type="button" class="cart-qty-minus" data-item-id="{{ item.pk }}"> - </button>
+                                    <input type="number" class="cart-qty-input" value="{{ item.quantity }}" min="1" data-item-id="{{ item.pk }}">
+                                    <button type="button" class="cart-qty-plus" data-item-id="{{ item.pk }}"> + </button>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0 fw-bold cart-item-remove" data-item-id="{{ item.pk }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="cart-page-item-total">
+                            <span class="cart-page-item-subtotal" id="subtotal-{{ item.pk }}">{{ item.subtotal|floatformat:0 }}</span>
+                            <small>DZD</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart-summary-card">
+                    <h5 class="fw-black mb-4">{% trans "Order Summary" %}</h5>
+                    <div class="cart-summary-row">
+                        <span>{% trans "Items" %}</span>
+                        <span id="summaryItems">{{ cart.total_items }}</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span>{% trans "Subtotal" %}</span>
+                        <span class="fw-black" id="summaryTotal">{{ cart.total_price|floatformat:0 }} DZD</span>
+                    </div>
+                    <div class="cart-summary-divider"></div>
+                    <a href="{% url 'frontend:checkout' %}" class="btn btn-dark w-100 rounded-pill py-3 fw-bold shadow">
+                        <i class="fas fa-lock me-2"></i>{% trans "Proceed to Checkout" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-shopping-bag fa-5x text-light"></i>
+            </div>
+            <h3 class="fw-black mb-3">{% trans "Your cart is empty" %}</h3>
+            <p class="text-muted mb-4">{% trans "Looks like you haven't added anything yet." %}</p>
+            <a href="{% url 'frontend:product_list' %}" class="btn btn-dark rounded-pill px-5 py-3 fw-bold">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Start Shopping" %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+    <script src="{% static 'js/cart.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,37 @@
+{% load i18n %}
+{% load static %}
+<!-- Floating Cart Button -->
+<button type="button" class="cart-fab" id="cartIcon" title="{% trans 'Open Cart' %}">
+    <i class="fas fa-shopping-bag"></i>
+    <span class="cart-fab-badge {% if cart_count == 0 %}d-none{% endif %}" id="fabCount">{{ cart_count }}</span>
+</button>
+
+<div class="cart-drawer-overlay" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+        <h5 class="cart-drawer-title">
+            <i class="fas fa-shopping-bag me-2"></i>{% trans "Shopping Cart" %}
+            <span class="cart-count-badge ms-2" id="drawerCount">0</span>
+        </h5>
+        <button type="button" class="cart-drawer-close" id="cartDrawerClose">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="cart-drawer-body" id="cartDrawerBody">
+        <div class="cart-empty-state" id="cartEmpty">
+            <i class="fas fa-shopping-bag"></i>
+            <p>{% trans "Your cart is empty" %}</p>
+            <span>{% trans "Add some products to get started" %}</span>
+        </div>
+        <div class="cart-items-list d-none" id="cartItemsList"></div>
+    </div>
+    <div class="cart-drawer-footer d-none" id="cartDrawerFooter">
+        <div class="cart-drawer-total">
+            <span>{% trans "Subtotal" %}</span>
+            <span class="fw-black" id="drawerTotal">0 DZD</span>
+        </div>
+        <a href="{% url 'frontend:cart' %}" class="btn btn-dark w-100 rounded-pill py-3 fw-bold">
+            <i class="fas fa-arrow-right me-2"></i>{% trans "View Cart & Checkout" %}
+        </a>
+    </div>
+</div>

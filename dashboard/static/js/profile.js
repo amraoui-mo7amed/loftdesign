@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("profileForm");
+    if (!form) return;
+
     var errorContainer = document.getElementById("profileForm-errors");
+    var l10n = form.dataset; // SuccessTitle, ErrorTitle, ErrorText
 
     var avatarRing = document.getElementById("avatarWrapper");
     var avatarPreview = document.getElementById("avatarPreview");
@@ -45,70 +48,68 @@ document.addEventListener("DOMContentLoaded", function () {
     // -------------------------------------------------------
     // Form submission via AJAX
     // -------------------------------------------------------
-    if (form) {
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-            var formData = new FormData(form);
-            var submitBtn = document.getElementById("saveProfileBtn");
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...';
-            }
+        var formData = new FormData(form);
+        var submitBtn = document.getElementById("saveProfileBtn");
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...';
+        }
 
-            fetch(form.action, {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                },
+        fetch(form.action, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+            },
+        })
+            .then(function (res) {
+                return res.json();
             })
-                .then(function (res) {
-                    return res.json();
-                })
-                .then(function (data) {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: data.message,
-                            timer: 2000,
-                            showConfirmButton: false,
-                        }).then(function () {
-                            location.reload();
-                        });
-                    } else {
-                        if (errorContainer) {
-                            var list = errorContainer.querySelector(".error-list");
-                            if (list) list.innerHTML = "";
-                            if (data.errors) {
-                                Object.values(data.errors).forEach(function (errs) {
-                                    errs.forEach(function (msg) {
-                                        var li = document.createElement("li");
-                                        li.textContent = msg;
-                                        if (list) list.appendChild(li);
-                                    });
+            .then(function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: l10n.successTitle || "Success",
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        location.reload();
+                    });
+                } else {
+                    if (errorContainer) {
+                        var list = errorContainer.querySelector(".error-list");
+                        if (list) list.innerHTML = "";
+                        if (data.errors) {
+                            Object.values(data.errors).forEach(function (errs) {
+                                errs.forEach(function (msg) {
+                                    var li = document.createElement("li");
+                                    li.textContent = msg;
+                                    if (list) list.appendChild(li);
                                 });
-                                errorContainer.classList.remove("d-none");
-                            }
-                        }
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Save Changes';
+                            });
+                            errorContainer.classList.remove("d-none");
                         }
                     }
-                })
-                .catch(function () {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "An unexpected error occurred.",
-                    });
                     if (submitBtn) {
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Save Changes';
                     }
+                }
+            })
+            .catch(function () {
+                Swal.fire({
+                    icon: "error",
+                    title: l10n.errorTitle || "Error",
+                    text: l10n.errorText || "An unexpected error occurred.",
                 });
-        });
-    }
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Save Changes';
+                }
+            });
+    });
 });

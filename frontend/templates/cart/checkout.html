@@ -1,0 +1,109 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} | {% trans "Checkout" %}{% endblock title %}
+
+{% block nav %}
+{% endblock nav %}
+{% block sidebar %}{% endblock sidebar %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/product_detail.css" %}?v={% now "U" %}">
+{% endblock extra_css %}
+
+
+{% block content %}
+<section class="checkout-section bg-light py-5" style="margin-top: 70px;">
+    <div class="container">
+        <h2 class="fw-black mb-4">{% trans "Checkout" %}</h2>
+        <form method="POST" action="{% url 'frontend:checkout' %}" id="checkoutForm"
+              data-select-wilaya-first="{% trans 'Please select a wilaya first' %}"
+              data-select-commune="{% trans 'Select Commune' %}">
+            {% csrf_token %}
+            <div class="row g-5">
+                <div class="col-lg-8">
+                    <div class="inquiry-form-card shadow-sm rounded-4 p-4">
+                        <h5 class="fw-bold mb-4">{% trans "Shipping Information" %}</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">{% trans "Full Name" %}</label>
+                                <input type="text" name="name" class="form-control rounded-3" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">{% trans "Phone Number" %}</label>
+                                <input type="tel" name="phone" class="form-control rounded-3" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">{% trans "Wilaya" %}</label>
+                                <div class="searchable-select-wrapper" id="wilaya-searchable">
+                                    <div class="searchable-select-display">
+                                        <span class="selected-text">{% trans "Select Wilaya" %}</span>
+                                        <i class="fas fa-chevron-down opacity-50"></i>
+                                    </div>
+                                    <div class="searchable-select-dropdown">
+                                        <div class="searchable-select-search">
+                                            <input type="text" class="search-input" placeholder="{% trans 'Search wilaya...' %}">
+                                        </div>
+                                        <ul class="searchable-select-list">
+                                            {% for opt in wilaya_options %}
+                                                <li data-value="{{ opt.value }}">{{ opt.label }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="wilaya" id="wilayaSelect_input" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">{% trans "Commune" %}</label>
+                                <div class="searchable-select-wrapper" id="commune-searchable">
+                                    <div class="searchable-select-display">
+                                        <span class="selected-text">{% trans "Select Commune" %}</span>
+                                        <i class="fas fa-chevron-down opacity-50"></i>
+                                    </div>
+                                    <div class="searchable-select-dropdown">
+                                        <div class="searchable-select-search">
+                                            <input type="text" class="search-input" placeholder="{% trans 'Search commune...' %}">
+                                        </div>
+                                        <ul class="searchable-select-list">
+                                            <!-- Filled via JS -->
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="commune" id="communeSelect_input" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small">{% trans "Address" %}</label>
+                                <textarea name="address" class="form-control rounded-3" rows="2" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="inquiry-form-card shadow-sm rounded-4 p-4">
+                        <h5 class="fw-bold mb-4">{% trans "Your Order" %}</h5>
+                        {% for item in cart.items.all %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>{{ item.product.title }} x {{ item.quantity }}</span>
+                            <span class="fw-bold">{{ item.subtotal|floatformat:0 }} DZD</span>
+                        </div>
+                        {% endfor %}
+                        <div class="border-top mt-3 pt-3 d-flex justify-content-between">
+                            <span class="fw-bold">{% trans "Total" %}</span>
+                            <span class="fw-black h5">{{ cart.total_price|floatformat:0 }} DZD</span>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 mt-4 fw-bold shadow">
+                            <i class="fas fa-lock me-2"></i>{% trans "Confirm Order (COD)" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{{ communes_data|json_script:"communes-data" }}
+{% endblock content %}
+
+{% block extra_js %}
+    <script src="{% static "js/product_detail.js" %}?v={% now "U" %}"></script>
+{% endblock extra_js %}

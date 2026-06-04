@@ -18,6 +18,7 @@
     <script src="{% static "js/products_list.js" %}?v={% now "U" %}"></script>
 {% endblock extra_js %}
 
+
 {% block content %}
 <section class="products-section bg-light py-5">
     <div class="container">
@@ -97,10 +98,10 @@
                         <label class="form-label fw-bold small text-uppercase tracking-wider">{% trans "Price Range (DZD)" %}</label>
                         <div class="row g-2">
                             <div class="col-6">
-                                <input type="number" name="min_price" value="{{ min_price }}" class="form-control rounded-3 py-2" placeholder="{% trans 'Min' %}">
+                                <input type="number" name="min_price" value="{{ min_price|default:'' }}" class="form-control rounded-3 py-2" placeholder="{% trans 'Min' %}">
                             </div>
                             <div class="col-6">
-                                <input type="number" name="max_price" value="{{ max_price }}" class="form-control rounded-3 py-2" placeholder="{% trans 'Max' %}">
+                                <input type="number" name="max_price" value="{{ max_price|default:'' }}" class="form-control rounded-3 py-2" placeholder="{% trans 'Max' %}">
                             </div>
                         </div>
                     </div>

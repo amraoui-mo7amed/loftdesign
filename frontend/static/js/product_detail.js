@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const communesData = JSON.parse(communesDataEl.textContent);
     
+    const formEl = document.getElementById('checkoutForm') || document.getElementById('orderForm');
+    const l10n = formEl ? formEl.dataset : { 
+        selectWilayaFirst: 'Please select a wilaya first', 
+        selectCommune: 'Select Commune' 
+    };
+
     // Initialize Wilaya Select
     initSearchableSelect('wilaya-searchable', (value) => {
         updateCommunes(value);
@@ -24,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Reset state
         list.innerHTML = '';
-        display.textContent = window.L10N_STRINGS.selectCommune;
+        display.textContent = l10n.selectCommune;
         hiddenInput.value = '';
 
         if (!wilayaId || !communesData[wilayaId]) {

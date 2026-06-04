@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import main, portfolio, products, orders
+from .views import main, portfolio, products, orders, cart
 
 app_name = "frontend"
 
@@ -14,4 +14,11 @@ urlpatterns = [
     # Products
     path("products/", products.product_list, name="product_list"),
     path("products/<int:pk>/", products.product_detail, name="product_detail"),
+    # Cart
+    path("cart/", cart.cart_view, name="cart"),
+    path("cart/checkout/", cart.cart_checkout, name="checkout"),
+    path("cart/add/", cart.cart_add, name="cart_add"),
+    path("cart/update/", cart.cart_update, name="cart_update"),
+    path("cart/remove/", cart.cart_remove, name="cart_remove"),
+    path("cart/load/", cart.cart_load, name="cart_load"),
 ]

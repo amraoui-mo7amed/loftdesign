@@ -16,16 +16,11 @@
 {% endblock extra_css %}
 
 {% block extra_js %}
-    <script>
-        window.L10N_STRINGS = {
-            selectWilayaFirst: "{% trans 'Please select a wilaya first' %}",
-            selectCommune: "{% trans 'Select Commune' %}"
-        };
-    </script>
     <script src="{% static "js/products_list.js" %}?v={% now "U" %}"></script>
     <script src="{% static "js/product_detail.js" %}?v={% now "U" %}"></script>
 {% endblock extra_js %}
 
+    
 {% block content %}
 <section class="products-section bg-light" style="margin-top: 70px;">
     <div class="container">
@@ -66,6 +61,15 @@
                                 </div>
                             </div>
                         </div>
+                        {% if product.quantity > 0 %}
+                        <div class="mt-4 pt-3 border-top">
+                            <button type="button"
+                                    class="btn btn-dark btn-lg rounded-pill px-5 fw-bold shadow-sm btn-add-to-cart w-100"
+                                    data-product-id="{{ product.pk }}">
+                                <i class="fas fa-cart-plus me-2"></i>{% trans "Add to Cart" %}
+                            </button>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -106,7 +110,9 @@
                         
                         {% include "partials/errorList.html" with form_id="orderForm" %}
                         
-                        <form method="POST" action="{% url 'frontend:place_order' %}" class="form" id="orderForm">
+                        <form method="POST" action="{% url 'frontend:place_order' %}" class="form" id="orderForm"
+                              data-select-wilaya-first="{% trans 'Please select a wilaya first' %}"
+                              data-select-commune="{% trans 'Select Commune' %}">
                             {% csrf_token %}
                             <input type="hidden" name="product_id" value="{{ product.id }}">
                             

@@ -73,8 +73,11 @@
 
             <!-- Main / Right Panel -->
             <div class="col-12 col-lg-8 col-xl-9 profile-main">
-                <form method="POST" action="{% url 'dash:profile_update' %}" class="form" id="profileForm" enctype="multipart/form-data">
-                    {% csrf_token %}
+<form method="POST" action="{% url 'dash:profile_update' %}" class="form" id="profileForm" enctype="multipart/form-data"
+      data-success-title="{% trans 'Success' %}"
+      data-error-title="{% trans 'Error' %}"
+      data-error-text="{% trans 'An unexpected error occurred.' %}">
+    {% csrf_token %}
 
                     <div class="profile-main-header">
                         <div>

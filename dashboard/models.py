@@ -195,6 +195,14 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        try:
+            qty = int(self.quantity)
+        except (ValueError, TypeError):
+            qty = 0
+        self.is_active = qty > 0
+        super().save(*args, **kwargs)
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(

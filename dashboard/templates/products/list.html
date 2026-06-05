@@ -78,7 +78,7 @@
             </div>
             
             <div class="editorial-content">
-                <div class="editorial-meta">
+                <div class="editorial-meta align-items-start">
                     <span class="text-primary fw-bold fs-5">DZD{{ product.price }}</span>
                     <span><i class="fas fa-shopping-bag me-1"></i> {{ product.orders.count }} {% trans "Leads" %}</span>
                     {% if product.category %}
@@ -86,6 +86,9 @@
                     {% endif %}
                     {% if product.external_link %}
                     <span class="badge bg-light text-dark border"><i class="fas fa-external-link-alt me-1"></i> {% trans "Affiliate" %}</span>
+                    {% endif %}
+                    {% if product.model_3d %}
+                    <span class="badge bg-light text-primary border"><i class="fas fa-cube me-1"></i> {% trans "3D" %}</span>
                     {% endif %}
                 </div>
                 <h3 class="editorial-title">{{ product.title }}</h3>

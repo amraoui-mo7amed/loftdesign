@@ -82,15 +82,15 @@
                 <div class="col-lg-4">
                     <div class="inquiry-form-card shadow-sm rounded-4 p-4">
                         <h5 class="fw-bold mb-4">{% trans "Your Order" %}</h5>
-                        {% for item in cart.items.all %}
+                        {% for item in cart_items %}
                         <div class="d-flex justify-content-between mb-2">
-                            <span>{{ item.product.title }} x {{ item.quantity }}</span>
-                            <span class="fw-bold">{{ item.subtotal|floatformat:0 }} DZD</span>
+                            <span>{{ item.title }} x {{ item.quantity }}</span>
+                            <span class="fw-bold">{{ item.subtotal_str }} DZD</span>
                         </div>
                         {% endfor %}
                         <div class="border-top mt-3 pt-3 d-flex justify-content-between">
                             <span class="fw-bold">{% trans "Total" %}</span>
-                            <span class="fw-black h5">{{ cart.total_price|floatformat:0 }} DZD</span>
+                            <span class="fw-black h5">{{ cart_total_price|floatformat:0 }} DZD</span>
                         </div>
                         <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 mt-4 fw-bold shadow">
                             <i class="fas fa-lock me-2"></i>{% trans "Confirm Order (COD)" %}

@@ -32,28 +32,28 @@
             <div class="col-lg-8">
                 <div class="cart-items-container">
                     {% for item in items %}
-                    <div class="cart-page-item" data-item-id="{{ item.pk }}">
+                    <div class="cart-page-item" data-item-id="{{ item.id }}">
                         <div class="cart-page-item-img">
-                            {% if item.product.thumbnail %}
-                            <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}">
+                            {% if item.thumbnail %}
+                            <img src="{{ item.thumbnail }}" alt="{{ item.title }}">
                             {% endif %}
                         </div>
                         <div class="cart-page-item-info">
-                            <h5 class="fw-black mb-1">{{ item.product.title }}</h5>
+                            <h5 class="fw-black mb-1">{{ item.title }}</h5>
                             <p class="text-muted small mb-2">{{ item.product.description|truncatewords:15 }}</p>
                             <div class="d-flex align-items-center gap-3 mt-3">
                                 <div class="cart-page-qty">
-                                    <button type="button" class="cart-qty-minus" data-item-id="{{ item.pk }}"> - </button>
-                                    <input type="number" class="cart-qty-input" value="{{ item.quantity }}" min="1" data-item-id="{{ item.pk }}">
-                                    <button type="button" class="cart-qty-plus" data-item-id="{{ item.pk }}"> + </button>
+                                    <button type="button" class="cart-qty-minus" data-item-id="{{ item.id }}"> - </button>
+                                    <input type="number" class="cart-qty-input" value="{{ item.quantity }}" min="1" data-item-id="{{ item.id }}">
+                                    <button type="button" class="cart-qty-plus" data-item-id="{{ item.id }}"> + </button>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-link text-danger p-0 fw-bold cart-item-remove" data-item-id="{{ item.pk }}">
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0 fw-bold cart-item-remove" data-item-id="{{ item.id }}">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="cart-page-item-total">
-                            <span class="cart-page-item-subtotal" id="subtotal-{{ item.pk }}">{{ item.subtotal|floatformat:0 }}</span>
+                            <span class="cart-page-item-subtotal" id="subtotal-{{ item.id }}">{{ item.subtotal|floatformat:0 }}</span>
                             <small>DZD</small>
                         </div>
                     </div>
@@ -65,11 +65,11 @@
                     <h5 class="fw-black mb-4">{% trans "Order Summary" %}</h5>
                     <div class="cart-summary-row">
                         <span>{% trans "Items" %}</span>
-                        <span id="summaryItems">{{ cart.total_items }}</span>
+                        <span id="summaryItems">{{ cart_total_items }}</span>
                     </div>
                     <div class="cart-summary-row">
                         <span>{% trans "Subtotal" %}</span>
-                        <span class="fw-black" id="summaryTotal">{{ cart.total_price|floatformat:0 }} DZD</span>
+                        <span class="fw-black" id="summaryTotal">{{ cart_total_price|floatformat:0 }} DZD</span>
                     </div>
                     <div class="cart-summary-divider"></div>
                     <a href="{% url 'frontend:checkout' %}" class="btn btn-dark w-100 rounded-pill py-3 fw-bold shadow">

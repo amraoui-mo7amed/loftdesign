@@ -17,7 +17,7 @@
         <h1 class="fw-black display-4 mb-0">{% trans "New Product" %}</h1>
     </div>
 
-    {% include "partials/errorList.html" with form_id="productForm" %}
+    {% include "partials/errorList.html" with form_id="portfolioForm" %}
 
     <form method="POST" enctype="multipart/form-data" class="form" id="portfolioForm">
         {% csrf_token %}
@@ -51,7 +51,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold">{% trans "Available Quantity" %}</label>
-                            <input type="number" name="quantity" class="form-control" placeholder="1" value="1" min="1" required>
+                            <input type="number" name="quantity" class="form-control" placeholder="1" value="1" min="0" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold">{% trans "Tags" %}</label>

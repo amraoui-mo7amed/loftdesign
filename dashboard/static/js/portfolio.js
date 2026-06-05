@@ -175,8 +175,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-    });
 
+    // 4. Quantity and is_active switch handling
+    const quantityInput = document.querySelector('input[name="quantity"]');
+    const isActiveInput = document.querySelector('input[name="is_active"]');
+    
+    console.log("Quantity/IsActive elements:", quantityInput, isActiveInput);
+    
+    if (quantityInput && isActiveInput) {
+        const updateIsActiveState = () => {
+            const qty = parseInt(quantityInput.value);
+            const isZeroOrLess = isNaN(qty) || qty <= 0;
+            console.log("Updating active state. Qty:", qty, "isZeroOrLess:", isZeroOrLess);
+            if (isZeroOrLess) {
+                isActiveInput.checked = false;
+            }
+        };
+        
+        // Run on load
+        updateIsActiveState();
+        
+        // Listen for input changes
+        quantityInput.addEventListener('input', updateIsActiveState);
+        quantityInput.addEventListener('change', updateIsActiveState);
+    }
 
     // 5. AJAX Deletion with SweetAlert2
     const deleteButtons = document.querySelectorAll('.delete-btn');
@@ -236,5 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+    });
 
 });

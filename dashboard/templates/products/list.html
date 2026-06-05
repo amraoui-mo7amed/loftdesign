@@ -90,6 +90,11 @@
                     {% if product.model_3d %}
                     <span class="badge bg-light text-primary border"><i class="fas fa-cube me-1"></i> {% trans "3D" %}</span>
                     {% endif %}
+                    {% if product.quantity > 0 %}
+                    <span class="badge bg-light text-success border"><i class="fas fa-check-circle me-1"></i> {% trans "In Stock" %} ({{ product.quantity }})</span>
+                    {% else %}
+                    <span class="badge bg-light text-danger border"><i class="fas fa-times-circle me-1"></i> {% trans "Out of Stock" %}</span>
+                    {% endif %}
                 </div>
                 <h3 class="editorial-title">{{ product.title }}</h3>
                 <p class="text-muted mb-3">{{ product.description|truncatechars:100 }}</p>

@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (errorList) {
                 errorList.innerHTML = '';
             }
+            if (errorContainer) {
+                errorContainer.classList.add('d-none');
+            }
 
             // Show loading state
             submitBtn.disabled = true;
@@ -45,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         li.classList.add('alert', 'alert-success', 'mb-2');
                         li.setAttribute('data-aos', 'fade-up');
                         if (errorList) errorList.appendChild(li);
+                        if (errorContainer) errorContainer.classList.remove('d-none');
                     }
                     if (data.redirect_url) {
                         setTimeout(() => {
@@ -76,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 .flat()
                                 .forEach(m => renderMsg(m));
                         }
+                        if (errorContainer) errorContainer.classList.remove('d-none');
                     }
                 }
             } catch (error) {
@@ -89,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     li.classList.add('alert', 'alert-danger', 'mb-2');
                     li.setAttribute('data-aos', 'fade-up');
                     errorList.appendChild(li);
+                    if (errorContainer) errorContainer.classList.remove('d-none');
                 }
                 console.error('Form submission error:', error);
             }

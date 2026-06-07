@@ -48,4 +48,16 @@ document.addEventListener("DOMContentLoaded", () => {
             updateViewer(index);
         });
     }
+
+    // Project Details Modal — populate from hidden card
+    const detailsModal = document.getElementById("detailsModal");
+    if (detailsModal) {
+        detailsModal.addEventListener("show.bs.modal", function () {
+            const card = document.getElementById("project-details");
+            const body = document.getElementById("detailsModalBody");
+            if (card && body) {
+                body.innerHTML = card.innerHTML;
+            }
+        });
+    }
 });

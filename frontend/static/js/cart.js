@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
             addToCart(productId, 1, btn);
         }
         // Cart drawer close/open
-        if (e.target.closest("#cartIcon")) {
+        if (e.target.closest("#cartIcon") || e.target.closest(".cart-trigger")) {
             e.preventDefault();
             openDrawer();
         }

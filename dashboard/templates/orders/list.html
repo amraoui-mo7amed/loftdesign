@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block dashTitle %}{% trans "Order Management" %}{% endblock dashTitle %}
+{% block dashTitle %}{{ title }}{% endblock dashTitle %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/orders.css' %}?v={% now 'U' %}">
@@ -13,8 +13,8 @@
     {% csrf_token %}
     <div class="d-flex justify-content-between align-items-end flex-wrap gap-4 mb-5 reveal reveal-up">
         <div>
-            <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Sales" %}</h6>
-            <h1 class="fw-black display-4 mb-0">{% trans "Orders" %}</h1>
+            <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Orders" %}</h6>
+            <h1 class="fw-black display-4 mb-0">{{ title }}</h1>
         </div>
         <div class="d-flex gap-2">
             <a href="?status=" class="btn btn-{% if not status_filter %}dark{% else %}light{% endif %} rounded-pill px-4 fw-bold">{% trans "All" %}</a>
@@ -32,8 +32,9 @@
                     <!-- Header: Product & Status -->
                     <div class="d-flex justify-content-between align-items-start mb-4">
                         <div class="d-flex align-items-center gap-3">
-                            {% if order.product and order.product.thumbnail %}
-                                <img src="{{ order.product.thumbnail.url }}" class="product-thumb shadow-sm" alt="{{ order.product.title }}">
+                            {% with first_item=order.items|first %}
+                            {% if first_item.thumbnail %}
+                                <img src="{{ first_item.thumbnail }}" class="product-thumb shadow-sm" alt="{{ first_item.title }}">
                             {% else %}
                                 <div class="product-thumb bg-light d-flex align-items-center justify-content-center">
                                     <i class="fas fa-box text-muted opacity-25"></i>
@@ -41,10 +42,14 @@
                             {% endif %}
                             <div>
                                 <h6 class="fw-black mb-0 text-truncate" style="max-width: 150px;">
-                                    {% if order.product %}{{ order.product.title }}{% else %}{% trans "Deleted Product" %}{% endif %}
+                                    {{ first_item.title }}
                                 </h6>
-                                <span class="smaller text-muted fw-bold">{{ order.created_at|date:"d M, Y" }}</span>
+                                {% if order.items|length > 1 %}
+                                <span class="smaller text-muted fw-bold">+{{ order.items|length|add:"-1" }} {% trans "more" %}</span>
+                                {% endif %}
+                                <span class="smaller text-muted fw-bold d-block">{{ order.created_at|date:"d M, Y" }}</span>
                             </div>
+                            {% endwith %}
                         </div>
 
                         <div class="dropdown">
@@ -72,7 +77,7 @@
                                 <div class="icon-box"><i class="fas fa-user small"></i></div>
                                 <div class="fw-bold text-dark">{{ order.customer_name }}</div>
                             </div>
-                            <span class="badge bg-secondary font-weight-bold">x{{ order.quantity }}</span>
+                            <span class="badge bg-secondary font-weight-bold">x{{ order.item_count }}</span>
                         </div>
                         <div class="d-flex align-items-center gap-3">
                             <div class="icon-box"><i class="fas fa-map-marker-alt small"></i></div>
@@ -83,23 +88,9 @@
 
                     <!-- Actions -->
                     <div class="mt-auto d-flex gap-2">
-                        <button class="view-details-btn d-flex align-items-center justify-content-center gap-2"
-                                data-product="{% if order.product %}{{ order.product.title }}{% else %}{% trans 'Deleted Product' %}{% endif %}"
-                                data-date="{{ order.created_at|date:'d M Y, H:i' }}"
-                                {% if is_provider %}
-                                data-limited="true"
-                                {% else %}
-                                data-name="{{ order.customer_name }}"
-                                data-phone="{{ order.customer_phone }}"
-                                data-location="{{ order.wilaya }} - {{ order.commune }}"
-                                data-address="{{ order.customer_address }}"
-                                {% endif %}
-                                data-product="{% if order.product %}{{ order.product.title }}{% else %}{% trans 'Deleted Product' %}{% endif %}"
-                                data-qty="{{ order.quantity }}"
-                                data-date="{{ order.created_at|date:'d M Y, H:i' }}">
-
-                            <i class="fas fa-eye"></i> {% trans "DETAILS" %}
-                        </button>
+                        <a href="{% url 'dash:order_detail' order.pk %}" class="view-details-btn d-flex align-items-center justify-content-center gap-2 text-decoration-none">
+                            <i class="fas fa-eye"></i>{% trans "Details" %}
+                        </a>
                         
                         {% if not is_provider %}
                         <button type="button" class="delete-order-btn delete-btn" 

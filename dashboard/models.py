@@ -224,29 +224,24 @@ class ProductImage(models.Model):
 
 
 class Order(models.Model):
-    """Simple order model for lead generation/direct orders"""
+    """Unified order model for both inquiries and cart/checkout orders"""
 
     class OrderStatus(models.TextChoices):
         PENDING = "pending", _("Pending")
         COMPLETED = "completed", _("Completed")
         CANCELLED = "cancelled", _("Cancelled")
 
-    product = models.ForeignKey(
-        Product, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        related_name="orders",
-        verbose_name=_("Product")
-    )
-    quantity = models.PositiveIntegerField(
-        _("Quantity"), default=1
+    items = models.JSONField(
+        _("Order Items"),
+        default=list,
+        blank=True,
+        help_text=_("List of products in this order with title, price, quantity, thumbnail")
     )
     customer_name = models.CharField(max_length=255, verbose_name=_("Customer Name"))
     customer_phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
     customer_address = models.TextField(verbose_name=_("Address"), blank=True)
     wilaya = models.CharField(max_length=100, verbose_name=_("Wilaya"), blank=True)
     commune = models.CharField(max_length=100, verbose_name=_("Commune"), blank=True)
-    quantity = models.PositiveIntegerField(default=1, verbose_name=_("Quantity"))
     status = models.CharField(
         max_length=20, 
         choices=OrderStatus.choices, 
@@ -261,8 +256,13 @@ class Order(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Order #{self.id} - {self.customer_name}"
+        return _("Order #%(id)s - %(name)s") % {"id": self.id, "name": self.customer_name}
 
+    def item_count(self):
+        return sum(item.get("quantity", 0) for item in self.items)
 
-    def subtotal(self):
-        return (self.product.price or 0) * self.quantity
+    def total_price(self):
+        return sum(
+            (float(item.get("price", 0)) or 0) * int(item.get("quantity", 1))
+            for item in self.items
+        )

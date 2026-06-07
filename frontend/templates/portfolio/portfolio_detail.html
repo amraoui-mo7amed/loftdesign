@@ -36,15 +36,20 @@
         </div>
 
         <div class="viewer-actions">
-            <button class="details-trigger-btn btn btn-primary rounded-pill" onclick="document.getElementById('project-details').scrollIntoView({behavior: 'smooth'})">
-                <i class="fas fa-info-circle"></i> {% trans "Project Details" %}
-            </button>
+            <div class="d-flex gap-2 viewer-actions-row">
+                <a href="{% url 'frontend:portfolio_list' %}" class="btn btn-outline-light rounded-pill px-4 fw-bold">
+                    <i class="fas fa-arrow-left"></i> {% trans "Back" %}
+                </a>
+                <button class="btn btn-primary rounded-pill px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#detailsModal">
+                    <i class="fas fa-info-circle"></i> {% trans "Project Details" %}
+                </button>
 
-            {% if portfolio.external_link %}
-            <a href="{{ portfolio.external_link }}" target="_blank" class="fixed-360-btn btn btn-primary rounded-pill">
-                <i class="fas fa-vr-cardboard"></i> {% trans "View 360" %}
-            </a>
-            {% endif %}
+                {% if portfolio.external_link %}
+                <a href="{{ portfolio.external_link }}" target="_blank" class="btn btn-primary rounded-pill px-4 fw-bold">
+                    <i class="fas fa-vr-cardboard"></i> {% trans "View 360" %}
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -63,8 +68,8 @@
                     {% endfor %}
                 </div>
 
-                <!-- Project Details Card -->
-                <div class="product-details-card" id="project-details" data-aos="fade-up">
+                <!-- Project Details Card (hidden, cloned into modal) -->
+                <div class="product-details-card d-none" id="project-details">
                     <div class="row g-5">
                         <div class="col-lg-7">
                             <div class="mb-4 text-start">
@@ -134,5 +139,18 @@
     </div>
 </section>
 
+    <!-- Project Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-2" id="detailsModalBody">
+                    <!-- populated from #project-details by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 {% block footer %}{% endblock footer %}

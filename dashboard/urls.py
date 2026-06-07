@@ -26,6 +26,7 @@ urlpatterns = [
     path("leads/<int:pk>/delete/", settings.contact_request_delete, name="contact_request_delete"),
     # Orders
     path("orders/", orders.order_list, name="order_list"),
+    path("orders/<int:pk>/", orders.order_detail, name="order_detail"),
     path("orders/<int:pk>/status/", orders.order_update_status, name="order_update_status"),
     path("orders/<int:pk>/delete/", orders.order_delete, name="order_delete"),
 

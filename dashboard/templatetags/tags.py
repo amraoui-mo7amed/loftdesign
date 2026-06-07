@@ -36,18 +36,25 @@ def dashboard_stats(context):
     stats = []
 
     if is_admin:
+        pending_orders = Order.objects.filter(status=Order.OrderStatus.PENDING).count()
         stats = [
             {"title": _("Providers"), "value": UserProfile.objects.filter(role=UserProfile.roleChoices.PROVIDER).count(), "icon": "fa-users", "color": "primary"},
             {"title": _("Products"), "value": Product.objects.count(), "icon": "fa-box-open", "color": "success"},
             {"title": _("Portfolios"), "value": Portfolio.objects.count(), "icon": "fa-briefcase", "color": "warning"},
-            {"title": _("Pending Orders"), "value": Order.objects.filter(status=Order.OrderStatus.PENDING).count(), "icon": "fa-clock", "color": "info"},
+            {"title": _("Pending Orders"), "value": pending_orders, "icon": "fa-clock", "color": "info"},
         ]
     elif role == "provider":
         user_products = Product.objects.filter(user=request.user)
+        user_product_ids = set(user_products.values_list("id", flat=True))
+        all_orders = Order.objects.all()
+        my_order_count = sum(
+            1 for o in all_orders
+            if any(item.get("product_id") in user_product_ids for item in o.items)
+        )
         stats = [
             {"title": _("My Products"), "value": user_products.count(), "icon": "fa-box-open", "color": "success"},
             {"title": _("Portfolios"), "value": Portfolio.objects.count(), "icon": "fa-briefcase", "color": "warning"},
-            {"title": _("My Orders"), "value": Order.objects.filter(product__in=user_products).count(), "icon": "fa-shopping-cart", "color": "primary"},
+            {"title": _("My Orders"), "value": my_order_count, "icon": "fa-shopping-cart", "color": "primary"},
             {"title": _("Commission"), "value": f"{profile.commission}%", "icon": "fa-percentage", "color": "info"},
         ]
 

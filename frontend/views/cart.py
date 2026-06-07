@@ -189,33 +189,49 @@ def cart_checkout(request):
         address = request.POST.get("address")
 
         with transaction.atomic():
+            order_items = []
+            product_titles = []
+
             for item_data in list(cart.values()):
                 product = Product.objects.filter(pk=item_data["product_id"]).first()
                 if not product:
                     continue
 
-                Order.objects.create(
-                    product=product,
-                    quantity=item_data["quantity"],
-                    customer_name=name,
-                    customer_phone=phone,
-                    customer_address=address,
-                    wilaya=wilaya,
-                    commune=commune,
-                    status=Order.OrderStatus.PENDING,
-                )
+                order_items.append({
+                    "product_id": product.pk,
+                    "title": product.title,
+                    "price": str(product.price),
+                    "quantity": item_data["quantity"],
+                    "thumbnail": product.thumbnail.url if product.thumbnail else "",
+                })
+                product_titles.append(product.title)
 
                 product.quantity -= item_data["quantity"]
                 product.save()
 
-                admins = User.objects.filter(is_superuser=True)
-                for admin in admins:
-                    notify_user(
-                        admin,
-                        _("New Order!"),
-                        _("New order for %(product)s by %(name)s") % {"product": product.title, "name": name},
-                        link="/dashboard/orders/"
-                    )
+            if not order_items:
+                return JsonResponse({"success": False, "errors": [_("No valid items in cart.")]})
+
+            Order.objects.create(
+                items=order_items,
+                customer_name=name,
+                customer_phone=phone,
+                customer_address=address,
+                wilaya=wilaya,
+                commune=commune,
+            )
+
+            admins = User.objects.filter(is_superuser=True)
+            for admin in admins:
+                notify_user(
+                    admin,
+                    _("New Order!"),
+                    _("New order for %(products)s by %(name)s") % {
+                        "products": ", ".join(product_titles),
+                        "name": name
+                    },
+                    link="/dashboard/orders/"
+                )
 
             request.session[CART_SESSION_KEY] = {}
             request.session.modified = True

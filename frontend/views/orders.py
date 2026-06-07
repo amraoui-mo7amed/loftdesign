@@ -45,13 +45,18 @@ def place_order(request):
                 product.save()
 
                 order = Order.objects.create(
-                    product=product,
+                    items=[{
+                        "product_id": product.pk,
+                        "title": product.title,
+                        "price": str(product.price),
+                        "quantity": quantity,
+                        "thumbnail": product.thumbnail.url if product.thumbnail else "",
+                    }],
                     customer_name=name,
                     customer_phone=phone,
                     customer_address=address,
                     wilaya=wilaya,
                     commune=commune,
-                    quantity=quantity,
                     status=Order.OrderStatus.PENDING
                 )
 
@@ -66,7 +71,7 @@ def place_order(request):
                             "product": product.title
                         },
                         notification_type=Notification.NotificationType.SUCCESS,
-                        link=f"/dashboard/orders/" # Could be more specific if detail view exists
+                        link="/dashboard/orders/"
                     )
 
                 return JsonResponse({

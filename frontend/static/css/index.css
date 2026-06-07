@@ -862,3 +862,27 @@ footer p {
     transform: translateY(0);
 }
 
+/* Navbar cart badge */
+.navbar .cart-icon-badge {
+    font-size: 0.55rem;
+    min-width: 16px;
+    height: 16px;
+    line-height: 16px;
+    padding: 0 4px;
+}
+
+/* Navbar icon buttons - keep nav-link style consistent */
+.navbar .btn-link.nav-link {
+    text-decoration: none;
+    color: var(--text-main);
+}
+
+.navbar .btn-link.nav-link:hover {
+    color: var(--brand-primary);
+}
+
+/* Hide cart FAB on pages that have the landing navbar */
+body:has(#landingNav) .cart-fab {
+    display: none !important;
+}
+

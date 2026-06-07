@@ -53,15 +53,68 @@
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="https://bilnov.com/promoter/login">{% trans "Bilnov" %}</a>
                     </li>
-                    <li class="nav-item ms-lg-3">{% include 'partials/language_switcher.html' %}</li>
                     <li class="nav-item ms-lg-2">
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'dash:dash_home' %}"
-                               class="btn btn-dark rounded-pill px-4 fw-bold">{% trans "Dashboard" %}</a>
-                        {% else %}
-                            <a href="{% url 'user_auth:login' %}"
-                               class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">{% trans "Login" %}</a>
-                        {% endif %}
+                        <div class="d-flex align-items-center gap-1">
+                            <!-- Language Switcher Icon -->
+                            <div class="dropdown">
+                                <button class="btn btn-link nav-link px-2"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        title="{% trans 'Language' %}">
+                                    <i class="fas fa-globe fs-5"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    {% get_available_languages as languages %}
+                                    {% for lang_code, lang_name in languages %}
+                                        <li>
+                                            <form action="{% url 'set_language' %}"
+                                                  method="post"
+                                                  class="language-form">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="language" value="{{ lang_code }}">
+                                                <input type="hidden" name="next"
+                                                       value="{{ request.get_full_path }}">
+                                                <button type="submit"
+                                                        class="dropdown-item {% if current_lang == lang_code %}active{% endif %}">
+                                                    <span class="flag me-2">
+                                                        {% if lang_code == 'ar' %}🇩🇿
+                                                        {% elif lang_code == 'en' %}🇬🇧
+                                                        {% elif lang_code == 'fr' %}🇫🇷
+                                                        {% else %}🌐
+                                                        {% endif %}
+                                                    </span>
+                                                    {{ lang_name }}
+                                                </button>
+                                            </form>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <!-- Cart Icon -->
+                            <button type="button"
+                                    class="btn btn-link nav-link px-2 position-relative cart-trigger"
+                                    title="{% trans 'Open Cart' %}">
+                                <i class="fas fa-shopping-bag fs-5"></i>
+                                <span class="cart-icon-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary {% if cart_count == 0 %}d-none{% endif %}">
+                                    {{ cart_count }}
+                                </span>
+                            </button>
+                            <!-- Auth Icon -->
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'dash:dash_home' %}"
+                                   class="btn btn-link nav-link px-2"
+                                   title="{% trans 'Dashboard' %}">
+                                    <i class="fas fa-user fs-5"></i>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'user_auth:login' %}"
+                                   class="btn btn-link nav-link px-2"
+                                   title="{% trans 'Login' %}">
+                                    <i class="fas fa-sign-in-alt fs-5"></i>
+                                </a>
+                            {% endif %}
+                        </div>
                     </li>
                 </ul>
             </div>

@@ -197,7 +197,6 @@
 .category-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -371,3 +370,5 @@
         padding: 60px 0;
     }
 }
+
+

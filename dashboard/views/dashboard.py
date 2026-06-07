@@ -26,6 +26,8 @@ def dash_home(request):
             status=Order.OrderStatus.PENDING
         ).count()
 
+        recent_items = list(Order.objects.order_by("-created_at")[:5])
+
         context = {
             "role": role,
             "stat_1": {
@@ -43,7 +45,7 @@ def dash_home(request):
                 "trend": "+5",
             },
             "stat_3": {
-                "title": _("Total Leads"),
+                "title": _("Total Orders"),
                 "value": total_orders,
                 "icon": "fa-shopping-cart",
                 "color": "warning",
@@ -52,39 +54,39 @@ def dash_home(request):
                 "trend_color": "danger",
             },
             "stat_4": {
-                "title": _("Pending Leads"),
+                "title": _("Pending"),
                 "value": pending_orders,
                 "icon": "fa-clock",
                 "color": "info",
             },
             "chart_title": _("Portfolio Distribution"),
             "user_dist_labels": json.dumps(
-                [str(_("Providers")), str(_("Projects")), str(_("Total Leads"))]
+                [str(_("Providers")), str(_("Projects")), str(_("Orders"))]
             ),
             "user_dist_values": json.dumps(
                 [total_providers, total_portfolios, total_orders]
             ),
-            "list_title": _("Recent Leads"),
-            "recent_orders": Order.objects.select_related("product").order_by(
-                "-created_at"
-            )[:5],
+            "list_title": _("Recent Orders"),
+            "recent_items": recent_items,
         }
     else:
         my_products = Product.objects.filter(user=request.user).count()
         my_active = Product.objects.filter(
             user=request.user, is_active=True
         ).count()
-        my_orders = Order.objects.filter(
-            product__user=request.user
-        ).count()
-        my_pending = Order.objects.filter(
-            product__user=request.user,
-            status=Order.OrderStatus.PENDING,
-        ).count()
-        my_completed = Order.objects.filter(
-            product__user=request.user,
-            status=Order.OrderStatus.COMPLETED,
-        ).count()
+
+        user_product_ids = set(
+            Product.objects.filter(user=request.user).values_list("id", flat=True)
+        )
+        all_orders = Order.objects.all().order_by("-created_at")
+        provider_orders = [
+            o for o in all_orders
+            if any(item.get("product_id") in user_product_ids for item in o.items)
+        ]
+        my_orders = len(provider_orders)
+        my_pending = sum(1 for o in provider_orders if o.status == Order.OrderStatus.PENDING)
+        my_completed = sum(1 for o in provider_orders if o.status == Order.OrderStatus.COMPLETED)
+        recent_items = provider_orders[:5]
 
         context = {
             "role": role,
@@ -120,9 +122,7 @@ def dash_home(request):
             "chart_title": _("Weekly Orders"),
             "chart_values": json.dumps([my_pending, my_completed, my_orders]),
             "list_title": _("My Recent Orders"),
-            "recent_orders": Order.objects.filter(
-                product__user=request.user
-            ).select_related("product").order_by("-created_at")[:5],
+            "recent_items": recent_items,
             "list_items": [],
         }
 

@@ -179,16 +179,26 @@ def user_details(request, pk):
     
     # Financial Analytics for Provider
     confirmed_orders = Order.objects.filter(
-        product__user=profile.user, 
         status=Order.OrderStatus.COMPLETED
     )
+    user_product_ids = set(
+        Product.objects.filter(user=profile.user).values_list("id", flat=True)
+    )
+    confirmed_orders = [
+        o for o in confirmed_orders
+        if any(item.get("product_id") in user_product_ids for item in o.items)
+    ]
     
-    confirmed_sales_count = confirmed_orders.count()
-    total_confirmed_price = confirmed_orders.aggregate(total=Sum('product__price'))['total'] or 0
-    
+    confirmed_sales_count = len(confirmed_orders)
+    total_confirmed_price = sum(
+        sum(
+            (float(item.get("price", 0)) or 0) * int(item.get("quantity", 1))
+            for item in o.items
+        )
+        for o in confirmed_orders
+    )
+
     # Debt: Total commission earned by the platform from this provider
-    # Formula: sum(product_price * provider_commission / 100)
-    # Since commission is per profile, we can calculate it from total sales
     total_debt = (total_confirmed_price * profile.commission) / 100
 
     context = {

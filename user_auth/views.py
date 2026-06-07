@@ -147,13 +147,7 @@ def signup_view(request):
         except Exception as e:
             return JsonResponse({"success": False, "errors": [str(e)]})
 
-    return render(
-        request,
-        "auth/signup.html",
-        {
-            "sex_choices": UserProfile.sexChoices.choices,
-        },
-    )
+    return render(request, "auth/signup.html")
 
 
 def set_password(request, uidb64, token):

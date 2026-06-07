@@ -1,0 +1,234 @@
+/* ============================================
+   Signup Page — Affiliate Registration
+   ============================================ */
+
+/* Affiliate Form Card */
+.affiliate-form-card {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.04);
+}
+
+[dir="rtl"] .affiliate-form-card {
+    text-align: right;
+}
+
+/* Affiliate Step Cards - Animated */
+.affiliate-step-card {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 24px;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    overflow: hidden;
+}
+
+.affiliate-step-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--brand-primary), #e8b84b);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+[dir="rtl"] .affiliate-step-card::before {
+    transform-origin: right;
+}
+
+.affiliate-step-card:hover::before {
+    transform: scaleX(1);
+}
+
+.affiliate-step-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+}
+
+.step-number {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(0,0,0,0.03);
+    line-height: 1;
+    user-select: none;
+    transition: all 0.4s ease;
+}
+
+[dir="rtl"] .step-number {
+    right: auto;
+    left: 1.5rem;
+}
+
+[dir="ltr"] .step-number {
+    right: 1.5rem;
+    left: auto;
+}
+
+.affiliate-step-card:hover .step-number {
+    color: rgba(183, 148, 84, 0.08);
+    transform: scale(1.1);
+}
+
+.step-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(183, 148, 84, 0.08);
+    border-radius: 50%;
+    font-size: 2rem;
+    color: var(--brand-primary);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.affiliate-step-card:hover .step-icon-wrapper {
+    background: var(--brand-primary);
+    color: #ffffff;
+    transform: scale(1.05) rotateY(180deg);
+}
+
+[dir="rtl"] .affiliate-step-card:hover .step-icon-wrapper {
+    transform: scale(1.05) rotateY(-180deg);
+}
+
+.affiliate-step-card h5 {
+    position: relative;
+    z-index: 1;
+}
+
+.affiliate-step-card p {
+    position: relative;
+    z-index: 1;
+}
+
+/* Password toggle button */
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: #6c757d;
+    z-index: 5;
+}
+
+[dir="ltr"] .password-toggle {
+    right: 10px;
+}
+
+[dir="rtl"] .password-toggle {
+    left: 10px;
+}
+
+.password-toggle:hover {
+    color: #212529;
+}
+
+/* Spacing utility */
+.mb-8 {
+    margin-bottom: 5rem;
+}
+
+/* Reveal animations reused from home.css */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-up.active {
+    transform: translateY(0);
+}
+
+.reveal-right.active {
+    transform: translateX(0);
+}
+
+.reveal-left.active {
+    transform: translateX(0);
+}
+
+.reveal-zoom.active {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.reveal {
+    transform: translateY(30px);
+}
+
+.reveal-right {
+    transform: translateX(30px);
+}
+
+.reveal-left {
+    transform: translateX(-30px);
+}
+
+.reveal-zoom {
+    transform: scale(0.95);
+}
+
+.delay-100 { transition-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; }
+
+/* ============================================
+   Signup Split Layout Utilities
+   ============================================ */
+.tracking-widest {
+    letter-spacing: 0.15em;
+}
+
+.bg-opacity-20 {
+    --tw-bg-opacity: 0.2;
+    background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
+}
+
+/* Password field wrapper reused from auth.css */
+.password-field {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: #6c757d;
+    z-index: 5;
+    right: 10px;
+}
+
+[dir="rtl"] .password-toggle {
+    right: auto;
+    left: 10px;
+}
+
+.password-toggle:hover {
+    color: #212529;
+}

@@ -1,4 +1,5 @@
 from django.urls import path
+from user_auth import views as auth_views
 from .views import main, portfolio, products, orders, cart
 
 app_name = "frontend"
@@ -23,5 +24,6 @@ urlpatterns = [
     path("cart/remove/", cart.cart_remove, name="cart_remove"),
     path("cart/load/", cart.cart_load, name="cart_load"),
     # Affiliate
+    path("signup/", auth_views.signup_view, name="affiliate_signup_page"),
     path("affiliate/signup/", main.affiliate_signup, name="affiliate_signup"),
 ]

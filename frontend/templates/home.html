@@ -51,6 +51,9 @@
                         <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#contact">{% trans "Contact" %}</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link fw-bold" href="{% url 'frontend:affiliate_signup_page' %}">{% trans "Affiliate" %}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link fw-bold" href="https://bilnov.com/promoter/login">{% trans "Bilnov" %}</a>
                     </li>
                     <li class="nav-item ms-lg-2">
@@ -326,126 +329,6 @@
                    class="btn btn-outline-dark rounded-pill px-4 mt-5 reveal reveal-up">{% trans "View All Products" %}</a>
         </div>
     </section>
-    <!-- Affiliate Section -->
-    <section class="py-10 bg-white" id="affiliate">
-        <div class="container">
-            <!-- Top Row: How It Works Cards -->
-            <div class="text-center mb-8 reveal reveal-up">
-                <span class="text-primary fw-bold text-uppercase tracking-widest mb-2 d-block">{% trans "How It Works" %}</span>
-                <h3 class="display-5 fw-black">{% trans "Three Simple Steps to Get Started" %}</h3>
-            </div>
-            <div class="row g-4 justify-content-center mb-8">
-                <div class="col-lg-4 col-md-6">
-                    <div class="affiliate-step-card reveal reveal-up delay-100">
-                        <div class="step-number">1</div>
-                        <div class="step-icon-wrapper">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <h5 class="fw-black mb-3">{% trans "Sign Up" %}</h5>
-                        <p class="text-muted mb-0">{% trans "Fill in your details and create your affiliate account in seconds." %}</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="affiliate-step-card reveal reveal-up delay-200">
-                        <div class="step-number">2</div>
-                        <div class="step-icon-wrapper">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <h5 class="fw-black mb-3">{% trans "Get Approved" %}</h5>
-                        <p class="text-muted mb-0">{% trans "Our team reviews your application and activates your account." %}</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="affiliate-step-card reveal reveal-up delay-300">
-                        <div class="step-number">3</div>
-                        <div class="step-icon-wrapper">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h5 class="fw-black mb-3">{% trans "Start Earning" %}</h5>
-                        <p class="text-muted mb-0">{% trans "Share your affiliate link and earn commissions on every referral." %}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bottom Row: Text + Inline Form -->
-            <div class="row g-5 align-items-start">
-                <div class="col-lg-6">
-                    <div class="reveal reveal-left">
-                        <span class="text-primary fw-bold text-uppercase tracking-widest mb-2 d-block">{% trans "Partner With Us" %}</span>
-                        <h2 class="display-4 fw-black mb-4">{% trans "Become an Affiliate" %}</h2>
-                        <p class="text-muted fs-5 mb-4">
-                            {% trans "Earn commissions by referring clients to LOFT Design. Join our affiliate program and turn your network into revenue." %}
-                        </p>
-                        <ul class="list-unstyled d-flex flex-column gap-3 mb-5">
-                            <li class="d-flex align-items-center gap-3">
-                                <i class="fas fa-percentage text-primary fa-lg"></i>
-                                <span class="fw-bold">{% trans "Competitive commission rates on every sale" %}</span>
-                            </li>
-                            <li class="d-flex align-items-center gap-3">
-                                <i class="fas fa-bolt text-primary fa-lg"></i>
-                                <span class="fw-bold">{% trans "Real-time tracking dashboard" %}</span>
-                            </li>
-                            <li class="d-flex align-items-center gap-3">
-                                <i class="fas fa-headset text-primary fa-lg"></i>
-                                <span class="fw-bold">{% trans "Dedicated support team" %}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="reveal reveal-right">
-                        {% include "partials/errorList.html" with form_id="affiliateForm" %}
-                        <form class="form affiliate-form-card" id="affiliateForm" method="POST" action="{% url 'frontend:affiliate_signup' %}">
-                            {% csrf_token %}
-                            <h5 class="fw-black text-uppercase mb-4">{% trans "Sign Up Now" %}</h5>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold small text-uppercase">{% trans "First Name" %}</label>
-                                    <input type="text" name="first_name" class="form-control rounded-3" placeholder="{% trans 'First Name' %}" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold small text-uppercase">{% trans "Last Name" %}</label>
-                                    <input type="text" name="last_name" class="form-control rounded-3" placeholder="{% trans 'Last Name' %}" required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label fw-bold small text-uppercase">{% trans "Email" %}</label>
-                                    <input type="email" name="email" class="form-control rounded-3" placeholder="email@example.com" required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label fw-bold small text-uppercase">{% trans "Phone" %}</label>
-                                    <input type="tel" name="phone" class="form-control rounded-3" placeholder="+213 555 00 00 00">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold small text-uppercase">{% trans "Password" %}</label>
-                                    <div class="position-relative">
-                                        <input type="password" name="password" class="form-control rounded-3" placeholder="{% trans 'Min 8 characters' %}" required>
-                                        <button type="button" class="password-toggle" tabindex="-1" aria-label="{% trans 'Toggle password visibility' %}">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold small text-uppercase">{% trans "Confirm Password" %}</label>
-                                    <div class="position-relative">
-                                        <input type="password" name="confirm_password" class="form-control rounded-3" placeholder="{% trans 'Repeat password' %}" required>
-                                        <button type="button" class="password-toggle" tabindex="-1" aria-label="{% trans 'Toggle password visibility' %}">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 fw-bold shadow">
-                                        {% trans "Create Affiliate Account" %}
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- 5. Contact Section -->
     <section id="contact" class="py-10 bg-dark text-white">
         <div class="container">
@@ -540,34 +423,6 @@
             </div>
         </div>
     </section>
-    <!-- Test Account Modal -->
-<div class="modal fade" id="testAccountModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
-            <div class="modal-header border-0 bg-dark text-white p-4">
-                <h5 class="modal-title fw-black text-uppercase">{% trans "Test Account Access" %}</h5>
-                <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="bg-light p-4 rounded-4 mb-4 border-2 border-dashed text-start">
-                    <p class="text-muted small text-uppercase fw-black mb-3" style="letter-spacing: 1px;">{% trans "Credentials" %}</p>
-                    <div class="mb-3">
-                        <span class="d-block smaller text-muted text-uppercase fw-bold">{% trans "USERNAME" %}</span>
-                        <span class="fs-5 fw-black text-dark">DAREB@live.fr</span>
-                    </div>
-                    <div>
-                        <span class="d-block smaller text-muted text-uppercase fw-bold">{% trans "PASSWORD" %}</span>
-                        <span class="fs-5 fw-black text-dark">123456789</span>
-                    </div>
-                </div>
-                <p class="text-muted small text-start">{% trans "Use these details to explore the provider dashboard features." %}</p>
-                <a href="https://bilnov.com/promoter/login" target="_blank" class="btn btn-primary w-100 rounded-pill py-3 fw-black text-uppercase tracking-wider mt-2">
-                    {% trans "Go to Login" %}
-                </a>
-            </div>
-{% endblock content %}
-
-{% block footer %}
     <footer class="bg-dark py-5 border-top border-secondary border-opacity-10">
         <div class="container">
             <div class="row g-4 mb-5">
@@ -630,6 +485,10 @@
             </div>
         </div>
     </footer>
+{% endblock content %}
+
+{% block footer %}
+
 {% endblock footer %}
 {% block extra_js %}
     <script src="{% static 'js/home.js' %}?v={% now 'U' %}"></script>

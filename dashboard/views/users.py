@@ -274,7 +274,10 @@ def user_approve(request, pk):
 @role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER, UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.ADMIN])
 def profile_update(request):
     """AJAX view for providers/affiliates/admins to update their own profile"""
-    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    if created and request.user.is_superuser:
+        profile.role = UserProfile.roleChoices.ADMIN
+        profile.save()
 
     if request.method == "POST":
         first_name = request.POST.get("first_name", "").strip()

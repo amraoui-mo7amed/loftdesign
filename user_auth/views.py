@@ -13,7 +13,7 @@ from django.conf import settings
 
 from .models import UserProfile
 from .utils import (
-    create_user_account,
+    create_affiliate_account,
     user_profile_upload_path,
 )
 
@@ -86,19 +86,15 @@ def signup_view(request):
         return redirect(reverse_lazy("dash:dash_home"))
 
     if request.method == "POST":
-        # Extract data
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
-        phone_number = request.POST.get("phone_number", "")
-        sex = request.POST.get("sex")
-        birth_date = request.POST.get("birth_date") or None
+        phone = request.POST.get("phone", "")
 
         errors = []
 
-        # Validation
         if not first_name:
             errors.append(_("First name is required."))
         if not last_name:
@@ -115,14 +111,12 @@ def signup_view(request):
         if errors:
             return JsonResponse({"success": False, "errors": errors})
 
-        # Check existing user
-        if User.objects.filter(username=email).exists():
+        if User.objects.filter(email=email).exists():
             return JsonResponse(
                 {"success": False, "errors": [_("This email is already registered.")]}
             )
 
         try:
-            # Data dictionaries for helper
             user_data = {
                 "email": email,
                 "password": password,
@@ -130,17 +124,15 @@ def signup_view(request):
                 "last_name": last_name,
             }
             profile_data = {
-                "phone_number": phone_number,
-                "sex": sex,
-                "birth_date": birth_date,
+                "phone_number": phone,
             }
 
-            user = create_user_account(user_data, profile_data, None)
+            user, affiliate_code = create_affiliate_account(user_data, profile_data)
 
             return JsonResponse(
                 {
                     "success": True,
-                    "message": _("Your account has been created successfully."),
+                    "message": _("Your affiliate account has been created! An admin will review and activate your account."),
                     "redirect_url": reverse("user_auth:login"),
                 }
             )

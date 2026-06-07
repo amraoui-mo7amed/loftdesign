@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Account Activated</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Cairo', Arial, sans-serif; background-color: #f8f9fa; color: #1A1A1A;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="center" style="padding: 40px 0;">
+                <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
+                    <tr>
+                        <td align="center" style="background-color: #1A1A1A; padding: 30px 20px;">
+                            <h1 style="color: #FFFFFF; margin: 0; font-size: 24px; font-weight: bold;">
+                                {{ site_name }}
+                            </h1>
+                            <p style="color: #9DBBDD; margin: 5px 0 0 0; font-size: 14px;">
+                                Affiliate Program
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 40px 30px; text-align: left;">
+                            <h2 style="color: #1A1A1A; margin-top: 0;">Welcome to the Team! 🎉</h2>
+                            <p style="font-size: 16px; line-height: 1.6; color: #4A5568;">
+                                Great news! Your affiliate account has been reviewed and <strong>approved</strong>.
+                                You can now log in and start sharing our products with your network.
+                            </p>
+
+                            <div style="background-color: #f8faff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 25px 0;">
+                                <h4 style="margin-top: 0; font-size: 15px; color: #1A1A1A; border-bottom: 2px solid #eef2ff; padding-bottom: 8px; margin-bottom: 15px;">
+                                    Your Credentials:
+                                </h4>
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td width="120" style="padding: 6px 0; color: #718096; font-size: 14px;">Email:</td>
+                                        <td style="padding: 6px 0; color: #1A1A1A; font-weight: bold; font-size: 14px;">{{ profile.user.email }}</td>
+                                    </tr>
+                                    {% if profile.affiliate_code %}
+                                    <tr>
+                                        <td width="120" style="padding: 6px 0; color: #718096; font-size: 14px;">Affiliate Code:</td>
+                                        <td style="padding: 6px 0; color: #1A1A1A; font-weight: bold; font-size: 14px;">{{ profile.affiliate_code }}</td>
+                                    </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+
+                            <div style="text-align: center;">
+                                <a href="{{ login_url }}" style="background-color: #1A1A1A; color: #ffffff; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block;">
+                                    Login to Your Account
+                                </a>
+                            </div>
+
+                            <p style="margin-top: 30px; font-size: 14px; color: #718096; line-height: 1.5;">
+                                If you have any questions, feel free to reach out to our support team.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #f1f3f7; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
+                            <p style="margin: 0; color: #718096; font-size: 12px;">
+                                &copy; {% now "Y" %} {{ site_name }}. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

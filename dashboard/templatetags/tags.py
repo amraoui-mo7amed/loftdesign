@@ -37,11 +37,12 @@ def dashboard_stats(context):
 
     if is_admin:
         pending_orders = Order.objects.filter(status=Order.OrderStatus.PENDING).count()
+        pending_affiliates = UserProfile.objects.filter(role=UserProfile.roleChoices.AFFILIATE, is_approved=False).count()
         stats = [
             {"title": _("Providers"), "value": UserProfile.objects.filter(role=UserProfile.roleChoices.PROVIDER).count(), "icon": "fa-users", "color": "primary"},
             {"title": _("Products"), "value": Product.objects.count(), "icon": "fa-box-open", "color": "success"},
-            {"title": _("Portfolios"), "value": Portfolio.objects.count(), "icon": "fa-briefcase", "color": "warning"},
-            {"title": _("Pending Orders"), "value": pending_orders, "icon": "fa-clock", "color": "info"},
+            {"title": _("Affiliates Pending"), "value": pending_affiliates, "icon": "fa-handshake", "color": "info"},
+            {"title": _("Pending Orders"), "value": pending_orders, "icon": "fa-clock", "color": "warning"},
         ]
     elif role == "provider":
         user_products = Product.objects.filter(user=request.user)

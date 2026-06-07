@@ -13,9 +13,10 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.conf import settings
+from django.utils import timezone
 from dashboard.utils import send_account_activation_email, notify_user
 from dashboard.decorator import role_required
-from dashboard.models import Notification
+from dashboard.models import Notification, Product
 from django.db import transaction
 import secrets
 
@@ -217,12 +218,13 @@ def user_delete(request, pk):
         full_name = profile.user.get_full_name() or profile.user.username
         profile.user.delete()  # Cascade will delete the profile
 
+        redirect_url = reverse("dash:affiliate_list") if profile.role == "affiliate" else reverse("dash:user_list")
         return JsonResponse(
             {
                 "success": True,
                 "message": _("User %(name)s deleted successfully.")
                 % {"name": full_name},
-                "redirect_url": reverse("dash:user_list"),
+                "redirect_url": redirect_url,
             }
         )
 
@@ -269,9 +271,9 @@ def user_approve(request, pk):
     return redirect("dash:user_details", pk=pk)
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER])
+@role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER, UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.ADMIN])
 def profile_update(request):
-    """AJAX view for providers to update their own profile"""
+    """AJAX view for providers/affiliates/admins to update their own profile"""
     profile = get_object_or_404(UserProfile, user=request.user)
 
     if request.method == "POST":
@@ -308,6 +310,7 @@ def profile_update(request):
             return JsonResponse({
                 "success": True,
                 "message": _("Profile updated successfully."),
+                "redirect_url": reverse("dash:profile_update"),
             })
         except Exception as e:
             return JsonResponse({
@@ -349,26 +352,125 @@ def user_toggle_block(request, pk):
             except Exception:
                 pass
 
-        # Notify admins
-        admins = User.objects.filter(is_superuser=True)
-        for admin in admins:
-            notify_user(
-                user=admin,
-                title=_("Account %(status)s") % {"status": status},
-                message=_(
-                    "%(name)s has been %(status)s by %(admin)s."
-                ) % {
-                    "name": full_name,
-                    "status": status,
-                    "admin": request.user.get_full_name() or request.user.username,
-                },
-                notification_type=Notification.NotificationType.WARNING if profile.is_blocked else Notification.NotificationType.INFO,
-                link=reverse("dash:user_details", kwargs={"pk": profile.pk}),
-            )
-
         return JsonResponse({
             "success": True,
             "message": _("User %(name)s has been %(status)s.") % {"name": full_name, "status": status},
         })
 
     return JsonResponse({"success": False}, status=400)
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+def affiliate_list(request):
+    query = request.GET.get("q", "")
+    status = request.GET.get("status", "")
+
+    profiles_list = (
+        UserProfile.objects.select_related("user")
+        .filter(role=UserProfile.roleChoices.AFFILIATE)
+        .order_by("-created_at")
+    )
+
+    if query:
+        profiles_list = profiles_list.filter(
+            Q(user__email__icontains=query)
+            | Q(user__first_name__icontains=query)
+            | Q(user__last_name__icontains=query)
+        )
+
+    if status == "approved":
+        profiles_list = profiles_list.filter(is_approved=True)
+    elif status == "pending":
+        profiles_list = profiles_list.filter(is_approved=False)
+
+    paginator = Paginator(profiles_list, 12)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    status_choices = [
+        ("", _("All")),
+        ("approved", _("Approved")),
+        ("pending", _("Pending")),
+    ]
+
+    context = {
+        "page_obj": page_obj,
+        "profiles": page_obj,
+        "status_choices": status_choices,
+        "query": query,
+        "selected_status": status,
+        "title": _("Affiliates"),
+    }
+    return render(request, "users/affiliate_list.html", context)
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+def affiliate_approve(request, pk):
+    if request.method == "POST":
+        profile = get_object_or_404(UserProfile, pk=pk, role=UserProfile.roleChoices.AFFILIATE)
+        approved = request.POST.get("approved") == "true"
+
+        try:
+            with transaction.atomic():
+                profile.is_approved = approved
+                profile.user.is_active = approved
+                if approved:
+                    profile.approved_at = timezone.now()
+                else:
+                    profile.approved_at = None
+                profile.save()
+                profile.user.save()
+
+                if approved:
+                    email_sent = send_affiliate_activation_email(request, profile)
+                    if not email_sent:
+                        transaction.set_rollback(True)
+                        return JsonResponse({
+                            "success": False,
+                            "message": _("Failed to send activation email. Operation cancelled."),
+                        })
+
+                    full_name = profile.user.get_full_name() or profile.user.username
+                    return JsonResponse({
+                        "success": True,
+                        "message": _("%(name)s approved successfully. Activation email sent.") % {"name": full_name},
+                    })
+                else:
+                    full_name = profile.user.get_full_name() or profile.user.username
+                    return JsonResponse({
+                        "success": True,
+                        "message": _("%(name)s has been disapproved.") % {"name": full_name},
+                    })
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "message": _("An error occurred: %(error)s") % {"error": str(e)},
+            })
+
+    return JsonResponse({"success": False}, status=400)
+
+
+def send_affiliate_activation_email(request, profile):
+    site_name = _("LOFT Design")
+    subject = _("Welcome to %(site)s — Your Affiliate Account is Active!") % {"site": site_name}
+    login_url = request.build_absolute_uri(reverse("user_auth:login"))
+
+    context = {
+        "profile": profile,
+        "login_url": login_url,
+        "site_name": site_name,
+    }
+
+    html_content = render_to_string("email/affiliate_activation.html", context)
+
+    email = EmailMultiAlternatives(
+        subject, "", settings.DEFAULT_FROM_EMAIL, [profile.user.email]
+    )
+    email.attach_alternative(html_content, "text/html")
+
+    try:
+        email.send()
+        return True
+    except Exception as e:
+        print(f"Failed to send affiliate activation email: {e}")
+        return False

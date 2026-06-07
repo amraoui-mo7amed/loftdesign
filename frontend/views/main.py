@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from dashboard.models import Portfolio, Product, SiteSettings, ContactRequest
 from django.http import JsonResponse
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from dashboard.utils import notify_user
 from dashboard.models import Notification
 from django.contrib.auth.models import User
+from user_auth.utils import create_affiliate_account
 
 def home_view(request):
     latest_portfolios = Portfolio.objects.filter(is_featured=True)[:6]
@@ -82,6 +84,81 @@ def contact_request_submit(request):
             })
         except Exception as e:
             return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+
+    return JsonResponse({"success": False}, status=400)
+
+
+def affiliate_signup(request):
+    """AJAX view for affiliate registration — account created inactive until admin approves."""
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        errors = {}
+        if not first_name:
+            errors["first_name"] = [_("First name is required.")]
+        if not last_name:
+            errors["last_name"] = [_("Last name is required.")]
+        if not email:
+            errors["email"] = [_("Email is required.")]
+        if not password:
+            errors["password"] = [_("Password is required.")]
+        elif len(password) < 8:
+            errors["password"] = [_("Password must be at least 8 characters.")]
+        if password != confirm_password:
+            errors["confirm_password"] = [_("Passwords do not match.")]
+
+        if errors:
+            return JsonResponse({"success": False, "errors": errors})
+
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({
+                "success": False,
+                "errors": {"email": [_("This email is already registered.")]},
+            })
+
+        try:
+            user_data = {
+                "email": email,
+                "password": password,
+                "first_name": first_name,
+                "last_name": last_name,
+            }
+            profile_data = {
+                "phone_number": phone or "",
+            }
+
+            user, affiliate_code = create_affiliate_account(user_data, profile_data)
+
+            # Notify all admins
+            admins = User.objects.filter(is_superuser=True)
+            for admin in admins:
+                notify_user(
+                    user=admin,
+                    title=_("New Affiliate Signup"),
+                    message=_(
+                        "%(name)s (%(email)s) has registered as an affiliate and is awaiting approval."
+                    ) % {"name": f"{first_name} {last_name}", "email": email},
+                    notification_type=Notification.NotificationType.INFO,
+                    link=reverse("dash:user_details", kwargs={"pk": user.profile.pk}),
+                )
+
+            return JsonResponse({
+                "success": True,
+                "message": _(
+                    "Your affiliate account has been created! An admin will review and activate your account. "
+                    "You will receive an email once approved."
+                ),
+            })
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "errors": {"system": [str(e)]},
+            })
 
     return JsonResponse({"success": False}, status=400)
 

@@ -15,8 +15,6 @@
         <div class="row g-0">
             <!-- Sidebar / Left Panel -->
             <div class="col-12 col-lg-4 col-xl-3 profile-sidebar">
-                {% include "partials/errorList.html" with form_id="profileForm" %}
-
                 <div class="profile-sidebar-sticky">
                     <!-- Avatar -->
                     <div class="profile-avatar-block">
@@ -24,7 +22,7 @@
                             <input type="file" name="profile_picture" id="profilePictureInput"
                                    class="d-none" accept="image/*">
                             {% if profile.profile_picture %}
-                                <img src="{{ profile.profile_picture.url }}"
+                                <img src="{{ profile.profile_picture.url }}?v={% now "U" %}"
                                      alt="{% trans 'Profile' %}"
                                      class="profile-avatar-img" id="avatarPreview">
                             {% else %}
@@ -73,10 +71,7 @@
 
             <!-- Main / Right Panel -->
             <div class="col-12 col-lg-8 col-xl-9 profile-main">
-<form method="POST" action="{% url 'dash:profile_update' %}" class="form" id="profileForm" enctype="multipart/form-data"
-      data-success-title="{% trans 'Success' %}"
-      data-error-title="{% trans 'Error' %}"
-      data-error-text="{% trans 'An unexpected error occurred.' %}">
+<form method="POST" action="{% url 'dash:profile_update' %}" id="profileForm" enctype="multipart/form-data">
     {% csrf_token %}
 
                     <div class="profile-main-header">

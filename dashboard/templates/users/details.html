@@ -8,13 +8,16 @@
 
 {% block extra_js %}
     <script src="{% static "js/users.js" %}?v={% now "U" %}"></script>
+    {% if profile.role == 'affiliate' %}
+    <script src="{% static 'js/affiliates.js' %}?v={% now 'U' %}"></script>
+    {% endif %}
 {% endblock extra_js %}
 
 {% block dashContent %}
     <div class="container-fluid">
         <!-- Back Button & Actions -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <a href="{% url 'dash:user_list' %}" class="btn btn-dark shadow-sm border-0 rounded-3 px-3 py-2 text-light">
+            <a href="{% if profile.role == 'affiliate' %}{% url 'dash:affiliate_list' %}{% else %}{% url 'dash:user_list' %}{% endif %}" class="btn btn-dark shadow-sm border-0 rounded-3 px-3 py-2 text-light">
                 <i class="fas fa-arrow-left me-2"></i> {% trans "Back to List" %}
             </a>
             <div class="d-flex gap-2">
@@ -23,7 +26,34 @@
                         <i class="fas fa-star me-1"></i> {% trans "Trusted" %}
                     </span>
                 {% endif %}
-                {% if not profile.is_approved %}
+                {% if profile.role == 'affiliate' %}
+                    {% if not profile.is_approved %}
+                    <button type="button" class="btn btn-success shadow-sm rounded-3 px-3 py-2 fw-bold affiliate-approve-btn"
+                            data-url="{% url 'dash:affiliate_approve' profile.pk %}"
+                            data-swal-title="{% trans 'Approve Affiliate?' %}"
+                            data-swal-text="{% trans 'This will activate their account and send them a welcome email.' %}"
+                            data-swal-confirm="{% trans 'Yes, Approve' %}"
+                            data-swal-cancel="{% trans 'Cancel' %}"
+                            data-swal-confirm-color="#198754"
+                            data-swal-icon="question"
+                            data-swal-error="{% trans 'An error occurred.' %}"
+                            data-form-data='[["approved","true"]]'>
+                        <i class="fas fa-check me-2"></i> {% trans "Approve" %}
+                    </button>
+                    {% endif %}
+                    <button type="button" class="btn btn-outline-danger shadow-sm rounded-3 px-3 py-2 fw-bold affiliate-approve-btn"
+                            data-url="{% url 'dash:affiliate_approve' profile.pk %}"
+                            data-swal-title="{% trans 'Disapprove Affiliate?' %}"
+                            data-swal-text="{% trans 'This will deactivate their account access.' %}"
+                            data-swal-confirm="{% trans 'Yes, Disapprove' %}"
+                            data-swal-cancel="{% trans 'Cancel' %}"
+                            data-swal-confirm-color="#dc3545"
+                            data-swal-icon="question"
+                            data-swal-error="{% trans 'An error occurred.' %}"
+                            data-form-data='[["approved","false"]]'>
+                        <i class="fas fa-times me-2"></i> {% trans "Disapprove" %}
+                    </button>
+                {% elif not profile.is_approved %}
                 <button id="approveUserBtn"
                         data-business-name="{{ profile.user.get_full_name|default:profile.user.username }}"
                         data-swal-title="{% trans 'Approve User?' %}"
@@ -41,6 +71,7 @@
                 </form>
                 {% endif %}
 
+                {% if profile.role != 'affiliate' %}
                 <button id="toggleBlockBtn"
                         data-user-id="{{ profile.pk }}"
                         data-business-name="{{ profile.user.get_full_name|default:profile.user.username }}"
@@ -58,6 +89,7 @@
                 <form id="toggleBlockForm" method="post" action="{% url 'dash:user_toggle_block' profile.pk %}" class="d-none">
                     {% csrf_token %}
                 </form>
+                {% endif %}
 
                 <button id="deleteUserBtn"
                         data-user-id="{{ profile.pk }}" 
@@ -83,10 +115,17 @@
             <div class="col-12 col-lg-4">
                 <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden bg-white">
                     <div class="card-header bg-primary bg-opacity-10 border-0 p-5 text-center">
+                        {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}?v={% now "U" %}"
+                             alt="{% trans 'Profile' %}"
+                             class="rounded-circle shadow-sm mx-auto mb-3"
+                             style="width: 100px; height: 100px; object-fit: cover;">
+                        {% else %}
                         <div class="avatar-circle bg-white text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm mx-auto mb-3" 
                              style="width: 100px; height: 100px; font-size: 2.5rem; color: #fff !important;">
                             {{ profile.user.username|slice:":1"|upper }}
                         </div>
+                        {% endif %}
                         <h4 class="fw-bold text-dark mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h4>
                         <p class="text-muted mb-0">@{{ profile.user.username }}</p>
                     </div>
@@ -115,8 +154,9 @@
                 </div>
             </div>
 
-            <!-- Financial Stats Row (Integrated in the same horizontal structure) -->
+            <!-- Financial Stats Row (Providers only) -->
             <div class="col-12 col-lg-8">
+                {% if profile.role == 'provider' %}
                 <div class="row g-4 mb-4">
                     <div class="col-md-4">
                         <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
@@ -139,6 +179,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
                 <!-- Detailed Information Card -->
                 <div class="card border-0 shadow-sm rounded-4 bg-white">

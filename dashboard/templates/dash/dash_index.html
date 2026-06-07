@@ -102,12 +102,19 @@
                         <a href="#"
                            class="d-flex align-items-center gap-2 text-decoration-none text-dark dropdown-toggle no-caret user-dropdown-trigger"
                            data-bs-toggle="dropdown">
+                            {% if request.user.profile.profile_picture %}
+                            <img src="{{ request.user.profile.profile_picture.url }}?v={% now "U" %}"
+                                 alt="{% trans 'Profile' %}"
+                                 class="rounded-circle"
+                                 style="width: 38px; height: 38px; object-fit: cover;">
+                            {% else %}
                             <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
                                  style="width: 38px;
                                         height: 38px;
                                         font-size: 0.9rem">
                                 {{ request.user.username|slice:":1"|upper }}
                             </div>
+                            {% endif %}
                             <div class="d-none d-md-block">
                                 <p class="small fw-bold mb-0 leading-tight">
                                     {{ request.user.get_full_name|default:request.user.username }}
@@ -116,7 +123,7 @@
                                     {% if request.user.is_superuser %}
                                         {% trans "Administrator" %}
                                     {% else %}
-                                        {{ request.user.profile.activity_type|title|default:_("User") }}
+                                        {{ request.user.profile.get_role_display|default:_("User") }}
                                     {% endif %}
                                 </p>
                             </div>

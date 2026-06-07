@@ -38,6 +38,9 @@ urlpatterns = [
     path("users/<int:pk>/approve/", users.user_approve, name="user_approve"),
     path("users/<int:pk>/toggle-block/", users.user_toggle_block, name="user_toggle_block"),
     path("profile/edit/", users.profile_update, name="profile_update"),
+    # Affiliates
+    path("affiliates/", users.affiliate_list, name="affiliate_list"),
+    path("affiliates/<int:pk>/approve/", users.affiliate_approve, name="affiliate_approve"),
     # Notifications
     path("notifications/stream/",notifications.notifications_stream,name="notifications_stream"),
     path("notifications/unread-count/",notifications.get_unread_count,name="notifications_unread_count",),

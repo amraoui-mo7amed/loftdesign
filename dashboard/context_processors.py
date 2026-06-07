@@ -23,6 +23,11 @@ def get_dashboard_menu(user):
     # Admin only links
     if is_admin:
         menu.append({
+            "title": _("Affiliates"),
+            "icon": "fas fa-handshake",
+            "url_name": "dash:affiliate_list",
+        })
+        menu.append({
             "title": _("Providers"),
             "icon": "fas fa-users",
             "url_name": "dash:user_list",

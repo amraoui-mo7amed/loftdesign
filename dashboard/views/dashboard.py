@@ -25,6 +25,9 @@ def dash_home(request):
         pending_orders = Order.objects.filter(
             status=Order.OrderStatus.PENDING
         ).count()
+        pending_affiliates = UserProfile.objects.filter(
+            role=UserProfile.roleChoices.AFFILIATE, is_approved=False
+        ).count()
 
         recent_items = list(Order.objects.order_by("-created_at")[:5])
 
@@ -54,9 +57,9 @@ def dash_home(request):
                 "trend_color": "danger",
             },
             "stat_4": {
-                "title": _("Pending"),
-                "value": pending_orders,
-                "icon": "fa-clock",
+                "title": _("Pending Affiliates"),
+                "value": pending_affiliates,
+                "icon": "fa-handshake",
                 "color": "info",
             },
             "chart_title": _("Portfolio Distribution"),

@@ -1,10 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var form = document.getElementById("profileForm");
-    if (!form) return;
-
-    var errorContainer = document.getElementById("profileForm-errors");
-    var l10n = form.dataset; // SuccessTitle, ErrorTitle, ErrorText
-
     var avatarRing = document.getElementById("avatarWrapper");
     var avatarPreview = document.getElementById("avatarPreview");
     var fileInput = document.getElementById("profilePictureInput");
@@ -46,16 +40,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // -------------------------------------------------------
-    // Form submission via AJAX
+    // Form submission via AJAX — SweetAlert notifications
     // -------------------------------------------------------
+    const form = document.getElementById("profileForm");
+    if (!form) return;
+
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        var formData = new FormData(form);
-        var submitBtn = document.getElementById("saveProfileBtn");
+        const formData = new FormData(form);
+
+        // Manually append the file from the external file input
+        var fileInput = document.getElementById("profilePictureInput");
+        if (fileInput && fileInput.files.length) {
+            formData.append("profile_picture", fileInput.files[0]);
+        }
+
+        const submitBtn = document.getElementById("saveProfileBtn");
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...';
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Saving...';
         }
 
         fetch(form.action, {
@@ -65,51 +69,50 @@ document.addEventListener("DOMContentLoaded", function () {
                 "X-Requested-With": "XMLHttpRequest",
             },
         })
-            .then(function (res) {
-                return res.json();
-            })
-            .then(function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: l10n.successTitle || "Success",
-                        text: data.message,
-                        timer: 2000,
-                        showConfirmButton: false,
-                    }).then(function () {
-                        location.reload();
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Save Changes';
+            }
+            if (data.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: data.message || "Profile updated successfully.",
+                    timer: 1500,
+                    showConfirmButton: false,
+                }).then(function () {
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    }
+                });
+                return;
+            }
+            if (data.errors) {
+                var errorHtml = "";
+                Object.values(data.errors).forEach(function (errs) {
+                    errs.forEach(function (msg) {
+                        errorHtml += "<li>" + msg + "</li>";
                     });
-                } else {
-                    if (errorContainer) {
-                        var list = errorContainer.querySelector(".error-list");
-                        if (list) list.innerHTML = "";
-                        if (data.errors) {
-                            Object.values(data.errors).forEach(function (errs) {
-                                errs.forEach(function (msg) {
-                                    var li = document.createElement("li");
-                                    li.textContent = msg;
-                                    if (list) list.appendChild(li);
-                                });
-                            });
-                            errorContainer.classList.remove("d-none");
-                        }
-                    }
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Save Changes';
-                    }
-                }
-            })
-            .catch(function () {
+                });
                 Swal.fire({
                     icon: "error",
-                    title: l10n.errorTitle || "Error",
-                    text: l10n.errorText || "An unexpected error occurred.",
+                    title: "Validation Error",
+                    html: "<ul class='mb-0 text-start'>" + errorHtml + "</ul>",
                 });
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Save Changes';
-                }
+            }
+        })
+        .catch(function () {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Save Changes';
+            }
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "An unexpected error occurred.",
             });
+        });
     });
+
 });

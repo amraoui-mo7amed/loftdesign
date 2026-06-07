@@ -8,6 +8,7 @@ class UserProfile(models.Model):
     class roleChoices(models.TextChoices):
         ADMIN = "admin", _("Admin")
         PROVIDER = "provider", _("Provider")
+        AFFILIATE = "affiliate", _("Affiliate")
 
     role = models.CharField(
         _("Role"), max_length=10, choices=roleChoices.choices, default=roleChoices.PROVIDER
@@ -34,6 +35,12 @@ class UserProfile(models.Model):
         default=0.00,
         help_text=_("Commission percentage for the provider"),
     )
+
+    # Affiliate Specific
+    affiliate_code = models.CharField(
+        _("Affiliate Code"), max_length=20, unique=True, blank=True, null=True
+    )
+    approved_at = models.DateTimeField(_("Approved At"), null=True, blank=True)
 
     # System Fields
     is_approved = models.BooleanField(_("Is Approved"), default=False)

@@ -3,9 +3,7 @@
 {% load static %}
 {% load tags %}
 
-{% block dashTitle %}
-    {% trans "Users List" %}
-{% endblock dashTitle %}
+{% block dashTitle %}{{ title }}{% endblock dashTitle %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/users.css" %}?v={% now "U" %}">
@@ -13,40 +11,32 @@
 
 {% block dashContent %}
     <div class="container-fluid">
+        {% csrf_token %}
         <!-- Action Bar -->
         <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap" data-aos="fade-down">
             <div class="d-flex align-items-center gap-2">
                 <button type="button" class="btn btn-primary rounded-3 px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2" 
                         data-bs-toggle="modal" data-bs-target="#filterModal" style="height: 45px;">
                     <i class="fas fa-sliders-h"></i>
-                    <span>{% trans "Filter Users" %}</span>
-                    {% if query or selected_activity or selected_status %}
+                    <span>{% trans "Filter Affiliates" %}</span>
+                    {% if query or selected_status %}
                         <span class="badge bg-white text-primary rounded-pill ms-1" style="font-size: 0.7rem;">!</span>
                     {% endif %}
                 </button>
                 
-                {% if query or selected_activity or selected_status %}
-                    <a href="{% url 'dash:user_list' %}" class="btn btn-white rounded-3 text-muted px-3 border shadow-sm d-flex align-items-center justify-content-center" 
+                {% if query or selected_status %}
+                    <a href="{% url 'dash:affiliate_list' %}" class="btn btn-white rounded-3 text-muted px-3 border shadow-sm d-flex align-items-center justify-content-center" 
                        style="height: 45px;" title="{% trans 'Clear All' %}">
                         <i class="fas fa-times me-2"></i> {% trans "Clear" %}
                     </a>
                 {% endif %}
             </div>
 
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-dark rounded-3 px-4 fw-bold shadow-sm d-flex align-items-center gap-2" 
-                        data-bs-toggle="modal" data-bs-target="#providerModal" style="height: 45px;">
-                    <i class="fas fa-user-plus text-primary"></i>
-                    <span>{% trans "New Provider" %}</span>
-                </button>
-            </div>
-            
             <div class="search-minimal ms-md-auto" style="min-width: 280px;">
-                <form method="get" action="{% url 'dash:user_list' %}" class="position-relative">
+                <form method="get" action="{% url 'dash:affiliate_list' %}" class="position-relative">
                     <i class="fas fa-search position-absolute text-muted" style="left: 15px; top: 50%; transform: translateY(-50%); z-index: 5;"></i>
                     <input type="text" name="q" value="{{ query }}" class="form-control rounded ps-5 border-0 shadow-sm" 
                            placeholder="{% trans 'Quick search...' %}">
-                    {% if selected_activity %}<input type="hidden" name="activity_type" value="{{ selected_activity }}">{% endif %}
                     {% if selected_status %}<input type="hidden" name="status" value="{{ selected_status }}">{% endif %}
                 </form>
             </div>
@@ -61,31 +51,29 @@
                             <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary">
                                 <i class="fas fa-filter"></i>
                             </div>
-                            {% trans "Advanced Filter" %}
+                            {% trans "Filter Affiliates" %}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     
-                    <form method="get" action="{% url 'dash:user_list' %}">
+                    <form method="get" action="{% url 'dash:affiliate_list' %}">
                         <div class="modal-body p-4">
-                            <!-- Keyword Search -->
                             <div class="mb-4">
                                 <label class="filter-label-modern">{% trans "Search Keyword" %}</label>
                                 <div class="position-relative">
                                     <input type="text" name="q" value="{{ query }}" 
                                            class="form-control modern-input" 
-                                           placeholder="{% trans 'Name, Username, Email...' %}">
+                                           placeholder="{% trans 'Name, Email...' %}">
                                 </div>
                             </div>
 
-                            <!-- Status -->
                             <div class="mb-2">
-                                {% include "components/custom_select.html" with id="modalStatusSelect" name="status" label=_("Account Status") choices=status_choices value=selected_status select_title=selected_status_label %}
+                                {% include "components/custom_select.html" with id="modalStatusSelect" name="status" label=_("Status") choices=status_choices value=selected_status select_title=selected_status|default:_("All") %}
                             </div>
                         </div>
                         
                         <div class="modal-footer border-0 p-4 pt-0 gap-2">
-                            <a href="{% url 'dash:user_list' %}" class="btn btn-light rounded-3 px-4 fw-bold text-muted border-0 bg-light">
+                            <a href="{% url 'dash:affiliate_list' %}" class="btn btn-light rounded-3 px-4 fw-bold text-muted border-0 bg-light">
                                 {% trans "Reset All" %}
                             </a>
                             <button type="submit" class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm">
@@ -97,7 +85,7 @@
             </div>
         </div>
 
-        <!-- Users Grid -->
+        <!-- Affiliates Grid -->
         <div class="row g-4">
             {% for profile in profiles %}
             <div class="col-lg-4 col-md-3">
@@ -105,8 +93,8 @@
                     <!-- Top Section with Gradient and Badges -->
                     <div class="card-header-gradient">
                         <div class="activity-badge-floating">
-                             <i class="fas fa-user me-1"></i>
-                             {% trans "User" %}
+                             <i class="fas fa-handshake me-1"></i>
+                             {% trans "Affiliate" %}
                         </div>
                         <div class="status-badge-premium">
                             <div class="d-flex flex-wrap gap-1">
@@ -116,16 +104,11 @@
                                     </span>
                                 {% elif profile.is_approved %}
                                     <span class="badge bg-success bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
-                                        <i class="fas fa-check-circle me-1"></i> {% trans "Active" %}
+                                        <i class="fas fa-check-circle me-1"></i> {% trans "Approved" %}
                                     </span>
                                 {% else %}
                                     <span class="badge bg-warning bg-opacity-75 text-white border-0 rounded-pill px-3 py-2">
                                         <i class="fas fa-clock me-1"></i> {% trans "Pending" %}
-                                    </span>
-                                {% endif %}
-                                {% if profile.is_trusted %}
-                                    <span class="badge bg-info text-white border-0 rounded-pill px-3 py-2">
-                                        <i class="fas fa-star me-1"></i> {% trans "Trusted" %}
                                     </span>
                                 {% endif %}
                             </div>
@@ -137,7 +120,7 @@
                                  class="avatar-image-premium">
                             {% else %}
                             <div class="avatar-circle-premium">
-                                {{ profile.user.username|slice:":1"|upper }}
+                                {{ profile.user.first_name|first|upper }}{{ profile.user.last_name|first|upper }}
                             </div>
                             {% endif %}
                         </div>
@@ -165,10 +148,22 @@
                                     <i class="fas fa-phone-alt small"></i>
                                 </div>
                                 <div>
-                                    <p class="smaller text-muted mb-0 lh-1">{% trans "Phone Number" %}</p>
-                                    <p class="small text-dark fw-bold mb-0">{{ profile.phone_number|default:"-" }}</p>
+                                    <p class="smaller text-muted mb-0 lh-1">{% trans "Phone" %}</p>
+                                    <p class="small text-dark fw-bold mb-0">{{ profile.phone_number|default:"—" }}</p>
                                 </div>
                             </div>
+
+                            {% if profile.affiliate_code %}
+                            <div class="info-item-modern">
+                                <div class="info-icon-wrapper">
+                                    <i class="fas fa-code small"></i>
+                                </div>
+                                <div>
+                                    <p class="smaller text-muted mb-0 lh-1">{% trans "Affiliate Code" %}</p>
+                                    <p class="small text-dark fw-bold mb-0">{{ profile.affiliate_code }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
 
                         <div class="mt-auto pt-2">
@@ -179,6 +174,11 @@
                             <span class="joined-label-premium">
                                 <i class="far fa-calendar-alt me-1"></i> 
                                 {% trans "Registered" %}: {{ profile.created_at|date:"d M, Y" }}
+                                {% if profile.approved_at %}
+                                <br>
+                                <i class="fas fa-check-circle text-success me-1"></i>
+                                {% trans "Approved" %}: {{ profile.approved_at|date:"d M, Y" }}
+                                {% endif %}
                             </span>
                         </div>
                     </div>
@@ -188,8 +188,8 @@
             <div class="col-12">
                 <div class="card border-0 shadow-sm p-5 text-center rounded-4 bg-white">
                     <div class="p-5">
-                        <i class="fas fa-users fa-4x text-light mb-4"></i>
-                        <h4 class="text-muted fw-bold">{% trans "No providers found" %}</h4>
+                        <i class="fas fa-handshake fa-4x text-light mb-4"></i>
+                        <h4 class="text-muted fw-bold">{% trans "No affiliates found" %}</h4>
                         <p class="text-muted mb-0">{% trans "Try adjusting your filters" %}</p>
                     </div>
                 </div>
@@ -202,70 +202,9 @@
             {% render_pagination page_obj %}
         </div>
     </div>
-
-    <!-- New Provider Modal -->
-    <div class="modal fade" id="providerModal" tabindex="-1" aria-labelledby="providerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
-                <div class="modal-header border-0 bg-dark text-white p-4">
-                    <h5 class="modal-title fw-black text-uppercase" id="providerModalLabel">
-                        <i class="fas fa-user-shield me-2 text-primary"></i>{% trans "Add New Provider" %}
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    {% include "partials/errorList.html" with form_id="providerForm" %}
-                    
-                    <form method="POST" action="{% url 'dash:provider_create' %}" class="form" id="providerForm">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-uppercase">{% trans "First Name" %}</label>
-                                <input type="text" name="first_name" class="form-control rounded-3" placeholder="John" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-uppercase">{% trans "Last Name" %}</label>
-                                <input type="text" name="last_name" class="form-control rounded-3" placeholder="Doe">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-uppercase">{% trans "Email Address" %}</label>
-                                <input type="email" name="email" class="form-control rounded-3" placeholder="john@example.com" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-uppercase">{% trans "Phone Number" %}</label>
-                                <input type="tel" name="phone" class="form-control rounded-3" placeholder="+213 ...">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-uppercase">{% trans "Commission (%)" %}</label>
-                                <input type="number" name="commission" class="form-control rounded-3" step="0.01" min="0" max="100" placeholder="0.00" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-uppercase">{% trans "Office Address" %}</label>
-                                <textarea name="address" class="form-control rounded-3" rows="2" placeholder="Street, City, Country"></textarea>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check form-switch mt-2">
-                                    <input type="checkbox" name="is_trusted" class="form-check-input" id="isTrustedCheck" role="switch">
-                                    <label class="form-check-label fw-bold small text-uppercase" for="isTrustedCheck">
-                                        {% trans "Mark as Trusted Provider" %}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-info mt-4 rounded-3 border-0 small">
-                            <i class="fas fa-info-circle me-2"></i>
-                            {% trans "The provider will receive an email with their generated login credentials automatically." %}
-                        </div>
-
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow">
-                                <i class="fas fa-paper-plane me-2"></i>{% trans "Create Provider & Send Credentials" %}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock dashContent %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'js/affiliates.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

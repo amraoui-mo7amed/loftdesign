@@ -274,7 +274,7 @@ def user_approve(request, pk):
 @role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER, UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.ADMIN])
 def profile_update(request):
     """AJAX view for providers/affiliates/admins to update their own profile"""
-    profile = get_object_or_404(UserProfile, user=request.user)
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
         first_name = request.POST.get("first_name", "").strip()

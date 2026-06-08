@@ -1,5 +1,5 @@
 from django.urls import path
-from dashboard.views import dashboard, users, notifications, portfolio, products, orders, settings
+from dashboard.views import dashboard, users, notifications, portfolio, products, orders, settings, partner_prices
 
 app_name = "dash"
 
@@ -15,6 +15,19 @@ urlpatterns = [
     path("products/create/", products.product_create, name="product_create"),
     path("products/<int:pk>/update/", products.product_update, name="product_update"),
     path("products/<int:pk>/delete/", products.product_delete, name="product_delete"),
+    # Product Validation
+    path("products/<int:pk>/approve/", products.product_approve, name="product_approve"),
+    path("products/<int:pk>/reject/", products.product_reject, name="product_reject"),
+    # Partner Pricing
+    path("products/<int:product_pk>/prices/", products.partner_price_list, name="partner_price_list"),
+    path("products/<int:product_pk>/prices/create/", products.partner_price_create, name="partner_price_create"),
+    path("prices/<int:pk>/delete/", products.partner_price_delete, name="partner_price_delete"),
+    # Affiliate Catalog
+    path("affiliate/catalog/", partner_prices.affiliate_catalog, name="affiliate_catalog"),
+    path("affiliate/catalog/<int:product_pk>/detail/", partner_prices.catalog_details, name="catalog_details"),
+    path("affiliate/catalog/<int:product_pk>/add/", partner_prices.affiliate_catalog_add, name="affiliate_catalog_add"),
+    path("affiliate/catalog/<int:product_pk>/remove/", partner_prices.affiliate_catalog_remove, name="affiliate_catalog_remove"),
+    path("affiliate/catalog/<int:product_pk>/pricing/", partner_prices.catalog_update_pricing, name="catalog_update_pricing"),
     # Categories
     path("categories/", products.category_list, name="category_list"),
     path("categories/create/", products.category_create, name="category_create"),
@@ -41,6 +54,9 @@ urlpatterns = [
     # Affiliates
     path("affiliates/", users.affiliate_list, name="affiliate_list"),
     path("affiliates/<int:pk>/approve/", users.affiliate_approve, name="affiliate_approve"),
+    path("semi-affiliates/", users.semi_affiliate_list, name="semi_affiliate_list"),
+    path("semi-affiliates/create/", users.semi_affiliate_create, name="semi_affiliate_create"),
+    path("semi-affiliates/<int:pk>/delete/", users.semi_affiliate_delete, name="semi_affiliate_delete"),
     # Notifications
     path("notifications/stream/",notifications.notifications_stream,name="notifications_stream"),
     path("notifications/unread-count/",notifications.get_unread_count,name="notifications_unread_count",),

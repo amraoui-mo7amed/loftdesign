@@ -38,10 +38,31 @@
                         <textarea name="description" class="form-control" rows="8" >{{ product.description }}</textarea>
                     </div>
                     <div class="row mb-0">
+                        {% if is_admin %}
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">{% trans "Price (DZD)" %}</label>
-                            <input type="number" name="price" step="0.01" class="form-control" value="{{ product.price|stringformat:'.2f' }}" lang="en" >
+                            <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
+                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" value="{{ product.loft_purchase_price|stringformat:'.2f' }}" lang="en">
+                            <div class="form-text small">{% trans "What Loft pays the supplier." %}</div>
                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{% trans "Wholesale (DZD)" %}</label>
+                            <input type="number" name="loft_wholesale_price" step="0.01" class="form-control" value="{{ product.loft_wholesale_price|default:''|stringformat:'.2f' }}" lang="en">
+                            <div class="form-text small">{% trans "Price for affiliates." %}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{% trans "Retail (DZD)" %}</label>
+                            <input type="number" name="loft_retail_price" step="0.01" class="form-control" value="{{ product.loft_retail_price|default:''|stringformat:'.2f' }}" lang="en">
+                            <div class="form-text small">{% trans "Price for end clients." %}</div>
+                        </div>
+                        {% else %}
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
+                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" value="{{ product.loft_purchase_price|stringformat:'.2f' }}" lang="en">
+                            <div class="form-text small">{% trans "The price Loft Design will pay you per unit." %}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row mt-3">
                         <div class="col-md-4">
                             <label class="form-label fw-bold">{% trans "Available Quantity" %}</label>
                             <input type="number" name="quantity" class="form-control" value="{{ product.quantity }}" min="0" required>
@@ -147,6 +168,11 @@
                         <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-lg py-3">
                             <i class="fas fa-save me-2"></i> {% trans "Save" %}
                         </button>
+                        {% if is_admin %}
+                        <a href="{% url 'dash:partner_price_list' product.pk %}" class="btn btn-outline-primary btn-lg rounded-pill fw-bold py-3">
+                            <i class="fas fa-tags me-2"></i> {% trans "Affiliate Pricing" %}
+                        </a>
+                        {% endif %}
                         <a href="{% url 'dash:product_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border py-3">
                             {% trans "Cancel" %}
                         </a>

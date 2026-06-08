@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from dashboard.models import Product, Order, Notification
-from dashboard.utils import notify_user
+from dashboard.utils import notify_user, resolve_price
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.db import transaction
@@ -38,6 +38,16 @@ def place_order(request):
         if product.quantity < quantity:
             return JsonResponse({"success": False, "errors": {"quantity": [_("Requested quantity exceeds available stock.")]}})
 
+        # Resolve price
+        seller_user = product.user or User.objects.filter(is_superuser=True).first()
+        buyer_user = request.user if request.user.is_authenticated else None
+        resolved = resolve_price(product, seller_user, buyer_user)
+        if resolved is None:
+            return JsonResponse({
+                "success": False,
+                "errors": {"system": [_("Price not configured for this product. Please contact support.")]}
+            })
+
         try:
             with transaction.atomic():
                 # Deduct stock
@@ -48,7 +58,7 @@ def place_order(request):
                     items=[{
                         "product_id": product.pk,
                         "title": product.title,
-                        "price": str(product.price),
+                        "price": str(resolved),
                         "quantity": quantity,
                         "thumbnail": product.thumbnail.url if product.thumbnail else "",
                     }],

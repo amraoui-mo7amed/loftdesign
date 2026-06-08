@@ -9,9 +9,12 @@ class UserProfile(models.Model):
         ADMIN = "admin", _("Admin")
         PROVIDER = "provider", _("Provider")
         AFFILIATE = "affiliate", _("Affiliate")
+        SEMI_AFFILIATE = "semi_affiliate", _("Semi-Affiliate")
+        PROFESSIONAL_CLIENT = "professional_client", _("Professional Client")
+        FINAL_CLIENT = "final_client", _("Final Client")
 
     role = models.CharField(
-        _("Role"), max_length=10, choices=roleChoices.choices, default=roleChoices.PROVIDER
+        _("Role"), max_length=20, choices=roleChoices.choices, default=roleChoices.PROVIDER
     )
     user = models.OneToOneField(
         User,
@@ -39,6 +42,11 @@ class UserProfile(models.Model):
     # Affiliate Specific
     affiliate_code = models.CharField(
         _("Affiliate Code"), max_length=20, unique=True, blank=True, null=True
+    )
+    parent_affiliate = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="semi_affiliates", verbose_name=_("Parent Affiliate"),
+        help_text=_("The affiliate who created this semi-affiliate account")
     )
     approved_at = models.DateTimeField(_("Approved At"), null=True, blank=True)
 

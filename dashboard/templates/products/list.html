@@ -2,9 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block dashTitle %}
-    {% trans "Product Inventory" %}
-{% endblock dashTitle %}
+{% block dashTitle %}{% trans "Product Inventory" %}{% endblock dashTitle %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
@@ -50,14 +48,32 @@
         </div>
     </div>
 
-    <div class="row mb-5" data-aos="fade-up">
+    <div class="row mb-4" data-aos="fade-up">
         <div class="col-lg-5">
             <form method="GET" class="form position-relative">
+                {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
                 <input type="text" name="q" value="{{ query }}" class="form-control rounded-4 border-0 shadow-sm py-3 ps-5" placeholder="{% trans 'Search by product title...' %}">
                 <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-4 text-muted opacity-50"></i>
             </form>
         </div>
     </div>
+
+    <!-- Status Filter Tabs (admin only) -->
+    {% if status_options %}
+    <div class="mb-4" data-aos="fade-up">
+        <div class="d-flex flex-wrap gap-2">
+            {% for val, label in status_options %}
+            <a href="?{% if query %}q={{ query }}&{% endif %}{% if val %}status={{ val }}{% endif %}"
+               class="btn btn-sm rounded-pill fw-bold px-4 py-2 {% if status_filter == val %}btn-dark{% else %}btn-light border{% endif %}">
+                {{ label }}
+                {% if val == "pending" and pending_count %}
+                <span class="badge bg-warning text-dark ms-1">{{ pending_count }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 
     <div class="editorial-list">
         {% for product in page_obj %}
@@ -75,11 +91,22 @@
                 {% else %}
                     <span class="vr-badge-icon bg-danger text-white" title="Inactive"><i class="fas fa-times"></i></span>
                 {% endif %}
+                {% if product.status == "pending" %}
+                    <span class="vr-badge-icon bg-warning text-dark" style="top:40px;" title="Pending"><i class="fas fa-clock"></i></span>
+                {% elif product.status == "rejected" %}
+                    <span class="vr-badge-icon bg-danger text-white" style="top:40px;" title="Rejected"><i class="fas fa-ban"></i></span>
+                {% endif %}
             </div>
             
             <div class="editorial-content">
                 <div class="editorial-meta align-items-start">
-                    <span class="text-primary fw-bold fs-5">DZD{{ product.price }}</span>
+                    <span class="text-primary fw-bold fs-5">
+                        {% if product.status == "pending" %}
+                            DZD{{ product.loft_purchase_price|floatformat:0 }}
+                        {% else %}
+                            DZD{{ product.loft_retail_price|default:0 }}
+                        {% endif %}
+                    </span>
                     <span><i class="fas fa-shopping-bag me-1"></i> {{ product.orders.count }} {% trans "Leads" %}</span>
                     {% if product.category %}
                         <span class="badge bg-light text-primary border"><i class="fas fa-folder me-1"></i> {{ product.category.name }}</span>
@@ -106,13 +133,32 @@
             </div>
 
             <div class="editorial-actions">
-                <a href="{% url 'dash:product_update' product.pk %}" class="editorial-btn" title="Edit"><i class="fas fa-edit"></i></a>
-                <button type="button" class="editorial-btn delete delete-btn" 
-                        data-url="{% url 'dash:product_delete' product.pk %}"
-                        data-name="{{ product.title }}"
-                        data-swal-title="{% trans 'Remove Product?' %}"
-                        data-swal-text="{% trans 'Are you sure you want to delete' %} '{{ product.title }}'?"
-                        title="Delete"><i class="fas fa-trash-alt"></i></button>
+                {% if request.user.is_superuser and product.status == "pending" %}
+                    <button type="button" class="editorial-btn text-success approve-btn" title="Approve"
+                            data-url="{% url 'dash:product_approve' product.pk %}"
+                            data-product="{{ product.title }}"
+                            data-approve-label="{% trans 'Set the pricing for this product' %}">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button type="button" class="editorial-btn text-danger reject-btn" title="Reject"
+                            data-url="{% url 'dash:product_reject' product.pk %}"
+                            data-product="{{ product.title }}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                {% else %}
+                    <a href="{% url 'dash:product_update' product.pk %}" class="editorial-btn" title="Edit"><i class="fas fa-edit"></i></a>
+                    <button type="button" class="editorial-btn delete delete-btn" 
+                            data-url="{% url 'dash:product_delete' product.pk %}"
+                            data-name="{{ product.title }}"
+                            data-swal-title="{% trans 'Remove Product?' %}"
+                            data-swal-text="{% trans 'Are you sure you want to delete' %} '{{ product.title }}'?"
+                            title="Delete"><i class="fas fa-trash-alt"></i></button>
+                    {% if request.user.is_superuser and product.status == "approved" %}
+                    <a href="{% url 'dash:partner_price_list' product.pk %}" class="editorial-btn" title="{% trans 'Affiliate Pricing' %}">
+                        <i class="fas fa-tags"></i>
+                    </a>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
         {% empty %}
@@ -126,9 +172,70 @@
         {% include "components/pagination.html" with page_obj=page_obj base_url='?' %}
     </div>
 </div>
+
+<!-- Approve Modal -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="fw-black">{% trans "Approve Product" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 pb-4">
+                {% include "partials/errorList.html" with form_id="approveForm" %}
+                <form id="approveForm" class="form" method="POST">
+                    {% csrf_token %}
+                    <p class="text-muted mb-4" id="approveProductName"></p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">{% trans "Wholesale Price (DZD)" %}</label>
+                            <input type="number" name="loft_wholesale_price" step="0.01" class="form-control form-control-lg" placeholder="e.g. 1500" lang="en" required>
+                            <div class="form-text">{% trans "Price affiliates will pay" %}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">{% trans "Retail Price (DZD)" %}</label>
+                            <input type="number" name="loft_retail_price" step="0.01" class="form-control form-control-lg" placeholder="e.g. 2000" lang="en" required>
+                            <div class="form-text">{% trans "Price end clients will pay" %}</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold py-3 mt-4 shadow">
+                        <i class="fas fa-check me-2"></i> {% trans "Approve & Activate" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="fw-black text-danger">{% trans "Reject Product" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 pb-4">
+                {% include "partials/errorList.html" with form_id="rejectForm" %}
+                <form id="rejectForm" class="form" method="POST">
+                    {% csrf_token %}
+                    <p class="text-muted mb-4" id="rejectProductName"></p>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{% trans "Reason (optional)" %}</label>
+                        <textarea name="reason" class="form-control" rows="3" placeholder="{% trans 'Explain why the product was rejected...' %}"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold py-3 shadow">
+                        <i class="fas fa-times me-2"></i> {% trans "Reject Product" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock dashContent %}
 
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/product_pricing.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

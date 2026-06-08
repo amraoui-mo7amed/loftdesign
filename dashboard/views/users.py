@@ -14,10 +14,11 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.conf import settings
 from django.utils import timezone
+from django.db import transaction
 from dashboard.utils import send_account_activation_email, notify_user
 from dashboard.decorator import role_required
-from dashboard.models import Notification, Product
-from django.db import transaction
+from dashboard.models import Notification, Product, PartnerPrice
+from user_auth.utils import generate_affiliate_code, user_profile_upload_path
 import secrets
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
@@ -180,7 +181,7 @@ def user_details(request, pk):
     
     # Financial Analytics for Provider
     confirmed_orders = Order.objects.filter(
-        status=Order.OrderStatus.COMPLETED
+        status__in=[Order.OrderStatus.PAID, Order.OrderStatus.DELIVERED]
     )
     user_product_ids = set(
         Product.objects.filter(user=profile.user).values_list("id", flat=True)
@@ -477,3 +478,84 @@ def send_affiliate_activation_email(request, profile):
     except Exception as e:
         print(f"Failed to send affiliate activation email: {e}")
         return False
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.AFFILIATE])
+def semi_affiliate_create(request):
+    """AJAX: an affiliate creates a semi-affiliate (sub-affiliate) under them"""
+    profile = get_object_or_404(UserProfile, user=request.user)
+    is_admin = request.user.is_superuser
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        errors = {}
+        if not first_name: errors["first_name"] = [_("First name is required")]
+        if not email: errors["email"] = [_("Email is required")]
+        if not password or len(password) < 6:
+            errors["password"] = [_("Password must be at least 6 characters")]
+        if User.objects.filter(email=email).exists():
+            errors["email"] = [_("This email is already registered")]
+
+        if errors:
+            return JsonResponse({"success": False, "errors": errors})
+
+        try:
+            affiliate_code = generate_affiliate_code()
+            username = email.split("@")[0]
+            if User.objects.filter(username=username).exists():
+                username = f"{username}_{secrets.token_hex(2)}"
+
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=username, email=email, password=password,
+                    first_name=first_name, last_name=last_name, is_active=True
+                )
+                UserProfile.objects.create(
+                    user=user,
+                    role=UserProfile.roleChoices.SEMI_AFFILIATE,
+                    parent_affiliate=profile if not is_admin else None,
+                    affiliate_code=affiliate_code,
+                    phone_number=request.POST.get("phone", ""),
+                    is_approved=True,
+                    approved_at=timezone.now(),
+                )
+
+            return JsonResponse({
+                "success": True,
+                "message": _("Semi-affiliate '%(name)s' created successfully.")
+                % {"name": f"{first_name} {last_name}"},
+            })
+        except Exception as e:
+            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+
+    return JsonResponse({"success": False}, status=400)
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.AFFILIATE])
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.AFFILIATE])
+def semi_affiliate_delete(request, pk):
+    """AJAX: delete a semi-affiliate account"""
+    if request.method == "POST":
+        profile = get_object_or_404(UserProfile, pk=pk, role=UserProfile.roleChoices.SEMI_AFFILIATE)
+        full_name = profile.user.get_full_name() or profile.user.username
+        profile.user.delete()
+        return JsonResponse({
+            "success": True,
+            "message": _("Semi-affiliate %(name)s deleted successfully.") % {"name": full_name},
+        })
+    return JsonResponse({"success": False}, status=400)
+
+
+def semi_affiliate_list(request):
+    """List semi-affiliates under the current affiliate"""
+    profile = get_object_or_404(UserProfile, user=request.user)
+    if request.user.is_superuser:
+        semi_affiliates = UserProfile.objects.filter(parent_affiliate__isnull=False).select_related("user")
+    else:
+        semi_affiliates = UserProfile.objects.filter(parent_affiliate=profile).select_related("user")
+
+    return render(request, "users/semi_affiliate_list.html", {"semi_affiliates": semi_affiliates})

@@ -1,0 +1,139 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}{% trans "Partner Pricing" %} — {{ product.title }}{% endblock dashTitle %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+{% endblock extra_css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+    <div class="mb-4" data-aos="fade-down">
+        <a href="{% url 'dash:product_list' %}" class="btn btn-link text-muted p-0 text-decoration-none mb-2">
+            <i class="fas fa-arrow-left me-1"></i> {% trans "Back to Inventory" %}
+        </a>
+        <h1 class="fw-black display-5 mb-1">{% trans "Partner Pricing" %}</h1>
+        <p class="text-muted mb-0">
+            <strong>{{ product.title }}</strong>
+            — {% trans "Wholesale" %}: DZD{{ product.loft_wholesale_price|floatformat:0 }}
+            | {% trans "Retail" %}: DZD{{ product.loft_retail_price|floatformat:0 }}
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7" data-aos="fade-right">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Custom Affiliate Prices" %}</h5>
+                {% if prices %}
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{% trans "Affiliate" %}</th>
+                                <th>{% trans "Purchase Price" %}</th>
+                                <th>{% trans "Wholesale" %}</th>
+                                <th>{% trans "Retail" %}</th>
+                                <th class="text-end">{% trans "Actions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pp in prices %}
+                            <tr>
+                                <td>
+                                    <span class="fw-bold">{{ pp.buyer.get_full_name|default:pp.buyer.username }}</span>
+                                    <small class="d-block text-muted">{{ pp.buyer.email }}</small>
+                                </td>
+                                <td>
+                                    <span class="fw-bold fs-5 text-primary">DZD{{ pp.purchase_price|floatformat:0 }}</span>
+                                </td>
+                                <td>
+                                    {% if pp.wholesale_price %}
+                                        <span class="text-muted">DZD{{ pp.wholesale_price|floatformat:0 }}</span>
+                                    {% else %}
+                                        <span class="text-muted small">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pp.retail_price %}
+                                        <span class="text-muted">DZD{{ pp.retail_price|floatformat:0 }}</span>
+                                    {% else %}
+                                        <span class="text-muted small">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill delete-price"
+                                            data-url="{% url 'dash:partner_price_delete' pp.pk %}"
+                                            data-name="{{ pp.buyer.get_full_name|default:pp.buyer.username }}"
+                                            data-swal-title="{% trans 'Remove Price?' %}"
+                                            data-swal-text="{% trans 'Remove custom price for' %}"
+                                            data-swal-confirm="{% trans 'Yes, remove' %}"
+                                            data-swal-cancel="{% trans 'Cancel' %}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-tags fa-3x text-muted opacity-25 mb-3"></i>
+                    <p class="text-muted">{% trans "No custom prices set yet." %}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-5" data-aos="fade-left">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                {% include "partials/errorList.html" with form_id="partnerPriceForm" %}
+                <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Add Custom Price" %}</h5>
+                <form id="partnerPriceForm" class="form" method="POST" action="{% url 'dash:partner_price_create' product.pk %}">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{% trans "Affiliate" %}</label>
+                        {% include "components/custom_select.html" with name="buyer_id" options=affiliate_options placeholder=_("Select Affiliate") %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
+                        <input type="number" name="purchase_price" step="0.01" class="form-control form-control-lg" placeholder="e.g. 1300" lang="en" required>
+                        <div class="form-text">{% trans "What the affiliate pays Loft Design for this product." %}</div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small">{% trans "Wholesale Resale (DZD)" %}</label>
+                            <input type="number" name="wholesale_price" step="0.01" class="form-control" placeholder="{% trans 'Optional' %}" lang="en">
+                            <div class="form-text small">{% trans "Price for affiliate's own semi-affiliates." %}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small">{% trans "Retail Resale (DZD)" %}</label>
+                            <input type="number" name="retail_price" step="0.01" class="form-control" placeholder="{% trans 'Optional' %}" lang="en">
+                            <div class="form-text small">{% trans "Price for end clients." %}</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-3 shadow">
+                        <i class="fas fa-plus me-2"></i> {% trans "Set Custom Price" %}
+                    </button>
+                </form>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 mt-4 bg-light">
+                <h6 class="fw-bold mb-3">{% trans "Price Resolution Priority" %}</h6>
+                <ol class="small text-muted mb-0 ps-3">
+                    <li>{% trans "Custom partner price (if set for this affiliate)" %}</li>
+                    <li>{% trans "Default wholesale price" %} (DZD{{ product.loft_wholesale_price|floatformat:0 }})</li>
+                    <li>{% trans "Retail price for end clients" %} (DZD{{ product.loft_retail_price|floatformat:0 }})</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'js/partner_price.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

@@ -1,5 +1,7 @@
+import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 userModel = get_user_model()
@@ -150,7 +152,12 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    """Product model with external links for affiliate/direct sales"""
+    """Product model with multi-tier pricing workflow"""
+
+    class ProductStatus(models.TextChoices):
+        PENDING = "pending", _("Pending")
+        APPROVED = "approved", _("Approved")
+        REJECTED = "rejected", _("Rejected")
 
     user = models.ForeignKey(
         userModel,
@@ -178,12 +185,32 @@ class Product(models.Model):
         help_text=_("Upload GLB or GLTF 3D model file")
     )
     description = models.TextField(verbose_name=_("Description"))
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"), default=0.00)
     quantity = models.PositiveIntegerField(default=1, verbose_name=_("Available Quantity"))
     external_link = models.URLField(verbose_name=_("External Buy Link"), blank=True, null=True)
     tags = models.CharField(max_length=10000, verbose_name=_("Tags"), blank=True)
+    brand = models.CharField(_("Brand"), max_length=255, blank=True)
+    sku = models.CharField(_("SKU"), max_length=100, unique=True, blank=True, null=True)
     is_active = models.BooleanField(default=True, verbose_name=_("Is Active"))
     is_featured = models.BooleanField(default=False, verbose_name=_("Is Featured"))
+
+    # Pricing Workflow Fields
+    status = models.CharField(
+        _("Status"), max_length=20, choices=ProductStatus.choices, default=ProductStatus.PENDING
+    )
+    loft_purchase_price = models.DecimalField(
+        _("Purchase Price (DZD)"), max_digits=10, decimal_places=2, default=0.00,
+        help_text=_("Price the supplier expects from Loft Design")
+    )
+    loft_wholesale_price = models.DecimalField(
+        _("Wholesale Price (DZD)"), max_digits=10, decimal_places=2, blank=True, null=True,
+        help_text=_("Default wholesale price for affiliates (set by admin)")
+    )
+    loft_retail_price = models.DecimalField(
+        _("Retail Price (DZD)"), max_digits=10, decimal_places=2, blank=True, null=True,
+        help_text=_("Default retail price for end clients (set by admin)")
+    )
+    rejection_reason = models.TextField(_("Rejection Reason"), blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
@@ -200,8 +227,68 @@ class Product(models.Model):
             qty = int(self.quantity)
         except (ValueError, TypeError):
             qty = 0
-        self.is_active = qty > 0
+        self.is_active = qty > 0 and self.status == self.ProductStatus.APPROVED
         super().save(*args, **kwargs)
+
+
+class SupplierPrice(models.Model):
+    """Supplier's price to Loft Design (one per product)"""
+    product = models.OneToOneField(
+        Product, on_delete=models.CASCADE, related_name="supplier_price",
+        verbose_name=_("Product")
+    )
+    supplier = models.ForeignKey(
+        userModel, on_delete=models.CASCADE, related_name="supplier_prices",
+        verbose_name=_("Supplier")
+    )
+    loft_purchase_price = models.DecimalField(
+        _("Loft Purchase Price (DZD)"), max_digits=10, decimal_places=2,
+        help_text=_("Price Loft Design pays the supplier")
+    )
+    suggested_retail_price = models.DecimalField(
+        _("Suggested Retail Price (DZD)"), max_digits=10, decimal_places=2,
+        blank=True, null=True,
+        help_text=_("Supplier's suggested retail price")
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Supplier Price")
+        verbose_name_plural = _("Supplier Prices")
+
+    def __str__(self):
+        return f"{self.product.title} — {self.loft_purchase_price} DZD"
+
+
+class LoftPrice(models.Model):
+    """Loft Design's default pricing for a product (one per product)"""
+    product = models.OneToOneField(
+        Product, on_delete=models.CASCADE, related_name="loft_price",
+        verbose_name=_("Product")
+    )
+    loft_purchase_price = models.DecimalField(
+        _("Loft Purchase Price (DZD)"), max_digits=10, decimal_places=2,
+        help_text=_("Copied from supplier price at approval time")
+    )
+    loft_default_wholesale_price = models.DecimalField(
+        _("Default Wholesale Price (DZD)"), max_digits=10, decimal_places=2,
+        help_text=_("Default price for affiliates buying from Loft")
+    )
+    loft_retail_price = models.DecimalField(
+        _("Retail Price (DZD)"), max_digits=10, decimal_places=2,
+        help_text=_("Public retail price for end clients")
+    )
+    is_active = models.BooleanField(_("Active"), default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Loft Price")
+        verbose_name_plural = _("Loft Prices")
+
+    def __str__(self):
+        return f"{self.product.title} — W:{self.loft_default_wholesale_price} / R:{self.loft_retail_price}"
 
 
 class ProductImage(models.Model):
@@ -223,19 +310,79 @@ class ProductImage(models.Model):
         return f"{self.product.title} — {self.order}"
 
 
+class PartnerPrice(models.Model):
+    """Custom negotiated price for a specific seller→buyer pair on a product.
+    
+    Three price columns allow each level to control their margin:
+    - purchase_price: what the buyer pays the seller
+    - wholesale_price: what the buyer can resell at (wholesale)
+    - retail_price: what the buyer can resell at (retail)
+    """
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="partner_prices",
+        verbose_name=_("Product")
+    )
+    seller = models.ForeignKey(
+        userModel, on_delete=models.CASCADE, related_name="prices_as_seller",
+        verbose_name=_("Seller")
+    )
+    buyer = models.ForeignKey(
+        userModel, on_delete=models.CASCADE, related_name="prices_as_buyer",
+        verbose_name=_("Buyer")
+    )
+    purchase_price = models.DecimalField(
+        _("Purchase Price (DZD)"), max_digits=10, decimal_places=2, default=0.00,
+        help_text=_("Price the buyer pays the seller")
+    )
+    wholesale_price = models.DecimalField(
+        _("Wholesale Price (DZD)"), max_digits=10, decimal_places=2,
+        blank=True, null=True,
+        help_text=_("Price at which buyer can resell (wholesale)")
+    )
+    retail_price = models.DecimalField(
+        _("Retail Price (DZD)"), max_digits=10, decimal_places=2,
+        blank=True, null=True,
+        help_text=_("Price at which buyer can resell (retail)")
+    )
+    is_active = models.BooleanField(_("Active"), default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Partner Price")
+        verbose_name_plural = _("Partner Prices")
+        unique_together = ("product", "seller", "buyer")
+
+    def __str__(self):
+        return f"{self.product.title} — {self.seller.get_full_name()} → {self.buyer.get_full_name()}: {self.purchase_price}"
+
+
 class Order(models.Model):
     """Unified order model for both inquiries and cart/checkout orders"""
 
     class OrderStatus(models.TextChoices):
         PENDING = "pending", _("Pending")
-        COMPLETED = "completed", _("Completed")
+        CONFIRMED = "confirmed", _("Confirmed")
+        PAID = "paid", _("Paid")
+        DELIVERED = "delivered", _("Delivered")
         CANCELLED = "cancelled", _("Cancelled")
 
+    order_number = models.CharField(
+        _("Order Number"), max_length=30, unique=True, blank=True, null=True
+    )
+    buyer = models.ForeignKey(
+        userModel, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="orders_as_buyer", verbose_name=_("Buyer")
+    )
+    seller = models.ForeignKey(
+        userModel, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="orders_as_seller", verbose_name=_("Seller")
+    )
     items = models.JSONField(
         _("Order Items"),
         default=list,
         blank=True,
-        help_text=_("List of products in this order with title, price, quantity, thumbnail")
+        help_text=_("List of products with title, price, quantity, thumbnail at time of order")
     )
     customer_name = models.CharField(max_length=255, verbose_name=_("Customer Name"))
     customer_phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
@@ -256,7 +403,8 @@ class Order(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return _("Order #%(id)s - %(name)s") % {"id": self.id, "name": self.customer_name}
+        on = self.order_number or f"#{self.id}"
+        return _("Order %(num)s - %(name)s") % {"num": on, "name": self.customer_name}
 
     def item_count(self):
         return sum(item.get("quantity", 0) for item in self.items)
@@ -266,3 +414,39 @@ class Order(models.Model):
             (float(item.get("price", 0)) or 0) * int(item.get("quantity", 1))
             for item in self.items
         )
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if not self.order_number:
+            dt = timezone.now().strftime("%y%m%d")
+            self.order_number = f"ORD-{self.pk}-{dt}"
+            super().save(update_fields=["order_number"])
+
+
+class OrderItem(models.Model):
+    """Individual line item within an order"""
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="order_items",
+        verbose_name=_("Order")
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="order_items", verbose_name=_("Product")
+    )
+    quantity = models.PositiveIntegerField(_("Quantity"), default=1)
+    unit_price = models.DecimalField(
+        _("Unit Price (DZD)"), max_digits=10, decimal_places=2,
+        help_text=_("Price applied at time of order")
+    )
+    total_price = models.DecimalField(
+        _("Total Price (DZD)"), max_digits=10, decimal_places=2, default=0.00
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Order Item")
+        verbose_name_plural = _("Order Items")
+
+    def __str__(self):
+        return f"{self.product.title if self.product else 'Deleted product'} x{self.quantity}"

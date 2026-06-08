@@ -1,0 +1,280 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}{% trans "Semi-Affiliates" %}{% endblock dashTitle %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+    <style>
+        .semi-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .semi-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--brand-primary);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+        }
+        .semi-card-top {
+            background: linear-gradient(135deg, #6f42c1, #e83e8c);
+            padding: 1.5rem 1.5rem 0;
+            position: relative;
+            min-height: 100px;
+        }
+        .semi-card-top-affiliate {
+            background: linear-gradient(135deg, var(--brand-primary), #f0c040);
+        }
+        .semi-avatar-wrapper {
+            position: absolute;
+            bottom: -28px;
+            left: 1.5rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            border: 3px solid #fff;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .semi-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .semi-avatar-circle {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            color: #6f42c1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.1rem;
+        }
+        .semi-avatar-circle-affiliate {
+            color: var(--brand-primary);
+        }
+        .semi-card-body {
+            padding: 2.5rem 1.5rem 1.25rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .semi-card-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 0.1rem;
+        }
+        .semi-card-code {
+            font-size: 0.75rem;
+            color: #adb5bd;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .semi-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.4rem 0;
+            font-size: 0.85rem;
+        }
+        .semi-stat-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            background: #f8f9fa;
+            color: #adb5bd;
+            flex-shrink: 0;
+        }
+        .semi-action-btn {
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            flex: 1;
+            text-decoration: none;
+        }
+        .semi-action-btn:hover {
+            transform: scale(1.02);
+        }
+        .semi-badge-sm {
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.2rem 0.65rem;
+            border-radius: 50px;
+            letter-spacing: 0.3px;
+        }
+
+        [dir="rtl"] .semi-avatar-wrapper {
+            left: auto;
+            right: 1.5rem;
+        }
+    </style>
+{% endblock extra_css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+    {% csrf_token %}
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-4 mb-5" data-aos="fade-down">
+        <div>
+            <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2" style="letter-spacing:1px;">{% trans "Affiliate Network" %}</h6>
+            <h1 class="fw-black display-4 mb-0">{% trans "Semi-Affiliates" %}</h1>
+            <p class="text-muted mt-2">{% trans "Manage your sub-affiliates and their pricing." %}</p>
+        </div>
+        <button type="button" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-lg" data-bs-toggle="modal" data-bs-target="#createSemiAffiliateModal">
+            <i class="fas fa-user-plus me-2 text-primary"></i> {% trans "Create Semi-Affiliate" %}
+        </button>
+    </div>
+
+    <div class="row g-4">
+        {% for sa in semi_affiliates %}
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
+            <div class="semi-card">
+                <div class="semi-card-top {% if request.user.is_superuser %}semi-card-top-affiliate{% endif %}">
+                    <div class="semi-avatar-wrapper">
+                        {% if sa.profile_picture %}
+                            <img src="{{ sa.profile_picture.url }}?v={% now 'U' %}" alt="" class="semi-avatar-img">
+                        {% else %}
+                            <div class="semi-avatar-circle {% if request.user.is_superuser %}semi-avatar-circle-affiliate{% endif %}">
+                                {{ sa.user.first_name|first|upper }}{{ sa.user.last_name|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="semi-card-body">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <h5 class="semi-card-name">{{ sa.user.get_full_name|default:sa.user.username }}</h5>
+                        {% if sa.is_approved %}
+                            <span class="semi-badge-sm bg-success text-white">{% trans "Active" %}</span>
+                        {% else %}
+                            <span class="semi-badge-sm bg-warning text-white">{% trans "Pending" %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="semi-card-code">{{ sa.affiliate_code|default:"" }}</div>
+
+                    <div class="mt-2">
+                        <div class="semi-stat">
+                            <div class="semi-stat-icon"><i class="fas fa-envelope"></i></div>
+                            <span class="text-truncate">{{ sa.user.email }}</span>
+                        </div>
+                        <div class="semi-stat">
+                            <div class="semi-stat-icon"><i class="fas fa-phone-alt"></i></div>
+                            <span>{{ sa.phone_number|default:"—" }}</span>
+                        </div>
+                        <div class="semi-stat">
+                            <div class="semi-stat-icon"><i class="far fa-calendar-alt"></i></div>
+                            <span>{{ sa.created_at|date:"d M, Y" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-3 d-flex gap-2">
+                        {% if request.user.is_superuser %}
+                        <button type="button"
+                                class="semi-action-btn btn btn-outline-danger delete-semi"
+                                data-url="{% url 'dash:semi_affiliate_delete' sa.pk %}"
+                                data-name="{{ sa.user.get_full_name|default:sa.user.username }}"
+                                data-swal-title="{% trans 'Delete Semi-Affiliate?' %}"
+                                data-swal-text="{% trans 'Permanently delete' %} \"{{ sa.user.get_full_name|default:sa.user.username }}\"{% trans '? This cannot be undone.' %}"
+                                data-swal-confirm="{% trans 'Yes, delete' %}"
+                                data-swal-cancel="{% trans 'Cancel' %}">
+                            <i class="fas fa-trash-alt"></i> {% trans "Delete" %}
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if sa.parent_affiliate %}
+                <div class="px-3 pb-2">
+                    <small class="text-muted" style="font-size:0.65rem;">
+                        <i class="fas fa-user-check me-1"></i>
+                        {% trans "Created by" %} {{ sa.parent_affiliate.user.get_full_name|default:sa.parent_affiliate.user.username }}
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5" data-aos="fade-up">
+                <div class="mb-4">
+                    <i class="fas fa-users fa-5x text-muted opacity-25"></i>
+                </div>
+                <h3 class="fw-bold text-muted">{% trans "No semi-affiliates yet" %}</h3>
+                <p class="text-muted">{% trans "Create your first semi-affiliate to start building your network." %}</p>
+                <button type="button" class="btn btn-dark rounded-pill px-5 py-3 fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#createSemiAffiliateModal">
+                    <i class="fas fa-user-plus me-2 text-primary"></i> {% trans "Create Semi-Affiliate" %}
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Create Semi-Affiliate Modal -->
+<div class="modal fade" id="createSemiAffiliateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="fw-black">{% trans "Create Semi-Affiliate" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 pb-4">
+                <div id="successMessage" class="alert alert-success d-none rounded-3"></div>
+                {% include "partials/errorList.html" with form_id="semiAffiliateForm" %}
+                <form id="semiAffiliateForm" class="form" method="POST" action="{% url 'dash:semi_affiliate_create' %}">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">{% trans "First Name" %}</label>
+                            <input type="text" name="first_name" class="form-control form-control-lg" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">{% trans "Last Name" %}</label>
+                            <input type="text" name="last_name" class="form-control form-control-lg">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">{% trans "Email" %}</label>
+                            <input type="email" name="email" class="form-control form-control-lg" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">{% trans "Phone (optional)" %}</label>
+                            <input type="text" name="phone" class="form-control form-control-lg">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">{% trans "Password" %}</label>
+                            <input type="password" name="password" class="form-control form-control-lg" required minlength="6">
+                            <div class="form-text">{% trans "Min 6 characters. The semi-affiliate will use this to log in." %}</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-3 mt-4 shadow">
+                        <i class="fas fa-user-plus me-2"></i> {% trans "Create Semi-Affiliate" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'js/semi_affiliate.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

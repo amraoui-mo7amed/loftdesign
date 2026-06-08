@@ -45,10 +45,31 @@
                         <textarea name="description" class="form-control" rows="8" placeholder="Product details, dimensions, materials..." required></textarea>
                     </div>
                     <div class="row mb-0">
+                        {% if is_provider %}
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">{% trans "Price (DZD)" %}</label>
-                            <input type="number" name="price" step="0.01" class="form-control" placeholder="0.00" lang="en" required>
+                            <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
+                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" placeholder="e.g. 1000" lang="en" required>
+                            <div class="form-text small">{% trans "The price Loft Design will pay you per unit." %}</div>
                         </div>
+                        {% else %}
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
+                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" placeholder="e.g. 1000" lang="en">
+                            <div class="form-text small">{% trans "What Loft pays the supplier." %}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{% trans "Wholesale (DZD)" %}</label>
+                            <input type="number" name="loft_wholesale_price" step="0.01" class="form-control" placeholder="e.g. 1500" lang="en">
+                            <div class="form-text small">{% trans "Price for affiliates." %}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{% trans "Retail (DZD)" %}</label>
+                            <input type="number" name="loft_retail_price" step="0.01" class="form-control" placeholder="e.g. 2000" lang="en">
+                            <div class="form-text small">{% trans "Price for end clients." %}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row mt-3">
                         <div class="col-md-4">
                             <label class="form-label fw-bold">{% trans "Available Quantity" %}</label>
                             <input type="number" name="quantity" class="form-control" placeholder="1" value="1" min="0" required>
@@ -115,6 +136,7 @@
                     <div class="form-text mt-2 small">{% trans "Optional. Supported formats: GLB, GLTF" %}</div>
                 </div>
 
+                {% if not is_provider %}
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Visibility" %}</h5>
                     <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center mb-3">
@@ -126,17 +148,23 @@
                         <input class="form-check-input ms-0 mt-0" type="checkbox" name="is_featured" style="width: 50px; height: 24px;">
                     </div>
                 </div>
+                {% endif %}
 
                 <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Publish" %}</h5>
                     <div class="d-flex flex-column gap-2">
                         <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-lg py-3">
-                            <i class="fas fa-plus-circle me-2"></i> {% trans "Add Product" %}
+                            <i class="fas fa-plus-circle me-2"></i> {% if is_provider %}{% trans "Submit for Review" %}{% else %}{% trans "Add Product" %}{% endif %}
                         </button>
                         <a href="{% url 'dash:product_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border py-3">
                             {% trans "Cancel" %}
                         </a>
                     </div>
+                    {% if is_provider %}
+                    <div class="alert alert-warning mt-3 mb-0 small rounded-3">
+                        <i class="fas fa-info-circle me-1"></i> {% trans "After submission, an admin will review your product and set the wholesale/retail prices before it goes live." %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

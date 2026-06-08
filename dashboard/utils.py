@@ -107,6 +107,75 @@ def notify_user(user, title, message, notification_type="info", link=""):
         )
         return None
 
+from user_auth.models import UserProfile
+
+
+def resolve_price(product, seller_user, buyer_user):
+    """
+    Resolve the correct price for a product transaction (spec Section 7).
+
+    Priority:
+    1. PartnerPrice for (product, seller, buyer) where is_active=True
+    2. If seller is Loft admin and buyer is affiliate/semi-affiliate -> LoftPrice.loft_default_wholesale_price
+    3. If buyer is final client or anonymous -> LoftPrice.loft_retail_price
+    4. No match -> None
+
+    Returns Decimal or None.
+    """
+    from .models import PartnerPrice, LoftPrice
+
+    buyer_profile = None
+    if buyer_user is not None and buyer_user.is_authenticated:
+        try:
+            buyer_profile = buyer_user.profile
+        except (UserProfile.DoesNotExist, AttributeError):
+            buyer_profile = None
+
+    seller_profile = None
+    if seller_user is not None and seller_user.is_authenticated:
+        try:
+            seller_profile = seller_user.profile
+        except (UserProfile.DoesNotExist, AttributeError):
+            seller_profile = None
+
+    # 1. Check custom partner price (active only)
+    partner = PartnerPrice.objects.filter(
+        product=product, seller=seller_user, buyer=buyer_user, is_active=True
+    ).first()
+    if partner:
+        return partner.purchase_price
+
+    # 2. Seller is Loft admin, buyer is affiliate/semi-affiliate -> wholesale price
+    is_seller_admin = seller_user and (seller_user.is_superuser or (
+        seller_profile and seller_profile.role == UserProfile.roleChoices.ADMIN
+    ))
+    is_buyer_affiliate = buyer_profile and buyer_profile.role in [
+        UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.SEMI_AFFILIATE
+    ]
+
+    if is_seller_admin and is_buyer_affiliate:
+        loft_price = LoftPrice.objects.filter(product=product, is_active=True).first()
+        if loft_price and loft_price.loft_default_wholesale_price is not None:
+            return loft_price.loft_default_wholesale_price
+
+    # 3. Buyer is final client or anonymous -> retail price
+    is_buyer_client = (
+        buyer_user is None
+        or not buyer_user.is_authenticated
+        or (buyer_profile and buyer_profile.role == UserProfile.roleChoices.FINAL_CLIENT)
+    )
+    if is_buyer_client:
+        loft_price = LoftPrice.objects.filter(product=product, is_active=True).first()
+        if loft_price and loft_price.loft_retail_price is not None:
+            return loft_price.loft_retail_price
+
+    # 4. Legacy fallback: product-level loft_retail_price
+    if product.loft_retail_price is not None:
+        return product.loft_retail_price
+
+    return None
+
+
 import json
 import os
 

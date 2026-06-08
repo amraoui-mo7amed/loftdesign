@@ -1,0 +1,387 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}{{ product.title }} — {% trans "Catalog Details" %}{% endblock dashTitle %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+<style>
+    /* ── Layout ────────────────────────────────────────────────── */
+    .detail-hero {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .detail-hero-img {
+        width: 100%;
+        height: 480px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s ease;
+    }
+
+    .detail-hero-img:hover {
+        transform: scale(1.02);
+    }
+
+    .detail-hero-placeholder {
+        width: 100%;
+        height: 480px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: #dee2e6;
+    }
+
+    .detail-thumbs {
+        display: flex;
+        gap: 0.6rem;
+        padding: 1rem 1.25rem;
+        overflow-x: auto;
+        background: #fff;
+        border-top: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .detail-thumbs img {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 12px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+
+    .detail-thumbs img:hover,
+    .detail-thumbs img.active {
+        border-color: var(--brand-primary);
+    }
+
+    /* ── Side Panel ────────────────────────────────────────────── */
+    .detail-panel {
+        position: sticky;
+        top: 1.5rem;
+    }
+
+    .detail-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 1.5rem;
+        border: 1px solid rgba(0,0,0,0.04);
+        margin-bottom: 1rem;
+    }
+
+    .detail-card-header {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #adb5bd;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .detail-card-header i {
+        font-size: 0.85rem;
+    }
+
+    .price-hero {
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--brand-primary);
+        line-height: 1.2;
+    }
+
+    .price-hero-sub {
+        font-size: 0.8rem;
+        color: #adb5bd;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+
+    .price-row + .price-row {
+        border-top: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .price-row-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .price-row-value {
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    /* ── Form ──────────────────────────────────────────────────── */
+    .pricing-input {
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+        padding: 0.7rem 1rem;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.2s;
+    }
+
+    .pricing-input:focus {
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(255, 214, 90, 0.15);
+    }
+
+    .pricing-input[readonly] {
+        background: #f8f9fa;
+        color: var(--brand-primary);
+        cursor: not-allowed;
+    }
+
+    .btn-action {
+        border-radius: 14px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        flex: 1;
+        text-align: center;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-1px);
+    }
+
+    /* ── Description ────────────────────────────────────────────── */
+    .detail-desc {
+        background: #fff;
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .detail-desc p {
+        color: #495057;
+        line-height: 1.8;
+        margin-bottom: 0;
+    }
+
+    /* ── Tag ─────────────────────────────────────────────────────── */
+    .tag-badge {
+        background: #f8f9fa;
+        color: var(--brand-dark);
+        border-radius: 50px;
+        padding: 0.25rem 1rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .tag-badge:hover {
+        background: var(--brand-primary);
+        color: #fff;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 992px) {
+        .detail-panel {
+            position: static;
+        }
+        .detail-hero-img,
+        .detail-hero-placeholder {
+            height: 300px;
+        }
+    }
+</style>
+{% endblock extra_css %}
+
+{% block dashContent %}
+{% csrf_token %}
+<div class="container-fluid py-4">
+    {# ── Breadcrumb ──────────────────────────────────────────────── #}
+    <div class="mb-3 d-flex align-items-center gap-2 flex-wrap" data-aos="fade-down">
+        <a href="{% url 'dash:affiliate_catalog' %}" class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-muted border">
+            <i class="fas fa-arrow-left me-1"></i> {% trans "Catalog" %}
+        </a>
+        <span class="text-muted small">/</span>
+        <span class="small fw-bold text-dark">{{ product.title }}</span>
+        {% if product.brand %}
+        <span class="text-muted small">·</span>
+        <span class="small text-muted">{{ product.brand }}</span>
+        {% endif %}
+    </div>
+
+    <div class="row g-4">
+        {# ── Left: Gallery ────────────────────────────────────────── #}
+        <div class="col-lg-7" data-aos="fade-right">
+            <div class="detail-hero">
+                {% if gallery %}
+                    <img src="{{ gallery.0.image.url }}" alt="{{ product.title }}" id="mainImage" class="detail-hero-img">
+                    <div class="detail-thumbs">
+                        {% for img in gallery %}
+                        <img src="{{ img.image.url }}"
+                             alt=""
+                             class="{% if forloop.first %}active{% endif %}"
+                             onclick="document.getElementById('mainImage').src=this.src;document.querySelectorAll('.detail-thumbs img').forEach(i=>i.classList.remove('active'));this.classList.add('active');">
+                        {% endfor %}
+                    </div>
+                {% elif product.thumbnail %}
+                    <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" class="detail-hero-img">
+                {% else %}
+                    <div class="detail-hero-placeholder">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            {# ── Description ────────────────────────────────────── #}
+            {% if product.description %}
+            <div class="detail-desc mt-4">
+                <div class="detail-card-header"><i class="far fa-file-alt"></i> {% trans "Description" %}</div>
+                <p>{{ product.description }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {# ── Right: Panel ────────────────────────────────────────── #}
+        <div class="col-lg-5" data-aos="fade-left">
+            <div class="detail-panel">
+                {# ── Product Title ───────────────────────────────── #}
+                <div class="detail-card">
+                    <h1 class="h4 fw-black mb-1" style="color:var(--brand-dark);">{{ product.title }}</h1>
+                    {% if product.brand %}
+                    <span class="small text-muted">{{ product.brand }}</span>
+                    {% endif %}
+                    {% if tags %}
+                    <div class="d-flex flex-wrap gap-1 mt-2">
+                        {% for tag in tags %}
+                        <span class="tag-badge">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                {# ── Price Summary ──────────────────────────────── #}
+                <div class="detail-card">
+                    <div class="detail-card-header"><i class="fas fa-chart-bar"></i> {% trans "Price Summary" %}</div>
+
+                    {% if price_configured and purchase_price %}
+                    <div class="text-center mb-3">
+                        <div class="price-hero">DZD{{ purchase_price|floatformat:0 }}</div>
+                        <div class="price-hero-sub">{% trans "Your wholesale cost per unit" %}</div>
+                    </div>
+                    {% endif %}
+
+                    <div class="price-row">
+                        <span class="price-row-label">{% trans "Default Wholesale" %}</span>
+                        <span class="price-row-value">DZD{{ loft_price.loft_default_wholesale_price|floatformat:0 }}</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-row-label">{% trans "Suggested Retail" %}</span>
+                        <span class="price-row-value">DZD{{ loft_price.loft_retail_price|floatformat:0 }}</span>
+                    </div>
+                    {% if product.sku %}
+                    <div class="price-row">
+                        <span class="price-row-label">{% trans "SKU" %}</span>
+                        <span class="price-row-value"><code>{{ product.sku }}</code></span>
+                    </div>
+                    {% endif %}
+                    {% if product.quantity %}
+                    <div class="price-row">
+                        <span class="price-row-label">{% trans "Available Stock" %}</span>
+                        <span class="price-row-value">{{ product.quantity }} {% trans "units" %}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {# ── Your Pricing Form ─────────────────────────── #}
+                {% if in_catalog %}
+                <form id="updatePricingForm" class="form" method="POST" action="{% url 'dash:catalog_update_pricing' product.pk %}">
+                    {% csrf_token %}
+                    {% include "partials/errorList.html" with form_id="updatePricingForm" %}
+                    <div class="detail-card">
+                        <div class="detail-card-header"><i class="fas fa-tags"></i> {% trans "Your Resale Prices" %}</div>
+
+                        <div class="mb-3">
+                            <label class="fw-bold small mb-1 text-muted">{% trans "Purchase Price (set by Loft)" %}</label>
+                            <input type="number" class="pricing-input form-control w-100" value="{{ partner_price.purchase_price|floatformat:0 }}" readonly disabled>
+                            <div class="form-text small mt-1">{% trans "Your cost. Set by Loft Design." %}</div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="fw-bold small mb-1 text-muted">{% trans "Your Wholesale (DZD)" %}</label>
+                                <input type="number" name="wholesale_price" step="0.01"
+                                       class="pricing-input form-control w-100"
+                                       value="{{ partner_price.wholesale_price|default:'' }}" lang="en"
+                                       placeholder="{% trans 'Same as purchase' %}">
+                                <div class="form-text small">{% trans "For semi-affiliates" %}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold small mb-1 text-muted">{% trans "Your Retail (DZD)" %}</label>
+                                <input type="number" name="retail_price" step="0.01"
+                                       class="pricing-input form-control w-100"
+                                       value="{{ partner_price.retail_price|default:'' }}" lang="en"
+                                       placeholder="{% trans 'e.g. 2500' %}">
+                                <div class="form-text small">{% trans "For end clients" %}</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 btn-action shadow-sm">
+                            <i class="fas fa-save me-2"></i> {% trans "Save Prices" %}
+                        </button>
+                    </div>
+                </form>
+
+                {% else %}
+                {# ── Not in Catalog ───────────────────────────── #}
+                <div class="detail-card text-center">
+                    <div class="py-3">
+                        <i class="fas fa-cart-plus fa-3x text-muted opacity-25 mb-3"></i>
+                        <p class="fw-bold mb-2">{% trans "Not in Your Catalog" %}</p>
+                        <p class="small text-muted mb-3">{% trans "Add this product to start setting your resale prices." %}</p>
+                        <button type="button"
+                                class="btn btn-primary btn-action add-catalog"
+                                data-url="{% url 'dash:affiliate_catalog_add' product.pk %}"
+                                data-name="{{ product.title }}"
+                                {% if not price_configured %}disabled{% endif %}>
+                            <i class="fas fa-plus-circle me-2"></i> {% trans "Add to Catalog" %}
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# ── Actions ──────────────────────────────────── #}
+                {% if in_catalog %}
+                <button type="button"
+                        class="btn btn-outline-danger btn-action w-100 remove-catalog"
+                        data-url="{% url 'dash:affiliate_catalog_remove' product.pk %}"
+                        data-name="{{ product.title }}"
+                        data-swal-title="{% trans 'Remove from Catalog?' %}"
+                        data-swal-text="{% trans 'Remove' %} \"{{ product.title }}\" {% trans 'from your catalog?' %}"
+                        data-swal-confirm="{% trans 'Yes, remove' %}"
+                        data-swal-cancel="{% trans 'Cancel' %}">
+                    <i class="fas fa-minus-circle me-2"></i> {% trans "Remove from Catalog" %}
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="{% static 'js/affiliate_catalog.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

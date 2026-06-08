@@ -28,6 +28,9 @@ def dash_home(request):
         pending_affiliates = UserProfile.objects.filter(
             role=UserProfile.roleChoices.AFFILIATE, is_approved=False
         ).count()
+        pending_products = Product.objects.filter(
+            status=Product.ProductStatus.PENDING
+        ).count()
 
         recent_items = list(Order.objects.order_by("-created_at")[:5])
 
@@ -41,17 +44,20 @@ def dash_home(request):
                 "trend": "+2",
             },
             "stat_2": {
-                "title": _("Total Projects"),
-                "value": total_portfolios,
-                "icon": "fa-briefcase",
-                "color": "success",
-                "trend": "+5",
+                "title": _("Pending Products"),
+                "value": pending_products,
+                "icon": "fa-clock",
+                "color": "warning",
+                "trend": str(pending_products),
+                "trend_dir": "up",
+                "trend_color": "warning",
+                "link": "dash:product_pending_list",
             },
             "stat_3": {
                 "title": _("Total Orders"),
                 "value": total_orders,
                 "icon": "fa-shopping-cart",
-                "color": "warning",
+                "color": "primary",
                 "trend": str(pending_orders),
                 "trend_dir": "down",
                 "trend_color": "danger",

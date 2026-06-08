@@ -1,19 +1,19 @@
+from functools import lru_cache
+
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _, get_language
 
 
-def site_settings(request):
-    """
-    Returns global site configuration and branding details.
-    """
-    static_url = settings.STATIC_URL
+@lru_cache(maxsize=4)
+def _build_site_config(lang):
+    """Build site config cached by language code."""
     return {
         "site_config": {
             "name": _("LOFT Design"),
-            "ar_name": "لوفت ديزاين",  # Keep for title fallback logic
+            "ar_name": "لوفت ديزاين",
             "tagline": _("Elevate Your Space"),
-            "logo": f"{static_url}img/icon.jpeg",
-            "favicon": f"{static_url}img/icon.jpeg",
+            "logo": f"{settings.STATIC_URL}img/icon.jpeg",
+            "favicon": f"{settings.STATIC_URL}img/icon.jpeg",
             "contact_email": "Loftdesign@live.fr",
             "phone": "+213 776139475",
             "mobile": "+213 541960603",
@@ -24,16 +24,16 @@ def site_settings(request):
             },
             "seo": {
                 "description": _(
-                    _("LOFT Design - High-end interior design and architectural solutions.")
+                    "LOFT Design - High-end interior design and architectural solutions."
                 ),
                 "keywords": _(
-                    _("interior design, loft, architecture, modern furniture, decor")
+                    "interior design, loft, architecture, modern furniture, decor"
                 ),
             },
             "branding": {
-                "primary_color": "#FFD65A",  # Soft Yellow from logo
-                "secondary_color": "#212121", # Dark Box from logo
-                "accent_color": "#FFFFFF",    # White text
+                "primary_color": "#FFD65A",
+                "secondary_color": "#212121",
+                "accent_color": "#FFFFFF",
                 "success_color": "#28a745",
                 "danger_color": "#dc3545",
                 "dark_color": "#1a1a1a",
@@ -41,3 +41,10 @@ def site_settings(request):
             },
         }
     }
+
+
+def site_settings(request):
+    """
+    Returns global site configuration and branding details (cached by language).
+    """
+    return _build_site_config(get_language())

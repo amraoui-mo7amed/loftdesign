@@ -5,9 +5,10 @@ from django.utils.translation import gettext as _
 from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.models import User
+from decimal import Decimal
 
 from dashboard.models import Product, Order
-from dashboard.utils import get_algeria_locations, notify_user
+from dashboard.utils import get_algeria_locations, notify_user, resolve_price
 
 
 CART_SESSION_KEY = "cart"
@@ -26,12 +27,20 @@ def _cart_total_items(cart):
     return sum(item["quantity"] for item in cart.values())
 
 
+def _resolve_for_cart(request, product):
+    """Resolve price for the current request context."""
+    seller_user = product.user or User.objects.filter(is_superuser=True).first()
+    buyer_user = request.user if request.user.is_authenticated else None
+    return resolve_price(product, seller_user, buyer_user)
+
+
 def _cart_total_price(cart):
     total = 0
     for item_data in cart.values():
         product = Product.objects.filter(pk=item_data["product_id"]).first()
         if product:
-            total += product.price * item_data["quantity"]
+            price = item_data.get("resolved_price") or product.loft_retail_price or 0
+            total += float(price) * item_data["quantity"]
     return total
 
 
@@ -42,13 +51,14 @@ def _get_cart_items_data(request):
         product = Product.objects.filter(pk=item_data["product_id"]).first()
         if not product:
             continue
-        subtotal = product.price * item_data["quantity"]
+        price = item_data.get("resolved_price") or product.price
+        subtotal = float(price) * item_data["quantity"]
         items.append({
             "id": item_data["product_id"],
             "product_id": product.pk,
             "product": product,
             "title": product.title,
-            "price": str(product.price),
+            "price": str(price),
             "quantity": item_data["quantity"],
             "subtotal": subtotal,
             "subtotal_str": f"{subtotal:.0f}",
@@ -66,13 +76,25 @@ def cart_add(request):
     if quantity < 1:
         return JsonResponse({"success": False, "message": _("Invalid quantity.")})
 
+    # Resolve price before adding
+    resolved = _resolve_for_cart(request, product)
+    if resolved is None:
+        return JsonResponse({
+            "success": False,
+            "message": _("Price not configured for this product. Please contact support.")
+        })
+
     cart = _get_cart(request)
     key = str(product_id)
 
     if key in cart:
         cart[key]["quantity"] += quantity
     else:
-        cart[key] = {"product_id": product.pk, "quantity": quantity}
+        cart[key] = {
+            "product_id": product.pk,
+            "quantity": quantity,
+            "resolved_price": str(resolved),
+        }
 
     _save_cart(request, cart)
 
@@ -110,7 +132,7 @@ def cart_update(request):
     _save_cart(request, cart)
 
     product = get_object_or_404(Product, pk=item_id)
-    item_subtotal = product.price * quantity
+    item_subtotal = (product.loft_retail_price or 0) * quantity
 
     return JsonResponse({
         "success": True,
@@ -146,12 +168,13 @@ def cart_load(request):
         product = Product.objects.filter(pk=item_data["product_id"]).first()
         if not product:
             continue
-        subtotal = product.price * item_data["quantity"]
+        price = item_data.get("resolved_price") or product.price
+        subtotal = float(price) * item_data["quantity"]
         items.append({
             "id": item_data["product_id"],
             "product_id": product.pk,
             "title": product.title,
-            "price": str(product.price),
+            "price": str(price),
             "quantity": item_data["quantity"],
             "subtotal": str(subtotal),
             "thumbnail": product.thumbnail.url if product.thumbnail else "",
@@ -197,10 +220,11 @@ def cart_checkout(request):
                 if not product:
                     continue
 
+                price = item_data.get("resolved_price") or str(product.loft_retail_price or "")
                 order_items.append({
                     "product_id": product.pk,
                     "title": product.title,
-                    "price": str(product.price),
+                    "price": price,
                     "quantity": item_data["quantity"],
                     "thumbnail": product.thumbnail.url if product.thumbnail else "",
                 })

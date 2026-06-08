@@ -131,3 +131,6 @@ def order_delete(request, pk):
         order.delete()
         return JsonResponse({"success": True, "message": _("Order removed")})
     return JsonResponse({"success": False}, status=400)
+
+
+

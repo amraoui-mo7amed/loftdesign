@@ -94,6 +94,7 @@ def cart_add(request):
             "product_id": product.pk,
             "quantity": quantity,
             "resolved_price": str(resolved),
+            "affiliate_code": request.session.get("affiliate_code", ""),
         }
 
     _save_cart(request, cart)
@@ -236,6 +237,12 @@ def cart_checkout(request):
             if not order_items:
                 return JsonResponse({"success": False, "errors": [_("No valid items in cart.")]})
 
+            referred_by = ""
+            for item_data in cart.values():
+                if item_data.get("affiliate_code"):
+                    referred_by = item_data["affiliate_code"]
+                    break
+
             Order.objects.create(
                 items=order_items,
                 customer_name=name,
@@ -243,6 +250,7 @@ def cart_checkout(request):
                 customer_address=address,
                 wilaya=wilaya,
                 commune=commune,
+                referred_by=referred_by,
             )
 
             admins = User.objects.filter(is_superuser=True)

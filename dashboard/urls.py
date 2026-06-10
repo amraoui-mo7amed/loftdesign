@@ -24,10 +24,12 @@ urlpatterns = [
     path("prices/<int:pk>/delete/", products.partner_price_delete, name="partner_price_delete"),
     # Affiliate Catalog
     path("affiliate/catalog/", partner_prices.affiliate_catalog, name="affiliate_catalog"),
+    path("affiliate/my-catalog/", partner_prices.my_catalog, name="my_catalog"),
     path("affiliate/catalog/<int:product_pk>/detail/", partner_prices.catalog_details, name="catalog_details"),
     path("affiliate/catalog/<int:product_pk>/add/", partner_prices.affiliate_catalog_add, name="affiliate_catalog_add"),
     path("affiliate/catalog/<int:product_pk>/remove/", partner_prices.affiliate_catalog_remove, name="affiliate_catalog_remove"),
     path("affiliate/catalog/<int:product_pk>/pricing/", partner_prices.catalog_update_pricing, name="catalog_update_pricing"),
+    path("affiliate/store/", partner_prices.store_settings, name="store_settings"),
     # Categories
     path("categories/", products.category_list, name="category_list"),
     path("categories/create/", products.category_create, name="category_create"),
@@ -42,6 +44,7 @@ urlpatterns = [
     path("orders/<int:pk>/", orders.order_detail, name="order_detail"),
     path("orders/<int:pk>/status/", orders.order_update_status, name="order_update_status"),
     path("orders/<int:pk>/delete/", orders.order_delete, name="order_delete"),
+    path("orders/<int:pk>/toggle-commission/", orders.order_toggle_commission, name="order_toggle_commission"),
 
     # Users
     path("users/", users.user_list, name="user_list"),

@@ -131,7 +131,7 @@
         <div class="col-lg-4">
             <div class="info-card">
                 <div class="card-header">
-                    <h6 class="fw-black mb-0"><i class="fas fa-user me-2 text-primary"></i>{% trans "Customer Information" %}</h6>
+                    <h6 class="fw-black mb-0 text-dark"><i class="fas fa-user me-2 text-primary"></i>{% trans "Customer Information" %}</h6>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -156,11 +156,60 @@
             </div>
         </div>
 
+        <!-- Referred By -->
+        {% if referred_by_profile %}
+        <div class="col-lg-4">
+            <div class="info-card">
+                <div class="card-header">
+                    <h6 class="fw-black mb-0 text-dark"><i class="fas fa-link me-2 text-primary"></i>{% trans "Referred By" %}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle fw-black text-white"
+                             style="width:44px;height:44px;background:var(--brand-primary);flex-shrink:0;">
+                            {{ referred_by_profile.user.get_full_name|first|upper }}
+                        </div>
+                        <div>
+                            <div class="fw-bold">{{ referred_by_profile.user.get_full_name }}</div>
+                            <span class="badge bg-dark rounded-pill px-3 py-1 small">{{ referred_by_profile.affiliate_code }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge {% if referred_by_profile.role == 'affiliate' %}bg-primary{% else %}bg-info{% endif %} rounded-pill px-3 py-2">
+                            {{ referred_by_profile.get_role_display }}
+                        </span>
+                    </div>
+                    {% if affiliate_earned is not None %}
+                    <div class="d-flex align-items-center gap-2 py-2 px-3 rounded-3" style="background:#f8f9fa;">
+                        <i class="fas fa-coins text-primary"></i>
+                        <div>
+                            <div class="info-label">{% trans "Commission Earned" %}</div>
+                            <div class="fw-black" style="color:var(--brand-primary);font-size:1.1rem;">
+                                {{ affiliate_earned|floatformat:2 }} <small>DZD</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="d-flex gap-2 mt-2">
+                        <a href="{% url 'dash:user_details' referred_by_profile.pk %}" class="btn btn-outline-dark btn-sm rounded-pill fw-bold flex-grow-1">
+                            <i class="fas fa-user me-1"></i> {% trans "View Profile" %}
+                        </a>
+                        {% if referred_by_profile.store %}
+                        <a href="{% url 'frontend:affiliate_store' referred_by_profile.affiliate_code %}" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill fw-bold">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Order Items -->
         <div class="col-lg-8">
             <div class="info-card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="fw-black mb-0"><i class="fas fa-box me-2 text-primary"></i>{% trans "Ordered Products" %}</h6>
+                    <h6 class="fw-black mb-0 text-dark"><i class="fas fa-box me-2 text-primary"></i>{% trans "Ordered Products" %}</h6>
                     <span class="badge bg-dark rounded-pill px-3 py-2 fw-bold">{{ order.items|length }} {% trans "product" %}{{ order.items|length|pluralize }}</span>
                 </div>
                 <div class="card-body p-0">

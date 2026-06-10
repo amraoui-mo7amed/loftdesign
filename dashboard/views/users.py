@@ -17,8 +17,9 @@ from django.utils import timezone
 from django.db import transaction
 from dashboard.utils import send_account_activation_email, notify_user
 from dashboard.decorator import role_required
-from dashboard.models import Notification, Product, PartnerPrice
+from dashboard.models import Notification, Product, PartnerPrice, AffiliateStore, StoreVisit, LoftPrice
 from user_auth.utils import generate_affiliate_code, user_profile_upload_path
+from decimal import Decimal
 import secrets
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
@@ -203,11 +204,58 @@ def user_details(request, pk):
     # Debt: Total commission earned by the platform from this provider
     total_debt = (total_confirmed_price * profile.commission) / 100
 
+    # Affiliate store data
+    store = None
+    store_visits = 0
+    store_orders = []
+    referred_order_count = 0
+    total_earnings = Decimal("0.00")
+    unpaid_earnings = Decimal("0.00")
+    referred_orders_data = []
+    if profile.role == UserProfile.roleChoices.AFFILIATE:
+        store, _ = AffiliateStore.objects.get_or_create(
+            affiliate=profile,
+            defaults={"store_name": profile.user.get_full_name() or profile.user.username}
+        )
+        store_visits = StoreVisit.objects.filter(store=store).count()
+        referred_orders_qs = Order.objects.filter(referred_by=profile.affiliate_code)
+        referred_order_count = referred_orders_qs.count()
+        store_orders = referred_orders_qs.order_by("-created_at")[:10]
+        for order in referred_orders_qs:
+            earnings = Decimal("0.00")
+            if order.status in [Order.OrderStatus.PAID, Order.OrderStatus.DELIVERED]:
+                for item in order.items:
+                    product_id = item.get("product_id")
+                    price = Decimal(str(item.get("price", 0))) or Decimal("0")
+                    quantity = int(item.get("quantity", 1))
+                    if product_id:
+                        try:
+                            loft_price = LoftPrice.objects.get(product_id=product_id)
+                            margin = price - loft_price.loft_retail_price
+                            if margin > 0:
+                                earnings += margin * quantity
+                        except LoftPrice.DoesNotExist:
+                            pass
+                total_earnings += earnings
+                if not order.commission_paid:
+                    unpaid_earnings += earnings
+            referred_orders_data.append({
+                "order": order,
+                "earnings": earnings,
+            })
+
     context = {
         "profile": profile,
         "confirmed_sales_count": confirmed_sales_count,
         "total_confirmed_price": total_confirmed_price,
         "total_debt": total_debt,
+        "store": store,
+        "store_visits": store_visits,
+        "store_orders": store_orders,
+        "referred_order_count": referred_order_count,
+        "total_earnings": total_earnings,
+        "unpaid_earnings": unpaid_earnings,
+        "referred_orders_data": referred_orders_data,
     }
     return render(request, "users/details.html", context)
 
@@ -482,7 +530,7 @@ def send_affiliate_activation_email(request, profile):
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.AFFILIATE])
 def semi_affiliate_create(request):
-    """AJAX: an affiliate creates a semi-affiliate (sub-affiliate) under them"""
+    """AJAX: an affiliate creates a semi-affiliate (sub-affiliate) under them, sends invitation email"""
     profile = get_object_or_404(UserProfile, user=request.user)
     is_admin = request.user.is_superuser
 
@@ -490,13 +538,11 @@ def semi_affiliate_create(request):
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
         email = request.POST.get("email")
-        password = request.POST.get("password")
+        phone = request.POST.get("phone", "")
 
         errors = {}
         if not first_name: errors["first_name"] = [_("First name is required")]
         if not email: errors["email"] = [_("Email is required")]
-        if not password or len(password) < 6:
-            errors["password"] = [_("Password must be at least 6 characters")]
         if User.objects.filter(email=email).exists():
             errors["email"] = [_("This email is already registered")]
 
@@ -511,23 +557,63 @@ def semi_affiliate_create(request):
 
             with transaction.atomic():
                 user = User.objects.create_user(
-                    username=username, email=email, password=password,
+                    username=username, email=email,
                     first_name=first_name, last_name=last_name, is_active=True
                 )
+                user.set_unusable_password()
+                user.save()
+
                 UserProfile.objects.create(
                     user=user,
                     role=UserProfile.roleChoices.SEMI_AFFILIATE,
                     parent_affiliate=profile if not is_admin else None,
                     affiliate_code=affiliate_code,
-                    phone_number=request.POST.get("phone", ""),
+                    phone_number=phone,
                     is_approved=True,
                     approved_at=timezone.now(),
                 )
 
+                token_generator = PasswordResetTokenGenerator()
+                token = token_generator.make_token(user)
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                set_password_url = request.build_absolute_uri(
+                    reverse('user_auth:set_password', kwargs={'uidb64': uidb64, 'token': token})
+                )
+
+                creator_name = request.user.get_full_name() or request.user.username
+                email_html = render_to_string('emails/semi_affiliate_set_password.html', {
+                    'first_name': first_name,
+                    'username': username,
+                    'email': email,
+                    'creator_name': creator_name,
+                    'set_password_url': set_password_url,
+                })
+
+                email_msg = EmailMessage(
+                    subject="LOFT Design - Your Semi-Affiliate Account / Votre compte sous-affilié",
+                    body=email_html,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[email],
+                )
+                email_msg.content_subtype = "html"
+
+                try:
+                    email_sent = email_msg.send(fail_silently=False)
+                    if not email_sent:
+                        raise Exception(_("Failed to send email. Account creation rolled back."))
+                except Exception as mail_err:
+                    transaction.set_rollback(True)
+                    return JsonResponse({
+                        "success": False,
+                        "errors": {
+                            "email": [_("Account could not be created because the invitation email failed to send. Please check your SMTP settings.")]
+                        }
+                    })
+
             return JsonResponse({
                 "success": True,
-                "message": _("Semi-affiliate '%(name)s' created successfully.")
-                % {"name": f"{first_name} {last_name}"},
+                "message": _("Semi-affiliate '%(name)s' created. Invitation sent to %(email)s.")
+                % {"name": f"{first_name} {last_name}", "email": email},
             })
         except Exception as e:
             return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
@@ -552,10 +638,47 @@ def semi_affiliate_delete(request, pk):
 
 def semi_affiliate_list(request):
     """List semi-affiliates under the current affiliate"""
+    q = request.GET.get("q", "")
+    parent_filter = request.GET.get("parent", "")
     profile = get_object_or_404(UserProfile, user=request.user)
-    if request.user.is_superuser:
-        semi_affiliates = UserProfile.objects.filter(parent_affiliate__isnull=False).select_related("user")
-    else:
-        semi_affiliates = UserProfile.objects.filter(parent_affiliate=profile).select_related("user")
 
-    return render(request, "users/semi_affiliate_list.html", {"semi_affiliates": semi_affiliates})
+    if request.user.is_superuser:
+        qs = UserProfile.objects.filter(
+            role=UserProfile.roleChoices.SEMI_AFFILIATE
+        ).select_related("user", "parent_affiliate__user")
+        if q:
+            qs = qs.filter(
+                Q(user__first_name__icontains=q)
+                | Q(user__last_name__icontains=q)
+                | Q(user__email__icontains=q)
+                | Q(affiliate_code__icontains=q)
+            )
+        if parent_filter:
+            qs = qs.filter(parent_affiliate_id=parent_filter)
+        semi_affiliates = qs
+        affiliate_options = [
+            {"value": a.id, "label": f"{a.user.get_full_name() or a.user.username} ({a.affiliate_code})"}
+            for a in UserProfile.objects.filter(
+                role=UserProfile.roleChoices.AFFILIATE, is_approved=True
+            ).select_related("user")
+        ]
+    else:
+        qs = UserProfile.objects.filter(
+            parent_affiliate=profile, role=UserProfile.roleChoices.SEMI_AFFILIATE
+        ).select_related("user")
+        if q:
+            qs = qs.filter(
+                Q(user__first_name__icontains=q)
+                | Q(user__last_name__icontains=q)
+                | Q(user__email__icontains=q)
+                | Q(affiliate_code__icontains=q)
+            )
+        semi_affiliates = qs
+        affiliate_options = []
+
+    return render(request, "users/semi_affiliate_list.html", {
+        "semi_affiliates": semi_affiliates,
+        "affiliate_options": affiliate_options,
+        "selected_parent": parent_filter,
+        "query": q,
+    })

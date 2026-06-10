@@ -1,0 +1,180 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}{% trans "My Catalog" %}{% endblock dashTitle %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+<style>
+    .catalog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.5rem;
+    }
+    .catalog-card {
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.04);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+    }
+    .catalog-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--brand-primary);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+    }
+    .catalog-card-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+    }
+    .catalog-card-img-placeholder {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #ced4da;
+    }
+    .catalog-card-body {
+        padding: 1.25rem 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .catalog-card-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 0.15rem;
+        color: var(--brand-dark);
+        text-decoration: none;
+    }
+    .catalog-card-title:hover { color: var(--brand-primary); }
+    .catalog-card-brand {
+        font-size: 0.8rem;
+        color: #adb5bd;
+        font-weight: 500;
+    }
+    .catalog-card-pricing {
+        display: flex;
+        align-items: baseline;
+        gap: 1.25rem;
+        margin: 0.75rem 0 1rem;
+    }
+    .catalog-price-your {
+        font-size: 1.3rem;
+        font-weight: 900;
+        color: var(--brand-primary);
+    }
+    .catalog-price-retail {
+        font-size: 0.85rem;
+        color: #adb5bd;
+    }
+    .catalog-card-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: auto;
+    }
+    .catalog-card-actions .btn {
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+        flex: 1;
+    }
+    @media (max-width: 768px) {
+        .catalog-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock extra_css %}
+
+{% block dashContent %}
+{% csrf_token %}
+<div class="container-fluid py-4">
+    <div class="mb-4" data-aos="fade-down">
+        <h1 class="fw-black display-5 mb-1">{% trans "My Catalog" %}</h1>
+        <p class="text-muted mb-0">{% trans "Products you've added to your catalog with your resale prices." %}</p>
+    </div>
+
+    {% if catalog %}
+    <div class="catalog-grid">
+        {% for item in catalog %}
+        <div class="catalog-card" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
+            <a href="{% url 'dash:catalog_details' item.product.pk %}">
+                {% if item.primary_image %}
+                    <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" class="catalog-card-img">
+                {% elif item.product.thumbnail %}
+                    <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" class="catalog-card-img">
+                {% else %}
+                    <div class="catalog-card-img-placeholder"><i class="fas fa-box-open"></i></div>
+                {% endif %}
+            </a>
+
+            <div class="catalog-card-body">
+                <a href="{% url 'dash:catalog_details' item.product.pk %}" class="catalog-card-title">
+                    {{ item.product.title }}
+                </a>
+                {% if item.product.brand %}
+                    <span class="catalog-card-brand">{{ item.product.brand }}</span>
+                {% endif %}
+
+                <div class="catalog-card-pricing">
+                    <div>
+                        <span class="catalog-price-your">DZD{{ item.purchase_price|floatformat:0 }}</span>
+                        <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "YOUR COST" %}</small>
+                    </div>
+                    {% if item.wholesale_price %}
+                    <div>
+                        <span class="fw-bold">DZD{{ item.wholesale_price|floatformat:0 }}</span>
+                        <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "WHOLESALE" %}</small>
+                    </div>
+                    {% endif %}
+                    {% if item.retail_price %}
+                    <div>
+                        <span class="fw-bold">DZD{{ item.retail_price|floatformat:0 }}</span>
+                        <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "RETAIL" %}</small>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="catalog-card-actions">
+                    <a href="{% url 'dash:catalog_details' item.product.pk %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-edit me-1"></i> {% trans "Manage" %}
+                    </a>
+                    <button type="button"
+                            class="btn btn-outline-danger remove-catalog"
+                            data-url="{% url 'dash:affiliate_catalog_remove' item.product.pk %}"
+                            data-name="{{ item.product.title }}"
+                            data-swal-title="{% trans 'Remove from Catalog?' %}"
+                            data-swal-text="{% trans 'Remove' %} \"{{ item.product.title }}\" {% trans 'from your catalog?' %}"
+                            data-swal-confirm="{% trans 'Yes, remove' %}"
+                            data-swal-cancel="{% trans 'Cancel' %}">
+                        <i class="fas fa-minus-circle me-1"></i> {% trans "Remove" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5" data-aos="fade-up">
+        <i class="fas fa-box-open fa-4x text-muted opacity-25 mb-3"></i>
+        <h4 class="fw-bold text-muted">{% trans "Your catalog is empty" %}</h4>
+        <p class="text-muted">{% trans "Browse available products and add them to your catalog." %}</p>
+        <a href="{% url 'dash:affiliate_catalog' %}" class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-sm mt-2">
+            <i class="fas fa-store me-2"></i> {% trans "Browse Products" %}
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="{% static 'js/affiliate_catalog.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

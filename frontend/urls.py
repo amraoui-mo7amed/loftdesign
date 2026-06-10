@@ -1,6 +1,6 @@
 from django.urls import path
 from user_auth import views as auth_views
-from .views import main, portfolio, products, orders, cart
+from .views import main, portfolio, products, orders, cart, store
 
 app_name = "frontend"
 
@@ -26,4 +26,6 @@ urlpatterns = [
     # Affiliate
     path("signup/", auth_views.signup_view, name="affiliate_signup_page"),
     path("affiliate/signup/", main.affiliate_signup, name="affiliate_signup"),
+    # Affiliate Storefront
+    path("store/<slug:code>/", store.affiliate_store, name="affiliate_store"),
 ]

@@ -5,7 +5,8 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
-from ..models import Order, Product, Notification
+from decimal import Decimal
+from ..models import Order, Product, Notification, LoftPrice
 from dashboard.decorator import role_required
 from dashboard.utils import notify_user
 from user_auth.models import UserProfile
@@ -116,9 +117,32 @@ def order_detail(request, pk):
         if not order_product_ids.intersection(user_product_ids):
             return redirect("dash:order_list")
 
+    referred_by_profile = None
+    affiliate_earned = None
+    if order.referred_by:
+        referred_by_profile = UserProfile.objects.filter(
+            affiliate_code=order.referred_by
+        ).first()
+        if referred_by_profile:
+            affiliate_earned = Decimal("0.00")
+            for item in order.items:
+                product_id = item.get("product_id")
+                price = Decimal(str(item.get("price", 0))) or Decimal("0")
+                quantity = int(item.get("quantity", 1))
+                if product_id:
+                    try:
+                        loft_price = LoftPrice.objects.get(product_id=product_id)
+                        margin = price - loft_price.loft_retail_price
+                        if margin > 0:
+                            affiliate_earned += margin * quantity
+                    except LoftPrice.DoesNotExist:
+                        pass
+
     return render(request, "orders/detail.html", {
         "order": order,
         "is_provider": is_provider,
+        "referred_by_profile": referred_by_profile,
+        "affiliate_earned": affiliate_earned,
         "title": _("Order #%(id)s Details") % {"id": order.id},
     })
 
@@ -130,6 +154,21 @@ def order_delete(request, pk):
         order = get_object_or_404(Order, pk=pk)
         order.delete()
         return JsonResponse({"success": True, "message": _("Order removed")})
+    return JsonResponse({"success": False}, status=400)
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+def order_toggle_commission(request, pk):
+    """AJAX: toggle commission_paid on an order"""
+    if request.method == "POST":
+        order = get_object_or_404(Order, pk=pk)
+        order.commission_paid = not order.commission_paid
+        order.save(update_fields=["commission_paid"])
+        return JsonResponse({
+            "success": True,
+            "commission_paid": order.commission_paid,
+            "message": _("Commission marked as paid") if order.commission_paid else _("Commission marked as unpaid"),
+        })
     return JsonResponse({"success": False}, status=400)
 
 

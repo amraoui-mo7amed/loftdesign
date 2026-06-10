@@ -8,7 +8,7 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/users.css" %}?v={% now "U" %}">
     <style>
-        .affiliate-card {
+        .aff-card {
             background: #fff;
             border-radius: 20px;
             overflow: hidden;
@@ -18,102 +18,158 @@
             display: flex;
             flex-direction: column;
         }
-        .affiliate-card:hover {
+        .aff-card:hover {
             transform: translateY(-4px);
             border-color: var(--brand-primary);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.06);
         }
-        .affiliate-card-top {
-            padding: 1.5rem 1.5rem 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
+
+        /* ── Head ─────────────────────────────────────────────── */
+        .aff-head {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 1.75rem 1.5rem 0;
+            position: relative;
+            min-height: 112px;
         }
-        .affiliate-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
+        .aff-head-approved {
+            background: linear-gradient(135deg, #0f3b2e 0%, #1b6b45 50%, #2d8f5a 100%);
+        }
+        .aff-head-pending {
+            background: linear-gradient(135deg, #5c3d0e 0%, #8b6914 50%, #b88a1f 100%);
+        }
+        .aff-head-blocked {
+            background: linear-gradient(135deg, #3d0e0e 0%, #6b1b1b 50%, #8f2d2d 100%);
+        }
+
+        .aff-status-floating {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.25rem 0.9rem;
+            border-radius: 50px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            border: 1.5px solid rgba(255,255,255,0.2);
+        }
+        [dir="rtl"] .aff-status-floating {
+            right: auto;
+            left: 16px;
+        }
+
+        .aff-avatar-wrap {
+            position: absolute;
+            bottom: -32px;
+            left: 1.5rem;
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            border: 3px solid #fff;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+        }
+        [dir="rtl"] .aff-avatar-wrap {
+            left: auto;
+            right: 1.5rem;
+        }
+        .aff-avatar-img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            flex-shrink: 0;
         }
-        .affiliate-avatar-circle {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--brand-primary), #f0c040);
-            color: #fff;
+        .aff-avatar-circle {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            color: #16213e;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 1.2rem;
-            flex-shrink: 0;
+            font-size: 1.3rem;
         }
-        .affiliate-card-name {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: var(--brand-dark);
-            margin-bottom: 0.1rem;
-        }
-        .affiliate-card-username {
-            font-size: 0.8rem;
-            color: #adb5bd;
-        }
-        .affiliate-card-body {
-            padding: 1rem 1.5rem 1.25rem;
+
+        /* ── Body ─────────────────────────────────────────────── */
+        .aff-body {
+            padding: 3rem 1.5rem 1.25rem;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
-        .affiliate-stat {
+        .aff-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 0.1rem;
+        }
+        .aff-username {
+            font-size: 0.78rem;
+            color: #adb5bd;
+        }
+        .aff-email {
+            font-size: 0.82rem;
+            color: #6c757d;
+        }
+        .aff-code {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            letter-spacing: 0.4px;
+        }
+        .aff-stat {
             display: flex;
             align-items: center;
             gap: 0.6rem;
-            padding: 0.4rem 0;
-            font-size: 0.85rem;
+            padding: 0.35rem 0;
+            font-size: 0.82rem;
+            color: #495057;
         }
-        .affiliate-stat-icon {
-            width: 28px;
-            height: 28px;
+        .aff-stat-icon {
+            width: 26px;
+            height: 26px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             background: #f8f9fa;
             color: #adb5bd;
             flex-shrink: 0;
         }
-        .affiliate-action {
+
+        .aff-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+        .aff-btn {
             border-radius: 12px;
-            padding: 0.6rem 1rem;
+            padding: 0.5rem 1rem;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: all 0.2s;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             flex: 1;
+            border: none;
         }
-        .affiliate-action:hover {
+        .aff-btn:hover {
             transform: scale(1.02);
         }
-        .affiliate-badge {
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 0.2rem 0.75rem;
-            border-radius: 50px;
-            letter-spacing: 0.3px;
-        }
-        .affiliate-footer {
+
+        /* ── Footer ───────────────────────────────────────────── */
+        .aff-foot {
             border-top: 1px solid rgba(0,0,0,0.04);
-            padding: 0.75rem 1.5rem;
+            padding: 0.65rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #ced4da;
         }
     </style>
@@ -199,58 +255,58 @@
         <div class="row g-4">
             {% for profile in profiles %}
             <div class="col-lg-4 col-md-6">
-                <div class="affiliate-card" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
-                    <div class="affiliate-card-top">
-                        {% if profile.profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}?v={% now "U" %}"
-                                 alt="{% trans 'Profile' %}" class="affiliate-avatar">
-                        {% else %}
-                            <div class="affiliate-avatar-circle">
-                                {{ profile.user.first_name|first|upper }}{{ profile.user.last_name|first|upper }}
-                            </div>
-                        {% endif %}
-                        <div class="flex-grow-1 min-width-0">
-                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <h5 class="affiliate-card-name text-truncate">{{ profile.user.get_full_name|default:profile.user.username }}</h5>
-                                {% if profile.is_blocked %}
-                                    <span class="affiliate-badge bg-danger text-white">{% trans "Blocked" %}</span>
-                                {% elif profile.is_approved %}
-                                    <span class="affiliate-badge bg-success text-white">{% trans "Active" %}</span>
-                                {% else %}
-                                    <span class="affiliate-badge bg-warning text-white">{% trans "Pending" %}</span>
-                                {% endif %}
-                            </div>
-                            <div class="affiliate-card-username">@{{ profile.user.username }}</div>
+                <div class="aff-card" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
+                    
+                    {% if profile.is_blocked %}
+                    <div class="aff-head aff-head-blocked">
+                        <span class="aff-status-floating bg-danger text-white">{% trans "Blocked" %}</span>
+                    {% elif profile.is_approved %}
+                    <div class="aff-head aff-head-approved">
+                        <span class="aff-status-floating bg-success text-white">{% trans "Active" %}</span>
+                    {% else %}
+                    <div class="aff-head aff-head-pending">
+                        <span class="aff-status-floating bg-warning text-white">{% trans "Pending" %}</span>
+                    {% endif %}
+                        <div class="aff-avatar-wrap">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}?v={% now "U" %}"
+                                     alt="{% trans 'Profile' %}" class="aff-avatar-img">
+                            {% else %}
+                                <div class="aff-avatar-circle">
+                                    {{ profile.user.first_name|first|upper }}{{ profile.user.last_name|first|upper }}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
 
-                    <div class="affiliate-card-body">
-                        <div class="affiliate-stat">
-                            <div class="affiliate-stat-icon"><i class="fas fa-envelope"></i></div>
-                            <span class="text-truncate">{{ profile.user.email|default:"—" }}</span>
-                        </div>
-                        <div class="affiliate-stat">
-                            <div class="affiliate-stat-icon"><i class="fas fa-phone-alt"></i></div>
-                            <span>{{ profile.phone_number|default:"—" }}</span>
-                        </div>
-                        {% if profile.affiliate_code %}
-                        <div class="affiliate-stat">
-                            <div class="affiliate-stat-icon"><i class="fas fa-code"></i></div>
-                            <span class="fw-bold text-primary">{{ profile.affiliate_code }}</span>
-                            <span class="ms-auto small text-muted">{% trans "Affiliate Code" %}</span>
-                        </div>
-                        {% endif %}
-                        <div class="affiliate-stat">
-                            <div class="affiliate-stat-icon"><i class="far fa-calendar-alt"></i></div>
-                            <span>{{ profile.created_at|date:"d M, Y" }}</span>
+                    <div class="aff-body">
+                        <h5 class="aff-name text-truncate">{{ profile.user.get_full_name|default:profile.user.username }}</h5>
+                        <div class="aff-username">@{{ profile.user.username }}</div>
+                        <div class="aff-email text-truncate mt-1">{{ profile.user.email|default:"—" }}</div>
+
+                        <div class="mt-3">
+                            <div class="aff-stat">
+                                <div class="aff-stat-icon"><i class="fas fa-phone-alt"></i></div>
+                                <span>{{ profile.phone_number|default:"—" }}</span>
+                            </div>
+                            {% if profile.affiliate_code %}
+                            <div class="aff-stat">
+                                <div class="aff-stat-icon"><i class="fas fa-code"></i></div>
+                                <span class="aff-code">{{ profile.affiliate_code }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="aff-stat">
+                                <div class="aff-stat-icon"><i class="far fa-calendar-alt"></i></div>
+                                <span>{{ profile.created_at|date:"d M, Y" }}</span>
+                            </div>
                         </div>
 
-                        <div class="mt-auto pt-3 d-flex gap-2">
-                            <a href="{% url 'dash:user_details' profile.pk %}" class="affiliate-action btn btn-light border">
+                        <div class="aff-actions">
+                            <a href="{% url 'dash:user_details' profile.pk %}" class="aff-btn btn btn-light border">
                                 <i class="fas fa-eye"></i> {% trans "Profile" %}
                             </a>
-                            {% if not profile.is_approved %}
-                            <button type="button" class="affiliate-action btn btn-primary approve-affiliate"
+                            {% if not profile.is_approved and not profile.is_blocked %}
+                            <button type="button" class="aff-btn btn btn-primary approve-affiliate"
                                     data-url="{% url 'dash:affiliate_approve' profile.pk %}"
                                     data-name="{{ profile.user.get_full_name|default:profile.user.username }}">
                                 <i class="fas fa-check"></i> {% trans "Approve" %}
@@ -259,7 +315,7 @@
                         </div>
                     </div>
 
-                    <div class="affiliate-footer">
+                    <div class="aff-foot">
                         <span><i class="fas fa-handshake me-1"></i> {% trans "Affiliate" %}</span>
                         {% if profile.approved_at %}
                             <span><i class="fas fa-check-circle text-success me-1"></i> {{ profile.approved_at|date:"d M, Y" }}</span>

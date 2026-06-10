@@ -76,6 +76,11 @@ def _build_menu(is_authenticated, is_superuser, role):
             "url_name": "dash:affiliate_catalog",
         })
         menu.append({
+            "title": _("My Catalog"),
+            "icon": "fas fa-boxes",
+            "url_name": "dash:my_catalog",
+        })
+        menu.append({
             "title": _("Semi-Affiliates"),
             "icon": "fas fa-user-friends",
             "url_name": "dash:semi_affiliate_list",

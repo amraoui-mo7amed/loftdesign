@@ -1,0 +1,222 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block body_class %}affiliate-store{% endblock body_class %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static "css/home.css" %}?v={% now "U" %}">
+<style>
+.store-hero {
+    height: 70vh;
+    min-height: 500px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+.store-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+.store-hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+}
+.store-hero .container {
+    position: relative;
+    z-index: 2;
+}
+.store-hero-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.store-hero-logo-pl {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    border: 3px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #fff;
+}
+/* Minimal fixed cart trigger */
+.affiliate-cart-float {
+    position: fixed;
+    top: 20px;
+    z-index: 1030;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.affiliate-cart-float:hover {
+    background: rgba(0,0,0,0.55);
+    transform: scale(1.08);
+    color: #fff;
+}
+.affiliate-cart-float .badge {
+    position: absolute;
+    top: -4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    line-height: 20px;
+    border-radius: 10px;
+}
+[dir="ltr"] .affiliate-cart-float {
+    right: 20px;
+}
+[dir="ltr"] .affiliate-cart-float .badge {
+    right: -4px;
+}
+[dir="rtl"] .affiliate-cart-float {
+    left: 20px;
+}
+[dir="rtl"] .affiliate-cart-float .badge {
+    left: -4px;
+}
+
+/* Hide the main site's floating cart FAB on this page */
+body.affiliate-store .cart-fab {
+    display: none !important;
+}
+</style>
+{% endblock extra_css %}
+
+{% block nav %}
+<button type="button" class="affiliate-cart-float cart-trigger" title="{% trans 'Cart' %}">
+    <i class="fas fa-shopping-bag"></i>
+    <span class="badge bg-primary {% if cart_count == 0 %}d-none{% endif %}">{{ cart_count }}</span>
+</button>
+{% endblock nav %}
+
+{% block sidebar %}{% endblock sidebar %}
+
+{% block content %}
+<header class="store-hero" style="background:{{ store.header_bg_color }};">
+    {% if store.store_banner %}
+    <div class="store-hero-bg" style="background-image:url('{{ store.store_banner.url }}');"></div>
+    {% endif %}
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-primary text-secondary px-3 py-2 rounded-pill mb-3 fw-bold text-uppercase tracking-wider">
+                    {% trans "Affiliate Store" %}
+                </span>
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    {% if store.store_logo %}
+                    <img src="{{ store.store_logo.url }}" alt="" class="store-hero-logo">
+                    {% else %}
+                    <div class="store-hero-logo-pl">{{ store.store_name|first|upper }}</div>
+                    {% endif %}
+                    <div>
+                        <h1 class="display-3 fw-black text-white mb-0">{{ store.store_name }}</h1>
+                        <p class="text-white-50 fs-5 mb-0">{{ profile.affiliate_code }}</p>
+                    </div>
+                </div>
+                {% if store.store_description %}
+                <p class="lead text-white-50 mb-0 mx-auto fs-5" style="max-width: 600px;">{{ store.store_description }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="py-10">
+    <div class="container">
+        {% if catalog %}
+        <div class="d-flex justify-content-between align-items-end mb-5">
+            <div>
+                <h2 class="display-5 fw-black mb-2">{% trans "Products" %}</h2>
+                <p class="text-muted mb-0">{{ catalog|length }} {% trans "items available" %}</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for item in catalog %}
+            <div class="col-lg-3 col-md-6">
+                <div class="soft-glass-card h-100 shadow-sm border-0 rounded-4 overflow-hidden bg-white transition-all hover-lift d-flex flex-column">
+                    <a href="{% url 'frontend:product_detail' item.product.pk %}" class="text-decoration-none text-dark">
+                        <div class="position-relative overflow-hidden" style="aspect-ratio: 1/1;">
+                            {% if item.primary_image %}
+                            <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;" loading="lazy">
+                            {% elif item.product.thumbnail %}
+                            <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;" loading="lazy">
+                            {% else %}
+                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
+                                <i class="fas fa-image fa-3x"></i>
+                            </div>
+                            {% endif %}
+                            {% if item.retail_price %}
+                            <span class="badge bg-dark position-absolute bottom-0 start-0 m-3 px-3 py-2 rounded-pill fw-bold">
+                                {{ item.retail_price|floatformat:0 }} DZD
+                            </span>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="p-4 d-flex flex-column flex-grow-1">
+                        <h5 class="fw-black mb-2">{{ item.product.title }}</h5>
+                        <p class="text-muted small mb-3 line-height-relaxed flex-grow-1">{{ item.product.description|truncatewords:10 }}</p>
+                        <a href="{% url 'frontend:product_detail' item.product.pk %}" class="btn btn-outline-dark rounded-pill w-100 fw-bold">
+                            {% trans "View Details" %} <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-10">
+            <div class="mb-4">
+                <i class="fas fa-store-alt fa-4x text-muted opacity-25"></i>
+            </div>
+            <h3 class="fw-black text-dark mb-2">{% trans "Coming Soon" %}</h3>
+            <p class="text-muted fs-5 mb-4">{% trans "This store is getting ready. Products will appear here shortly." %}</p>
+            <a href="/" class="btn btn-dark rounded-pill px-5 py-3 fw-bold">
+                <i class="fas fa-arrow-left me-2"></i> {% trans "Browse Main Store" %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<footer class="bg-dark py-5">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h6 class="text-white fw-bold mb-1">{{ store.store_name }}</h6>
+                <p class="text-white-50 small mb-0">{{ profile.affiliate_code }}</p>
+            </div>
+            <small class="text-white-50">&copy; {% now "Y" %} {{ store.store_name }}. {% trans "Powered by" %} <a href="/" class="text-white fw-bold text-decoration-none">LOFT Design</a>.</small>
+        </div>
+    </div>
+</footer>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}

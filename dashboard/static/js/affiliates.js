@@ -69,6 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     };
 
-    document.querySelectorAll(".approve-btn, .toggle-block-btn, .delete-btn, .affiliate-approve-btn")
+    document.querySelectorAll(".approve-btn, .toggle-block-btn, .delete-btn, .affiliate-approve-btn, .commission-toggle-btn")
         .forEach(handleAffiliateAction);
 });

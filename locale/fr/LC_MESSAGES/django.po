@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 08:16+0000\n"
+"POT-Creation-Date: 2026-06-10 15:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: core/context_processors.py:12
+#: core/context_processors.py:12 dashboard/views/users.py:506
 msgid "LOFT Design"
 msgstr "LOFT Design"
 
@@ -41,61 +41,90 @@ msgstr ""
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "design d'intérieur, loft, architecture, mobilier moderne, décoration"
 
-#: core/settings.py:132
+#: core/settings.py:133
 msgid "English"
 msgstr "Anglais"
 
-#: core/settings.py:132
+#: core/settings.py:133
 msgid "French"
 msgstr "Français"
 
-#: dashboard/context_processors.py:11
-#: dashboard/templates/dash/dash_index.html:90 frontend/templates/home.html:60
-#: frontend/templates/partials/landing-nav.html:47
+#: dashboard/context_processors.py:12
+#: dashboard/templates/dash/dash_index.html:91 frontend/templates/home.html:110
+#: frontend/templates/partials/landing-nav.html:95
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: dashboard/context_processors.py:26 dashboard/templatetags/tags.py:40
-#: dashboard/views/dashboard.py:62
+#: dashboard/context_processors.py:28 dashboard/views/users.py:454
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Affiliates"
+msgstr "Affiliation"
+
+#: dashboard/context_processors.py:33 dashboard/context_processors.py:84
+#: dashboard/templates/users/semi_affiliate_list.html:5
+#: dashboard/templates/users/semi_affiliate_list.html:138
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Semi-Affiliates"
+msgstr "Affiliation"
+
+#: dashboard/context_processors.py:38 dashboard/templatetags/tags.py:42
+#: dashboard/views/dashboard.py:73
 #, fuzzy
 #| msgid "Orders"
 msgid "Providers"
 msgstr "Commandes"
 
-#: dashboard/context_processors.py:31 dashboard/models.py:112
-#: dashboard/models.py:127 dashboard/templates/portfolio/list.html:6
+#: dashboard/context_processors.py:43 dashboard/models.py:114
+#: dashboard/models.py:129 dashboard/templates/portfolio/list.html:6
 #: frontend/templates/home.html:45
-#: frontend/templates/partials/landing-nav.html:32
+#: frontend/templates/partials/landing-nav.html:33
 #: frontend/templates/portfolio/portfolio_list.html:5
 msgid "Portfolio"
 msgstr "Portfolio"
 
-#: dashboard/context_processors.py:36 dashboard/models.py:146
+#: dashboard/context_processors.py:48 dashboard/models.py:148
 #: dashboard/templates/categories/list.html:11
 msgid "Categories"
 msgstr "Catégories"
 
-#: dashboard/context_processors.py:42 dashboard/context_processors.py:60
-#: dashboard/models.py:226 dashboard/templates/orders/list.html:17
-msgid "Orders"
-msgstr "Commandes"
-
-#: dashboard/context_processors.py:47 dashboard/templates/leads/list.html:5
+#: dashboard/context_processors.py:53 dashboard/templates/leads/list.html:5
 #: dashboard/templates/leads/list.html:15
 #, fuzzy
 #| msgid "Contact Details"
 msgid "Contact Leads"
 msgstr "Coordonnées"
 
-#: dashboard/context_processors.py:55 dashboard/models.py:185
+#: dashboard/context_processors.py:61 dashboard/models.py:219
 #: dashboard/templates/categories/list.html:28
-#: dashboard/templates/products/list.html:19 dashboard/templatetags/tags.py:41
-#: frontend/templates/index.html:98
+#: dashboard/templates/products/list.html:17 dashboard/templatetags/tags.py:43
+#: frontend/templates/affiliate_store.html:156 frontend/templates/index.html:98
 #: frontend/templates/products/products_list.html:5
 msgid "Products"
 msgstr "Produits"
 
-#: dashboard/models.py:12 dashboard/models.py:13
+#: dashboard/context_processors.py:66 dashboard/models.py:410
+#: dashboard/templates/orders/list.html:16 dashboard/views/dashboard.py:73
+#: dashboard/views/orders.py:48
+msgid "Orders"
+msgstr "Commandes"
+
+#: dashboard/context_processors.py:74
+#: dashboard/templates/products/affiliate_catalog.html:5
+#: dashboard/templates/products/affiliate_catalog.html:140
+#, fuzzy
+#| msgid "Total Products"
+msgid "Available Products"
+msgstr "Produits"
+
+#: dashboard/context_processors.py:79
+#: dashboard/templates/products/my_catalog.html:5
+#: dashboard/templates/products/my_catalog.html:101
+msgid "My Catalog"
+msgstr "Mon Catalogue"
+
+#: dashboard/models.py:14 dashboard/models.py:15
 #: dashboard/models_settings.py:14 dashboard/models_settings.py:15
 #: dashboard/templates/settings/update.html:15
 #, fuzzy
@@ -103,258 +132,592 @@ msgstr "Produits"
 msgid "Site Settings"
 msgstr "Paramètres de vente"
 
-#: dashboard/models.py:25 dashboard/templates/dash/dash_index.html:139
+#: dashboard/models.py:27 dashboard/templates/dash/dash_index.html:147
 #: frontend/templates/index.html:104
 msgid "Settings"
 msgstr "Paramètres"
 
-#: dashboard/models.py:27
+#: dashboard/models.py:29
 #, fuzzy
 #| msgid "Multiple Images"
 msgid "Slider Image"
 msgstr "Plusieurs images"
 
-#: dashboard/models.py:31
+#: dashboard/models.py:33
 msgid "Site Settings Slider Image"
-msgstr "Image du slider des paramètres du site"#: dashboard/models.py:32
+msgstr "Image du slider des paramètres du site"
+
+#: dashboard/models.py:34
 msgid "Site Settings Slider Images"
-msgstr "Images du slider des paramètres du site"#: dashboard/models.py:41 dashboard/models_settings.py:23
-#: frontend/templates/home.html:333
-#: frontend/templates/products/product_detail.html:114
+msgstr "Images du slider des paramètres du site"
+
+#: dashboard/models.py:43 dashboard/models_settings.py:23
+#: frontend/templates/cart/checkout.html:30 frontend/templates/home.html:392
+#: frontend/templates/products/product_detail.html:144
 msgid "Full Name"
 msgstr "Nom complet"
 
-#: dashboard/models.py:42 dashboard/models.py:211
-#: dashboard/models_settings.py:24 dashboard/templates/users/details.html:157
-#: dashboard/templates/users/list.html:162
-#: dashboard/templates/users/list.html:229
-#: dashboard/templates/users/profile_edit.html:104
-#: frontend/templates/home.html:337
-#: frontend/templates/products/product_detail.html:120 user_auth/models.py:28
-#: user_auth/templates/auth/signup.html:94
+#: dashboard/models.py:44 dashboard/models.py:388
+#: dashboard/models_settings.py:24 dashboard/templates/users/list.html:168
+#: dashboard/templates/users/list.html:235
+#: dashboard/templates/users/partials/_details_info.html:15
+#: dashboard/templates/users/profile_edit.html:102
+#: frontend/templates/cart/checkout.html:34 frontend/templates/home.html:396
+#: frontend/templates/products/product_detail.html:150 user_auth/models.py:32
 msgid "Phone Number"
 msgstr "Numéro de téléphone"
 
-#: dashboard/models.py:43 dashboard/models_settings.py:25
-#: frontend/templates/home.html:341
+#: dashboard/models.py:45 dashboard/models_settings.py:25
+#: frontend/templates/home.html:400
 msgid "Project Type"
 msgstr "Type de projet"
 
-#: dashboard/models.py:44 dashboard/models_settings.py:26
-#: frontend/templates/home.html:349
+#: dashboard/models.py:46 dashboard/models_settings.py:26
+#: frontend/templates/home.html:408
 msgid "Message"
 msgstr "Message"
 
-#: dashboard/models.py:48 dashboard/models_settings.py:30
+#: dashboard/models.py:50 dashboard/models_settings.py:30
 #, fuzzy
 #| msgid "Contact Details"
 msgid "Contact Request"
 msgstr "Coordonnées"
 
-#: dashboard/models.py:49 dashboard/models_settings.py:31
+#: dashboard/models.py:51 dashboard/models_settings.py:31
 #, fuzzy
 #| msgid "Contact Details"
 msgid "Contact Requests"
 msgstr "Coordonnées"
 
-#: dashboard/models.py:60
+#: dashboard/models.py:62
 msgid "معلومة"
 msgstr "Information"
 
-#: dashboard/models.py:61
+#: dashboard/models.py:63
 msgid "نجاح"
 msgstr "Succès"
 
-#: dashboard/models.py:62
+#: dashboard/models.py:64
 msgid "تحذير"
 msgstr "Avertissement"
 
-#: dashboard/models.py:63
+#: dashboard/models.py:65
 msgid "خطأ"
 msgstr "Erreur"
 
-#: dashboard/models.py:69
+#: dashboard/models.py:71
 msgid "المستخدم"
 msgstr "Utilisateur"
 
-#: dashboard/models.py:72
+#: dashboard/models.py:74
 msgid "العنوان"
 msgstr "Titre"
 
-#: dashboard/models.py:73
+#: dashboard/models.py:75
 msgid "الرسالة"
 msgstr "Message"
 
-#: dashboard/models.py:78
+#: dashboard/models.py:80
 msgid "نوع الإشعار"
 msgstr "Type de notification"
 
-#: dashboard/models.py:80
+#: dashboard/models.py:82
 msgid "مقروء"
 msgstr "Lu"
 
-#: dashboard/models.py:81
+#: dashboard/models.py:83
 msgid "تاريخ الإنشاء"
 msgstr "Date de création"
 
-#: dashboard/models.py:82
+#: dashboard/models.py:84
 msgid "تاريخ القراءة"
 msgstr "Date de lecture"
 
-#: dashboard/models.py:86
+#: dashboard/models.py:88
 msgid "الرابط"
 msgstr "Lien"
 
-#: dashboard/models.py:87
+#: dashboard/models.py:89
 msgid "رابط اختياري للتنقل"
 msgstr "Lien de navigation optionnel"
 
-#: dashboard/models.py:91
+#: dashboard/models.py:93
 msgid "إشعار"
 msgstr "Notification"
 
-#: dashboard/models.py:102 dashboard/models.py:163
+#: dashboard/models.py:104 dashboard/models.py:170
 msgid "Title"
 msgstr "Titre"
 
-#: dashboard/models.py:103 dashboard/models.py:172
+#: dashboard/models.py:105 dashboard/models.py:179
 #: dashboard/templates/portfolio/create.html:75
 msgid "Thumbnail"
 msgstr "Vignette"
 
-#: dashboard/models.py:104 dashboard/models.py:173
+#: dashboard/models.py:106 dashboard/models.py:187
 #: dashboard/templates/portfolio/create.html:38
 #: dashboard/templates/portfolio/edit.html:37
+#: dashboard/templates/products/catalog_details.html:252
 msgid "Description"
 msgstr "Description"
 
-#: dashboard/models.py:105 dashboard/models.py:177
+#: dashboard/models.py:107 dashboard/models.py:190
 #: dashboard/templates/portfolio/create.html:43
 #: dashboard/templates/portfolio/edit.html:41
-#: dashboard/templates/products/create.html:57
-#: dashboard/templates/products/edit.html:50
+#: dashboard/templates/products/create.html:70
+#: dashboard/templates/products/edit.html:71
 msgid "Tags"
 msgstr "Tags"
 
-#: dashboard/models.py:105
+#: dashboard/models.py:107
 msgid "Comma separated tags"
 msgstr "Tags séparés par des virgules"
 
-#: dashboard/models.py:106 dashboard/templates/portfolio/create.html:86
+#: dashboard/models.py:108 dashboard/templates/portfolio/create.html:86
 #: dashboard/templates/portfolio/edit.html:118
 msgid "External Link"
 msgstr "Lien d'achat externe"
 
-#: dashboard/models.py:107 dashboard/models.py:179
-#: dashboard/templates/products/create.html:95
-#: dashboard/templates/products/edit.html:89
+#: dashboard/models.py:109 dashboard/models.py:194
+#: dashboard/templates/products/create.html:148
+#: dashboard/templates/products/edit.html:169
 msgid "Is Featured"
-msgstr "Mis en avant"#: dashboard/models.py:108 user_auth/models.py:42
+msgstr "Mis en avant"
+
+#: dashboard/models.py:110 user_auth/models.py:57
 msgid "Created At"
 msgstr "Créé le"
 
-#: dashboard/models.py:109
+#: dashboard/models.py:111
 msgid "Updated At"
 msgstr "Mis à jour le"
 
-#: dashboard/models.py:113 dashboard/templates/portfolio/list.html:20
-#: dashboard/templatetags/tags.py:42 dashboard/templatetags/tags.py:49
+#: dashboard/models.py:115 dashboard/templates/portfolio/list.html:20
+#: dashboard/templatetags/tags.py:57
 msgid "Portfolios"
 msgstr "Portfolios"
 
-#: dashboard/models.py:129
+#: dashboard/models.py:131 dashboard/models.py:301
 msgid "Image"
 msgstr "Image"
 
-#: dashboard/models.py:132
+#: dashboard/models.py:134
 msgid "Portfolio Image"
 msgstr "Image de portfolio"
 
-#: dashboard/models.py:133
+#: dashboard/models.py:135
 msgid "Portfolio Images"
 msgstr "Images de portfolio"
 
-#: dashboard/models.py:141 dashboard/templates/categories/list.html:68
+#: dashboard/models.py:143 dashboard/templates/categories/list.html:68
 #: dashboard/templates/categories/list.html:108
-#: dashboard/templates/products/list.html:41
+#: dashboard/templates/products/list.html:39
 msgid "Category Name"
 msgstr "Catégories"
 
-#: dashboard/models.py:145 dashboard/models.py:170
+#: dashboard/models.py:147 dashboard/models.py:177
 #: dashboard/templates/products/create.html:34
 #: dashboard/templates/products/edit.html:33
 msgid "Category"
 msgstr "Catégories"
 
-#: dashboard/models.py:159 dashboard/templates/dash/dash_index.html:118
+#: dashboard/models.py:158 dashboard/models.py:364
+#: dashboard/templates/users/affiliate_list.html:268
+#: dashboard/templates/users/list.html:123
+#: dashboard/templates/users/profile_edit.html:63
+#: dashboard/templates/users/semi_affiliate_list.html:184
+#: dashboard/views/products.py:102 dashboard/views/users.py:155
+#: dashboard/views/users.py:445
+msgid "Pending"
+msgstr "En attente"
+
+#: dashboard/models.py:159 dashboard/templates/users/details.html:154
+#: dashboard/views/products.py:103 dashboard/views/users.py:154
+#: dashboard/views/users.py:444
+msgid "Approved"
+msgstr "Approuvé"
+
+#: dashboard/models.py:160 dashboard/views/products.py:104
+msgid "Rejected"
+msgstr "Refusé"
+
+#: dashboard/models.py:166 dashboard/templates/dash/dash_index.html:126
 #: dashboard/templates/users/list.html:109
 msgid "User"
 msgstr "Utilisateur"
 
-#: dashboard/models.py:174
-msgid "Price"
-msgstr "Prix"
+#: dashboard/models.py:182 dashboard/templates/products/create.html:120
+#: dashboard/templates/products/edit.html:136
+msgid "3D Model"
+msgstr "Modèle 3D"
 
-#: dashboard/models.py:175 dashboard/templates/products/create.html:53
-#: dashboard/templates/products/edit.html:46
+#: dashboard/models.py:185
+msgid "Upload GLB or GLTF 3D model file"
+msgstr "Importer un fichier de modèle 3D GLB ou GLTF"
+
+#: dashboard/models.py:188 dashboard/templates/products/create.html:66
+#: dashboard/templates/products/edit.html:67
 #, fuzzy
 #| msgid "Availability"
 msgid "Available Quantity"
 msgstr "Visibilité"
 
-#: dashboard/models.py:176
+#: dashboard/models.py:189
 msgid "External Buy Link"
 msgstr "Lien d'achat externe"
 
-#: dashboard/models.py:178
+#: dashboard/models.py:191
+msgid "Brand"
+msgstr "Marque"
+
+#: dashboard/models.py:192
+#: dashboard/templates/products/catalog_details.html:297
+msgid "SKU"
+msgstr "SKU"
+
+#: dashboard/models.py:193
 msgid "Is Active"
 msgstr "Est actif"
 
-#: dashboard/models.py:184 dashboard/models.py:205
+#: dashboard/models.py:198 dashboard/models.py:404
+#: dashboard/templates/users/affiliate_list.html:237
+#: dashboard/templates/users/details.html:308
+#: dashboard/templates/users/profile_edit.html:66
+msgid "Status"
+msgstr "Statut"
+
+#: dashboard/models.py:201 dashboard/models.py:334
+#: dashboard/templates/products/create.html:49
+#: dashboard/templates/products/edit.html:43
+#: dashboard/templates/products/edit.html:59
+#: dashboard/templates/products/partner_price_list.html:101
+#, fuzzy
+#| msgid "Price (DZD)"
+msgid "Purchase Price (DZD)"
+msgstr "Prix ($)"
+
+#: dashboard/models.py:202
+msgid "Price the supplier expects from Loft Design"
+msgstr "Prix attendu par le fournisseur auprès de Loft Design"
+
+#: dashboard/models.py:205 dashboard/models.py:338
+#: dashboard/templates/products/list.html:191
+#, fuzzy
+#| msgid "Price (DZD)"
+msgid "Wholesale Price (DZD)"
+msgstr "Prix ($)"
+
+#: dashboard/models.py:206
+msgid "Default wholesale price for affiliates (set by admin)"
+msgstr "Prix de gros par défaut pour les affiliés (défini par l'administrateur)"
+
+#: dashboard/models.py:209 dashboard/models.py:279 dashboard/models.py:343
+#: dashboard/templates/products/list.html:196
+#, fuzzy
+#| msgid "Price (DZD)"
+msgid "Retail Price (DZD)"
+msgstr "Prix ($)"
+
+#: dashboard/models.py:210
+msgid "Default retail price for end clients (set by admin)"
+msgstr "Prix de vente par défaut pour les clients finaux (défini par l'administrateur)"
+
+#: dashboard/models.py:212
+msgid "Rejection Reason"
+msgstr "Motif du refus"
+
+#: dashboard/models.py:218 dashboard/models.py:238 dashboard/models.py:268
+#: dashboard/models.py:299 dashboard/models.py:323 dashboard/models.py:443
+#: dashboard/models.py:500 dashboard/templates/orders/detail.html:220
 msgid "Product"
 msgstr "Produit"
 
-#: dashboard/models.py:196 dashboard/templates/users/list.html:123
-#: dashboard/templates/users/profile_edit.html:65 dashboard/views/users.py:152
-msgid "Pending"
-msgstr "En attente"
+#: dashboard/models.py:242
+msgid "Supplier"
+msgstr "Fournisseur"
 
-#: dashboard/models.py:197 dashboard/views/dashboard.py:115
-#: frontend/templates/portfolio/portfolio_detail.html:95
-msgid "Completed"
-msgstr "Terminé"
+#: dashboard/models.py:245 dashboard/models.py:271
+#, fuzzy
+#| msgid "Price (DZD)"
+msgid "Loft Purchase Price (DZD)"
+msgstr "Prix ($)"
 
-#: dashboard/models.py:198
+#: dashboard/models.py:246
+msgid "Price Loft Design pays the supplier"
+msgstr "Prix payé par Loft Design au fournisseur"
+
+#: dashboard/models.py:249
+msgid "Suggested Retail Price (DZD)"
+msgstr "Prix de vente conseillé (DZD)"
+
+#: dashboard/models.py:251
+msgid "Supplier's suggested retail price"
+msgstr "Prix de vente conseillé du fournisseur"
+
+#: dashboard/models.py:257
+msgid "Supplier Price"
+msgstr "Prix fournisseur"
+
+#: dashboard/models.py:258
+#, fuzzy
+#| msgid "Services"
+msgid "Supplier Prices"
+msgstr "Services"
+
+#: dashboard/models.py:272
+msgid "Copied from supplier price at approval time"
+msgstr "Copié depuis le prix fournisseur lors de l'approbation"
+
+#: dashboard/models.py:275
+msgid "Default Wholesale Price (DZD)"
+msgstr "Prix de gros par défaut (DZD)"
+
+#: dashboard/models.py:276
+msgid "Default price for affiliates buying from Loft"
+msgstr "Prix par défaut pour les affiliés achetant auprès de Loft"
+
+#: dashboard/models.py:280
+msgid "Public retail price for end clients"
+msgstr "Prix de vente public pour les clients finaux"
+
+#: dashboard/models.py:282 dashboard/models.py:347 dashboard/models.py:480
+#: dashboard/templates/users/affiliate_list.html:265
+#: dashboard/templates/users/list.html:119
+#: dashboard/templates/users/profile_edit.html:61
+#: dashboard/templates/users/semi_affiliate_list.html:182
+#: dashboard/views/dashboard.py:110
+msgid "Active"
+msgstr "Actif"
+
+#: dashboard/models.py:287
+#, fuzzy
+#| msgid "Price"
+msgid "Loft Price"
+msgstr "Prix"
+
+#: dashboard/models.py:288
+#, fuzzy
+#| msgid "Price"
+msgid "Loft Prices"
+msgstr "Prix"
+
+#: dashboard/models.py:302 dashboard/models.py:409 dashboard/models.py:439
+#: dashboard/templates/orders/detail.html:103
+#: dashboard/templates/users/details.html:306
+msgid "Order"
+msgstr "Commande"
+
+#: dashboard/models.py:306 dashboard/templates/products/create.html:109
+#: dashboard/templates/products/edit.html:123
+msgid "Product Image"
+msgstr "Image du produit"
+
+#: dashboard/models.py:307
+#, fuzzy
+#| msgid "Product Image"
+msgid "Product Images"
+msgstr "Image du produit"
+
+#: dashboard/models.py:327 dashboard/models.py:379
+msgid "Seller"
+msgstr "Vendeur"
+
+#: dashboard/models.py:331 dashboard/models.py:375
+msgid "Buyer"
+msgstr "Acheteur"
+
+#: dashboard/models.py:335
+msgid "Price the buyer pays the seller"
+msgstr "Prix payé par l'acheteur au vendeur"
+
+#: dashboard/models.py:340
+msgid "Price at which buyer can resell (wholesale)"
+msgstr "Prix de revente (prix de gros)"
+
+#: dashboard/models.py:345
+msgid "Price at which buyer can resell (retail)"
+msgstr "Prix de revente (prix de détail)"
+
+#: dashboard/models.py:352
+msgid "Partner Price"
+msgstr "Prix partenaire"
+
+#: dashboard/models.py:353
+msgid "Partner Prices"
+msgstr "Prix partenaires"
+
+#: dashboard/models.py:365
+#, fuzzy
+#| msgid "Confirm Password"
+msgid "Confirmed"
+msgstr "Confirmer le mot de passe"
+
+#: dashboard/models.py:366 dashboard/templates/users/details.html:354
+msgid "Paid"
+msgstr "Payé"
+
+#: dashboard/models.py:367
+#, fuzzy
+#| msgid "Registered"
+msgid "Delivered"
+msgstr "Inscrit"
+
+#: dashboard/models.py:368
 msgid "Cancelled"
 msgstr "Annulé"
 
-#: dashboard/models.py:208 dashboard/models.py:215
-#: frontend/templates/products/product_detail.html:124
-msgid "Quantity"
-msgstr "Quantité"#: dashboard/models.py:210
+#: dashboard/models.py:371
+#, fuzzy
+#| msgid "Phone Number"
+msgid "Order Number"
+msgstr "Numéro de téléphone"
+
+#: dashboard/models.py:382 dashboard/models.py:457
+#, fuzzy
+#| msgid "Orders"
+msgid "Order Items"
+msgstr "Commandes"
+
+#: dashboard/models.py:385
+msgid ""
+"List of products with title, price, quantity, thumbnail at time of order"
+msgstr "Liste des produits avec titre, prix, quantité et miniature au moment de la commande"
+
+#: dashboard/models.py:387
 msgid "Customer Name"
 msgstr "Nom du client"
 
-#: dashboard/models.py:212 dashboard/templates/users/details.html:172
-#: dashboard/templates/users/profile_edit.html:111 user_auth/models.py:29
+#: dashboard/models.py:389 dashboard/templates/orders/detail.html:151
+#: dashboard/templates/users/partials/_details_info.html:30
+#: dashboard/templates/users/profile_edit.html:109
+#: frontend/templates/cart/checkout.html:76 user_auth/models.py:33
 msgid "Address"
 msgstr "Adresse"
 
-#: dashboard/models.py:213 frontend/templates/products/product_detail.html:130
+#: dashboard/models.py:390 frontend/templates/cart/checkout.html:38
+#: frontend/templates/products/product_detail.html:160
 msgid "Wilaya"
-msgstr "Wilaya"#: dashboard/models.py:214 frontend/templates/products/product_detail.html:151
+msgstr "Wilaya"
+
+#: dashboard/models.py:391 frontend/templates/cart/checkout.html:58
+#: frontend/templates/products/product_detail.html:181
 #, fuzzy
 #| msgid "Commerce"
 msgid "Commune"
 msgstr "Commerce"
 
-#: dashboard/models.py:220 dashboard/templates/users/profile_edit.html:68
-msgid "Status"
-msgstr "Statut"
+#: dashboard/models.py:393 dashboard/templates/orders/detail.html:164
+msgid "Referred By"
+msgstr "Recommandé par"
 
-#: dashboard/models.py:225
-msgid "Order"
-msgstr "Commande"
+#: dashboard/models.py:394
+msgid "Affiliate code that referred this order"
+msgstr "Code d'affiliation ayant généré cette commande"
+
+#: dashboard/models.py:397
+#, fuzzy
+#| msgid "Commission Rate"
+msgid "Commission Paid"
+msgstr "Taux de commission"
+
+#: dashboard/models.py:398
+msgid "Whether the affiliate commission for this order has been settled"
+msgstr "Si la commission d'affiliation pour cette commande a été réglée"
+
+#: dashboard/models.py:415
+#, python-format
+msgid "Order %(num)s - %(name)s"
+msgstr "Commande %(num)s - %(name)s"
+
+#: dashboard/models.py:445 frontend/templates/products/product_detail.html:154
+msgid "Quantity"
+msgstr "Quantité"
+
+#: dashboard/models.py:447
+#, fuzzy
+#| msgid "Price (DZD)"
+msgid "Unit Price (DZD)"
+msgstr "Prix ($)"
+
+#: dashboard/models.py:448
+msgid "Price applied at time of order"
+msgstr "Prix appliqué au moment de la commande"
+
+#: dashboard/models.py:451
+#, fuzzy
+#| msgid "Price (DZD)"
+msgid "Total Price (DZD)"
+msgstr "Prix ($)"
+
+#: dashboard/models.py:456
+#, fuzzy
+#| msgid "Order removed"
+msgid "Order Item"
+msgstr "Commande supprimée"
+
+#: dashboard/models.py:467 dashboard/templates/products/list.html:115
+#: dashboard/templates/products/partner_price_list.html:34
+#: dashboard/templates/products/partner_price_list.html:97
+#: dashboard/templates/users/affiliate_list.html:319
+#: frontend/templates/home.html:54 user_auth/models.py:11
+msgid "Affiliate"
+msgstr "Affiliation"
+
+#: dashboard/models.py:469 dashboard/templates/users/details.html:402
+#, fuzzy
+#| msgid "Product Name"
+msgid "Store Name"
+msgstr "Nom du produit"
+
+#: dashboard/models.py:471 dashboard/templates/users/details.html:421
+msgid "Store Logo"
+msgstr "Logo de la boutique"
+
+#: dashboard/models.py:474 dashboard/templates/users/details.html:434
+msgid "Store Banner"
+msgstr "Bannière de la boutique"
+
+#: dashboard/models.py:476 dashboard/templates/users/details.html:406
+#, fuzzy
+#| msgid "Description"
+msgid "Store Description"
+msgstr "Description"
+
+#: dashboard/models.py:478 dashboard/templates/users/details.html:410
+msgid "Header Background Color"
+msgstr "Couleur d'arrière-plan de l'en-tête"
+
+#: dashboard/models.py:485 frontend/templates/affiliate_store.html:130
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Affiliate Store"
+msgstr "Affiliation"
+
+#: dashboard/models.py:486
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Affiliate Stores"
+msgstr "Affiliation"
+
+#: dashboard/models.py:496
+msgid "Store"
+msgstr "Boutique"
+
+#: dashboard/models.py:502
+msgid "Visitor IP"
+msgstr "IP du visiteur"
+
+#: dashboard/models.py:503
+msgid "Session"
+msgstr "Session"
+
+#: dashboard/models.py:507
+msgid "Store Visit"
+msgstr "Visite de la boutique"
+
+#: dashboard/models.py:508
+msgid "Store Visits"
+msgstr "Visites en magasin"
 
 #: dashboard/models_settings.py:6
 #, fuzzy
@@ -421,12 +784,22 @@ msgstr "Oui, supprimer"
 #: dashboard/templates/portfolio/create.html:109
 #: dashboard/templates/portfolio/edit.html:135
 #: dashboard/templates/portfolio/list.html:83
-#: dashboard/templates/products/create.html:107
-#: dashboard/templates/products/edit.html:101
-#: dashboard/templates/users/details.html:32
-#: dashboard/templates/users/details.html:51
-#: dashboard/templates/users/details.html:68
-#: dashboard/templates/users/profile_edit.html:150
+#: dashboard/templates/products/affiliate_catalog.html:205
+#: dashboard/templates/products/catalog_details.html:375
+#: dashboard/templates/products/create.html:161
+#: dashboard/templates/products/edit.html:186
+#: dashboard/templates/products/my_catalog.html:157
+#: dashboard/templates/products/partner_price_list.html:72
+#: dashboard/templates/users/details.html:56
+#: dashboard/templates/users/details.html:69
+#: dashboard/templates/users/details.html:82
+#: dashboard/templates/users/details.html:100
+#: dashboard/templates/users/details.html:117
+#: dashboard/templates/users/details.html:351
+#: dashboard/templates/users/details.html:449
+#: dashboard/templates/users/profile_edit.html:148
+#: dashboard/templates/users/semi_affiliate_list.html:222
+#: dashboard/templates/users/semi_affiliate_list.html:273
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -436,7 +809,8 @@ msgstr "Catégories"
 
 #: dashboard/templates/categories/list.html:72
 #: dashboard/templates/portfolio/edit.html:132
-#: dashboard/templates/users/profile_edit.html:153
+#: dashboard/templates/users/details.html:451
+#: dashboard/templates/users/profile_edit.html:151
 msgid "Save Changes"
 msgstr "Enregistrer les modifications"
 
@@ -449,8 +823,8 @@ msgid "New Category"
 msgstr "Nouvelle entrée"
 
 #: dashboard/templates/categories/list.html:112
-#: dashboard/templates/products/list.html:33
-#: dashboard/templates/products/list.html:45
+#: dashboard/templates/products/list.html:31
+#: dashboard/templates/products/list.html:43
 msgid "Create Category"
 msgstr "Créé le"
 
@@ -463,7 +837,7 @@ msgid "Notifications"
 msgstr "Notifications"
 
 #: dashboard/templates/components/notification_dropdown.html:13
-#: dashboard/templates/dash/dash_index.html:30
+#: dashboard/templates/dash/dash_index.html:31
 msgid "New"
 msgstr "Nouveau"
 
@@ -476,10 +850,12 @@ msgid "Mark all as read"
 msgstr "Tout marquer comme lu"
 
 #: dashboard/templates/components/pagination.html:9
+#: frontend/templates/products/product_detail.html:45
 msgid "Previous"
 msgstr "Précédent"
 
 #: dashboard/templates/components/pagination.html:39
+#: frontend/templates/products/product_detail.html:46
 msgid "Next"
 msgstr "Suivant"
 
@@ -536,68 +912,87 @@ msgstr "7 derniers jours"
 msgid "Last 30 Days"
 msgstr "30 derniers jours"
 
-#: dashboard/templates/dash/dash_home.html:122
+#: dashboard/templates/dash/dash_home.html:124
 #, fuzzy
 #| msgid "No orders found."
 msgid "No orders yet"
 msgstr "Aucune commande trouvée."
 
-#: dashboard/templates/dash/dash_home.html:126
-msgid "View Full List"
-msgstr "Voir la liste complète"
+#: dashboard/templates/dash/dash_home.html:128
+#, fuzzy
+#| msgid "View All Projects"
+msgid "View All Orders"
+msgstr "Voir tous les projets"
 
-#: dashboard/templates/dash/dash_index.html:26
+#: dashboard/templates/dash/dash_index.html:27
 msgid "Just now"
 msgstr "À l'instant"
 
-#: dashboard/templates/dash/dash_index.html:27
+#: dashboard/templates/dash/dash_index.html:28
 msgid "minutes ago"
 msgstr "il y a quelques minutes"
 
-#: dashboard/templates/dash/dash_index.html:28
+#: dashboard/templates/dash/dash_index.html:29
 msgid "hours ago"
 msgstr "il y a quelques heures"
 
-#: dashboard/templates/dash/dash_index.html:29
+#: dashboard/templates/dash/dash_index.html:30
 msgid "No notifications"
 msgstr "Aucune notification"
 
-#: dashboard/templates/dash/dash_index.html:70
+#: dashboard/templates/dash/dash_index.html:71
 #, fuzzy
 #| msgid "Launch Website"
 msgid "View Website"
 msgstr "Lancer le site web"
 
-#: dashboard/templates/dash/dash_index.html:76
-#: dashboard/templates/dash/dash_index.html:150
+#: dashboard/templates/dash/dash_index.html:77
+#: dashboard/templates/dash/dash_index.html:158
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: dashboard/templates/dash/dash_index.html:116
+#: dashboard/templates/dash/dash_index.html:107
+#: dashboard/templates/users/affiliate_list.html:273
+#: dashboard/templates/users/affiliate_list.html:306
+#: dashboard/templates/users/details.html:135
+#: dashboard/templates/users/list.html:136
+#: dashboard/templates/users/profile_edit.html:26
+#, fuzzy
+#| msgid "My Profile"
+msgid "Profile"
+msgstr "Mon profil"
+
+#: dashboard/templates/dash/dash_index.html:124
 msgid "Administrator"
 msgstr "Administrateur"
 
-#: dashboard/templates/dash/dash_index.html:135
+#: dashboard/templates/dash/dash_index.html:143
 #: dashboard/templates/users/profile_edit.html:6
 msgid "My Profile"
 msgstr "Mon profil"
 
-#: dashboard/templates/dash/dash_index.html:143
+#: dashboard/templates/dash/dash_index.html:151
 msgid "Help & Support"
 msgstr "Aide et assistance"
 
 #: dashboard/templates/leads/list.html:16
 msgid "Inquiries captured from landing page contact form."
-msgstr "Demandes capturées via le formulaire de contact de la page de destination."#: dashboard/templates/leads/list.html:36
+msgstr ""
+"Demandes capturées via le formulaire de contact de la page de destination."
+
+#: dashboard/templates/leads/list.html:36
+#: dashboard/templates/orders/detail.html:142
+#: user_auth/templates/auth/signup.html:109
 msgid "Phone"
-msgstr "Téléphone"#: dashboard/templates/leads/list.html:40
+msgstr "Téléphone"
+
+#: dashboard/templates/leads/list.html:40
 #, fuzzy
 #| msgid "Sort Preferences"
 msgid "Project Preference"
 msgstr "Préférences de tri"
 
 #: dashboard/templates/leads/list.html:52
-#: dashboard/templates/orders/list.html:101
 #, fuzzy
 #| msgid "VIEW DETAILS"
 msgid "DETAILS"
@@ -610,35 +1005,120 @@ msgid "Remove Inquiry?"
 msgstr "Envoyer une demande"
 
 #: dashboard/templates/leads/list.html:59
-#: dashboard/templates/orders/list.html:109
+#: dashboard/templates/orders/list.html:100
 msgid "This action cannot be undone."
 msgstr "Cette action ne peut pas être annulée."
 
 #: dashboard/templates/leads/list.html:69
 msgid "No contact requests yet."
-msgstr "Aucune demande de contact pour le moment."#: dashboard/templates/orders/list.html:5 dashboard/views/orders.py:35
-msgid "Order Management"
-msgstr "Gestion des commandes"
+msgstr "Aucune demande de contact pour le moment."
 
-#: dashboard/templates/orders/list.html:16
-msgid "Sales"
-msgstr "Ventes"
+#: dashboard/templates/orders/detail.html:100
+#: frontend/templates/portfolio/portfolio_detail.html:41
+#: frontend/templates/products/product_viewer_3d.html:32
+msgid "Back"
+msgstr "Retour"
+
+#: dashboard/templates/orders/detail.html:123
+#, fuzzy
+#| msgid "Total Leads"
+msgid "Total Items"
+msgstr "Total des utilisateurs"
+
+#: dashboard/templates/orders/detail.html:134
+#, fuzzy
+#| msgid "General Information"
+msgid "Customer Information"
+msgstr "Informations générales"
+
+#: dashboard/templates/orders/detail.html:138
+#, fuzzy
+#| msgid "Full Name"
+msgid "Name"
+msgstr "Nom complet"
+
+#: dashboard/templates/orders/detail.html:146
+#, fuzzy
+#| msgid "Notifications"
+msgid "Location"
+msgstr "Notifications"
+
+#: dashboard/templates/orders/detail.html:186
+#, fuzzy
+#| msgid "Commission Rate"
+msgid "Commission Earned"
+msgstr "Taux de commission"
+
+#: dashboard/templates/orders/detail.html:195
+#, fuzzy
+#| msgid "View Full Profile"
+msgid "View Profile"
+msgstr "Voir le profil complet"
+
+#: dashboard/templates/orders/detail.html:212
+#, fuzzy
+#| msgid "Add Product"
+msgid "Ordered Products"
+msgstr "Ajouter un produit"
+
+#: dashboard/templates/orders/detail.html:213
+#, fuzzy
+#| msgid "Product"
+msgid "product"
+msgstr "Produit"
+
+#: dashboard/templates/orders/detail.html:221
+msgid "Qty"
+msgstr "Qté"
+
+#: dashboard/templates/orders/detail.html:222
+#, fuzzy
+#| msgid "Price"
+msgid "Unit Price"
+msgstr "Prix"
+
+#: dashboard/templates/orders/detail.html:223
+#: frontend/templates/cart/cart.html:72
+#: frontend/templates/cart/cart_drawer.html:30
+msgid "Subtotal"
+msgstr "Sous-total"
+
+#: dashboard/templates/orders/detail.html:238
+#: dashboard/templates/orders/detail.html:239
+#: dashboard/templates/orders/detail.html:244
+msgid "DA"
+msgstr "DA"
+
+#: dashboard/templates/orders/detail.html:243
+#: frontend/templates/cart/checkout.html:92
+#, fuzzy
+#| msgid "Total Projects"
+msgid "Total"
+msgstr "Projets"
 
 #: dashboard/templates/orders/list.html:20
+#: dashboard/templates/users/affiliate_list.html:237
+#: dashboard/views/products.py:101 dashboard/views/users.py:443
 msgid "All"
 msgstr "Tout"
 
-#: dashboard/templates/orders/list.html:44
-#: dashboard/templates/orders/list.html:87
-#: dashboard/templates/orders/list.html:97
-msgid "Deleted Product"
-msgstr "Produit supprimé"
+#: dashboard/templates/orders/list.html:48
+msgid "more"
+msgstr "plus"
 
-#: dashboard/templates/orders/list.html:108
+#: dashboard/templates/orders/list.html:92
+#: dashboard/templates/products/affiliate_catalog.html:195
+#: dashboard/templates/users/details.html:212
+#, fuzzy
+#| msgid "User Details"
+msgid "Details"
+msgstr "Détails de l'utilisateur"
+
+#: dashboard/templates/orders/list.html:99
 msgid "Remove Order?"
 msgstr "Supprimer la commande ?"
 
-#: dashboard/templates/orders/list.html:120
+#: dashboard/templates/orders/list.html:111
 msgid "No orders found."
 msgstr "Aucune commande trouvée."
 
@@ -648,7 +1128,7 @@ msgid "Create Project"
 msgstr "Créer un projet"
 
 #: dashboard/templates/portfolio/create.html:17
-#: dashboard/templates/users/details.html:18
+#: dashboard/templates/users/details.html:41
 msgid "Back to List"
 msgstr "Retour à la liste"
 
@@ -683,14 +1163,20 @@ msgid "Project Gallery"
 msgstr "Galerie du projet"
 
 #: dashboard/templates/portfolio/create.html:53
+#: dashboard/templates/products/create.html:92
+#: dashboard/templates/products/edit.html:92
 msgid "Multiple Images"
 msgstr "Plusieurs images"
 
 #: dashboard/templates/portfolio/create.html:58
+#: dashboard/templates/products/create.html:97
+#: dashboard/templates/products/edit.html:111
 msgid "Drop your gallery images here"
 msgstr "Déposez vos images de galerie ici"
 
 #: dashboard/templates/portfolio/create.html:59
+#: dashboard/templates/products/create.html:98
+#: dashboard/templates/products/edit.html:112
 msgid "Or click to browse your files"
 msgstr "Ou cliquez pour parcourir vos fichiers"
 
@@ -709,8 +1195,8 @@ msgstr "Lien d'achat externe"
 
 #: dashboard/templates/portfolio/create.html:95
 #: dashboard/templates/portfolio/edit.html:111
-#: dashboard/templates/products/create.html:89
-#: dashboard/templates/products/edit.html:83
+#: dashboard/templates/products/create.html:142
+#: dashboard/templates/products/edit.html:163
 msgid "Visibility"
 msgstr "Visibilité"
 
@@ -722,7 +1208,8 @@ msgid "Active/Featured"
 msgstr "Actif dans la boutique"
 
 #: dashboard/templates/portfolio/create.html:103
-#: dashboard/templates/products/edit.html:95
+#: dashboard/templates/products/edit.html:175
+#: dashboard/templates/products/partner_price_list.html:38
 msgid "Actions"
 msgstr "Actions"
 
@@ -809,7 +1296,7 @@ msgid "Remove Masterpiece?"
 msgstr "Supprimer le chef-d'œuvre ?"
 
 #: dashboard/templates/portfolio/list.html:81
-#: dashboard/templates/products/list.html:106
+#: dashboard/templates/products/list.html:154
 msgid "Are you sure you want to delete"
 msgstr "Êtes-vous sûr de vouloir supprimer"
 
@@ -819,6 +1306,7 @@ msgstr "Cette action est irréversible."
 
 #: dashboard/templates/portfolio/list.html:84
 #: dashboard/templates/settings/update.html:50
+#: dashboard/templates/users/semi_affiliate_list.html:223
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -834,14 +1322,185 @@ msgstr "Commencez à ajouter vos projets pour mettre en valeur votre talent."
 msgid "Create First Project"
 msgstr "Créer le premier projet"
 
+#: dashboard/templates/products/affiliate_catalog.html:141
+msgid "Browse the catalog. Add products to your catalog to set resale prices."
+msgstr "Parcourez le catalogue. Ajoutez des produits à votre catalogue pour définir des prix de revente."
+
+#: dashboard/templates/products/affiliate_catalog.html:149
+msgid "In Catalog"
+msgstr "Dans le catalogue"
+
+#: dashboard/templates/products/affiliate_catalog.html:176
+msgid "YOUR PRICE"
+msgstr "VOTRE PRIX"
+
+#: dashboard/templates/products/affiliate_catalog.html:181
+#: dashboard/templates/products/my_catalog.html:141
+#, fuzzy
+#| msgid "VIEW DETAILS"
+msgid "RETAIL"
+msgstr "VOIR LES DÉTAILS"
+
+#: dashboard/templates/products/affiliate_catalog.html:187
+msgid "Price not configured"
+msgstr "Prix non configuré"
+
+#: dashboard/templates/products/affiliate_catalog.html:202
+#: dashboard/templates/products/catalog_details.html:372
+#: dashboard/templates/products/my_catalog.html:154
+#, fuzzy
+#| msgid "Remove Product?"
+msgid "Remove from Catalog?"
+msgstr "Supprimer le produit ?"
+
+#: dashboard/templates/products/affiliate_catalog.html:203
+#: dashboard/templates/products/affiliate_catalog.html:206
+#: dashboard/templates/products/catalog_details.html:373
+#: dashboard/templates/products/my_catalog.html:155
+#: dashboard/templates/products/my_catalog.html:158
+#, fuzzy
+#| msgid "Remove Order?"
+msgid "Remove"
+msgstr "Supprimer la commande ?"
+
+#: dashboard/templates/products/affiliate_catalog.html:203
+#: dashboard/templates/products/catalog_details.html:373
+#: dashboard/templates/products/my_catalog.html:155
+msgid "from your catalog?"
+msgstr "de votre catalogue ?"
+
+#: dashboard/templates/products/affiliate_catalog.html:204
+#: dashboard/templates/products/catalog_details.html:374
+#: dashboard/templates/products/my_catalog.html:156
+#: dashboard/templates/products/partner_price_list.html:71
+#, fuzzy
+#| msgid "Yes, approve!"
+msgid "Yes, remove"
+msgstr "Oui, approuver !"
+
+#: dashboard/templates/products/affiliate_catalog.html:214
+#: frontend/templates/home.html:300
+#: frontend/templates/partials/product_card.html:18
+#, fuzzy
+#| msgid "Address"
+msgid "Add"
+msgstr "Adresse"
+
+#: dashboard/templates/products/affiliate_catalog.html:225
+#, fuzzy
+#| msgid "Product Details"
+msgid "No Products Available"
+msgstr "Détails du produit"
+
+#: dashboard/templates/products/affiliate_catalog.html:226
+msgid "There are no approved products in the catalog yet."
+msgstr "Il n'y a pas encore de produits approuvés dans le catalogue."
+
+#: dashboard/templates/products/catalog_details.html:5
+#, fuzzy
+#| msgid "Technical Details"
+msgid "Catalog Details"
+msgstr "Détails du projet"
+
+#: dashboard/templates/products/catalog_details.html:216
+msgid "Catalog"
+msgstr "Catalogue"
+
+#: dashboard/templates/products/catalog_details.html:278
+msgid "Price Summary"
+msgstr "Récapitulatif des prix"
+
+#: dashboard/templates/products/catalog_details.html:283
+msgid "Your wholesale cost per unit"
+msgstr "Votre coût de gros par unité"
+
+#: dashboard/templates/products/catalog_details.html:288
+msgid "Default Wholesale"
+msgstr "Prix de gros par défaut"
+
+#: dashboard/templates/products/catalog_details.html:292
+msgid "Suggested Retail"
+msgstr "Prix de vente conseillé"
+
+#: dashboard/templates/products/catalog_details.html:303
+#, fuzzy
+#| msgid "Availability"
+msgid "Available Stock"
+msgstr "Visibilité"
+
+#: dashboard/templates/products/catalog_details.html:304
+msgid "units"
+msgstr "unités"
+
+#: dashboard/templates/products/catalog_details.html:315
+msgid "Your Resale Prices"
+msgstr "Vos prix de revente"
+
+#: dashboard/templates/products/catalog_details.html:318
+msgid "Purchase Price (set by Loft)"
+msgstr "Prix d'achat (fixé par Loft)"
+
+#: dashboard/templates/products/catalog_details.html:320
+msgid "Your cost. Set by Loft Design."
+msgstr "Votre coût. Défini par Loft Design."
+
+#: dashboard/templates/products/catalog_details.html:325
+msgid "Your Wholesale (DZD)"
+msgstr "Votre prix de gros (DZD)"
+
+#: dashboard/templates/products/catalog_details.html:329
+msgid "Same as purchase"
+msgstr "Identique au prix d'achat"
+
+#: dashboard/templates/products/catalog_details.html:330
+msgid "For semi-affiliates"
+msgstr "Pour les semi-affiliés"
+
+#: dashboard/templates/products/catalog_details.html:333
+msgid "Your Retail (DZD)"
+msgstr "Votre prix de détail (DZD)"
+
+#: dashboard/templates/products/catalog_details.html:337
+msgid "e.g. 2500"
+msgstr "ex. 2500"
+
+#: dashboard/templates/products/catalog_details.html:338
+msgid "For end clients"
+msgstr "Pour les clients finaux"
+
+#: dashboard/templates/products/catalog_details.html:343
+#, fuzzy
+#| msgid "Services"
+msgid "Save Prices"
+msgstr "Services"
+
+#: dashboard/templates/products/catalog_details.html:353
+msgid "Not in Your Catalog"
+msgstr "Absent de votre catalogue"
+
+#: dashboard/templates/products/catalog_details.html:354
+msgid "Add this product to start setting your resale prices."
+msgstr "Ajoutez ce produit pour commencer à définir vos prix de revente."
+
+#: dashboard/templates/products/catalog_details.html:360
+#, fuzzy
+#| msgid "Add Category"
+msgid "Add to Catalog"
+msgstr "Catégories"
+
+#: dashboard/templates/products/catalog_details.html:376
+msgid "Remove from Catalog"
+msgstr "Retirer du catalogue"
+
 #: dashboard/templates/products/create.html:5
-#: dashboard/templates/products/create.html:104
-#: dashboard/templates/products/list.html:23
+#: dashboard/templates/products/create.html:158
+#: dashboard/templates/products/list.html:21
 msgid "Add Product"
 msgstr "Ajouter un produit"
 
 #: dashboard/templates/products/create.html:15
 #: dashboard/templates/products/edit.html:15
+#: dashboard/templates/products/partner_price_list.html:15
 msgid "Back to Inventory"
 msgstr "Retour à l'inventaire"
 
@@ -869,83 +1528,332 @@ msgstr "Sélectionnez le sexe"
 msgid "Full Description"
 msgstr "Description complète"
 
-#: dashboard/templates/products/create.html:49
-#: dashboard/templates/products/edit.html:42
-msgid "Price (DZD)"
+#: dashboard/templates/products/create.html:51
+msgid "Your cost from supplier."
+msgstr "Votre coût fournisseur."
+
+#: dashboard/templates/products/create.html:51
+#: dashboard/templates/products/edit.html:45
+msgid "What Loft pays the supplier."
+msgstr "Ce que Loft paie au fournisseur."
+
+#: dashboard/templates/products/create.html:54
+#: dashboard/templates/products/edit.html:48
+msgid "Wholesale (DZD)"
+msgstr "Prix de gros (DZD)"
+
+#: dashboard/templates/products/create.html:56
+#: dashboard/templates/products/edit.html:50
+msgid "Price for affiliates."
+msgstr "Prix pour les affiliés."
+
+#: dashboard/templates/products/create.html:59
+#: dashboard/templates/products/edit.html:53
+#, fuzzy
+#| msgid "Price (DZD)"
+msgid "Retail (DZD)"
 msgstr "Prix ($)"
 
-#: dashboard/templates/products/create.html:64
-#: dashboard/templates/products/edit.html:57
+#: dashboard/templates/products/create.html:61
+#: dashboard/templates/products/edit.html:55
+#: dashboard/templates/products/partner_price_list.html:114
+msgid "Price for end clients."
+msgstr "Prix pour les clients finaux."
+
+#: dashboard/templates/products/create.html:77
+#: dashboard/templates/products/edit.html:78
 msgid "Sales Settings"
 msgstr "Paramètres de vente"
 
-#: dashboard/templates/products/create.html:66
-#: dashboard/templates/products/edit.html:59
+#: dashboard/templates/products/create.html:79
+#: dashboard/templates/products/edit.html:80
 msgid "External Affiliate/Buy Link"
 msgstr "Lien d'affiliation/achat externe"
 
-#: dashboard/templates/products/create.html:71
+#: dashboard/templates/products/create.html:84
 msgid "Leave empty if product is sold directly through this platform."
 msgstr "Laissez vide si le produit est vendu directement via cette plateforme."
 
-#: dashboard/templates/products/create.html:78
-#: dashboard/templates/products/edit.html:70
-msgid "Product Image"
-msgstr "Image du produit"
+#: dashboard/templates/products/create.html:91
+#: dashboard/templates/products/edit.html:91
+#, fuzzy
+#| msgid "Project Gallery"
+msgid "Product Gallery"
+msgstr "Galerie du projet"
 
-#: dashboard/templates/products/create.html:82
+#: dashboard/templates/products/create.html:113
 msgid "Upload High Quality Thumbnail"
 msgstr "Téléverser une miniature de haute qualité"
 
-#: dashboard/templates/products/create.html:91
-#: dashboard/templates/products/edit.html:85
+#: dashboard/templates/products/create.html:124
+#: dashboard/templates/products/edit.html:145
+msgid "Upload GLB or GLTF 3D Model"
+msgstr "Importer un modèle 3D GLB ou GLTF"
+
+#: dashboard/templates/products/create.html:128
+#: dashboard/templates/products/edit.html:150
+msgid "Optional. Supported formats: GLB, GLTF"
+msgstr "Optionnel. Formats pris en charge : GLB, GLTF"
+
+#: dashboard/templates/products/create.html:144
+#: dashboard/templates/products/edit.html:165
 msgid "Active in Store"
 msgstr "Actif dans la boutique"
 
-#: dashboard/templates/products/create.html:101
+#: dashboard/templates/products/create.html:155
 msgid "Publish"
 msgstr "Publier"
+
+#: dashboard/templates/products/create.html:158
+msgid "Submit for Review"
+msgstr "Soumettre pour examen"
+
+#: dashboard/templates/products/create.html:166
+msgid ""
+"After submission, an admin will review your product and set the wholesale/"
+"retail prices before it goes live."
+msgstr "Après soumission, un administrateur examinera votre produit et fixera les prix de gros et de détail avant sa mise en ligne."
 
 #: dashboard/templates/products/edit.html:5
 #: dashboard/templates/products/edit.html:17
 msgid "Edit Product"
 msgstr "Modifier le produit"
 
-#: dashboard/templates/products/edit.html:79
+#: dashboard/templates/products/edit.html:61
+msgid "The price Loft Design will pay you per unit."
+msgstr "Le prix que Loft Design vous versera par unité."
+
+#: dashboard/templates/products/edit.html:132
 msgid "Click to change image"
 msgstr "Cliquez pour changer l'image"
 
-#: dashboard/templates/products/edit.html:98
+#: dashboard/templates/products/edit.html:142
+#, fuzzy
+#| msgid "Click to change image"
+msgid "Click to replace"
+msgstr "Cliquez pour changer l'image"
+
+#: dashboard/templates/products/edit.html:178
 msgid "Save"
 msgstr "Enregistrer"
 
-#: dashboard/templates/products/list.html:6
+#: dashboard/templates/products/edit.html:182
+#: dashboard/templates/products/list.html:157
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Affiliate Pricing"
+msgstr "Affiliation"
+
+#: dashboard/templates/products/list.html:5
 msgid "Product Inventory"
 msgstr "Inventaire des produits"
 
-#: dashboard/templates/products/list.html:18
+#: dashboard/templates/products/list.html:16
 msgid "Commerce"
 msgstr "Commerce"
 
-#: dashboard/templates/products/list.html:56
+#: dashboard/templates/products/list.html:55
 msgid "Search by product title..."
 msgstr "Rechercher par titre de produit..."
 
-#: dashboard/templates/products/list.html:83
+#: dashboard/templates/products/list.html:110
 msgid "Leads"
 msgstr "Prospects"
 
-#: dashboard/templates/products/list.html:88
-msgid "Affiliate"
-msgstr "Affiliation"
+#: dashboard/templates/products/list.html:118
+msgid "3D"
+msgstr "3D"
 
-#: dashboard/templates/products/list.html:105
+#: dashboard/templates/products/list.html:121
+#: frontend/templates/products/product_detail.html:82
+msgid "In Stock"
+msgstr "En stock"
+
+#: dashboard/templates/products/list.html:123
+#: frontend/templates/products/product_detail.html:82
+msgid "Out of Stock"
+msgstr "En rupture de stock"
+
+#: dashboard/templates/products/list.html:140
+msgid "Set the pricing for this product"
+msgstr "Définir la tarification pour ce produit"
+
+#: dashboard/templates/products/list.html:153
 msgid "Remove Product?"
 msgstr "Supprimer le produit ?"
 
-#: dashboard/templates/products/list.html:112
+#: dashboard/templates/products/list.html:166
 msgid "No products found."
 msgstr "Aucun produit trouvé."
+
+#: dashboard/templates/products/list.html:181
+#, fuzzy
+#| msgid "Remove Product?"
+msgid "Approve Product"
+msgstr "Supprimer le produit ?"
+
+#: dashboard/templates/products/list.html:193
+msgid "Price affiliates will pay"
+msgstr "Prix payé par les affiliés"
+
+#: dashboard/templates/products/list.html:198
+msgid "Price end clients will pay"
+msgstr "Prix payé par les clients finaux"
+
+#: dashboard/templates/products/list.html:202
+#, fuzzy
+#| msgid "Approve User"
+msgid "Approve & Activate"
+msgstr "Approuver l'utilisateur"
+
+#: dashboard/templates/products/list.html:215
+#: dashboard/templates/products/list.html:228
+#, fuzzy
+#| msgid "Deleted Product"
+msgid "Reject Product"
+msgstr "Produit supprimé"
+
+#: dashboard/templates/products/list.html:224
+#, fuzzy
+#| msgid "Select an option"
+msgid "Reason (optional)"
+msgstr "Sélectionnez une option"
+
+#: dashboard/templates/products/list.html:225
+msgid "Explain why the product was rejected..."
+msgstr "Expliquez pourquoi le produit a été rejeté..."
+
+#: dashboard/templates/products/my_catalog.html:102
+msgid "Products you've added to your catalog with your resale prices."
+msgstr "Produits que vous avez ajoutés à votre catalogue avec vos prix de revente."
+
+#: dashboard/templates/products/my_catalog.html:130
+msgid "YOUR COST"
+msgstr "VOTRE COÛT"
+
+#: dashboard/templates/products/my_catalog.html:135
+msgid "WHOLESALE"
+msgstr "PRIX DE GROS"
+
+#: dashboard/templates/products/my_catalog.html:148
+#, fuzzy
+#| msgid "Manage Users"
+msgid "Manage"
+msgstr "Gérer les utilisateurs"
+
+#: dashboard/templates/products/my_catalog.html:168
+#, fuzzy
+#| msgid "Your portfolio is empty."
+msgid "Your catalog is empty"
+msgstr "Votre portfolio est vide."
+
+#: dashboard/templates/products/my_catalog.html:169
+msgid "Browse available products and add them to your catalog."
+msgstr "Parcourez les produits disponibles et ajoutez-les à votre catalogue."
+
+#: dashboard/templates/products/my_catalog.html:171
+#, fuzzy
+#| msgid "Products"
+msgid "Browse Products"
+msgstr "Produits"
+
+#: dashboard/templates/products/partner_price_list.html:5
+#: dashboard/templates/products/partner_price_list.html:17
+msgid "Partner Pricing"
+msgstr "Tarification partenaire"
+
+#: dashboard/templates/products/partner_price_list.html:20
+#: dashboard/templates/products/partner_price_list.html:36
+msgid "Wholesale"
+msgstr "Vente en gros"
+
+#: dashboard/templates/products/partner_price_list.html:21
+#: dashboard/templates/products/partner_price_list.html:37
+msgid "Retail"
+msgstr "Vente au détail"
+
+#: dashboard/templates/products/partner_price_list.html:28
+msgid "Custom Affiliate Prices"
+msgstr "Prix affiliés personnalisés"
+
+#: dashboard/templates/products/partner_price_list.html:35
+#, fuzzy
+#| msgid "Purchase Inquiry:"
+msgid "Purchase Price"
+msgstr "Demande d'achat :"
+
+#: dashboard/templates/products/partner_price_list.html:69
+#, fuzzy
+#| msgid "Remove Product?"
+msgid "Remove Price?"
+msgstr "Supprimer le produit ?"
+
+#: dashboard/templates/products/partner_price_list.html:70
+#, fuzzy
+#| msgid "Remove Masterpiece?"
+msgid "Remove custom price for"
+msgstr "Supprimer le chef-d'œuvre ?"
+
+#: dashboard/templates/products/partner_price_list.html:84
+#, fuzzy
+#| msgid "No contact requests yet."
+msgid "No custom prices set yet."
+msgstr "Aucune demande de contact pour le moment."
+
+#: dashboard/templates/products/partner_price_list.html:93
+msgid "Add Custom Price"
+msgstr "Ajouter un prix personnalisé"
+
+#: dashboard/templates/products/partner_price_list.html:98
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Select Affiliate"
+msgstr "Affiliation"
+
+#: dashboard/templates/products/partner_price_list.html:103
+msgid "What the affiliate pays Loft Design for this product."
+msgstr "Ce que l'affilié paie à Loft Design pour ce produit."
+
+#: dashboard/templates/products/partner_price_list.html:107
+msgid "Wholesale Resale (DZD)"
+msgstr "Revente en gros (DZD)"
+
+#: dashboard/templates/products/partner_price_list.html:108
+#: dashboard/templates/products/partner_price_list.html:113
+#, fuzzy
+#| msgid "Save Updates"
+msgid "Optional"
+msgstr "Enregistrer les modifications"
+
+#: dashboard/templates/products/partner_price_list.html:109
+msgid "Price for affiliate's own semi-affiliates."
+msgstr "Prix pour les semi-affiliés de l'affilié."
+
+#: dashboard/templates/products/partner_price_list.html:112
+#, fuzzy
+#| msgid "Price Range"
+msgid "Retail Resale (DZD)"
+msgstr "Prix"
+
+#: dashboard/templates/products/partner_price_list.html:118
+msgid "Set Custom Price"
+msgstr "Définir un prix personnalisé"
+
+#: dashboard/templates/products/partner_price_list.html:124
+msgid "Price Resolution Priority"
+msgstr "Priorité de résolution des prix"
+
+#: dashboard/templates/products/partner_price_list.html:126
+msgid "Custom partner price (if set for this affiliate)"
+msgstr "Prix partenaire personnalisé (si défini pour cet affilié)"
+
+#: dashboard/templates/products/partner_price_list.html:127
+msgid "Default wholesale price"
+msgstr "Prix de gros par défaut"
+
+#: dashboard/templates/products/partner_price_list.html:128
+msgid "Retail price for end clients"
+msgstr "Prix de détail pour les clients finaux"
 
 #: dashboard/templates/settings/update.html:5
 #, fuzzy
@@ -955,9 +1863,14 @@ msgstr "Paramètres de vente"
 
 #: dashboard/templates/settings/update.html:16
 msgid "Manage global options and dynamic homepage content."
-msgstr "Gérer les options globales et le contenu dynamique de la page d'accueil."#: dashboard/templates/settings/update.html:22
+msgstr ""
+"Gérer les options globales et le contenu dynamique de la page d'accueil."
+
+#: dashboard/templates/settings/update.html:22
 msgid "Home Slider"
-msgstr "Slider de la page d'accueil"#: dashboard/templates/settings/update.html:25
+msgstr "Slider de la page d'accueil"
+
+#: dashboard/templates/settings/update.html:25
 #, fuzzy
 #| msgid "Sales Settings"
 msgid "General Settings"
@@ -965,9 +1878,13 @@ msgstr "Paramètres de vente"
 
 #: dashboard/templates/settings/update.html:40
 msgid "Homepage Slide Showcase"
-msgstr "Diaporama de la page d'accueil"#: dashboard/templates/settings/update.html:60
+msgstr "Diaporama de la page d'accueil"
+
+#: dashboard/templates/settings/update.html:60
 msgid "Upload Slide"
-msgstr "Charger une diapositive"#: dashboard/templates/settings/update.html:72
+msgstr "Charger une diapositive"
+
+#: dashboard/templates/settings/update.html:72
 #, fuzzy
 #| msgid "Save Updates"
 msgid "Save Options"
@@ -987,151 +1904,377 @@ msgstr "Détails du produit"
 
 #: dashboard/templates/settings/update.html:87
 msgid "Brand options are automatically synced from global configurations."
-msgstr "Les options de marque sont automatiquement synchronisées à partir des configurations globales."#: dashboard/templates/users/details.html:6
+msgstr ""
+"Les options de marque sont automatiquement synchronisées à partir des "
+"configurations globales."
+
+#: dashboard/templates/users/affiliate_list.html:187
+#: dashboard/templates/users/affiliate_list.html:220
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Filter Affiliates"
+msgstr "Affiliation"
+
+#: dashboard/templates/users/affiliate_list.html:195
+#: dashboard/templates/users/list.html:30
+msgid "Clear All"
+msgstr "Tout effacer"
+
+#: dashboard/templates/users/affiliate_list.html:196
+#: dashboard/templates/users/list.html:31
+msgid "Clear"
+msgstr "Effacer"
+
+#: dashboard/templates/users/affiliate_list.html:205
+#: dashboard/templates/users/list.html:48
+msgid "Quick search..."
+msgstr "Recherche rapide..."
+
+#: dashboard/templates/users/affiliate_list.html:228
+#: dashboard/templates/users/list.html:73
+msgid "Search Keyword"
+msgstr "Mot-clé de recherche"
+
+#: dashboard/templates/users/affiliate_list.html:232
+#, fuzzy
+#| msgid "Name, Username, Email..."
+msgid "Name, Email..."
+msgstr "Nom, Nom d'utilisateur, E-mail..."
+
+#: dashboard/templates/users/affiliate_list.html:243
+#: dashboard/templates/users/list.html:89
+msgid "Reset All"
+msgstr "Tout réinitialiser"
+
+#: dashboard/templates/users/affiliate_list.html:246
+#: dashboard/templates/users/list.html:92
+#: dashboard/templates/users/semi_affiliate_list.html:275
+#: frontend/templates/products/products_list.html:119
+msgid "Apply Filters"
+msgstr "Appliquer les filtres"
+
+#: dashboard/templates/users/affiliate_list.html:262
+#: dashboard/templates/users/details.html:152
+#: dashboard/templates/users/list.html:115
+msgid "Blocked"
+msgstr "Bloqué"
+
+#: dashboard/templates/users/affiliate_list.html:312
+#: dashboard/templates/users/details.html:61
+#, fuzzy
+#| msgid "Approved"
+msgid "Approve"
+msgstr "Approuvé"
+
+#: dashboard/templates/users/affiliate_list.html:331
+#, fuzzy
+#| msgid "No categories found."
+msgid "No affiliates found"
+msgstr "Aucune commande trouvée."
+
+#: dashboard/templates/users/affiliate_list.html:332
+#: dashboard/templates/users/list.html:193
+msgid "Try adjusting your filters"
+msgstr "Essayez d'ajuster vos filtres"
+
+#: dashboard/templates/users/details.html:6
 msgid "User Details"
 msgstr "Détails de l'utilisateur"
 
-#: dashboard/templates/users/details.html:23
+#: dashboard/templates/users/details.html:46
 #: dashboard/templates/users/list.html:128
 msgid "Trusted"
-msgstr "De confiance"#: dashboard/templates/users/details.html:29
+msgstr "De confiance"
+
+#: dashboard/templates/users/details.html:53
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Approve Affiliate?"
+msgstr "Affiliation"
+
+#: dashboard/templates/users/details.html:54
+msgid "This will activate their account and send them a welcome email."
+msgstr "Ceci activera leur compte et leur enverra un e-mail de bienvenue."
+
+#: dashboard/templates/users/details.html:55
+#, fuzzy
+#| msgid "Yes, approve!"
+msgid "Yes, Approve"
+msgstr "Oui, approuver !"
+
+#: dashboard/templates/users/details.html:59
+#: dashboard/templates/users/details.html:72
+msgid "An error occurred."
+msgstr "Une erreur est survenue."
+
+#: dashboard/templates/users/details.html:66
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Disapprove Affiliate?"
+msgstr "Affiliation"
+
+#: dashboard/templates/users/details.html:67
+msgid "This will deactivate their account access."
+msgstr "Ceci désactivera l'accès à leur compte."
+
+#: dashboard/templates/users/details.html:68
+#, fuzzy
+#| msgid "Yes, approve!"
+msgid "Yes, Disapprove"
+msgstr "Oui, approuver !"
+
+#: dashboard/templates/users/details.html:74
+#, fuzzy
+#| msgid "Yes, approve!"
+msgid "Disapprove"
+msgstr "Oui, approuver !"
+
+#: dashboard/templates/users/details.html:79
 msgid "Approve User?"
 msgstr "Approuver l'utilisateur ?"
 
-#: dashboard/templates/users/details.html:30
+#: dashboard/templates/users/details.html:80
 #, python-format
 msgid "Are you sure you want to approve %(name)s?"
 msgstr "Êtes-vous sûr de vouloir approuver %(name)s ?"
 
-#: dashboard/templates/users/details.html:31
+#: dashboard/templates/users/details.html:81
 msgid "Yes, approve!"
 msgstr "Oui, approuver !"
 
-#: dashboard/templates/users/details.html:33
-#: dashboard/templates/users/details.html:52
+#: dashboard/templates/users/details.html:83
+#: dashboard/templates/users/details.html:101
 msgid "Success!"
 msgstr "Succès !"
 
-#: dashboard/templates/users/details.html:35
+#: dashboard/templates/users/details.html:85
 msgid "Approve User"
 msgstr "Approuver l'utilisateur"
 
-#: dashboard/templates/users/details.html:48
+#: dashboard/templates/users/details.html:97
 msgid "Unblock User?"
-msgstr "Débloquer l'utilisateur ?"#: dashboard/templates/users/details.html:48
+msgstr "Débloquer l'utilisateur ?"
+
+#: dashboard/templates/users/details.html:97
 msgid "Block User?"
-msgstr "Bloquer l'utilisateur ?"#: dashboard/templates/users/details.html:49
+msgstr "Bloquer l'utilisateur ?"
+
+#: dashboard/templates/users/details.html:98
 #, fuzzy, python-format
 #| msgid "Are you sure you want to approve %(name)s?"
 msgid ""
 "Are you sure you want to unblock %(name)s? They will be able to log in again."
 msgstr "Êtes-vous sûr de vouloir approuver %(name)s ?"
 
-#: dashboard/templates/users/details.html:49
+#: dashboard/templates/users/details.html:98
 #, python-format
 msgid ""
 "Are you sure you want to block %(name)s? They will not be able to log in "
 "until unblocked."
-msgstr "Êtes-vous sûr de vouloir bloquer %(name)s ? Il ne pourra plus se connecter tant qu'il ne sera pas débloqué."#: dashboard/templates/users/details.html:50
+msgstr ""
+"Êtes-vous sûr de vouloir bloquer %(name)s ? Il ne pourra plus se connecter "
+"tant qu'il ne sera pas débloqué."
+
+#: dashboard/templates/users/details.html:99
 msgid "Yes, unblock!"
-msgstr "Oui, débloquer !"#: dashboard/templates/users/details.html:50
+msgstr "Oui, débloquer !"
+
+#: dashboard/templates/users/details.html:99
 msgid "Yes, block!"
-msgstr "Oui, bloquer !"#: dashboard/templates/users/details.html:55
+msgstr "Oui, bloquer !"
+
+#: dashboard/templates/users/details.html:104
 msgid "Unblock"
-msgstr "Débloquer"#: dashboard/templates/users/details.html:55
+msgstr "Débloquer"
+
+#: dashboard/templates/users/details.html:104
 msgid "Block"
-msgstr "Bloquer"#: dashboard/templates/users/details.html:65
+msgstr "Bloquer"
+
+#: dashboard/templates/users/details.html:114
 msgid "Are you sure?"
 msgstr "Êtes-vous sûr ?"
 
-#: dashboard/templates/users/details.html:66
+#: dashboard/templates/users/details.html:115
 #, python-format
 msgid "You are about to delete %(name)s. This action cannot be undone!"
 msgstr ""
 "Vous êtes sur le point de supprimer %(name)s. Cette action est irréversible !"
 
-#: dashboard/templates/users/details.html:67
+#: dashboard/templates/users/details.html:116
 msgid "Yes, delete it!"
 msgstr "Oui, supprimer !"
 
-#: dashboard/templates/users/details.html:69
+#: dashboard/templates/users/details.html:118
 msgid "Deleted!"
 msgstr "Supprimé !"
 
-#: dashboard/templates/users/details.html:71
+#: dashboard/templates/users/details.html:120
 msgid "Delete User"
 msgstr "Supprimer l'utilisateur"
 
-#: dashboard/templates/users/details.html:96
+#: dashboard/templates/users/details.html:150
 #: dashboard/templates/users/list.html:83
 msgid "Account Status"
 msgstr "Statut du compte"
 
-#: dashboard/templates/users/details.html:98
-#: dashboard/templates/users/list.html:115
-msgid "Blocked"
-msgstr "Bloqué"#: dashboard/templates/users/details.html:100 dashboard/views/users.py:151
-msgid "Approved"
-msgstr "Approuvé"
-
-#: dashboard/templates/users/details.html:102
+#: dashboard/templates/users/details.html:156
 msgid "Pending Approval"
 msgstr "En attente d'approbation"
 
-#: dashboard/templates/users/details.html:106
-#: dashboard/templates/users/profile_edit.html:52
-#: dashboard/templates/users/profile_edit.html:139
+#: dashboard/templates/users/details.html:160 user_auth/models.py:17
+msgid "Role"
+msgstr "Rôle"
+
+#: dashboard/templates/users/details.html:164
+#: dashboard/templates/users/profile_edit.html:50
+#: dashboard/templates/users/profile_edit.html:137
 msgid "Member Since"
 msgstr "Membre depuis"
 
-#: dashboard/templates/users/details.html:110
+#: dashboard/templates/users/details.html:168
 msgid "User ID"
 msgstr "ID utilisateur"
 
-#: dashboard/templates/users/details.html:123
+#: dashboard/templates/users/details.html:184
 msgid "Commission Rate"
-msgstr "Taux de commission"#: dashboard/templates/users/details.html:129
+msgstr "Taux de commission"
+
+#: dashboard/templates/users/details.html:190
 #, fuzzy
 #| msgid "Confirm Password"
 msgid "Confirmed Sales"
 msgstr "Confirmer le mot de passe"
 
-#: dashboard/templates/users/details.html:136
+#: dashboard/templates/users/details.html:197
 #, fuzzy
 #| msgid "Total Projects"
 msgid "Total Debt"
 msgstr "Projets"
 
-#: dashboard/templates/users/details.html:138
+#: dashboard/templates/users/details.html:199
 msgid "Platform Share"
-msgstr "Part de la plateforme"#: dashboard/templates/users/details.html:147
-msgid "Detailed Information"
-msgstr "Informations détaillées"
+msgstr "Part de la plateforme"
 
-#: dashboard/templates/users/details.html:153
-#: dashboard/templates/users/list.html:152
-#: dashboard/templates/users/profile_edit.html:130
-#: user_auth/templates/auth/signup.html:81
-msgid "Email"
-msgstr "E-mail"
+#: dashboard/templates/users/details.html:217
+#, fuzzy
+#| msgid "Recent Leads"
+msgid "Referred Orders"
+msgstr "Inscriptions récentes"
 
-#: dashboard/templates/users/details.html:161 user_auth/models.py:26
-#: user_auth/templates/auth/signup.html:105
-msgid "Birth Date"
-msgstr "Date de naissance"
+#: dashboard/templates/users/details.html:280
+#, fuzzy
+#| msgid "Total Leads"
+msgid "Total Earned"
+msgstr "Total des utilisateurs"
 
-#: dashboard/templates/users/details.html:165
-msgid "Gender"
-msgstr "Genre"
+#: dashboard/templates/users/details.html:286
+msgid "Unpaid Balance"
+msgstr "Solde impayé"
 
-#: dashboard/templates/users/details.html:176
-#: dashboard/templates/users/profile_edit.html:118 user_auth/models.py:25
-msgid "Bio"
-msgstr "Bio"
+#: dashboard/templates/users/details.html:288
+#, fuzzy
+#| msgid "Commission Rate"
+msgid "All commissions settled"
+msgstr "Taux de commission"
 
-#: dashboard/templates/users/details.html:177
-msgid "No bio provided."
-msgstr "Aucune bio fournie."
+#: dashboard/templates/users/details.html:297
+#, fuzzy
+#| msgid "Recent Leads"
+msgid "All Referred Orders"
+msgstr "Inscriptions récentes"
+
+#: dashboard/templates/users/details.html:307
+msgid "Customer"
+msgstr "Client"
+
+#: dashboard/templates/users/details.html:309
+msgid "Amount"
+msgstr "Montant"
+
+#: dashboard/templates/users/details.html:310
+msgid "Earned"
+msgstr "Gagné"
+
+#: dashboard/templates/users/details.html:311
+#: dashboard/templates/users/profile_edit.html:55
+#: dashboard/templatetags/tags.py:59
+msgid "Commission"
+msgstr "Commission"
+
+#: dashboard/templates/users/details.html:312
+msgid "Date"
+msgstr "Date"
+
+#: dashboard/templates/users/details.html:348
+#, fuzzy
+#| msgid "Mark all as read"
+msgid "Mark as unpaid?"
+msgstr "Tout marquer comme lu"
+
+#: dashboard/templates/users/details.html:348
+#, fuzzy
+#| msgid "Email is required."
+msgid "Mark commission as paid?"
+msgstr "L'adresse e-mail est requise."
+
+#: dashboard/templates/users/details.html:349
+msgid "This will add the amount back to the unpaid balance."
+msgstr "Ceci réintégrera le montant au solde impayé."
+
+#: dashboard/templates/users/details.html:349
+msgid "This will deduct this order from the unpaid balance."
+msgstr "Ceci déduira cette commande du solde impayé."
+
+#: dashboard/templates/users/details.html:350
+msgid "Yes"
+msgstr "Oui"
+
+#: dashboard/templates/users/details.html:354
+msgid "Mark Paid"
+msgstr "Marquer comme payé"
+
+#: dashboard/templates/users/details.html:373
+#, fuzzy
+#| msgid "Recent Leads"
+msgid "No Referred Orders"
+msgstr "Inscriptions récentes"
+
+#: dashboard/templates/users/details.html:374
+msgid "This affiliate hasn't referred any orders yet."
+msgstr "Cet affilié n'a pas encore généré de commandes."
+
+#: dashboard/templates/users/details.html:394
+#, fuzzy
+#| msgid "Sales Settings"
+msgid "Store Settings"
+msgstr "Paramètres de vente"
+
+#: dashboard/templates/users/details.html:403
+msgid "My Store"
+msgstr "Ma boutique"
+
+#: dashboard/templates/users/details.html:407
+msgid "Describe your store..."
+msgstr "Décrivez votre boutique..."
+
+#: dashboard/templates/users/details.html:417 user_auth/models.py:44
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Affiliate Code"
+msgstr "Affiliation"
+
+#: dashboard/templates/users/details.html:427
+#, fuzzy
+#| msgid "Remove Product?"
+msgid "Remove logo"
+msgstr "Supprimer le produit ?"
+
+#: dashboard/templates/users/details.html:440
+#, fuzzy
+#| msgid "Remove Order?"
+msgid "Remove banner"
+msgstr "Supprimer la commande ?"
 
 #: dashboard/templates/users/list.html:7
 msgid "Users List"
@@ -1141,149 +2284,270 @@ msgstr "Liste des utilisateurs"
 msgid "Filter Users"
 msgstr "Filtrer les utilisateurs"
 
-#: dashboard/templates/users/list.html:30
-msgid "Clear All"
-msgstr "Tout effacer"
-
-#: dashboard/templates/users/list.html:31
-msgid "Clear"
-msgstr "Effacer"
-
 #: dashboard/templates/users/list.html:40
 #, fuzzy
 #| msgid "New Product"
 msgid "New Provider"
 msgstr "Nouveau produit"
 
-#: dashboard/templates/users/list.html:48
-msgid "Quick search..."
-msgstr "Recherche rapide..."
-
 #: dashboard/templates/users/list.html:64
 msgid "Advanced Filter"
 msgstr "Filtre avancé"
-
-#: dashboard/templates/users/list.html:73
-msgid "Search Keyword"
-msgstr "Mot-clé de recherche"
 
 #: dashboard/templates/users/list.html:77
 msgid "Name, Username, Email..."
 msgstr "Nom, Nom d'utilisateur, E-mail..."
 
-#: dashboard/templates/users/list.html:89
-msgid "Reset All"
-msgstr "Tout réinitialiser"
+#: dashboard/templates/users/list.html:158
+#: dashboard/templates/users/partials/_details_info.html:11
+#: dashboard/templates/users/profile_edit.html:128
+#: dashboard/templates/users/semi_affiliate_list.html:306
+#: user_auth/templates/auth/signup.html:102
+msgid "Email"
+msgstr "E-mail"
 
-#: dashboard/templates/users/list.html:92
-#: frontend/templates/products/products_list.html:118
-msgid "Apply Filters"
-msgstr "Appliquer les filtres"
-
-#: dashboard/templates/users/list.html:119
-#: dashboard/templates/users/profile_edit.html:63
-#: dashboard/views/dashboard.py:99
-msgid "Active"
-msgstr "Actif"
-
-#: dashboard/templates/users/list.html:170
+#: dashboard/templates/users/list.html:176
 msgid "View Full Profile"
 msgstr "Voir le profil complet"
 
-#: dashboard/templates/users/list.html:175
+#: dashboard/templates/users/list.html:181
 msgid "Registered"
 msgstr "Inscrit"
 
-#: dashboard/templates/users/list.html:186
-msgid "No users found"
-msgstr "Aucun utilisateur trouvé"
+#: dashboard/templates/users/list.html:192
+#, fuzzy
+#| msgid "No orders found."
+msgid "No providers found"
+msgstr "Aucune commande trouvée."
 
-#: dashboard/templates/users/list.html:187
-msgid "Try adjusting your filters"
-msgstr "Essayez d'ajuster vos filtres"
-
-#: dashboard/templates/users/list.html:206
+#: dashboard/templates/users/list.html:212
 msgid "Add New Provider"
-msgstr "Ajouter un nouveau fournisseur"#: dashboard/templates/users/list.html:217
-#: dashboard/templates/users/profile_edit.html:90
-#: user_auth/templates/auth/signup.html:55
+msgstr "Ajouter un nouveau fournisseur"
+
+#: dashboard/templates/users/list.html:223
+#: dashboard/templates/users/profile_edit.html:88
+#: dashboard/templates/users/semi_affiliate_list.html:298
+#: user_auth/templates/auth/signup.html:88
 msgid "First Name"
 msgstr "Prénom"
 
-#: dashboard/templates/users/list.html:221
-#: dashboard/templates/users/profile_edit.html:97
-#: user_auth/templates/auth/signup.html:68
+#: dashboard/templates/users/list.html:227
+#: dashboard/templates/users/profile_edit.html:95
+#: dashboard/templates/users/semi_affiliate_list.html:302
+#: user_auth/templates/auth/signup.html:95
 msgid "Last Name"
 msgstr "Nom"
 
-#: dashboard/templates/users/list.html:225
+#: dashboard/templates/users/list.html:231
 #: user_auth/templates/auth/password_reset.html:51
 #, fuzzy
 #| msgid "Address"
 msgid "Email Address"
 msgstr "Adresse"
 
-#: dashboard/templates/users/list.html:233
+#: dashboard/templates/users/list.html:239
 #, python-format
 msgid "Commission (%%)"
-msgstr "Commission (%%)"#: dashboard/templates/users/list.html:237
+msgstr "Commission (%%)"
+
+#: dashboard/templates/users/list.html:243
 #, fuzzy
 #| msgid "Address"
 msgid "Office Address"
 msgstr "Adresse"
 
-#: dashboard/templates/users/list.html:244
+#: dashboard/templates/users/list.html:250
 msgid "Mark as Trusted Provider"
-msgstr "Marquer comme fournisseur de confiance"#: dashboard/templates/users/list.html:252
+msgstr "Marquer comme fournisseur de confiance"
+
+#: dashboard/templates/users/list.html:258
 msgid ""
 "The provider will receive an email with their generated login credentials "
 "automatically."
-msgstr "Le fournisseur recevra automatiquement un e-mail contenant ses identifiants de connexion générés."#: dashboard/templates/users/list.html:257
-msgid "Create Provider & Send Credentials"
-msgstr "Créer le fournisseur et envoyer les identifiants"#: dashboard/templates/users/profile_edit.html:28
-#, fuzzy
-#| msgid "My Profile"
-msgid "Profile"
-msgstr "Mon profil"
+msgstr ""
+"Le fournisseur recevra automatiquement un e-mail contenant ses identifiants "
+"de connexion générés."
 
-#: dashboard/templates/users/profile_edit.html:36
+#: dashboard/templates/users/list.html:263
+msgid "Create Provider & Send Credentials"
+msgstr "Créer le fournisseur et envoyer les identifiants"
+
+#: dashboard/templates/users/partials/_details_info.html:5
+msgid "Detailed Information"
+msgstr "Informations détaillées"
+
+#: dashboard/templates/users/partials/_details_info.html:19
+#: user_auth/models.py:30
+msgid "Birth Date"
+msgstr "Date de naissance"
+
+#: dashboard/templates/users/partials/_details_info.html:23
+msgid "Gender"
+msgstr "Genre"
+
+#: dashboard/templates/users/partials/_details_info.html:34
+#: dashboard/templates/users/profile_edit.html:116 user_auth/models.py:29
+msgid "Bio"
+msgstr "Bio"
+
+#: dashboard/templates/users/partials/_details_info.html:35
+msgid "No bio provided."
+msgstr "Aucune bio fournie."
+
+#: dashboard/templates/users/profile_edit.html:34
 msgid "Change photo"
-msgstr "Changer la photo"#: dashboard/templates/users/profile_edit.html:57
-#: dashboard/templatetags/tags.py:51
-msgid "Commission"
-msgstr "Commission"#: dashboard/templates/users/profile_edit.html:81
+msgstr "Changer la photo"
+
+#: dashboard/templates/users/profile_edit.html:79
 #, fuzzy
 #| msgid "General Information"
 msgid "Account Information"
 msgstr "Informations générales"
 
-#: dashboard/templates/users/profile_edit.html:82
+#: dashboard/templates/users/profile_edit.html:80
 msgid "Update your personal details below"
-msgstr "Mettez à jour vos informations personnelles ci-dessous"#: dashboard/templates/users/profile_edit.html:93
+msgstr "Mettez à jour vos informations personnelles ci-dessous"
+
+#: dashboard/templates/users/profile_edit.html:91
 msgid "John"
-msgstr "John"#: dashboard/templates/users/profile_edit.html:100
+msgstr "John"
+
+#: dashboard/templates/users/profile_edit.html:98
 msgid "Doe"
-msgstr "Doe"#: dashboard/templates/users/profile_edit.html:114
+msgstr "Doe"
+
+#: dashboard/templates/users/profile_edit.html:112
 msgid "Street, City"
-msgstr "Rue, Ville"#: dashboard/templates/users/profile_edit.html:121
+msgstr "Rue, Ville"
+
+#: dashboard/templates/users/profile_edit.html:119
 #, fuzzy
 #| msgid "Tell us about your dream space..."
 msgid "Tell us about yourself..."
 msgstr "Parlez-nous de l'espace de vos rêves..."
 
-#: dashboard/templatetags/tags.py:43
+#: dashboard/templates/users/semi_affiliate_list.html:137
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Affiliate Network"
+msgstr "Affiliation"
+
+#: dashboard/templates/users/semi_affiliate_list.html:139
+msgid "Manage your sub-affiliates and their pricing."
+msgstr "Gérez vos sous-affiliés et leurs tarifs."
+
+#: dashboard/templates/users/semi_affiliate_list.html:144
+#, fuzzy
+#| msgid "Filter Users"
+msgid "Filter"
+msgstr "Filtrer les utilisateurs"
+
+#: dashboard/templates/users/semi_affiliate_list.html:148
+#: dashboard/templates/users/semi_affiliate_list.html:240
+#: dashboard/templates/users/semi_affiliate_list.html:288
+#: dashboard/templates/users/semi_affiliate_list.html:320
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Create Semi-Affiliate"
+msgstr "Affiliation"
+
+#: dashboard/templates/users/semi_affiliate_list.html:156
+#, fuzzy
+#| msgid "Clear Filters"
+msgid "Clear All Filters"
+msgstr "Appliquer les filtres"
+
+#: dashboard/templates/users/semi_affiliate_list.html:158
+#, fuzzy
+#| msgid "Affiliate"
+msgid "semi-affiliates"
+msgstr "Affiliation"
+
+#: dashboard/templates/users/semi_affiliate_list.html:206
+msgid "Added by"
+msgstr "Ajouté par"
+
+#: dashboard/templates/users/semi_affiliate_list.html:219
+msgid "Delete Semi-Affiliate?"
+msgstr "Supprimer le semi-affilié ?"
+
+#: dashboard/templates/users/semi_affiliate_list.html:220
+msgid "Permanently delete"
+msgstr "Supprimer définitivement"
+
+#: dashboard/templates/users/semi_affiliate_list.html:220
+#, fuzzy
+#| msgid "This action cannot be undone."
+msgid "? This cannot be undone."
+msgstr "Cette action ne peut pas être annulée."
+
+#: dashboard/templates/users/semi_affiliate_list.html:221
+#, fuzzy
+#| msgid "Yes, delete it"
+msgid "Yes, delete"
+msgstr "Oui, supprimer"
+
+#: dashboard/templates/users/semi_affiliate_list.html:237
+msgid "No semi-affiliates yet"
+msgstr "Aucun semi-affilié pour le moment"
+
+#: dashboard/templates/users/semi_affiliate_list.html:238
+msgid "Create your first semi-affiliate to start building your network."
+msgstr "Créez votre premier semi-affilié pour commencer à bâtir votre réseau."
+
+#: dashboard/templates/users/semi_affiliate_list.html:253
+msgid "Filter Semi-Affiliates"
+msgstr "Filtrer les semi-affiliés"
+
+#: dashboard/templates/users/semi_affiliate_list.html:259
+msgid "Search"
+msgstr "Mot-clé de recherche"
+
+#: dashboard/templates/users/semi_affiliate_list.html:262
+msgid "Name, email, or affiliate code..."
+msgstr "Nom, e-mail ou code d'affilié..."
+
+#: dashboard/templates/users/semi_affiliate_list.html:267
+#, fuzzy
+#| msgid "Created At"
+msgid "Created By"
+msgstr "Créé le"
+
+#: dashboard/templates/users/semi_affiliate_list.html:268
+#, fuzzy
+#| msgid "Affiliate"
+msgid "All Affiliates"
+msgstr "Affiliation"
+
+#: dashboard/templates/users/semi_affiliate_list.html:310
+msgid "Phone (optional)"
+msgstr "Téléphone (optionnel)"
+
+#: dashboard/templates/users/semi_affiliate_list.html:315
+msgid ""
+"An invitation email will be sent to this address with instructions to set "
+"their password."
+msgstr "Un e-mail d'invitation sera envoyé à cette adresse avec les instructions pour définir leur mot de passe."
+
+#: dashboard/templatetags/tags.py:44
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Affiliates Pending"
+msgstr "Affiliation"
+
+#: dashboard/templatetags/tags.py:45
 #, fuzzy
 #| msgid "Pending Leads"
 msgid "Pending Orders"
 msgstr "En attente"
 
-#: dashboard/templatetags/tags.py:48 dashboard/views/dashboard.py:92
+#: dashboard/templatetags/tags.py:56 dashboard/views/dashboard.py:103
 #, fuzzy
 #| msgid "Products"
 msgid "My Products"
 msgstr "Produits"
 
-#: dashboard/templatetags/tags.py:50
+#: dashboard/templatetags/tags.py:58
 #, fuzzy
 #| msgid "Orders"
 msgid "My Orders"
@@ -1294,73 +2558,165 @@ msgstr "Commandes"
 msgid "Your %(site)s Account has been Activated!"
 msgstr "Votre compte %(site)s a été activé !"
 
-#: dashboard/views/dashboard.py:32
+#: dashboard/views/dashboard.py:40
 #, fuzzy
 #| msgid "Total Projects"
 msgid "Total Providers"
 msgstr "Projets"
 
-#: dashboard/views/dashboard.py:39
-msgid "Total Projects"
-msgstr "Projets"
-
-#: dashboard/views/dashboard.py:46 dashboard/views/dashboard.py:62
-msgid "Total Leads"
-msgstr "Total des utilisateurs"
-
-#: dashboard/views/dashboard.py:55
-msgid "Pending Leads"
+#: dashboard/views/dashboard.py:47
+#, fuzzy
+#| msgid "Pending Leads"
+msgid "Pending Products"
 msgstr "En attente"
 
-#: dashboard/views/dashboard.py:60
-msgid "Portfolio Distribution"
-msgstr "Portfolios"
-
-#: dashboard/views/dashboard.py:62 frontend/templates/home.html:434
-#: frontend/templates/portfolio/portfolio_list.html:26
-msgid "Projects"
-msgstr "Projets"
-
-#: dashboard/views/dashboard.py:67
-msgid "Recent Leads"
-msgstr "Inscriptions récentes"
-
-#: dashboard/views/dashboard.py:106
+#: dashboard/views/dashboard.py:57 dashboard/views/dashboard.py:117
 #, fuzzy
 #| msgid "Total Leads"
 msgid "Total Orders"
 msgstr "Total des utilisateurs"
 
-#: dashboard/views/dashboard.py:120
+#: dashboard/views/dashboard.py:66
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Pending Affiliates"
+msgstr "Affiliation"
+
+#: dashboard/views/dashboard.py:71
+msgid "Portfolio Distribution"
+msgstr "Portfolios"
+
+#: dashboard/views/dashboard.py:73 frontend/templates/home.html:462
+#: frontend/templates/portfolio/portfolio_list.html:26
+msgid "Projects"
+msgstr "Projets"
+
+#: dashboard/views/dashboard.py:78
+#, fuzzy
+#| msgid "Recent Leads"
+msgid "Recent Orders"
+msgstr "Inscriptions récentes"
+
+#: dashboard/views/dashboard.py:126
+#: frontend/templates/portfolio/portfolio_detail.html:100
+msgid "Completed"
+msgstr "Terminé"
+
+#: dashboard/views/dashboard.py:131
 #, fuzzy
 #| msgid "Orders"
 msgid "Weekly Orders"
 msgstr "Commandes"
 
-#: dashboard/views/dashboard.py:122
+#: dashboard/views/dashboard.py:133
 #, fuzzy
 #| msgid "Recent Leads"
 msgid "My Recent Orders"
 msgstr "Inscriptions récentes"
 
-#: dashboard/views/orders.py:58
+#: dashboard/views/orders.py:75
 msgid "You can only update orders for your own products."
-msgstr "Vous ne pouvez modifier que les commandes de vos propres produits."#: dashboard/views/orders.py:71
+msgstr "Vous ne pouvez modifier que les commandes de vos propres produits."
+
+#: dashboard/views/orders.py:87
 #, fuzzy, python-format
 #| msgid "Order status updated"
 msgid "Order #%(id)s Status Updated"
 msgstr "Statut de la commande mis à jour"
 
-#: dashboard/views/orders.py:73
+#: dashboard/views/orders.py:89
 #, python-format
 msgid "%(provider)s changed order #%(id)s from «%(old)s» to «%(new)s»"
-msgstr "%(provider)s a modifié la commande #%(id)s de «%(old)s» à «%(new)s»"#: dashboard/views/orders.py:84
+msgstr "%(provider)s a modifié la commande #%(id)s de «%(old)s» à «%(new)s»"
+
+#: dashboard/views/orders.py:100
 msgid "Order status updated"
 msgstr "Statut de la commande mis à jour"
 
-#: dashboard/views/orders.py:94
+#: dashboard/views/orders.py:146
+#, fuzzy, python-format
+#| msgid "Order status updated"
+msgid "Order #%(id)s Details"
+msgstr "Statut de la commande mis à jour"
+
+#: dashboard/views/orders.py:156
 msgid "Order removed"
 msgstr "Commande supprimée"
+
+#: dashboard/views/orders.py:170
+#, fuzzy
+#| msgid "Commission Rate"
+msgid "Commission marked as paid"
+msgstr "Taux de commission"
+
+#: dashboard/views/orders.py:170
+#, fuzzy
+#| msgid "Email is required."
+msgid "Commission marked as unpaid"
+msgstr "L'adresse e-mail est requise."
+
+#: dashboard/views/partner_prices.py:122
+msgid "Price not configured for this product."
+msgstr "Prix non configuré pour ce produit."
+
+#: dashboard/views/partner_prices.py:138
+#, fuzzy
+#| msgid "Product Name"
+msgid "Product Added!"
+msgstr "Nom du produit"
+
+#: dashboard/views/partner_prices.py:139
+#, python-format
+msgid ""
+"\"%(product)s\" has been added to your catalog with purchase price "
+"DZD%(price)s."
+msgstr "\"%(product)s\" a été ajouté à votre catalogue avec un prix d'achat de DZD%(price)s."
+
+#: dashboard/views/partner_prices.py:148
+msgid "New Catalog Addition"
+msgstr "Nouvel ajout au catalogue"
+
+#: dashboard/views/partner_prices.py:149
+#, python-format
+msgid "%(affiliate)s added \"%(product)s\" to their catalog."
+msgstr "%(affiliate)s a ajouté \"%(product)s\" à son catalogue."
+
+#: dashboard/views/partner_prices.py:160
+#, fuzzy
+#| msgid "Product added successfully"
+msgid "Product added to your catalog."
+msgstr "Produit ajouté avec succès"
+
+#: dashboard/views/partner_prices.py:177
+msgid "Product not in your catalog."
+msgstr "Produit absent de votre catalogue."
+
+#: dashboard/views/partner_prices.py:204
+msgid "Affiliate Prices Updated"
+msgstr "Prix des affiliés mis à jour"
+
+#: dashboard/views/partner_prices.py:205
+#, python-format
+msgid "%(affiliate)s updated %(field)s prices for \"%(product)s\"."
+msgstr "%(affiliate)s a mis à jour les prix %(field)s pour \"%(product)s\"."
+
+#: dashboard/views/partner_prices.py:217
+#, fuzzy
+#| msgid "Project updated successfully"
+msgid "Prices updated successfully."
+msgstr "Projet mis à jour avec succès"
+
+#: dashboard/views/partner_prices.py:238
+#, fuzzy
+#| msgid "Product removed"
+msgid "Product removed from your catalog."
+msgstr "Produit supprimé"
+
+#: dashboard/views/partner_prices.py:273
+#, fuzzy
+#| msgid "Sales Settings"
+msgid "Store settings saved."
+msgstr "Paramètres de vente"
 
 #: dashboard/views/portfolio.py:28
 msgid "Portfolio Management"
@@ -1386,7 +2742,7 @@ msgstr "Projet supprimé avec succès"
 msgid "Invalid request"
 msgstr "Requête invalide"
 
-#: dashboard/views/products.py:30 dashboard/views/products.py:63
+#: dashboard/views/products.py:31 dashboard/views/products.py:63
 msgid "Category name is required"
 msgstr "Le nom est requis."
 
@@ -1398,37 +2754,151 @@ msgstr "Projet créé avec succès"
 msgid "Category deleted successfully"
 msgstr "Projet créé avec succès"
 
-#: dashboard/views/products.py:69
+#: dashboard/views/products.py:68
 msgid "Category created successfully"
 msgstr "Projet créé avec succès"
 
-#: dashboard/views/products.py:99
+#: dashboard/views/products.py:109
 msgid "Product Management"
 msgstr "Gestion des produits"
 
-#: dashboard/views/products.py:119
+#: dashboard/views/products.py:123
+msgid "Only trusted providers can create products."
+msgstr "Seuls les fournisseurs de confiance peuvent créer des produits."
+
+#: dashboard/views/products.py:137
 msgid "Title is required"
 msgstr "Le titre est obligatoire"
 
-#: dashboard/views/products.py:120
-msgid "Price is required"
-msgstr "Le prix est obligatoire"
-
-#: dashboard/views/products.py:121
+#: dashboard/views/products.py:139
 msgid "Thumbnail is required"
 msgstr "La vignette est obligatoire"
 
-#: dashboard/views/products.py:146
+#: dashboard/views/products.py:143 dashboard/views/products.py:453
+#, fuzzy
+#| msgid "Price is required"
+msgid "Purchase price is required"
+msgstr "Le prix est obligatoire"
+
+#: dashboard/views/products.py:213
+#, fuzzy
+#| msgid "New Contact Request"
+msgid "New Product Requires Validation"
+msgstr "Nouvelle demande de contact"
+
+#: dashboard/views/products.py:214
+#, python-format
+msgid "%(name)s added '%(product)s' — set wholesale/retail prices to activate."
+msgstr "%(name)s a ajouté '%(product)s' — définissez les prix de gros/détail pour l'activer."
+
+#: dashboard/views/products.py:220
+msgid "Product submitted for review."
+msgstr "Produit soumis pour validation."
+
+#: dashboard/views/products.py:220
 msgid "Product added successfully"
 msgstr "Produit ajouté avec succès"
 
-#: dashboard/views/products.py:186
+#: dashboard/views/products.py:283
 msgid "Product updated successfully"
 msgstr "Produit mis à jour avec succès"
 
-#: dashboard/views/products.py:205
+#: dashboard/views/products.py:303
 msgid "Product removed"
 msgstr "Produit supprimé"
+
+#: dashboard/views/products.py:319
+#, fuzzy
+#| msgid "Price is required"
+msgid "Wholesale price is required"
+msgstr "Le prix est obligatoire"
+
+#: dashboard/views/products.py:321
+#, fuzzy
+#| msgid "Price is required"
+msgid "Retail price is required"
+msgstr "Le prix est obligatoire"
+
+#: dashboard/views/products.py:324 dashboard/views/products.py:329
+msgid "Must be greater than zero"
+msgstr "Doit être supérieur à zéro"
+
+#: dashboard/views/products.py:326 dashboard/views/products.py:331
+#, fuzzy
+#| msgid "Invalid request"
+msgid "Invalid number"
+msgstr "Requête invalide"
+
+#: dashboard/views/products.py:368
+#, fuzzy
+#| msgid "Product removed"
+msgid "Product Approved!"
+msgstr "Produit supprimé"
+
+#: dashboard/views/products.py:369
+#, python-format
+msgid "Your product '%(product)s' has been approved and is now live."
+msgstr "Votre produit '%(product)s' a été approuvé et est désormais en ligne."
+
+#: dashboard/views/products.py:377
+#, fuzzy
+#| msgid "Product added successfully"
+msgid "Product approved successfully."
+msgstr "Produit ajouté avec succès"
+
+#: dashboard/views/products.py:403
+#, fuzzy
+#| msgid "Product removed"
+msgid "Product Rejected"
+msgstr "Produit supprimé"
+
+#: dashboard/views/products.py:404
+#, python-format
+msgid "Your product '%(product)s' was not approved.%(reason)s"
+msgstr "Votre produit '%(product)s' n'a pas été approuvé.%(reason)s"
+
+#: dashboard/views/products.py:406
+#, python-format
+msgid " Reason: %s"
+msgstr " Raison : %s"
+
+#: dashboard/views/products.py:413
+#, fuzzy
+#| msgid "Product removed"
+msgid "Product rejected."
+msgstr "Produit supprimé"
+
+#: dashboard/views/products.py:451
+#, fuzzy
+#| msgid "Title is required"
+msgid "Affiliate is required"
+msgstr "Le titre est obligatoire"
+
+#: dashboard/views/products.py:461
+#, fuzzy
+#| msgid "No users found"
+msgid "User not found"
+msgstr "Aucun utilisateur trouvé"
+
+#: dashboard/views/products.py:475
+#, fuzzy
+#| msgid "Customer Name"
+msgid "Custom Price Set!"
+msgstr "Nom du client"
+
+#: dashboard/views/products.py:476
+#, python-format
+msgid "Admin set a custom price for \"%(product)s\" — DZD%(price)s."
+msgstr "L'administrateur a défini un prix personnalisé pour \"%(product)s\" — DZD%(price)s."#: dashboard/views/products.py:484
+#, python-format
+msgid "Custom price set for %(name)s."
+msgstr "Prix personnalisé défini pour %(name)s."
+
+#: dashboard/views/products.py:500
+#, fuzzy
+#| msgid "Contact request removed."
+msgid "Custom price removed."
+msgstr "Demande de contact supprimée."
 
 #: dashboard/views/settings.py:33
 #, fuzzy
@@ -1438,137 +2908,332 @@ msgstr "Projet créé avec succès"
 
 #: dashboard/views/settings.py:57
 msgid "Contact request removed."
-msgstr "Demande de contact supprimée."#: dashboard/views/users.py:35 dashboard/views/users.py:276
+msgstr "Demande de contact supprimée."
+
+#: dashboard/views/users.py:38 dashboard/views/users.py:340
+#: dashboard/views/users.py:544
 #, fuzzy
 #| msgid "First name is required."
 msgid "First name is required"
 msgstr "Le prénom est requis."
 
-#: dashboard/views/users.py:36
+#: dashboard/views/users.py:39 dashboard/views/users.py:545
 #, fuzzy
 #| msgid "Email is required."
 msgid "Email is required"
 msgstr "L'adresse e-mail est requise."
 
-#: dashboard/views/users.py:37
+#: dashboard/views/users.py:40
 #, fuzzy
 #| msgid "Email is required."
 msgid "Commission is required"
 msgstr "L'adresse e-mail est requise."
 
-#: dashboard/views/users.py:39
+#: dashboard/views/users.py:42
 #, fuzzy
 #| msgid "This email is already registered."
 msgid "This email is already in use"
 msgstr "Cette adresse e-mail est déjà utilisée."
 
-#: dashboard/views/users.py:98
+#: dashboard/views/users.py:101 dashboard/views/users.py:603
 #, fuzzy
 #| msgid "Failed to send activation email. Approval cancelled."
 msgid "Failed to send email. Account creation rolled back."
 msgstr "Échec de l'envoi de l'e-mail d'activation. Approbation annulée."
 
-#: dashboard/views/users.py:106
+#: dashboard/views/users.py:109 dashboard/views/users.py:609
 msgid ""
 "Account could not be created because the invitation email failed to send. "
 "Please check your SMTP settings."
-msgstr "Le compte n'a pas pu être créé car l'e-mail d'invitation n'a pas pu être envoyé. Veuillez vérifier vos paramètres SMTP."#: dashboard/views/users.py:112
+msgstr ""
+"Le compte n'a pas pu être créé car l'e-mail d'invitation n'a pas pu être "
+"envoyé. Veuillez vérifier vos paramètres SMTP."
+
+#: dashboard/views/users.py:115
 #, fuzzy
 #| msgid "Your account has been created successfully."
 msgid "Provider account created and invitation sent successfully."
 msgstr "Votre compte a été créé avec succès."
 
-#: dashboard/views/users.py:150 dashboard/views/users.py:155
+#: dashboard/views/users.py:153 dashboard/views/users.py:158
 msgid "All Status"
 msgstr "Tous les statuts"
 
-#: dashboard/views/users.py:213
+#: dashboard/views/users.py:274
 #, python-format
 msgid "User %(name)s deleted successfully."
 msgstr "L'utilisateur %(name)s a été supprimé avec succès."
 
-#: dashboard/views/users.py:240
+#: dashboard/views/users.py:301
 msgid "Failed to send activation email. Approval cancelled."
 msgstr "Échec de l'envoi de l'e-mail d'activation. Approbation annulée."
 
-#: dashboard/views/users.py:246
+#: dashboard/views/users.py:307
 #, python-format
 msgid "User %(name)s approved successfully."
 msgstr "L'utilisateur %(name)s a été approuvé avec succès."
 
-#: dashboard/views/users.py:254
+#: dashboard/views/users.py:315
 #, python-format
 msgid "An error occurred during approval: %(error)s"
 msgstr "Une erreur est survenue lors de l'approbation : %(error)s"
 
-#: dashboard/views/users.py:278
+#: dashboard/views/users.py:342
 #, fuzzy
 #| msgid "Last name is required."
 msgid "Last name is required"
 msgstr "Le nom est requis."
 
-#: dashboard/views/users.py:300
+#: dashboard/views/users.py:364
 #, fuzzy
 #| msgid "Project updated successfully"
 msgid "Profile updated successfully."
 msgstr "Projet mis à jour avec succès"
 
-#: dashboard/views/users.py:322
+#: dashboard/views/users.py:387
 msgid "blocked"
-msgstr "bloqué"#: dashboard/views/users.py:322
-msgid "unblocked"
-msgstr "débloqué"#: dashboard/views/users.py:331
-msgid "LOFT Design - Account Blocked"
-msgstr "LOFT Design - Compte bloqué"#: dashboard/views/users.py:347
-#, fuzzy, python-format
-#| msgid "Account Status"
-msgid "Account %(status)s"
-msgstr "Statut du compte"
+msgstr "bloqué"
 
-#: dashboard/views/users.py:349
-#, python-format
-msgid "%(name)s has been %(status)s by %(admin)s."
-msgstr "%(name)s a été %(status)s par %(admin)s."#: dashboard/views/users.py:361
+#: dashboard/views/users.py:387
+msgid "unblocked"
+msgstr "débloqué"
+
+#: dashboard/views/users.py:396
+msgid "LOFT Design - Account Blocked"
+msgstr "LOFT Design - Compte bloqué"
+
+#: dashboard/views/users.py:409
 #, fuzzy, python-format
 #| msgid "User %(name)s deleted successfully."
 msgid "User %(name)s has been %(status)s."
 msgstr "L'utilisateur %(name)s a été supprimé avec succès."
 
-#: frontend/templates/home.html:42 frontend/templates/home.html:426
-#: frontend/templates/partials/landing-nav.html:29
+#: dashboard/views/users.py:482
+#, fuzzy
+#| msgid "Failed to send activation email. Approval cancelled."
+msgid "Failed to send activation email. Operation cancelled."
+msgstr "Échec de l'envoi de l'e-mail d'activation. Approbation annulée."
+
+#: dashboard/views/users.py:488
+#, fuzzy, python-format
+#| msgid "User %(name)s approved successfully."
+msgid "%(name)s approved successfully. Activation email sent."
+msgstr "L'utilisateur %(name)s a été approuvé avec succès."
+
+#: dashboard/views/users.py:494
+#, fuzzy, python-format
+#| msgid "User %(name)s deleted successfully."
+msgid "%(name)s has been disapproved."
+msgstr "L'utilisateur %(name)s a été supprimé avec succès."
+
+#: dashboard/views/users.py:499
+#, fuzzy, python-format
+#| msgid "An error occurred during approval: %(error)s"
+msgid "An error occurred: %(error)s"
+msgstr "Une erreur est survenue lors de l'approbation : %(error)s"
+
+#: dashboard/views/users.py:507
+#, python-format
+msgid "Welcome to %(site)s — Your Affiliate Account is Active!"
+msgstr "Bienvenue sur %(site)s — Votre compte affilié est actif !"
+
+#: dashboard/views/users.py:547
+#, fuzzy
+#| msgid "This email is already registered."
+msgid "This email is already registered"
+msgstr "Cette adresse e-mail est déjà utilisée."
+
+#: dashboard/views/users.py:615
+#, python-format
+msgid "Semi-affiliate '%(name)s' created. Invitation sent to %(email)s."
+msgstr "Semi-affilié '%(name)s' créé. Invitation envoyée à %(email)s."
+
+#: dashboard/views/users.py:634
+#, fuzzy, python-format
+#| msgid "User %(name)s deleted successfully."
+msgid "Semi-affiliate %(name)s deleted successfully."
+msgstr "L'utilisateur %(name)s a été supprimé avec succès."
+
+#: frontend/templates/affiliate_store.html:113
+msgid "Cart"
+msgstr "Panier"
+
+#: frontend/templates/affiliate_store.html:157
+msgid "items available"
+msgstr "articles disponibles"
+
+#: frontend/templates/affiliate_store.html:187 frontend/templates/home.html:312
+#: frontend/templates/partials/product_card.html:29
+msgid "View Details"
+msgstr "Voir les détails"
+
+#: frontend/templates/affiliate_store.html:199
+msgid "Coming Soon"
+msgstr "Bientôt disponible"
+
+#: frontend/templates/affiliate_store.html:200
+msgid "This store is getting ready. Products will appear here shortly."
+msgstr "Cette boutique est en préparation. Les produits apparaîtront ici sous peu."
+
+#: frontend/templates/affiliate_store.html:202
+#, fuzzy
+#| msgid "Active in Store"
+msgid "Browse Main Store"
+msgstr "Actif dans la boutique"
+
+#: frontend/templates/affiliate_store.html:216
+msgid "Powered by"
+msgstr "Propulsé par"
+
+#: frontend/templates/cart/cart.html:5 frontend/templates/cart/cart.html:23
+#: frontend/templates/cart/cart_drawer.html:13
+msgid "Shopping Cart"
+msgstr "Panier d'achat"
+
+#: frontend/templates/cart/cart.html:24
+msgid "item(s) in your cart"
+msgstr "article(s) dans votre panier"
+
+#: frontend/templates/cart/cart.html:27
+msgid "Continue Shopping"
+msgstr "Continuer les achats"
+
+#: frontend/templates/cart/cart.html:66
+msgid "Order Summary"
+msgstr "Résumé de la commande"
+
+#: frontend/templates/cart/cart.html:68
+msgid "Items"
+msgstr "Articles"
+
+#: frontend/templates/cart/cart.html:77
+msgid "Proceed to Checkout"
+msgstr "Passer la commande"
+
+#: frontend/templates/cart/cart.html:87
+#: frontend/templates/cart/cart_drawer.html:23
+#, fuzzy
+#| msgid "Your portfolio is empty."
+msgid "Your cart is empty"
+msgstr "Votre portfolio est vide."
+
+#: frontend/templates/cart/cart.html:88
+msgid "Looks like you haven't added anything yet."
+msgstr "Il semble que vous n'ayez encore rien ajouté."
+
+#: frontend/templates/cart/cart.html:90
+msgid "Start Shopping"
+msgstr "Commencer les achats"
+
+#: frontend/templates/cart/cart_drawer.html:4 frontend/templates/home.html:100
+#: frontend/templates/partials/landing-nav.html:85
+msgid "Open Cart"
+msgstr "Ouvrir le panier"
+
+#: frontend/templates/cart/cart_drawer.html:24
+msgid "Add some products to get started"
+msgstr "Ajoutez des produits pour commencer"
+
+#: frontend/templates/cart/cart_drawer.html:34
+msgid "View Cart & Checkout"
+msgstr "Voir le panier et passer commande"
+
+#: frontend/templates/cart/checkout.html:5
+#: frontend/templates/cart/checkout.html:19
+msgid "Checkout"
+msgstr "Paiement"
+
+#: frontend/templates/cart/checkout.html:21
+#: frontend/templates/products/product_detail.html:138
+msgid "Please select a wilaya first"
+msgstr "Veuillez d'abord sélectionner une wilaya"
+
+#: frontend/templates/cart/checkout.html:22
+#: frontend/templates/cart/checkout.html:61
+#: frontend/templates/products/product_detail.html:139
+#: frontend/templates/products/product_detail.html:184
+#, fuzzy
+#| msgid "Select sex"
+msgid "Select Commune"
+msgstr "Sélectionnez le sexe"
+
+#: frontend/templates/cart/checkout.html:27
+#, fuzzy
+#| msgid "General Information"
+msgid "Shipping Information"
+msgstr "Informations générales"
+
+#: frontend/templates/cart/checkout.html:41
+#: frontend/templates/products/product_detail.html:163
+#, fuzzy
+#| msgid "Select Category"
+msgid "Select Wilaya"
+msgstr "Sélectionnez le sexe"
+
+#: frontend/templates/cart/checkout.html:46
+#: frontend/templates/products/product_detail.html:168
+msgid "Search wilaya..."
+msgstr "Rechercher une wilaya..."
+
+#: frontend/templates/cart/checkout.html:66
+#: frontend/templates/products/product_detail.html:189
+#, fuzzy
+#| msgid "Search by product title..."
+msgid "Search commune..."
+msgstr "Rechercher par titre de produit..."
+
+#: frontend/templates/cart/checkout.html:84
+#, fuzzy
+#| msgid "Order"
+msgid "Your Order"
+msgstr "Commande"
+
+#: frontend/templates/cart/checkout.html:96
+msgid "Confirm Order (COD)"
+msgstr "Confirmer la commande (Paiement à la livraison)"
+
+#: frontend/templates/home.html:42 frontend/templates/home.html:454
+#: frontend/templates/partials/landing-nav.html:30
 msgid "About"
 msgstr "À propos"
 
 #: frontend/templates/home.html:48
-#: frontend/templates/partials/landing-nav.html:35
+#: frontend/templates/partials/landing-nav.html:36
 msgid "Shop"
 msgstr "Boutique"
 
 #: frontend/templates/home.html:51
-#: frontend/templates/partials/landing-nav.html:38
+#: frontend/templates/partials/landing-nav.html:39
 msgid "Contact"
 msgstr "Contact"
 
-#: frontend/templates/home.html:54
-#: frontend/templates/partials/landing-nav.html:41
+#: frontend/templates/home.html:57
+#: frontend/templates/partials/landing-nav.html:42
 msgid "Bilnov"
-msgstr "Bilnov"#: frontend/templates/home.html:63
-#: frontend/templates/partials/landing-nav.html:50
+msgstr "Bilnov"
+
+#: frontend/templates/home.html:67
+#: frontend/templates/partials/landing-nav.html:52
+msgid "Language"
+msgstr "Langue"
+
+#: frontend/templates/home.html:116
+#: frontend/templates/partials/landing-nav.html:101
 #: user_auth/templates/auth/login.html:10
 #: user_auth/templates/auth/login.html:92
-#: user_auth/templates/auth/signup.html:182
+#: user_auth/templates/auth/signup.html:147
 msgid "Login"
 msgstr "Connexion"
 
-#: frontend/templates/home.html:87
+#: frontend/templates/home.html:143
 msgid "Transform Your Space Into a "
 msgstr "Transformez votre espace en un "
 
-#: frontend/templates/home.html:87
+#: frontend/templates/home.html:143
 msgid "Masterpiece"
 msgstr "Nouveau chef-d'œuvre"
 
-#: frontend/templates/home.html:90
+#: frontend/templates/home.html:146
 msgid ""
 "We combine elegance, functionality, and modern aesthetics to create living "
 "environments that reflect your personality."
@@ -1576,27 +3241,27 @@ msgstr ""
 "Nous allions élégance, fonctionnalité et esthétique moderne pour créer des "
 "espaces de vie qui reflètent votre personnalité."
 
-#: frontend/templates/home.html:95
+#: frontend/templates/home.html:151
 msgid "Book a Consultation"
 msgstr "Réserver une consultation"
 
-#: frontend/templates/home.html:98
+#: frontend/templates/home.html:154
 msgid "Explore Gallery"
 msgstr "Explorer la galerie"
 
-#: frontend/templates/home.html:107
+#: frontend/templates/home.html:163
 msgid "Our Philosophy"
 msgstr "Notre philosophie"
 
-#: frontend/templates/home.html:108
+#: frontend/templates/home.html:164
 msgid "Crafting Spaces, Shaping Emotions"
 msgstr "Concevoir des espaces, façonner des émotions"
 
-#: frontend/templates/home.html:117
+#: frontend/templates/home.html:173
 msgid "Visionary Design"
 msgstr "Design visionnaire"
 
-#: frontend/templates/home.html:119
+#: frontend/templates/home.html:175
 msgid ""
 "We don't just follow trends; we create timeless environments that speak to "
 "your soul and elevate your daily experience."
@@ -1605,11 +3270,11 @@ msgstr ""
 "environnements intemporels qui parlent à votre âme et subliment votre "
 "quotidien."
 
-#: frontend/templates/home.html:128
+#: frontend/templates/home.html:184
 msgid "Personal Touch"
 msgstr "Une touche personnelle"
 
-#: frontend/templates/home.html:130
+#: frontend/templates/home.html:186
 msgid ""
 "Every client is unique. We dive deep into your lifestyle to ensure every "
 "corner of your space is functional and personalized."
@@ -1618,11 +3283,11 @@ msgstr ""
 "garantir que chaque recoin de votre espace soit à la fois fonctionnel et "
 "personnalisé."
 
-#: frontend/templates/home.html:139
+#: frontend/templates/home.html:195
 msgid "360° Immersion"
 msgstr "Vision à 360°"
 
-#: frontend/templates/home.html:141
+#: frontend/templates/home.html:197
 msgid ""
 "Project yourself even before the build. Thanks to our immersive "
 "technologies, explore your future space in 360° and experience your project "
@@ -1632,15 +3297,15 @@ msgstr ""
 "immersives, explorez votre futur espace à 360° et vivez votre projet avant "
 "qu'il ne prenne vie."
 
-#: frontend/templates/home.html:154
+#: frontend/templates/home.html:210
 msgid "Projects Completed"
 msgstr "Projets réalisés"
 
-#: frontend/templates/home.html:159
+#: frontend/templates/home.html:215
 msgid "Designing spaces crafted for your well-being"
 msgstr "Concevoir des espaces façonnés pour votre bien-être"
 
-#: frontend/templates/home.html:161
+#: frontend/templates/home.html:217
 msgid ""
 "At LOFT Design, we craft spaces where design meets everyday comfort. Every "
 "project is designed to adapt to your lifestyle, optimize your spaces, and "
@@ -1651,74 +3316,69 @@ msgstr ""
 "optimiser vos espaces et créer une atmosphère harmonieuse, fonctionnelle et "
 "agréable à vivre."
 
-#: frontend/templates/home.html:166
+#: frontend/templates/home.html:222
 msgid "Optimized layout for maximum comfort."
 msgstr "Agencement optimisé pour un confort maximal."
 
-#: frontend/templates/home.html:170
+#: frontend/templates/home.html:226
 msgid "Modern, clean, and functional design."
 msgstr "Design moderne, épuré et fonctionnel."
 
-#: frontend/templates/home.html:174
+#: frontend/templates/home.html:230
 msgid "Integration of smart and immersive solutions (360°, 3D visualization)."
 msgstr ""
 "Intégration de solutions intelligentes et immersives (360°, visualisation "
 "3D)."
 
-#: frontend/templates/home.html:178
+#: frontend/templates/home.html:234
 msgid "Personalized support, from concept to completion"
 msgstr "Accompagnement personnalisé, du concept à la réalisation"
 
-#: frontend/templates/home.html:182
+#: frontend/templates/home.html:238
 msgid "Discover Our Process"
 msgstr "Découvrez notre processus"
 
-#: frontend/templates/home.html:192
+#: frontend/templates/home.html:248
 msgid "Our Works"
 msgstr "Nos réalisations"
 
-#: frontend/templates/home.html:193
+#: frontend/templates/home.html:249
 msgid "Check out our latest interior design projects."
 msgstr "Découvrez nos derniers projets de design d'intérieur."
 
-#: frontend/templates/home.html:207
+#: frontend/templates/home.html:263
 #: frontend/templates/partials/portfolio_card.html:11
 msgid "View Projects"
 msgstr "Voir les projets"
 
-#: frontend/templates/home.html:215
-#: frontend/templates/portfolio/portfolio_detail.html:82
+#: frontend/templates/home.html:271
+#: frontend/templates/portfolio/portfolio_detail.html:87
 msgid "View All Projects"
 msgstr "Voir tous les projets"
 
-#: frontend/templates/home.html:223
+#: frontend/templates/home.html:279
 msgid "Featured Collections"
 msgstr "Collections à la une"
 
-#: frontend/templates/home.html:224
+#: frontend/templates/home.html:280
 msgid "Handpicked pieces from our latest interior projects."
 msgstr "Des pièces sélectionnées avec soin issues de nos derniers projets."
 
-#: frontend/templates/home.html:253
-#: frontend/templates/partials/product_card.html:23
-msgid "View Details"
-msgstr "Voir les détails"
-
-#: frontend/templates/home.html:259
-#: frontend/templates/partials/product_card.html:28
-#: frontend/templates/products/product_detail.html:43
+#: frontend/templates/home.html:318
+#: frontend/templates/partials/product_card.html:34
+#: frontend/templates/products/product_detail.html:65
 msgid "Show in your workspace"
 msgstr "Visualiser dans votre espace"
 
-#: frontend/templates/home.html:270
+#: frontend/templates/home.html:329
 msgid "View All Products"
 msgstr "Voir tous les produits"
 
-#: frontend/templates/home.html:279
+#: frontend/templates/home.html:338
 msgid "Start Your Project Today"
 msgstr "Lancez votre projet dès aujourd'hui"
 
-#: frontend/templates/home.html:281
+#: frontend/templates/home.html:340
 msgid ""
 "Ready to redefine your space? Fill out the form and our design specialists "
 "will get back to you within 24 hours."
@@ -1726,88 +3386,65 @@ msgstr ""
 "Prêt à redéfinir votre espace ? Remplissez le formulaire et nos spécialistes "
 "en design vous recontacteront sous 24 heures."
 
-#: frontend/templates/home.html:289 frontend/templates/home.html:298
+#: frontend/templates/home.html:348 frontend/templates/home.html:357
 msgid "Call Us"
 msgstr "Appelez-nous"
 
-#: frontend/templates/home.html:307
+#: frontend/templates/home.html:366
 msgid "Email Us"
 msgstr "Contactez-nous par e-mail"
 
-#: frontend/templates/home.html:316
+#: frontend/templates/home.html:375
 msgid "try Bilnov"
-msgstr "essayez Bilnov"#: frontend/templates/home.html:318
+msgstr "essayez Bilnov"
+
+#: frontend/templates/home.html:377
 #, fuzzy
 #| msgid "User Details"
 msgid "Access Details"
 msgstr "Détails de l'utilisateur"
 
-#: frontend/templates/home.html:343
+#: frontend/templates/home.html:402
 msgid "Residential"
 msgstr "Résidentiel"
 
-#: frontend/templates/home.html:344
+#: frontend/templates/home.html:403
 msgid "Commercial"
 msgstr "Commercial"
 
-#: frontend/templates/home.html:345
+#: frontend/templates/home.html:404
 msgid "Other"
 msgstr "Autre"
 
-#: frontend/templates/home.html:352
+#: frontend/templates/home.html:411
 msgid "Tell us about your dream space..."
 msgstr "Parlez-nous de l'espace de vos rêves..."
 
-#: frontend/templates/home.html:357
-#: frontend/templates/products/product_detail.html:175
+#: frontend/templates/home.html:416
+#: frontend/templates/products/product_detail.html:205
 msgid "Send Inquiry"
 msgstr "Envoyer une demande"
 
-#: frontend/templates/home.html:372
-#, fuzzy
-#| msgid "Create Account"
-msgid "Test Account Access"
-msgstr "Créer un compte"
-
-#: frontend/templates/home.html:377
-#, fuzzy
-#| msgid "Residential"
-msgid "Credentials"
-msgstr "Résidentiel"
-
-#: frontend/templates/home.html:379
-msgid "USERNAME"
-msgstr "NOM D'UTILISATEUR"#: frontend/templates/home.html:383
-msgid "PASSWORD"
-msgstr "MOT DE PASSE"#: frontend/templates/home.html:387
-msgid "Use these details to explore the provider dashboard features."
-msgstr "Utilisez ces informations pour explorer les fonctionnalités du tableau de bord du fournisseur."#: frontend/templates/home.html:389
-#: user_auth/templates/auth/set_password.html:107
-#, fuzzy
-#| msgid "Login"
-msgid "Go to Login"
-msgstr "Connexion"
-
-#: frontend/templates/home.html:418
+#: frontend/templates/home.html:446
 msgid ""
 "Redefining modern living through innovative design and premium craftsmanship."
 msgstr ""
 "Redéfinir l'art de vivre moderne grâce à un design innovant et un savoir-"
 "faire d'exception."
 
-#: frontend/templates/home.html:422
+#: frontend/templates/home.html:450
 msgid "Quick Links"
 msgstr "Liens rapides"
 
-#: frontend/templates/home.html:430
+#: frontend/templates/home.html:458
 msgid "Services"
 msgstr "Services"
 
-#: frontend/templates/home.html:439
+#: frontend/templates/home.html:467
 msgid "Follow Us"
 msgstr "Suivez-nous"
 
-#: frontend/templates/home.html:456
+#: frontend/templates/home.html:484
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
@@ -1827,31 +3464,38 @@ msgstr "Menu principal"
 msgid "Choose a file..."
 msgstr "Choisir un fichier..."
 
-#: frontend/templates/portfolio/portfolio_detail.html:43
+#: frontend/templates/partials/product_card.html:17
+#: frontend/templates/products/product_detail.html:93
+#, fuzzy
+#| msgid "Add Category"
+msgid "Add to Cart"
+msgstr "Catégories"
+
+#: frontend/templates/portfolio/portfolio_detail.html:44
 msgid "Project Details"
 msgstr "Détails du projet"
 
-#: frontend/templates/portfolio/portfolio_detail.html:48
+#: frontend/templates/portfolio/portfolio_detail.html:49
 msgid "View 360"
 msgstr "Vue 360°"
 
-#: frontend/templates/portfolio/portfolio_detail.html:71
+#: frontend/templates/portfolio/portfolio_detail.html:76
 msgid "Project Showcase"
 msgstr "Projets"
 
-#: frontend/templates/portfolio/portfolio_detail.html:85
+#: frontend/templates/portfolio/portfolio_detail.html:90
 msgid "Request Similar Design"
 msgstr "Demander un design similaire"
 
-#: frontend/templates/portfolio/portfolio_detail.html:92
+#: frontend/templates/portfolio/portfolio_detail.html:97
 msgid "Technical Details"
 msgstr "Détails du projet"
 
-#: frontend/templates/portfolio/portfolio_detail.html:100
+#: frontend/templates/portfolio/portfolio_detail.html:105
 msgid "Expertise"
 msgstr "Expertise"
 
-#: frontend/templates/portfolio/portfolio_detail.html:111
+#: frontend/templates/portfolio/portfolio_detail.html:116
 msgid "Direct Inquiry"
 msgstr "Envoyer une demande"
 
@@ -1863,164 +3507,259 @@ msgstr "Nos"
 msgid "Nothing to show yet."
 msgstr "Rien à afficher pour le moment."
 
-#: frontend/templates/products/product_detail.html:21
-msgid "Please select a wilaya first"
-msgstr "Veuillez d'abord sélectionner une wilaya"#: frontend/templates/products/product_detail.html:22
-#: frontend/templates/products/product_detail.html:154
-#, fuzzy
-#| msgid "Select sex"
-msgid "Select Commune"
-msgstr "Sélectionnez le sexe"
-
-#: frontend/templates/products/product_detail.html:52
+#: frontend/templates/products/product_detail.html:74
 msgid "Market Valuation"
 msgstr "Estimation de marché"
 
-#: frontend/templates/products/product_detail.html:56
-msgid "Stock"
-msgstr "Stock"#: frontend/templates/products/product_detail.html:57
-msgid "pcs"
-msgstr "pcs"#: frontend/templates/products/product_detail.html:60
+#: frontend/templates/products/product_detail.html:78
 msgid "Availability"
 msgstr "Visibilité"
 
-#: frontend/templates/products/product_detail.html:64
-msgid "In Stock"
-msgstr "En stock"#: frontend/templates/products/product_detail.html:64
-msgid "Out of Stock"
-msgstr "En rupture de stock"#: frontend/templates/products/product_detail.html:78
+#: frontend/templates/products/product_detail.html:106
 msgid "Bespoke Collection"
 msgstr "Collection"
 
-#: frontend/templates/products/product_detail.html:85
+#: frontend/templates/products/product_detail.html:113
 msgid "The Narrative"
 msgstr "Le récit"
 
-#: frontend/templates/products/product_detail.html:93
+#: frontend/templates/products/product_detail.html:121
 msgid "Design DNA"
 msgstr "L'ADN du design"
 
-#: frontend/templates/products/product_detail.html:104
+#: frontend/templates/products/product_detail.html:132
 msgid "Direct Concierge"
 msgstr "Conciergerie directe"
 
-#: frontend/templates/products/product_detail.html:105
+#: frontend/templates/products/product_detail.html:133
 msgid ""
 "Connect with our design specialists for personalized acquisition support."
 msgstr "Contactez nos spécialistes en design pour des conseils personnalisés."
 
-#: frontend/templates/products/product_detail.html:115
+#: frontend/templates/products/product_detail.html:145
 #, fuzzy
 #| msgid "Product Name"
 msgid "Your Name"
 msgstr "Nom du produit"
 
-#: frontend/templates/products/product_detail.html:133
-#, fuzzy
-#| msgid "Select Category"
-msgid "Select Wilaya"
-msgstr "Sélectionnez le sexe"
-
-#: frontend/templates/products/product_detail.html:138
-msgid "Search wilaya..."
-msgstr "Rechercher une wilaya..."#: frontend/templates/products/product_detail.html:159
-#, fuzzy
-#| msgid "Search by product title..."
-msgid "Search commune..."
-msgstr "Rechercher par titre de produit..."
-
-#: frontend/templates/products/product_detail.html:170
+#: frontend/templates/products/product_detail.html:200
 msgid "Specific Address (Optional)"
-msgstr "Adresse précise (optionnel)"#: frontend/templates/products/product_detail.html:171
+msgstr "Adresse précise (optionnel)"
+
+#: frontend/templates/products/product_detail.html:201
 msgid "Street, Building..."
-msgstr "Rue, bâtiment..."#: frontend/templates/products/products_list.html:31
+msgstr "Rue, bâtiment..."
+
+#: frontend/templates/products/product_viewer_3d.html:8
+msgid "3D View"
+msgstr "Vue 3D"
+
+#: frontend/templates/products/products_list.html:32
 #, fuzzy
 #| msgid "Search products..."
 msgid "Search projects or pieces..."
 msgstr "Rechercher par titre de produit..."
 
-#: frontend/templates/products/products_list.html:42
+#: frontend/templates/products/products_list.html:43
 #, fuzzy
 #| msgid "Filter Users"
 msgid "Filters"
 msgstr "Filtrer les utilisateurs"
 
-#: frontend/templates/products/products_list.html:64
+#: frontend/templates/products/products_list.html:65
 msgid "No products match your filters."
 msgstr "Essayez d'ajuster vos filtres"
 
-#: frontend/templates/products/products_list.html:65
+#: frontend/templates/products/products_list.html:66
 msgid "Clear Filters"
 msgstr "Appliquer les filtres"
 
-#: frontend/templates/products/products_list.html:83
+#: frontend/templates/products/products_list.html:84
 #, fuzzy
 #| msgid "Bespoke Collection"
 msgid "Refine Collection"
 msgstr "Collection"
 
-#: frontend/templates/products/products_list.html:92
+#: frontend/templates/products/products_list.html:93
 #, fuzzy
 #| msgid "All Collections"
 msgid "Collections"
 msgstr "Collection"
 
-#: frontend/templates/products/products_list.html:97
+#: frontend/templates/products/products_list.html:98
 #, fuzzy
 #| msgid "Price Range"
 msgid "Price Range (DZD)"
 msgstr "Prix"
 
-#: frontend/templates/products/products_list.html:100
+#: frontend/templates/products/products_list.html:101
 #, fuzzy
 #| msgid "Mon"
 msgid "Min"
 msgstr "Lun"
 
-#: frontend/templates/products/products_list.html:103
+#: frontend/templates/products/products_list.html:104
 #, fuzzy
 #| msgid "Mar"
 msgid "Max"
 msgstr "Mars"
 
-#: frontend/templates/products/products_list.html:109
+#: frontend/templates/products/products_list.html:110
 msgid "Sort Preferences"
 msgstr "Préférences de tri"
 
-#: frontend/templates/products/products_list.html:115
+#: frontend/templates/products/products_list.html:116
 #, fuzzy
 #| msgid "Reset All"
 msgid "Reset"
 msgstr "Tout réinitialiser"
 
-#: frontend/views/main.py:53
+#: frontend/views/cart.py:77
+#, fuzzy
+#| msgid "Invalid quantity value"
+msgid "Invalid quantity."
+msgstr "Valeur de quantité invalide"
+
+#: frontend/views/cart.py:84 frontend/views/orders.py:48
+#, fuzzy
+#| msgid "Your account has been created successfully."
+msgid "Price not configured for this product. Please contact support."
+msgstr "Votre compte a été créé avec succès."
+
+#: frontend/views/cart.py:104
+#, python-format
+msgid "%(title)s added to cart."
+msgstr "%(title)s a été ajouté au panier."
+
+#: frontend/views/cart.py:119
+#, fuzzy
+#| msgid "No products found."
+msgid "Item not found."
+msgstr "Aucun produit trouvé."
+
+#: frontend/views/cart.py:126
+#, fuzzy
+#| msgid "Order removed"
+msgid "Item removed."
+msgstr "Commande supprimée"
+
+#: frontend/views/cart.py:140
+#, fuzzy
+#| msgid "Last updated"
+msgid "Cart updated."
+msgstr "Dernière mise à jour"
+
+#: frontend/views/cart.py:159
+msgid "Item removed from cart."
+msgstr "Article retiré du panier."
+
+#: frontend/views/cart.py:238
+msgid "No valid items in cart."
+msgstr "Aucun article valide dans le panier."
+
+#: frontend/views/cart.py:260
+#, fuzzy
+#| msgid "New Product"
+msgid "New Order!"
+msgstr "Nouveau produit"
+
+#: frontend/views/cart.py:261
+#, python-format
+msgid "New order for %(products)s by %(name)s"
+msgstr "Nouvelle commande de %(products)s par %(name)s"
+
+#: frontend/views/cart.py:271
+#, fuzzy
+#| msgid "Project updated successfully"
+msgid "Order placed successfully!"
+msgstr "Projet mis à jour avec succès"
+
+#: frontend/views/main.py:55
 #, fuzzy
 #| msgid "First name is required."
 msgid "Full Name is required"
 msgstr "Le prénom est requis."
 
-#: frontend/views/main.py:54
+#: frontend/views/main.py:56
 #, fuzzy
 #| msgid "Thumbnail is required"
 msgid "Phone Number is required"
 msgstr "La vignette est obligatoire"
 
-#: frontend/views/main.py:55
+#: frontend/views/main.py:57
 #, fuzzy
 #| msgid "Last name is required."
 msgid "Message is required"
 msgstr "Le nom est requis."
 
-#: frontend/views/main.py:73
+#: frontend/views/main.py:75
 msgid "New Contact Request"
-msgstr "Nouvelle demande de contact"#: frontend/views/main.py:74
+msgstr "Nouvelle demande de contact"
+
+#: frontend/views/main.py:76
 #, python-format
 msgid "New contact lead from %(name)s"
-msgstr "Nouveau prospect de contact de %(name)s"#: frontend/views/main.py:81
+msgstr "Nouveau prospect de contact de %(name)s"
+
+#: frontend/views/main.py:83
 msgid ""
 "Your contact request has been sent successfully. We will get back to you "
 "shortly."
-msgstr "Votre demande de contact a été envoyée avec succès. Nous reviendrons vers vous très prochainement."#: frontend/views/orders.py:21
+msgstr ""
+"Votre demande de contact a été envoyée avec succès. Nous reviendrons vers "
+"vous très prochainement."
+
+#: frontend/views/main.py:103 user_auth/views.py:99
+msgid "First name is required."
+msgstr "Le prénom est requis."
+
+#: frontend/views/main.py:105 user_auth/views.py:101
+msgid "Last name is required."
+msgstr "Le nom est requis."
+
+#: frontend/views/main.py:107 user_auth/views.py:103 user_auth/views.py:223
+msgid "Email is required."
+msgstr "L'adresse e-mail est requise."
+
+#: frontend/views/main.py:109 user_auth/views.py:105 user_auth/views.py:176
+#: user_auth/views.py:314
+msgid "Password is required."
+msgstr "Le mot de passe est requis."
+
+#: frontend/views/main.py:111
+#, fuzzy
+#| msgid "Password must be at least 8 characters long."
+msgid "Password must be at least 8 characters."
+msgstr "Le mot de passe doit comporter au moins 8 caractères."
+
+#: frontend/views/main.py:113 user_auth/views.py:107 user_auth/views.py:180
+#: user_auth/views.py:318
+msgid "Passwords do not match."
+msgstr "Les mots de passe ne correspondent pas."
+
+#: frontend/views/main.py:121 user_auth/views.py:116
+msgid "This email is already registered."
+msgstr "Cette adresse e-mail est déjà utilisée."
+
+#: frontend/views/main.py:142
+#, fuzzy
+#| msgid "Affiliate"
+msgid "New Affiliate Signup"
+msgstr "Affiliation"
+
+#: frontend/views/main.py:144
+#, python-format
+msgid ""
+"%(name)s (%(email)s) has registered as an affiliate and is awaiting approval."
+msgstr "%(name)s (%(email)s) s'est inscrit en tant qu'affilié et est en attente d'approbation."
+
+#: frontend/views/main.py:153
+msgid ""
+"Your affiliate account has been created! An admin will review and activate "
+"your account. You will receive an email once approved."
+msgstr "Votre compte affilié a été créé ! Un administrateur examinera et activera votre compte. Vous recevrez un e-mail une fois approuvé."
+
+#: frontend/views/orders.py:21
 #, fuzzy
 #| msgid "Last name is required."
 msgid "Name is required"
@@ -2046,65 +3785,123 @@ msgstr "Le nom est requis."
 
 #: frontend/views/orders.py:28
 msgid "Quantity must be at least 1"
-msgstr "La quantité doit être d'au moins 1"#: frontend/views/orders.py:30
+msgstr "La quantité doit être d'au moins 1"
+
+#: frontend/views/orders.py:30
 msgid "Invalid quantity value"
-msgstr "Valeur de quantité invalide"#: frontend/views/orders.py:39
+msgstr "Valeur de quantité invalide"
+
+#: frontend/views/orders.py:39
 msgid "Requested quantity exceeds available stock."
-msgstr "La quantité demandée dépasse le stock disponible."#: frontend/views/orders.py:63
+msgstr "La quantité demandée dépasse le stock disponible."
+
+#: frontend/views/orders.py:78
 msgid "New Lead Received"
-msgstr "Nouveau prospect reçu"#: frontend/views/orders.py:64
+msgstr "Nouveau prospect reçu"
+
+#: frontend/views/orders.py:79
 #, python-format
 msgid "New inquiry from %(name)s for product: %(product)s"
-msgstr "Nouvelle demande de %(name)s pour le produit : %(product)s"#: frontend/views/orders.py:74
+msgstr "Nouvelle demande de %(name)s pour le produit : %(product)s"
+
+#: frontend/views/orders.py:89
 msgid ""
 "Your inquiry has been sent successfully. Our team will contact you soon."
-msgstr "Votre demande a été envoyée avec succès. Notre équipe vous contactera bientôt."#: frontend/views/products.py:34 frontend/views/products.py:44
+msgstr ""
+"Votre demande a été envoyée avec succès. Notre équipe vous contactera "
+"bientôt."
+
+#: frontend/views/products.py:35 frontend/views/products.py:45
 msgid "All Collections"
 msgstr "Collection"
 
-#: frontend/views/products.py:38 frontend/views/products.py:51
+#: frontend/views/products.py:39 frontend/views/products.py:52
 msgid "Newest First"
 msgstr "Les plus récents"
 
-#: frontend/views/products.py:39
+#: frontend/views/products.py:40
 msgid "Price: Low to High"
 msgstr "Prix : croissant"
 
-#: frontend/views/products.py:40
+#: frontend/views/products.py:41
 msgid "Price: High to Low"
 msgstr "Prix : décroissant"
 
-#: frontend/views/products.py:41
+#: frontend/views/products.py:42
 msgid "Name: A-Z"
 msgstr "Nom : A-Z"
 
+#: frontend/views/products.py:86
+msgid "No 3D model available for this product"
+msgstr "Aucun modèle 3D disponible pour ce produit"
+
 #: user_auth/models.py:9
 msgid "Admin"
-msgstr "Administrateur"#: user_auth/models.py:10
+msgstr "Administrateur"
+
+#: user_auth/models.py:10
 msgid "Provider"
-msgstr "Fournisseur"#: user_auth/models.py:13
-msgid "Role"
-msgstr "Rôle"#: user_auth/models.py:23
+msgstr "Fournisseur"
+
+#: user_auth/models.py:12
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Semi-Affiliate"
+msgstr "Affiliation"
+
+#: user_auth/models.py:13
+msgid "Professional Client"
+msgstr "Client Professionnel"
+
+#: user_auth/models.py:14
+msgid "Final Client"
+msgstr "Client Final"
+
+#: user_auth/models.py:27
 msgid "Profile Picture"
 msgstr "Photo de profil"
 
-#: user_auth/models.py:31
+#: user_auth/models.py:35
 msgid "Commission (%)"
-msgstr "Commission (%)"#: user_auth/models.py:35
+msgstr "Commission (%)"
+
+#: user_auth/models.py:39
 msgid "Commission percentage for the provider"
-msgstr "Pourcentage de commission pour le fournisseur"#: user_auth/models.py:39
+msgstr "Pourcentage de commission pour le fournisseur"
+
+#: user_auth/models.py:48
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Parent Affiliate"
+msgstr "Affiliation"
+
+#: user_auth/models.py:49
+msgid "The affiliate who created this semi-affiliate account"
+msgstr "L'affilié ayant créé ce compte semi-affilié"
+
+#: user_auth/models.py:51
+#, fuzzy
+#| msgid "Approved"
+msgid "Approved At"
+msgstr "Approuvé"
+
+#: user_auth/models.py:54
 msgid "Is Approved"
 msgstr "Approuvé"
 
-#: user_auth/models.py:40
+#: user_auth/models.py:55
 msgid "Is Trusted"
-msgstr "Est de confiance"#: user_auth/models.py:41
+msgstr "Est de confiance"
+
+#: user_auth/models.py:56
 msgid "Is Blocked"
-msgstr "Est bloqué"#: user_auth/models.py:48
+msgstr "Est bloqué"
+
+#: user_auth/models.py:63
 msgid "User Profile"
 msgstr "Profil utilisateur"
 
-#: user_auth/models.py:49
+#: user_auth/models.py:64
 msgid "User Profiles"
 msgstr "Profils utilisateurs"
 
@@ -2126,7 +3923,7 @@ msgstr "Entrez votre nom d'utilisateur"
 
 #: user_auth/templates/auth/login.html:65
 #: user_auth/templates/auth/set_password.html:55
-#: user_auth/templates/auth/signup.html:119
+#: user_auth/templates/auth/signup.html:116
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -2142,6 +3939,18 @@ msgstr "Se souvenir de moi"
 #: user_auth/templates/auth/login.html:89
 msgid "Forgot password?"
 msgstr "Mot de passe oublié ?"
+
+#: user_auth/templates/auth/login.html:96
+msgid "Don't have an account?"
+msgstr "Vous n'avez pas de compte ?"
+
+#: user_auth/templates/auth/login.html:97
+#: user_auth/templates/auth/signup.html:9
+#: user_auth/templates/auth/signup.html:38
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Become an Affiliate"
+msgstr "Affiliation"
 
 #: user_auth/templates/auth/password_reset.html:10
 #, fuzzy
@@ -2163,7 +3972,9 @@ msgstr "Entrez votre nom"
 
 #: user_auth/templates/auth/password_reset.html:62
 msgid "Send Reset Link"
-msgstr "Envoyer le lien de réinitialisation"#: user_auth/templates/auth/password_reset.html:68
+msgstr "Envoyer le lien de réinitialisation"
+
+#: user_auth/templates/auth/password_reset.html:68
 #: user_auth/templates/auth/password_reset_confirm.html:109
 #, fuzzy
 #| msgid "Back to List"
@@ -2184,10 +3995,15 @@ msgstr "Produit ajouté avec succès"
 
 #: user_auth/templates/auth/password_reset_complete.html:38
 msgid "Your password has been set. You may go ahead and log in now."
-msgstr "Votre mot de passe a été configuré. Vous pouvez maintenant vous connecter."#: user_auth/templates/auth/password_reset_complete.html:40
+msgstr ""
+"Votre mot de passe a été configuré. Vous pouvez maintenant vous connecter."
+
+#: user_auth/templates/auth/password_reset_complete.html:40
 #: user_auth/templates/auth/password_reset_done.html:40
 msgid "Return to Login"
-msgstr "Retour à la connexion"#: user_auth/templates/auth/password_reset_confirm.html:10
+msgstr "Retour à la connexion"
+
+#: user_auth/templates/auth/password_reset_confirm.html:10
 #: user_auth/templates/auth/password_reset_confirm.html:52
 #, fuzzy
 #| msgid "Password"
@@ -2208,7 +4024,7 @@ msgstr "Entrez le mot de passe"
 
 #: user_auth/templates/auth/password_reset_confirm.html:71
 #: user_auth/templates/auth/set_password.html:75
-#: user_auth/templates/auth/signup.html:140
+#: user_auth/templates/auth/signup.html:128
 msgid "Confirm Password"
 msgstr "Confirmer le mot de passe"
 
@@ -2233,7 +4049,11 @@ msgstr "Requête invalide"
 #: user_auth/templates/auth/password_reset_confirm.html:99
 msgid ""
 "The password reset link is invalid or has expired. Please request a new one."
-msgstr "Le lien de réinitialisation du mot de passe est invalide ou a expiré. Veuillez en demander un nouveau."#: user_auth/templates/auth/password_reset_confirm.html:102
+msgstr ""
+"Le lien de réinitialisation du mot de passe est invalide ou a expiré. "
+"Veuillez en demander un nouveau."
+
+#: user_auth/templates/auth/password_reset_confirm.html:102
 #, fuzzy
 #| msgid "Request Private Viewing"
 msgid "Request New Link"
@@ -2247,17 +4067,29 @@ msgstr "Tout réinitialiser"
 
 #: user_auth/templates/auth/password_reset_done.html:37
 msgid "Reset Link Sent"
-msgstr "Lien de réinitialisation envoyé"#: user_auth/templates/auth/password_reset_done.html:38
+msgstr "Lien de réinitialisation envoyé"
+
+#: user_auth/templates/auth/password_reset_done.html:38
 msgid ""
 "We've emailed you instructions for setting your password, if an account "
 "exists with the email you entered."
-msgstr "Si un compte existe avec l'adresse e-mail saisie, nous vous avons envoyé des instructions par e-mail pour configurer votre mot de passe."#: user_auth/templates/auth/password_reset_email.txt:2
+msgstr ""
+"Si un compte existe avec l'adresse e-mail saisie, nous vous avons envoyé des "
+"instructions par e-mail pour configurer votre mot de passe."
+
+#: user_auth/templates/auth/password_reset_email.txt:2
 #, python-format
 msgid ""
 "Hello %(user.get_short_name|default:user.get_username)s,\n"
 "\n"
 "You requested a password reset for your LOFT Design account."
-msgstr "Bonjour %(user.get_short_name|default:user.get_username)s,\n\nVous avez demandé une réinitialisation de mot de passe pour votre compte LOFT Design."#: user_auth/templates/auth/password_reset_email.txt:6
+msgstr ""
+"Bonjour %(user.get_short_name|default:user.get_username)s,\n"
+"\n"
+"Vous avez demandé une réinitialisation de mot de passe pour votre compte "
+"LOFT Design."
+
+#: user_auth/templates/auth/password_reset_email.txt:6
 #, fuzzy
 #| msgid "Enter your username"
 msgid "Your username:"
@@ -2265,12 +4097,20 @@ msgstr "Entrez votre nom d'utilisateur"
 
 #: user_auth/templates/auth/password_reset_email.txt:8
 msgid "Click the link below to choose a new password:"
-msgstr "Cliquez sur le lien ci-dessous pour choisir un nouveau mot de passe :"#: user_auth/templates/auth/password_reset_email.txt:13
+msgstr "Cliquez sur le lien ci-dessous pour choisir un nouveau mot de passe :"
+
+#: user_auth/templates/auth/password_reset_email.txt:13
 msgid ""
 "If you did not request this reset, please ignore this email.\n"
 "\n"
 "The LOFT Design team"
-msgstr "Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet e-mail.\n\nL'équipe LOFT Design"#: user_auth/templates/auth/set_password.html:10
+msgstr ""
+"Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet e-"
+"mail.\n"
+"\n"
+"L'équipe LOFT Design"
+
+#: user_auth/templates/auth/set_password.html:10
 #, fuzzy
 #| msgid "Enter your password"
 msgid "Set Your Password"
@@ -2284,7 +4124,11 @@ msgstr "Bienvenue"
 msgid ""
 "Please set a password for your account. You'll be logged in automatically "
 "after setting it."
-msgstr "Veuillez définir un mot de passe pour votre compte. Vous serez connecté automatiquement après l'avoir configuré."#: user_auth/templates/auth/set_password.html:82
+msgstr ""
+"Veuillez définir un mot de passe pour votre compte. Vous serez connecté "
+"automatiquement après l'avoir configuré."
+
+#: user_auth/templates/auth/set_password.html:82
 #, fuzzy
 #| msgid "Confirm Password"
 msgid "Confirm your password"
@@ -2292,66 +4136,112 @@ msgstr "Confirmer le mot de passe"
 
 #: user_auth/templates/auth/set_password.html:94
 msgid "Set Password & Login"
-msgstr "Définir le mot de passe et se connecter"#: user_auth/templates/auth/set_password.html:102
+msgstr "Définir le mot de passe et se connecter"
+
+#: user_auth/templates/auth/set_password.html:102
 msgid "Invalid or Expired Link"
-msgstr "Lien invalide ou expiré"#: user_auth/templates/auth/set_password.html:104
+msgstr "Lien invalide ou expiré"
+
+#: user_auth/templates/auth/set_password.html:104
 msgid ""
 "This password setup link is invalid or has already been used. Please contact "
 "your administrator to request a new invitation."
-msgstr "Ce lien de configuration de mot de passe est invalide ou a déjà été utilisé. Veuillez contacter votre administrateur pour demander une nouvelle invitation."#: user_auth/templates/auth/signup.html:9
-#: user_auth/templates/auth/signup.html:37
-#: user_auth/templates/auth/signup.html:176
-msgid "Create Account"
+msgstr ""
+"Ce lien de configuration de mot de passe est invalide ou a déjà été utilisé. "
+"Veuillez contacter votre administrateur pour demander une nouvelle "
+"invitation."
+
+#: user_auth/templates/auth/set_password.html:107
+#, fuzzy
+#| msgid "Login"
+msgid "Go to Login"
+msgstr "Connexion"
+
+#: user_auth/templates/auth/signup.html:39
+msgid ""
+"Earn commissions by referring clients to LOFT Design. Join our affiliate "
+"program and turn your network into revenue."
+msgstr "Gagnez des commissions en recommandant des clients à LOFT Design. Rejoignez notre programme d'affiliation et transformez votre réseau en revenus."
+
+#: user_auth/templates/auth/signup.html:44
+msgid "Sign Up"
+msgstr "S'inscrire"
+
+#: user_auth/templates/auth/signup.html:45
+#, fuzzy
+#| msgid "Create new account"
+msgid "Create your account in seconds"
+msgstr "Créer un nouveau compte"
+
+#: user_auth/templates/auth/signup.html:51
+#, fuzzy
+#| msgid "Approved"
+msgid "Get Approved"
+msgstr "Approuvé"
+
+#: user_auth/templates/auth/signup.html:52
+#, fuzzy
+#| msgid "Login to your account"
+msgid "We review and activate your account"
+msgstr "Connectez-vous à votre compte"
+
+#: user_auth/templates/auth/signup.html:58
+msgid "Start Earning"
+msgstr "Commencez à gagner"
+
+#: user_auth/templates/auth/signup.html:59
+msgid "Share your link and earn commissions"
+msgstr "Partagez votre lien et gagnez des commissions"
+
+#: user_auth/templates/auth/signup.html:69
+#, fuzzy
+#| msgid "Affiliate"
+msgid "Affiliate Program"
+msgstr "Affiliation"
+
+#: user_auth/templates/auth/signup.html:70
+#, fuzzy
+#| msgid "Create Account"
+msgid "Create Your Account"
 msgstr "Créer un compte"
 
-#: user_auth/templates/auth/signup.html:40
-#, python-format
-msgid "Join the community and start your journey with %(site_name)s"
-msgstr "Rejoignez la communauté et commencez votre aventure avec %(site_name)s"
+#: user_auth/templates/auth/signup.html:71
+msgid "Fill in your details below to get started"
+msgstr "Remplissez vos informations ci-dessous pour commencer"
 
-#: user_auth/templates/auth/signup.html:61
+#: user_auth/templates/auth/signup.html:91
 msgid "Enter your first name"
 msgstr "Saisissez votre prénom"
 
-#: user_auth/templates/auth/signup.html:74
+#: user_auth/templates/auth/signup.html:98
 msgid "Enter your last name"
 msgstr "Entrez votre nom"
 
-#: user_auth/templates/auth/signup.html:114
-msgid "Sex"
-msgstr "Sexe"
+#: user_auth/templates/auth/signup.html:120
+msgid "Min 8 characters"
+msgstr "Min. 8 caractères"
 
-#: user_auth/templates/auth/signup.html:114
-msgid "Select sex"
-msgstr "Sélectionnez le sexe"
-
-#: user_auth/templates/auth/signup.html:126
-msgid "Enter password"
-msgstr "Entrez le mot de passe"
-
-#: user_auth/templates/auth/signup.html:147
-msgid "Re-enter password"
+#: user_auth/templates/auth/signup.html:132
+#, fuzzy
+#| msgid "Re-enter password"
+msgid "Repeat password"
 msgstr "Réentrez le mot de passe"
 
-#: user_auth/templates/auth/signup.html:170
-msgid "I agree to"
-msgstr "J'accepte les"
+#: user_auth/templates/auth/signup.html:141
+#, fuzzy
+#| msgid "Create Account"
+msgid "Create Affiliate Account"
+msgstr "Créer un compte"
 
-#: user_auth/templates/auth/signup.html:170
-msgid "Terms of Service"
-msgstr "Conditions Générales d'Utilisation"
-
-#: user_auth/templates/auth/signup.html:170
-msgid "and"
-msgstr "et"
-
-#: user_auth/templates/auth/signup.html:170
-msgid "Privacy Policy"
-msgstr "la Politique de confidentialité"
-
-#: user_auth/templates/auth/signup.html:181
+#: user_auth/templates/auth/signup.html:146
 msgid "Already have an account?"
 msgstr "Vous avez déjà un compte ?"
+
+#: user_auth/templates/auth/signup.html:151
+#, fuzzy
+#| msgid "Back to List"
+msgid "Back to Home"
+msgstr "Retour à la liste"
 
 #: user_auth/views.py:31
 msgid "Please fill in all required fields."
@@ -2369,59 +4259,138 @@ msgstr "Votre compte a été créé avec succès."
 msgid "Invalid username/email or password. Please try again."
 msgstr "Nom d'utilisateur ou mot de passe invalide. Veuillez réessayer."
 
-#: user_auth/views.py:103
-msgid "First name is required."
-msgstr "Le prénom est requis."
-
-#: user_auth/views.py:105
-msgid "Last name is required."
-msgstr "Le nom est requis."
-
-#: user_auth/views.py:107 user_auth/views.py:237
-msgid "Email is required."
-msgstr "L'adresse e-mail est requise."
-
-#: user_auth/views.py:109 user_auth/views.py:190 user_auth/views.py:328
-msgid "Password is required."
-msgstr "Le mot de passe est requis."
-
-#: user_auth/views.py:111 user_auth/views.py:194 user_auth/views.py:332
-msgid "Passwords do not match."
-msgstr "Les mots de passe ne correspondent pas."
-
-#: user_auth/views.py:113 user_auth/views.py:192 user_auth/views.py:330
+#: user_auth/views.py:109 user_auth/views.py:178 user_auth/views.py:316
 msgid "Password must be at least 8 characters long."
 msgstr "Le mot de passe doit comporter au moins 8 caractères."
 
-#: user_auth/views.py:121
-msgid "This email is already registered."
-msgstr "Cette adresse e-mail est déjà utilisée."
+#: user_auth/views.py:135
+msgid ""
+"Your affiliate account has been created! An admin will review and activate "
+"your account."
+msgstr "Votre compte affilié a été créé ! Un administrateur examinera et activera votre compte."
 
-#: user_auth/views.py:143
-msgid "Your account has been created successfully."
-msgstr "Votre compte a été créé avec succès."
-
-#: user_auth/views.py:210
+#: user_auth/views.py:196
 msgid "Password set successfully! Welcome to LOFT Design."
-msgstr "Mot de passe défini avec succès ! Bienvenue sur LOFT Design."#: user_auth/views.py:216
+msgstr "Mot de passe défini avec succès ! Bienvenue sur LOFT Design."
+
+#: user_auth/views.py:202
 msgid "Something went wrong. Please try logging in manually."
-msgstr "Une erreur est survenue. Veuillez essayer de vous connecter manuellement."#: user_auth/views.py:248
+msgstr ""
+"Une erreur est survenue. Veuillez essayer de vous connecter manuellement."
+
+#: user_auth/views.py:234
 msgid "If an account with that email exists, a reset link has been sent."
-msgstr "Si un compte avec cette adresse e-mail existe, un lien de réinitialisation a été envoyé."#: user_auth/views.py:272
+msgstr ""
+"Si un compte avec cette adresse e-mail existe, un lien de réinitialisation a "
+"été envoyé."
+
+#: user_auth/views.py:258
 msgid "LOFT Design - Password Reset / Réinitialisation du mot de passe"
-msgstr "LOFT Design - Réinitialisation du mot de passe"#: user_auth/views.py:284
+msgstr "LOFT Design - Réinitialisation du mot de passe"
+
+#: user_auth/views.py:270
 #, fuzzy
 #| msgid "Invalid username or password. Please try again."
 msgid "Failed to send email. Please try again later."
 msgstr "Nom d'utilisateur ou mot de passe invalide. Veuillez réessayer."
 
-#: user_auth/views.py:289
+#: user_auth/views.py:275
 msgid "A password reset link has been sent to your email."
-msgstr "Un lien de réinitialisation du mot de passe a été envoyé à votre adresse e-mail."#: user_auth/views.py:342
+msgstr ""
+"Un lien de réinitialisation du mot de passe a été envoyé à votre adresse e-"
+"mail."
+
+#: user_auth/views.py:328
 #, fuzzy
 #| msgid "Category deleted successfully"
 msgid "Password reset successfully."
 msgstr "Projet créé avec succès"
+
+#~ msgid "View Full List"
+#~ msgstr "Voir la liste complète"
+
+#~ msgid "Order Management"
+#~ msgstr "Gestion des commandes"
+
+#~ msgid "Sales"
+#~ msgstr "Ventes"
+
+#~ msgid "Total Projects"
+#~ msgstr "Projets"
+
+#~ msgid "Pending Leads"
+#~ msgstr "En attente"
+
+#~ msgid "Recent Leads"
+#~ msgstr "Inscriptions récentes"
+
+#, fuzzy, python-format
+#~| msgid "Account Status"
+#~ msgid "Account %(status)s"
+#~ msgstr "Statut du compte"
+
+#, python-format
+#~ msgid "%(name)s has been %(status)s by %(admin)s."
+#~ msgstr "%(name)s a été %(status)s par %(admin)s."
+
+#, fuzzy
+#~| msgid "Create Account"
+#~ msgid "Test Account Access"
+#~ msgstr "Créer un compte"
+
+#, fuzzy
+#~| msgid "Residential"
+#~ msgid "Credentials"
+#~ msgstr "Résidentiel"
+
+#~ msgid "USERNAME"
+#~ msgstr "NOM D'UTILISATEUR"
+
+#~ msgid "PASSWORD"
+#~ msgstr "MOT DE PASSE"
+
+#~ msgid "Use these details to explore the provider dashboard features."
+#~ msgstr ""
+#~ "Utilisez ces informations pour explorer les fonctionnalités du tableau de "
+#~ "bord du fournisseur."
+
+#~ msgid "Stock"
+#~ msgstr "Stock"
+
+#~ msgid "pcs"
+#~ msgstr "pcs"
+
+#, python-format
+#~ msgid "Join the community and start your journey with %(site_name)s"
+#~ msgstr ""
+#~ "Rejoignez la communauté et commencez votre aventure avec %(site_name)s"
+
+#~ msgid "Sex"
+#~ msgstr "Sexe"
+
+#~ msgid "Select sex"
+#~ msgstr "Sélectionnez le sexe"
+
+#~ msgid "Enter password"
+#~ msgstr "Entrez le mot de passe"
+
+#~ msgid "Re-enter password"
+#~ msgstr "Réentrez le mot de passe"
+
+#~ msgid "I agree to"
+#~ msgstr "J'accepte les"
+
+#~ msgid "Terms of Service"
+#~ msgstr "Conditions Générales d'Utilisation"
+
+#~ msgid "and"
+#~ msgstr "et"
+
+#~ msgid "Privacy Policy"
+#~ msgstr "la Politique de confidentialité"
+
+#~ msgid "Your account has been created successfully."
+#~ msgstr "Votre compte a été créé avec succès."
 
 #~ msgid "Processing"
 #~ msgstr "En cours"
@@ -2449,17 +4418,8 @@ msgstr "Projet créé avec succès"
 #~ msgid "Efficiency Score"
 #~ msgstr "Score d'efficacité"
 
-#~ msgid "Customer"
-#~ msgstr "Client"
-
-#~ msgid "Date"
-#~ msgstr "Date"
-
 #~ msgid "Price ($)"
 #~ msgstr "Prix ($)"
-
-#~ msgid "Total Products"
-#~ msgstr "Produits"
 
 #~ msgid "Lead Activity"
 #~ msgstr "Activité hebdomadaire"
@@ -2487,10 +4447,6 @@ msgstr "Projet créé avec succès"
 
 #~ msgid "username"
 #~ msgstr "Nom d'utilisateur"
-
-#~| msgid "Search Keyword"
-#~ msgid "Search"
-#~ msgstr "Mot-clé de recherche"
 
 #~ msgid "Sort By"
 #~ msgstr "Trier par"
@@ -2564,17 +4520,8 @@ msgstr "Projet créé avec succès"
 #~ "Une vitrine de solutions d'aménagement intérieur haut de gamme et "
 #~ "d'excellence architecturale."
 
-#~ msgid "Don't have an account?"
-#~ msgstr "Vous n'avez pas de compte ?"
-
-#~ msgid "Create new account"
-#~ msgstr "Créer un nouveau compte"
-
 #~ msgid "Users"
 #~ msgstr "Utilisateurs"
-
-#~ msgid "Manage Users"
-#~ msgstr "Gérer les utilisateurs"
 
 #~ msgid "Take Action"
 #~ msgstr "Passer à l'action"
@@ -2636,9 +4583,6 @@ msgstr "Projet créé avec succès"
 
 #~ msgid "EXPLORE PROJECT"
 #~ msgstr "EXPLORER LE PROJET"
-
-#~ msgid "Purchase Inquiry:"
-#~ msgstr "Demande d'achat :"
 
 #~ msgid "Contact to Purchase"
 #~ msgstr "Contact pour l'achat"

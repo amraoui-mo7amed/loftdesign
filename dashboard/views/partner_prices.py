@@ -4,12 +4,37 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.template.loader import render_to_string
 from ..decorator import role_required
-from ..models import Product, PartnerPrice, LoftPrice
+from ..models import Product, PartnerPrice, LoftPrice, AffiliateStore
 from ..utils import notify_user
 from user_auth.models import UserProfile
 
 User = get_user_model()
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+def my_catalog(request):
+    """List only products the affiliate has added to their catalog"""
+    prices = PartnerPrice.objects.filter(
+        buyer=request.user, is_active=True,
+    ).select_related("product", "product__loft_price").prefetch_related("product__gallery_images")
+
+    catalog = []
+    for pp in prices:
+        product = pp.product
+        loft_price = getattr(product, "loft_price", None)
+        catalog.append({
+            "product": product,
+            "partner_price": pp,
+            "purchase_price": pp.purchase_price,
+            "wholesale_price": pp.wholesale_price,
+            "retail_price": pp.retail_price or (loft_price.loft_retail_price if loft_price else None),
+            "primary_image": product.gallery_images.first(),
+        })
+
+    return render(request, "products/my_catalog.html", {"catalog": catalog})
 
 
 @role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
@@ -212,3 +237,43 @@ def affiliate_catalog_remove(request, product_pk):
         "success": True,
         "message": _("Product removed from your catalog."),
     })
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+def store_settings(request):
+    """AJAX: update the affiliate's mini-store settings (used via modal in user_details)"""
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    if request.method != "POST":
+        return JsonResponse({"success": False}, status=400)
+
+    store, _ = AffiliateStore.objects.get_or_create(
+        affiliate=profile,
+        defaults={"store_name": request.user.get_full_name() or request.user.username}
+    )
+
+    store.store_name = request.POST.get("store_name", store.store_name)
+    store.store_description = request.POST.get("store_description", "")
+    store.header_bg_color = request.POST.get("header_bg_color", "#1a1a2e")
+
+    if request.FILES.get("store_logo"):
+        store.store_logo = request.FILES["store_logo"]
+    if request.FILES.get("store_banner"):
+        store.store_banner = request.FILES["store_banner"]
+    if request.POST.get("remove_logo"):
+        store.store_logo.delete(save=False)
+        store.store_logo = None
+    if request.POST.get("remove_banner"):
+        store.store_banner.delete(save=False)
+        store.store_banner = None
+
+    store.save()
+    return JsonResponse({
+        "success": True,
+        "message": _("Store settings saved."),
+        "redirect_url": reverse("dash:user_details", kwargs={"pk": profile.pk})
+    })
+
+
+from django.db.models import Count
+from dashboard.models import AffiliateStore, StoreVisit, Order

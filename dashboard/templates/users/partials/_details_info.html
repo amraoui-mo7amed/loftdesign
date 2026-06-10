@@ -1,0 +1,39 @@
+{% load i18n %}
+<div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+    <div class="card-header bg-transparent border-bottom p-4">
+        <h5 class="fw-bold mb-0 text-dark">
+            <i class="fas fa-info-circle text-primary me-2"></i> {% trans "Detailed Information" %}
+        </h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-12 col-md-6">
+                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Email" %}</label>
+                <p class="text-dark fw-bold mb-0"><i class="far fa-envelope text-muted me-2"></i> {{ profile.user.email|default:"--" }}</p>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Phone Number" %}</label>
+                <p class="text-dark fw-bold mb-0"><i class="fas fa-phone-alt text-muted me-2"></i> {{ profile.phone_number|default:"--" }}</p>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Birth Date" %}</label>
+                <p class="text-dark fw-bold mb-0"><i class="fas fa-calendar-alt text-muted me-2"></i> {{ profile.birth_date|default:"--" }}</p>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Gender" %}</label>
+                <p class="text-dark fw-bold mb-0">
+                    <i class="fas {% if profile.sex == 'male' %}fa-mars{% else %}fa-venus{% endif %} text-muted me-2"></i> 
+                    {{ profile.get_sex_display|default:"--" }}
+                </p>
+            </div>
+            <div class="col-12">
+                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Address" %}</label>
+                <p class="text-dark fw-bold mb-0"><i class="fas fa-map-marker-alt text-muted me-2"></i> {{ profile.address|default:"--" }}</p>
+            </div>
+            <div class="col-12">
+                <label class="form-label smaller text-muted fw-bold text-uppercase mb-1 d-block">{% trans "Bio" %}</label>
+                <p class="text-dark mb-0 bg-light p-3 rounded-3 border-start border-4 border-primary">{{ profile.bio|default:_("No bio provided.") }}</p>
+            </div>
+        </div>
+    </div>
+</div>

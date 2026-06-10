@@ -138,13 +138,12 @@ def product_create(request):
         if not thumbnail:
             errors["thumbnail"] = [_("Thumbnail is required")]
 
-        # Provider enters purchase price; admin enters full pricing
-        if is_provider:
-            purchase_price = request.POST.get("loft_purchase_price")
-            if not purchase_price:
-                errors["loft_purchase_price"] = [_("Purchase price is required")]
-        else:
-            purchase_price = request.POST.get("loft_purchase_price", 0)
+        purchase_price = request.POST.get("loft_purchase_price", "0")
+        if is_provider and not purchase_price:
+            errors["loft_purchase_price"] = [_("Purchase price is required")]
+
+        wholesale = request.POST.get("loft_wholesale_price")
+        retail = request.POST.get("loft_retail_price")
 
         if errors:
             return JsonResponse({"success": False, "errors": errors})
@@ -169,20 +168,41 @@ def product_create(request):
             }
 
             if is_provider:
-                # Provider: auto-pending, no admin price fields
+                # Provider: auto-pending
                 product_kwargs["status"] = Product.ProductStatus.PENDING
                 product_kwargs["is_active"] = False
+                product_kwargs["loft_wholesale_price"] = wholesale or None
+                product_kwargs["loft_retail_price"] = retail or None
             else:
                 # Admin can set everything directly
                 product_kwargs["status"] = Product.ProductStatus.APPROVED
                 product_kwargs["is_active"] = request.POST.get("is_active") == "on"
-                product_kwargs["loft_wholesale_price"] = request.POST.get("loft_wholesale_price") or None
-                product_kwargs["loft_retail_price"] = request.POST.get("loft_retail_price") or None
+                product_kwargs["loft_wholesale_price"] = wholesale or None
+                product_kwargs["loft_retail_price"] = retail or None
 
             product = Product.objects.create(**product_kwargs)
 
             for i, img in enumerate(request.FILES.getlist("gallery_images")):
                 ProductImage.objects.create(product=product, image=img, order=i)
+
+            # Create LoftPrice + SupplierPrice for admin-created products
+            if not is_provider:
+                LoftPrice.objects.update_or_create(
+                    product=product,
+                    defaults={
+                        "loft_purchase_price": purchase_price or 0,
+                        "loft_default_wholesale_price": wholesale or 0,
+                        "loft_retail_price": retail or 0,
+                        "is_active": True,
+                    }
+                )
+                SupplierPrice.objects.update_or_create(
+                    product=product,
+                    defaults={
+                        "supplier": request.user,
+                        "loft_purchase_price": purchase_price or 0,
+                    }
+                )
 
             # Notify admins if provider created a pending product
             if is_provider:

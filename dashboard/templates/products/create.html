@@ -45,17 +45,10 @@
                         <textarea name="description" class="form-control" rows="8" placeholder="Product details, dimensions, materials..." required></textarea>
                     </div>
                     <div class="row mb-0">
-                        {% if is_provider %}
                         <div class="col-md-4">
                             <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
-                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" placeholder="e.g. 1000" lang="en" required>
-                            <div class="form-text small">{% trans "The price Loft Design will pay you per unit." %}</div>
-                        </div>
-                        {% else %}
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
-                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" placeholder="e.g. 1000" lang="en">
-                            <div class="form-text small">{% trans "What Loft pays the supplier." %}</div>
+                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" placeholder="e.g. 1000" lang="en" {% if is_provider %}required{% endif %}>
+                            <div class="form-text small">{% if is_provider %}{% trans "Your cost from supplier." %}{% else %}{% trans "What Loft pays the supplier." %}{% endif %}</div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold">{% trans "Wholesale (DZD)" %}</label>
@@ -67,7 +60,6 @@
                             <input type="number" name="loft_retail_price" step="0.01" class="form-control" placeholder="e.g. 2000" lang="en">
                             <div class="form-text small">{% trans "Price for end clients." %}</div>
                         </div>
-                        {% endif %}
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">
@@ -134,6 +126,15 @@
                         <input type="file" name="model_3d" class="d-none" accept=".glb,.gltf,model/gltf-binary,model/gltf+json">
                     </div>
                     <div class="form-text mt-2 small">{% trans "Optional. Supported formats: GLB, GLTF" %}</div>
+                    <div id="modelStatus" class="mt-2 d-none">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span id="modelStatusText" class="fw-semibold"></span>
+                            <span id="modelStatusSize" class="text-muted"></span>
+                        </div>
+                        <div class="progress" style="height:4px;">
+                            <div id="modelStatusBar" class="progress-bar" role="progressbar" style="width:0%"></div>
+                        </div>
+                    </div>
                 </div>
 
                 {% if not is_provider %}
@@ -174,4 +175,5 @@
 
 {% block extra_js %}
     <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/products.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

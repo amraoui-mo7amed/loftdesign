@@ -148,6 +148,15 @@
                         <input type="file" name="model_3d" class="d-none" accept=".glb,.gltf,model/gltf-binary,model/gltf+json">
                     </div>
                     <div class="form-text mt-2 small">{% trans "Optional. Supported formats: GLB, GLTF" %}</div>
+                    <div id="modelStatus" class="mt-2 d-none">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span id="modelStatusText" class="fw-semibold"></span>
+                            <span id="modelStatusSize" class="text-muted"></span>
+                        </div>
+                        <div class="progress" style="height:4px;">
+                            <div id="modelStatusBar" class="progress-bar" role="progressbar" style="width:0%"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
@@ -186,4 +195,5 @@
 
 {% block extra_js %}
     <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/products.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

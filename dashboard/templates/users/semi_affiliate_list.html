@@ -138,10 +138,26 @@
             <h1 class="fw-black display-4 mb-0">{% trans "Semi-Affiliates" %}</h1>
             <p class="text-muted mt-2">{% trans "Manage your sub-affiliates and their pricing." %}</p>
         </div>
-        <button type="button" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-lg" data-bs-toggle="modal" data-bs-target="#createSemiAffiliateModal">
-            <i class="fas fa-user-plus me-2 text-primary"></i> {% trans "Create Semi-Affiliate" %}
-        </button>
+        <div class="d-flex gap-2">
+            {% if request.user.is_superuser %}
+            <button type="button" class="btn btn-outline-dark rounded-pill px-4 py-3 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="fas fa-filter me-1"></i> {% trans "Filter" %}
+            </button>
+            {% endif %}
+            <button type="button" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-lg" data-bs-toggle="modal" data-bs-target="#createSemiAffiliateModal">
+                <i class="fas fa-user-plus me-2 text-primary"></i> {% trans "Create Semi-Affiliate" %}
+            </button>
+        </div>
     </div>
+
+    {% if query or selected_parent %}
+    <div class="mb-4" data-aos="fade-down">
+        <a href="{% url 'dash:semi_affiliate_list' %}" class="btn btn-light rounded-pill px-4 fw-bold text-muted border">
+            <i class="fas fa-times me-1"></i> {% trans "Clear All Filters" %}
+        </a>
+        <span class="ms-2 text-muted small">{{ semi_affiliates|length }} {% trans "semi-affiliates" %}</span>
+    </div>
+    {% endif %}
 
     <div class="row g-4">
         {% for sa in semi_affiliates %}
@@ -183,6 +199,15 @@
                             <div class="semi-stat-icon"><i class="far fa-calendar-alt"></i></div>
                             <span>{{ sa.created_at|date:"d M, Y" }}</span>
                         </div>
+                        {% if sa.parent_affiliate %}
+                        <div class="semi-stat">
+                            <div class="semi-stat-icon" style="background:#fff3e6;color:#e67e22;"><i class="fas fa-user-plus"></i></div>
+                            <span class="text-truncate fw-semibold">
+                                <span class="text-muted small">{% trans "Added by" %}</span>
+                                {{ sa.parent_affiliate.user.get_full_name|default:sa.parent_affiliate.user.username }}
+                            </span>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="mt-auto pt-3 d-flex gap-2">
@@ -201,14 +226,6 @@
                     </div>
                 </div>
 
-                {% if sa.parent_affiliate %}
-                <div class="px-3 pb-2">
-                    <small class="text-muted" style="font-size:0.65rem;">
-                        <i class="fas fa-user-check me-1"></i>
-                        {% trans "Created by" %} {{ sa.parent_affiliate.user.get_full_name|default:sa.parent_affiliate.user.username }}
-                    </small>
-                </div>
-                {% endif %}
             </div>
         </div>
         {% empty %}
@@ -225,6 +242,41 @@
             </div>
         </div>
         {% endfor %}
+    </div>
+</div>
+
+<!-- Filter Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="fw-black">{% trans "Filter Semi-Affiliates" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="get" action="{% url 'dash:semi_affiliate_list' %}">
+                <div class="modal-body px-4 pb-3">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{% trans "Search" %}</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-transparent border-end-0"><i class="fas fa-search text-muted"></i></span>
+                            <input type="text" name="q" class="form-control border-start-0 ps-0" placeholder="{% trans 'Name, email, or affiliate code...' %}" value="{{ query }}">
+                        </div>
+                    </div>
+                    {% if affiliate_options %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{% trans "Created By" %}</label>
+                        {% include "components/custom_select.html" with id="parentFilter" name="parent" options=affiliate_options value=selected_parent placeholder=_("All Affiliates") %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow">
+                        <i class="fas fa-filter me-1"></i> {% trans "Apply Filters" %}
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -259,9 +311,9 @@
                             <input type="text" name="phone" class="form-control form-control-lg">
                         </div>
                         <div class="col-12">
-                            <label class="form-label fw-bold">{% trans "Password" %}</label>
-                            <input type="password" name="password" class="form-control form-control-lg" required minlength="6">
-                            <div class="form-text">{% trans "Min 6 characters. The semi-affiliate will use this to log in." %}</div>
+                            <div class="alert alert-info rounded-3 mb-0 small">
+                                <i class="fas fa-envelope me-1"></i> {% trans "An invitation email will be sent to this address with instructions to set their password." %}
+                            </div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-3 mt-4 shadow">

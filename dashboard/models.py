@@ -389,6 +389,14 @@ class Order(models.Model):
     customer_address = models.TextField(verbose_name=_("Address"), blank=True)
     wilaya = models.CharField(max_length=100, verbose_name=_("Wilaya"), blank=True)
     commune = models.CharField(max_length=100, verbose_name=_("Commune"), blank=True)
+    referred_by = models.CharField(
+        _("Referred By"), max_length=30, blank=True,
+        help_text=_("Affiliate code that referred this order")
+    )
+    commission_paid = models.BooleanField(
+        _("Commission Paid"), default=False,
+        help_text=_("Whether the affiliate commission for this order has been settled")
+    )
     status = models.CharField(
         max_length=20, 
         choices=OrderStatus.choices, 
@@ -450,3 +458,55 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.title if self.product else 'Deleted product'} x{self.quantity}"
+
+
+class AffiliateStore(models.Model):
+    """Customizable storefront for each affiliate"""
+    affiliate = models.OneToOneField(
+        "user_auth.UserProfile", on_delete=models.CASCADE, related_name="store",
+        verbose_name=_("Affiliate")
+    )
+    store_name = models.CharField(_("Store Name"), max_length=255, blank=True)
+    store_logo = models.ImageField(
+        _("Store Logo"), upload_to="stores/logos/", blank=True
+    )
+    store_banner = models.ImageField(
+        _("Store Banner"), upload_to="stores/banners/", blank=True
+    )
+    store_description = models.TextField(_("Store Description"), blank=True)
+    header_bg_color = models.CharField(
+        _("Header Background Color"), max_length=7, default="#1a1a2e"
+    )
+    is_active = models.BooleanField(_("Active"), default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Affiliate Store")
+        verbose_name_plural = _("Affiliate Stores")
+
+    def __str__(self):
+        return self.store_name or self.affiliate.affiliate_code or str(self.affiliate)
+
+
+class StoreVisit(models.Model):
+    """Track visits to affiliate storefronts"""
+    store = models.ForeignKey(
+        AffiliateStore, on_delete=models.CASCADE, related_name="visits",
+        verbose_name=_("Store")
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="store_visits", verbose_name=_("Product")
+    )
+    visitor_ip = models.GenericIPAddressField(_("Visitor IP"), blank=True, null=True)
+    session_key = models.CharField(_("Session"), max_length=40, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Store Visit")
+        verbose_name_plural = _("Store Visits")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Visit to {self.store} on {self.created_at:%Y-%m-%d}"

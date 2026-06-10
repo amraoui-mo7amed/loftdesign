@@ -41,19 +41,21 @@ def order_list(request):
     for order in page_obj.object_list:
         order.items_json = json.dumps(order.items, ensure_ascii=False)
 
+    is_trusted = user_profile and user_profile.is_trusted
     context = {
         "page_obj": page_obj,
         "status_filter": status_filter,
         "status_choices": Order.OrderStatus.choices,
         "title": _("Orders"),
         "is_provider": is_provider,
+        "is_trusted": is_trusted,
     }
     return render(request, "orders/list.html", context)
 
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def order_update_status(request, pk):
-    """AJAX view to update order status"""
+    """AJAX view to update order status — only admins and trusted providers"""
     if request.method == "POST":
         order = get_object_or_404(Order, pk=pk)
         new_status = request.POST.get("status")
@@ -65,6 +67,12 @@ def order_update_status(request, pk):
         is_provider = user_profile and user_profile.role == UserProfile.roleChoices.PROVIDER
 
         if is_provider:
+            if not user_profile.is_trusted:
+                return JsonResponse({
+                    "success": False,
+                    "message": _("Only trusted providers can update order status."),
+                })
+            user_product_ids = set(
             user_product_ids = set(
                 Product.objects.filter(user=request.user).values_list("id", flat=True)
             )
@@ -138,9 +146,11 @@ def order_detail(request, pk):
                     except LoftPrice.DoesNotExist:
                         pass
 
+    is_trusted = user_profile and user_profile.is_trusted
     return render(request, "orders/detail.html", {
         "order": order,
         "is_provider": is_provider,
+        "is_trusted": is_trusted,
         "referred_by_profile": referred_by_profile,
         "affiliate_earned": affiliate_earned,
         "title": _("Order #%(id)s Details") % {"id": order.id},

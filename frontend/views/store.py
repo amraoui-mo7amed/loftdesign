@@ -5,10 +5,13 @@ from dashboard.models import PartnerPrice, AffiliateStore, StoreVisit
 
 
 def affiliate_store(request, code):
-    """Public mini-storefront for an affiliate"""
+    """Public mini-storefront for an affiliate or semi-affiliate"""
     profile = get_object_or_404(
-        UserProfile, affiliate_code=code, role=UserProfile.roleChoices.AFFILIATE, is_approved=True
+        UserProfile, affiliate_code=code, is_approved=True
     )
+    if profile.role not in (UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.SEMI_AFFILIATE):
+        from django.http import Http404
+        raise Http404
 
     store = AffiliateStore.objects.filter(affiliate=profile, is_active=True).first()
     if not store:

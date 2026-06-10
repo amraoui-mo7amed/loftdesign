@@ -58,14 +58,16 @@
                                 {% elif order.status == 'processing' %}bg-info text-white
                                 {% elif order.status == 'completed' %}bg-success text-white
                                 {% else %}bg-danger text-white{% endif %}"
-                                data-bs-toggle="dropdown">
+                                {% if not is_provider or is_trusted %}data-bs-toggle="dropdown"{% endif %}>
                                 {{ order.get_status_display }}
                             </span>
+                            {% if not is_provider or is_trusted %}
                             <ul class="dropdown-menu shadow border-0 rounded-3">
                                 {% for status, label in status_choices %}
                                 <li><button class="dropdown-item update-status-btn" data-url="{% url 'dash:order_update_status' order.pk %}" data-status="{{ status }}">{{ label }}</button></li>
                                 {% endfor %}
                             </ul>
+                            {% endif %}
                         </div>
                     </div>
 

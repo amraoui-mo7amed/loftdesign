@@ -68,8 +68,8 @@ def _build_menu(is_authenticated, is_superuser, role):
             "url_name": "dash:order_list",
         })
 
-    # Affiliate-only links
-    if is_affiliate:
+    # Affiliate / Semi-Affiliate links
+    if is_affiliate or is_semi_affiliate:
         menu.append({
             "title": _("My Store"),
             "icon": "fas fa-store-alt",
@@ -85,6 +85,8 @@ def _build_menu(is_authenticated, is_superuser, role):
             "icon": "fas fa-boxes",
             "url_name": "dash:my_catalog",
         })
+
+    if is_affiliate:
         menu.append({
             "title": _("Semi-Affiliates"),
             "icon": "fas fa-user-friends",

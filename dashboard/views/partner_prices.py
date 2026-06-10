@@ -14,7 +14,11 @@ from user_auth.models import UserProfile
 User = get_user_model()
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+_SEMI = UserProfile.roleChoices.SEMI_AFFILIATE
+_AFF = UserProfile.roleChoices.AFFILIATE
+
+
+@role_required(allowed_roles=[_AFF, _SEMI])
 def my_catalog(request):
     """List only products the affiliate has added to their catalog"""
     prices = PartnerPrice.objects.filter(
@@ -37,7 +41,7 @@ def my_catalog(request):
     return render(request, "products/my_catalog.html", {"catalog": catalog})
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+@role_required(allowed_roles=[_AFF, _SEMI])
 def catalog_details(request, product_pk):
     """Detail page for a product in the affiliate catalog"""
     product = get_object_or_404(
@@ -62,13 +66,29 @@ def catalog_details(request, product_pk):
     })
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+@role_required(allowed_roles=[_AFF, _SEMI])
 def affiliate_catalog(request):
-    """List all approved products available for the affiliate to resell"""
-    products = Product.objects.filter(
+    """List approved products available to resell.
+    Affiliates see all approved products.
+    Semi-affiliates see only products in their parent affiliate's catalog.
+    """
+    profile = get_object_or_404(UserProfile, user=request.user)
+    is_semi = profile.role == _SEMI
+
+    base_qs = Product.objects.filter(
         status=Product.ProductStatus.APPROVED,
         is_active=True,
     ).select_related("user", "loft_price").prefetch_related("gallery_images")
+
+    if is_semi and profile.parent_affiliate:
+        # Semi-affiliate: only products in the parent affiliate's catalog
+        parent_product_ids = PartnerPrice.objects.filter(
+            buyer=profile.parent_affiliate.user,
+            is_active=True,
+        ).values_list("product_id", flat=True)
+        products = base_qs.filter(pk__in=parent_product_ids)
+    else:
+        products = base_qs
 
     existing_prices = {
         pp.product_id: pp
@@ -105,7 +125,7 @@ def affiliate_catalog(request):
     })
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+@role_required(allowed_roles=[_AFF, _SEMI])
 def affiliate_catalog_add(request, product_pk):
     """AJAX: Create PartnerPrice — affiliate adds product to their catalog"""
     if request.method != "POST":
@@ -161,7 +181,7 @@ def affiliate_catalog_add(request, product_pk):
     })
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+@role_required(allowed_roles=[_AFF, _SEMI])
 def catalog_update_pricing(request, product_pk):
     """AJAX: Update the affiliate's wholesale/retail prices for a product"""
     if request.method != "POST":
@@ -218,7 +238,7 @@ def catalog_update_pricing(request, product_pk):
     })
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+@role_required(allowed_roles=[_AFF, _SEMI])
 def affiliate_catalog_remove(request, product_pk):
     """AJAX: Deactivate PartnerPrice — remove product from affiliate catalog"""
     if request.method != "POST":
@@ -239,7 +259,7 @@ def affiliate_catalog_remove(request, product_pk):
     })
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
+@role_required(allowed_roles=[_AFF, _SEMI])
 def store_settings(request):
     """Affiliate store settings page (GET) + AJAX update (POST)"""
     profile = get_object_or_404(UserProfile, user=request.user)

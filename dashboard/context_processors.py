@@ -71,6 +71,11 @@ def _build_menu(is_authenticated, is_superuser, role):
     # Affiliate-only links
     if is_affiliate:
         menu.append({
+            "title": _("My Store"),
+            "icon": "fas fa-store-alt",
+            "url_name": "dash:store_settings",
+        })
+        menu.append({
             "title": _("Available Products"),
             "icon": "fas fa-store",
             "url_name": "dash:affiliate_catalog",

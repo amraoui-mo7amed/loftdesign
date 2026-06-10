@@ -213,7 +213,7 @@ def user_details(request, pk):
     unpaid_earnings = Decimal("0.00")
     referred_orders_data = []
     if profile.role == UserProfile.roleChoices.AFFILIATE:
-        store, _ = AffiliateStore.objects.get_or_create(
+        store, created = AffiliateStore.objects.get_or_create(
             affiliate=profile,
             defaults={"store_name": profile.user.get_full_name() or profile.user.username}
         )

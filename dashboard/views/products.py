@@ -168,13 +168,11 @@ def product_create(request):
             }
 
             if is_provider:
-                # Provider: auto-pending
                 product_kwargs["status"] = Product.ProductStatus.PENDING
                 product_kwargs["is_active"] = False
-                product_kwargs["loft_wholesale_price"] = wholesale or None
-                product_kwargs["loft_retail_price"] = retail or None
+                product_kwargs["loft_wholesale_price"] = None
+                product_kwargs["loft_retail_price"] = None
             else:
-                # Admin can set everything directly
                 product_kwargs["status"] = Product.ProductStatus.APPROVED
                 product_kwargs["is_active"] = request.POST.get("is_active") == "on"
                 product_kwargs["loft_wholesale_price"] = wholesale or None
@@ -185,7 +183,6 @@ def product_create(request):
             for i, img in enumerate(request.FILES.getlist("gallery_images")):
                 ProductImage.objects.create(product=product, image=img, order=i)
 
-            # Create LoftPrice + SupplierPrice for admin-created products
             if not is_provider:
                 LoftPrice.objects.update_or_create(
                     product=product,
@@ -204,7 +201,7 @@ def product_create(request):
                     }
                 )
 
-            # Notify admins if provider created a pending product
+            # Notify admin
             if is_provider:
                 admins = User.objects.filter(is_superuser=True)
                 for admin in admins:
@@ -214,10 +211,13 @@ def product_create(request):
                         _("%(name)s added '%(product)s' — set wholesale/retail prices to activate.")
                         % {"name": request.user.get_full_name() or request.user.username, "product": product.title},
                         notification_type=Notification.NotificationType.INFO,
-                        link=reverse("dash:product_list") + "?status=pending"
+                        link=reverse("dash:product_update", kwargs={"pk": product.pk})
                     )
 
-            msg = _("Product submitted for review.") if is_provider else _("Product added successfully")
+            if is_provider:
+                msg = _("Product submitted for review.")
+            else:
+                msg = _("Product added successfully")
             return JsonResponse({
                 "success": True, "message": msg,
                 "redirect_url": reverse("dash:product_list")
@@ -253,6 +253,37 @@ def product_update(request, pk):
             product.loft_wholesale_price = request.POST.get("loft_wholesale_price") or None
             product.loft_retail_price = request.POST.get("loft_retail_price") or None
             product.is_active = request.POST.get("is_active") == "on"
+
+            # Auto-approve if product is PENDING and admin sets wholesale + retail
+            if product.status == Product.ProductStatus.PENDING and product.loft_wholesale_price and product.loft_retail_price:
+                product.status = Product.ProductStatus.APPROVED
+                product.is_active = True
+                LoftPrice.objects.update_or_create(
+                    product=product,
+                    defaults={
+                        "loft_purchase_price": product.loft_purchase_price or 0,
+                        "loft_default_wholesale_price": product.loft_wholesale_price,
+                        "loft_retail_price": product.loft_retail_price,
+                        "is_active": True,
+                    }
+                )
+                SupplierPrice.objects.update_or_create(
+                    product=product,
+                    defaults={
+                        "supplier": product.user,
+                        "loft_purchase_price": product.loft_purchase_price or 0,
+                    }
+                )
+                # Notify the provider
+                if product.user:
+                    notify_user(
+                        product.user,
+                        _("Product Approved!"),
+                        _("Your product '%(product)s' has been approved and is now live.")
+                        % {"product": product.title},
+                        notification_type=Notification.NotificationType.SUCCESS,
+                        link=reverse("dash:product_list")
+                    )
         else:
             # Provider can only update their purchase price
             product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)

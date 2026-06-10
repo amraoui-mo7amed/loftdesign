@@ -241,37 +241,41 @@ def affiliate_catalog_remove(request, product_pk):
 
 @role_required(allowed_roles=[UserProfile.roleChoices.AFFILIATE])
 def store_settings(request):
-    """AJAX: update the affiliate's mini-store settings (used via modal in user_details)"""
+    """Affiliate store settings page (GET) + AJAX update (POST)"""
     profile = get_object_or_404(UserProfile, user=request.user)
 
-    if request.method != "POST":
-        return JsonResponse({"success": False}, status=400)
-
-    store, _ = AffiliateStore.objects.get_or_create(
+    store, created = AffiliateStore.objects.get_or_create(
         affiliate=profile,
         defaults={"store_name": request.user.get_full_name() or request.user.username}
     )
 
-    store.store_name = request.POST.get("store_name", store.store_name)
-    store.store_description = request.POST.get("store_description", "")
-    store.header_bg_color = request.POST.get("header_bg_color", "#1a1a2e")
+    if request.method == "POST":
+        store.store_name = request.POST.get("store_name", store.store_name)
+        store.store_description = request.POST.get("store_description", "")
+        store.header_bg_color = request.POST.get("header_bg_color", "#1a1a2e")
 
-    if request.FILES.get("store_logo"):
-        store.store_logo = request.FILES["store_logo"]
-    if request.FILES.get("store_banner"):
-        store.store_banner = request.FILES["store_banner"]
-    if request.POST.get("remove_logo"):
-        store.store_logo.delete(save=False)
-        store.store_logo = None
-    if request.POST.get("remove_banner"):
-        store.store_banner.delete(save=False)
-        store.store_banner = None
+        if request.FILES.get("store_logo"):
+            store.store_logo = request.FILES["store_logo"]
+        elif request.POST.get("remove_logo") == "1":
+            store.store_logo.delete(save=False)
+            store.store_logo = None
 
-    store.save()
-    return JsonResponse({
-        "success": True,
-        "message": _("Store settings saved."),
-        "redirect_url": reverse("dash:user_details", kwargs={"pk": profile.pk})
+        if request.FILES.get("store_banner"):
+            store.store_banner = request.FILES["store_banner"]
+        elif request.POST.get("remove_banner") == "1":
+            store.store_banner.delete(save=False)
+            store.store_banner = None
+
+        store.save()
+        return JsonResponse({
+            "success": True,
+            "message": _("Store settings saved."),
+        })
+
+    return render(request, "products/store_settings.html", {
+        "store": store,
+        "profile": profile,
+        "title": _("My Store"),
     })
 
 

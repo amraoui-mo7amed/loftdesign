@@ -73,7 +73,6 @@ def order_update_status(request, pk):
                     "message": _("Only trusted providers can update order status."),
                 })
             user_product_ids = set(
-            user_product_ids = set(
                 Product.objects.filter(user=request.user).values_list("id", flat=True)
             )
             order_product_ids = {item.get("product_id") for item in order.items}

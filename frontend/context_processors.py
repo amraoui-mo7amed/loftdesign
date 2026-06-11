@@ -6,4 +6,5 @@ def cart_context(request):
     cart_count = sum(item["quantity"] for item in cart.values())
     return {
         "cart_count": cart_count,
+        "affiliate_code": request.session.get("affiliate_code", ""),
     }

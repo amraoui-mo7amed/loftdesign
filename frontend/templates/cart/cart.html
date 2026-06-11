@@ -4,8 +4,17 @@
 
 {% block title %} | {% trans "Shopping Cart" %}{% endblock title %}
 
+{% block body_class %}{% if affiliate_code %}affiliate-store{% endif %}{% endblock body_class %}
+
 {% block nav %}
+    {% if affiliate_code %}
+    <button type="button" class="affiliate-cart-float cart-trigger" title="{% trans 'Cart' %}">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="badge bg-primary {% if cart_count == 0 %}d-none{% endif %}">{{ cart_count }}</span>
+    </button>
+    {% else %}
     {% include 'partials/landing-nav.html' %}
+    {% endif %}
 {% endblock nav %}
 
 {% block sidebar %}{% endblock sidebar %}
@@ -13,17 +22,20 @@
 {% block cart %}{% endblock cart %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/cart.css" %}?v={% now "U" %}">
+    {% if affiliate_code %}
+    <link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={% now "U" %}">
+    {% endif %}
 {% endblock extra_css %}
 
 {% block content %}
-<section class="cart-page-section bg-light" style="margin-top: 90px; min-height: 60vh;">
+<section class="cart-page-section bg-light" style="margin-top: {% if affiliate_code %}0{% else %}90{% endif %}px; min-height: 60vh;">
     <div class="container py-5">
         <div class="d-flex align-items-center justify-content-between mb-5">
             <div>
                 <h1 class="fw-black display-5 mb-2">{% trans "Shopping Cart" %}</h1>
                 <p class="text-muted mb-0">{{ items|length }} {% trans "item(s) in your cart" %}</p>
             </div>
-            <a href="{% url 'frontend:product_list' %}" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
+            <a href="{% if affiliate_code %}{% url 'frontend:affiliate_store' affiliate_code %}{% else %}{% url 'frontend:product_list' %}{% endif %}" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
                 <i class="fas fa-arrow-left me-2"></i>{% trans "Continue Shopping" %}
             </a>
         </div>
@@ -86,7 +98,7 @@
             </div>
             <h3 class="fw-black mb-3">{% trans "Your cart is empty" %}</h3>
             <p class="text-muted mb-4">{% trans "Looks like you haven't added anything yet." %}</p>
-            <a href="{% url 'frontend:product_list' %}" class="btn btn-dark rounded-pill px-5 py-3 fw-bold">
+            <a href="{% if affiliate_code %}{% url 'frontend:affiliate_store' affiliate_code %}{% else %}{% url 'frontend:product_list' %}{% endif %}" class="btn btn-dark rounded-pill px-5 py-3 fw-bold">
                 <i class="fas fa-arrow-left me-2"></i>{% trans "Start Shopping" %}
             </a>
         </div>

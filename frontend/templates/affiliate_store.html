@@ -137,7 +137,6 @@ body.affiliate-store .cart-fab {
                     {% endif %}
                     <div>
                         <h1 class="display-3 fw-black text-white mb-0">{{ store.store_name }}</h1>
-                        <p class="text-white-50 fs-5 mb-0">{{ profile.affiliate_code }}</p>
                     </div>
                 </div>
                 {% if store.store_description %}
@@ -209,10 +208,9 @@ body.affiliate-store .cart-fab {
 <footer class="bg-dark py-5">
     <div class="container">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div>
-                <h6 class="text-white fw-bold mb-1">{{ store.store_name }}</h6>
-                <p class="text-white-50 small mb-0">{{ profile.affiliate_code }}</p>
-            </div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">{{ store.store_name }}</h6>
+                    </div>
             <small class="text-white-50">&copy; {% now "Y" %} {{ store.store_name }}. {% trans "Powered by" %} <a href="/" class="text-white fw-bold text-decoration-none">LOFT Design</a>.</small>
         </div>
     </div>

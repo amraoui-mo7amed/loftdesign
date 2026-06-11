@@ -1,23 +1,30 @@
 import json
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
+from django.db import transaction
 from decimal import Decimal
-from ..models import Order, Product, Notification, LoftPrice
+from ..models import Order, Product, PartnerPrice, Notification, LoftPrice
 from dashboard.decorator import role_required
-from dashboard.utils import notify_user
+from dashboard.utils import notify_user, get_dash_cart, save_dash_cart, DASHBOARD_CART_SESSION_KEY, get_algeria_locations
 from user_auth.models import UserProfile
 
+_RC = UserProfile.roleChoices
+_AFFILIATE_ROLES = [_RC.AFFILIATE, _RC.SEMI_AFFILIATE]
 
-@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
+
+@role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER] + _AFFILIATE_ROLES)
 def order_list(request):
-    """View to list all orders — admins see all, providers see only orders containing their products"""
+    """List orders — admins see all, providers see their products, affiliates see their catalog products"""
     status_filter = request.GET.get("status", "")
     user_profile = getattr(request.user, "profile", None)
-    is_provider = user_profile and user_profile.role == UserProfile.roleChoices.PROVIDER
+    role = user_profile.role if user_profile else None
+    is_provider = role == _RC.PROVIDER
+    is_affiliate_or_semi = role in _AFFILIATE_ROLES
 
     if is_provider:
         user_product_ids = set(
@@ -27,16 +34,24 @@ def order_list(request):
         orders = [o for o in all_orders if any(
             item.get("product_id") in user_product_ids for item in o.items
         )]
-        paginator = Paginator(orders, 15)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+    elif is_affiliate_or_semi:
+        catalog_ids = set(
+            PartnerPrice.objects.filter(
+                buyer=request.user, is_active=True
+            ).values_list("product_id", flat=True)
+        )
+        all_orders = Order.objects.all().order_by("-created_at")
+        orders = [o for o in all_orders if any(
+            item.get("product_id") in catalog_ids for item in o.items
+        )]
     else:
         orders = Order.objects.all().order_by("-created_at")
         if status_filter:
             orders = orders.filter(status=status_filter)
-        paginator = Paginator(orders, 15)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+
+    paginator = Paginator(orders, 15)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     for order in page_obj.object_list:
         order.items_json = json.dumps(order.items, ensure_ascii=False)
@@ -49,11 +64,215 @@ def order_list(request):
         "title": _("Orders"),
         "is_provider": is_provider,
         "is_trusted": is_trusted,
+        "is_affiliate_or_semi": is_affiliate_or_semi,
     }
     return render(request, "orders/list.html", context)
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
+@role_required(allowed_roles=_AFFILIATE_ROLES)
+def affiliate_cart_checkout(request):
+    """Dashboard cart for affiliates — select products + client details → create Order"""
+    profile = get_object_or_404(UserProfile, user=request.user)
+    cart = get_dash_cart(request)
+
+    catalog_prices = PartnerPrice.objects.filter(
+        buyer=request.user, is_active=True
+    ).select_related("product", "product__loft_price").prefetch_related("product__gallery_images")
+
+    cart_product_ids = set(cart.keys())
+
+    catalog = []
+    for pp in catalog_prices:
+        product = pp.product
+        loft_price = getattr(product, "loft_price", None)
+        pid_str = str(product.pk)
+        catalog.append({
+            "product": product,
+            "partner_price": pp,
+            "retail_price": pp.retail_price or (loft_price.loft_retail_price if loft_price else None),
+            "primary_image": product.gallery_images.first(),
+            "cart_qty": int(cart.get(pid_str, {}).get("quantity", 0)),
+        })
+
+    cart_items = []
+    for product_id_str, item_data in cart.items():
+        try:
+            product = Product.objects.get(pk=product_id_str)
+        except Product.DoesNotExist:
+            continue
+        price = Decimal(str(item_data.get("retail_price", 0)))
+        qty = int(item_data.get("quantity", 1))
+        cart_items.append({
+            "product_id": product.pk,
+            "title": product.title,
+            "price": price,
+            "quantity": qty,
+            "subtotal": price * qty,
+            "thumbnail": product.thumbnail.url if product.thumbnail else "",
+        })
+
+    wilaya_options, communes_data = get_algeria_locations()
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        phone = request.POST.get("phone")
+        wilaya = request.POST.get("wilaya")
+        commune = request.POST.get("commune")
+        address = request.POST.get("address")
+
+        if not name or not phone:
+            return JsonResponse({"success": False, "errors": [_("Name and phone are required.")]})
+
+        if not cart_items:
+            return JsonResponse({"success": False, "errors": [_("Cart is empty.")]})
+
+        with transaction.atomic():
+            order_items = []
+            product_titles = []
+            for item_data in cart.values():
+                product = Product.objects.filter(pk=item_data.get("product_id")).first()
+                if not product:
+                    continue
+                price = Decimal(str(item_data.get("retail_price", 0)))
+                qty = int(item_data.get("quantity", 1))
+                order_items.append({
+                    "product_id": product.pk,
+                    "title": product.title,
+                    "price": str(price),
+                    "quantity": qty,
+                    "thumbnail": product.thumbnail.url if product.thumbnail else "",
+                })
+                product_titles.append(product.title)
+                product.quantity -= qty
+                product.save()
+
+            Order.objects.create(
+                buyer=request.user,
+                items=order_items,
+                customer_name=name,
+                customer_phone=phone,
+                customer_address=address,
+                wilaya=wilaya,
+                commune=commune,
+                referred_by=profile.affiliate_code,
+            )
+
+        request.session[DASHBOARD_CART_SESSION_KEY] = {}
+        request.session.modified = True
+
+        admins = User.objects.filter(is_superuser=True)
+        for admin in admins:
+            notify_user(
+                admin,
+                _("New Order from Affiliate!"),
+                _("%(affiliate)s placed an order for %(products)s — %(name)s")
+                % {
+                    "affiliate": request.user.get_full_name() or request.user.username,
+                    "products": ", ".join(product_titles),
+                    "name": name,
+                },
+                link="/dashboard/orders/",
+            )
+
+        return JsonResponse({
+            "success": True,
+            "message": _("Order created successfully!"),
+            "redirect_url": reverse("dash:order_list"),
+        })
+
+    cart_product_ids = set(cart.keys())
+
+    cart_total = sum(item["subtotal"] for item in cart_items)
+
+    return render(request, "orders/affiliate_cart.html", {
+        "catalog": catalog,
+        "cart_items": cart_items,
+        "cart_total": cart_total,
+        "cart_product_ids": cart_product_ids,
+        "wilaya_options": wilaya_options,
+        "communes_data": communes_data,
+        "profile": profile,
+        "title": _("Create Order"),
+    })
+
+
+@role_required(allowed_roles=_AFFILIATE_ROLES)
+def affiliate_cart_add(request, product_pk):
+    """AJAX: Add/update product quantity in dashboard cart"""
+    if request.method != "POST":
+        return JsonResponse({"success": False}, status=400)
+
+    product = get_object_or_404(
+        Product, pk=product_pk, is_active=True,
+        status=Product.ProductStatus.APPROVED
+    )
+    pp = PartnerPrice.objects.filter(
+        product=product, buyer=request.user, is_active=True
+    ).first()
+    if not pp:
+        return JsonResponse({
+            "success": False,
+            "message": _("Product not in your catalog."),
+        })
+
+    retail_price = pp.retail_price
+    loft_price = getattr(product, "loft_price", None)
+    if not retail_price and loft_price:
+        retail_price = loft_price.loft_retail_price
+
+    if not retail_price:
+        return JsonResponse({
+            "success": False,
+            "message": _("No retail price configured for this product."),
+        })
+
+    quantity = int(request.POST.get("quantity", 1))
+    if quantity < 1:
+        quantity = 1
+    if quantity > product.quantity:
+        return JsonResponse({
+            "success": False,
+            "message": _("Only %(qty)s available.") % {"qty": product.quantity},
+        })
+
+    cart = get_dash_cart(request)
+    key = str(product_pk)
+    cart[key] = {
+        "product_id": product.pk,
+        "quantity": quantity,
+        "retail_price": str(retail_price),
+        "title": product.title,
+    }
+    save_dash_cart(request, cart)
+
+    return JsonResponse({
+        "success": True,
+        "message": _("%(title)s added to cart.") % {"title": product.title},
+        "cart_count": len(cart),
+    })
+
+
+@role_required(allowed_roles=_AFFILIATE_ROLES)
+def affiliate_cart_remove(request, product_pk):
+    """AJAX: Remove product from dashboard cart"""
+    if request.method != "POST":
+        return JsonResponse({"success": False}, status=400)
+
+    cart = get_dash_cart(request)
+    key = str(product_pk)
+    removed_title = cart.get(key, {}).get("title", "")
+    if key in cart:
+        del cart[key]
+        save_dash_cart(request, cart)
+
+    return JsonResponse({
+        "success": True,
+        "message": _("%(title)s removed from cart.") % {"title": removed_title},
+        "cart_count": len(cart),
+    })
+
+
+@role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER])
 def order_update_status(request, pk):
     """AJAX view to update order status — only admins and trusted providers"""
     if request.method == "POST":
@@ -109,19 +328,30 @@ def order_update_status(request, pk):
     return JsonResponse({"success": False}, status=400)
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
+@role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER] + _AFFILIATE_ROLES)
 def order_detail(request, pk):
     """View order details with full product list"""
     order = get_object_or_404(Order, pk=pk)
     user_profile = getattr(request.user, "profile", None)
-    is_provider = user_profile and user_profile.role == UserProfile.roleChoices.PROVIDER
+    role = user_profile.role if user_profile else None
+    is_provider = role == _RC.PROVIDER
+    is_affiliate_or_semi = role in _AFFILIATE_ROLES
 
     if is_provider:
-        user_product_ids = set(
+        own_ids = set(
             Product.objects.filter(user=request.user).values_list("id", flat=True)
         )
-        order_product_ids = {item.get("product_id") for item in order.items}
-        if not order_product_ids.intersection(user_product_ids):
+        order_ids = {item.get("product_id") for item in order.items}
+        if not order_ids.intersection(own_ids):
+            return redirect("dash:order_list")
+    elif is_affiliate_or_semi:
+        catalog_ids = set(
+            PartnerPrice.objects.filter(
+                buyer=request.user, is_active=True
+            ).values_list("product_id", flat=True)
+        )
+        order_ids = {item.get("product_id") for item in order.items}
+        if not order_ids.intersection(catalog_ids):
             return redirect("dash:order_list")
 
     referred_by_profile = None
@@ -150,6 +380,7 @@ def order_detail(request, pk):
         "order": order,
         "is_provider": is_provider,
         "is_trusted": is_trusted,
+        "is_affiliate_or_semi": is_affiliate_or_semi,
         "referred_by_profile": referred_by_profile,
         "affiliate_earned": affiliate_earned,
         "title": _("Order #%(id)s Details") % {"id": order.id},

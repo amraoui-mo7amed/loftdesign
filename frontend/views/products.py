@@ -1,10 +1,15 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
-from dashboard.models import Product, Category
+from dashboard.models import Product, Category, PartnerPrice, AffiliateStore
+from user_auth.models import UserProfile
 from django.db.models import Q
 from django.utils.translation import gettext as _
 
 def product_list(request):
+    if request.session.get("affiliate_code"):
+        del request.session["affiliate_code"]
+        request.session.modified = True
+
     products = Product.objects.filter(is_active=True)
     categories = Category.objects.all()
     
@@ -71,13 +76,42 @@ from dashboard.utils import get_algeria_locations
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk, is_active=True)
     wilaya_options, communes_data = get_algeria_locations()
-    
-    context = {
+
+    affiliate_code = request.session.get("affiliate_code")
+    if affiliate_code:
+        try:
+            profile = UserProfile.objects.get(affiliate_code=affiliate_code, is_approved=True)
+        except UserProfile.DoesNotExist:
+            profile = None
+
+        if profile:
+            partner_price = PartnerPrice.objects.filter(
+                product=product, buyer=profile.user, is_active=True
+            ).first()
+            if partner_price:
+                store, _ = AffiliateStore.objects.get_or_create(
+                    affiliate=profile,
+                    defaults={"store_name": profile.user.get_full_name() or profile.user.username},
+                )
+                template = "products/affiliate_product_detail.html"
+            else:
+                profile = store = partner_price = None
+                template = "products/product_detail.html"
+        else:
+            profile = store = partner_price = None
+            template = "products/product_detail.html"
+    else:
+        profile = store = partner_price = None
+        template = "products/product_detail.html"
+
+    return render(request, template, {
         "product": product,
         "wilaya_options": wilaya_options,
         "communes_data": communes_data,
-    }
-    return render(request, "products/product_detail.html", context)
+        "profile": profile,
+        "store": store,
+        "partner_price": partner_price,
+    })
 
 
 def product_viewer_3d(request, pk):

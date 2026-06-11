@@ -45,6 +45,10 @@ urlpatterns = [
     path("orders/<int:pk>/status/", orders.order_update_status, name="order_update_status"),
     path("orders/<int:pk>/delete/", orders.order_delete, name="order_delete"),
     path("orders/<int:pk>/toggle-commission/", orders.order_toggle_commission, name="order_toggle_commission"),
+    # Affiliate Dashboard Cart
+    path("orders/cart/", orders.affiliate_cart_checkout, name="affiliate_cart"),
+    path("orders/cart/<int:product_pk>/add/", orders.affiliate_cart_add, name="affiliate_cart_add"),
+    path("orders/cart/<int:product_pk>/remove/", orders.affiliate_cart_remove, name="affiliate_cart_remove"),
 
     # Users
     path("users/", users.user_list, name="user_list"),

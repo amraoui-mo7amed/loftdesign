@@ -179,6 +179,18 @@ def resolve_price(product, seller_user, buyer_user):
 import json
 import os
 
+DASHBOARD_CART_SESSION_KEY = "dash_cart"
+
+
+def get_dash_cart(request):
+    return request.session.setdefault(DASHBOARD_CART_SESSION_KEY, {})
+
+
+def save_dash_cart(request, cart):
+    request.session[DASHBOARD_CART_SESSION_KEY] = cart
+    request.session.modified = True
+
+
 def get_algeria_locations():
     """
     Returns a dictionary of Wilayas and their corresponding Communes.

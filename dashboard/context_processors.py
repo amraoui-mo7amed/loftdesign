@@ -55,13 +55,19 @@ def _build_menu(is_authenticated, is_superuser, role):
             "url_name": "dash:contact_request_list",
         })
 
-    # Admin and Provider links
+    # Admin, Provider, and Affiliate links
     if is_admin or role == "provider":
         menu.append({
             "title": _("Products"),
             "icon": "fas fa-box-open",
             "url_name": "dash:product_list",
         })
+        menu.append({
+            "title": _("Orders"),
+            "icon": "fas fa-shopping-cart",
+            "url_name": "dash:order_list",
+        })
+    elif is_affiliate or is_semi_affiliate:
         menu.append({
             "title": _("Orders"),
             "icon": "fas fa-shopping-cart",

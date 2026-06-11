@@ -9,6 +9,10 @@ from django.contrib.auth.models import User
 from user_auth.utils import create_affiliate_account
 
 def home_view(request):
+    if request.session.get("affiliate_code"):
+        del request.session["affiliate_code"]
+        request.session.modified = True
+
     latest_portfolios = Portfolio.objects.filter(is_featured=True)[:6]
     if not latest_portfolios.exists():
         latest_portfolios = Portfolio.objects.all()[:6]

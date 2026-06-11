@@ -4,17 +4,28 @@
 
 {% block title %} | {% trans "Checkout" %}{% endblock title %}
 
+{% block body_class %}{% if affiliate_code %}affiliate-store{% endif %}{% endblock body_class %}
+
 {% block nav %}
+    {% if affiliate_code %}
+    <button type="button" class="affiliate-cart-float cart-trigger" title="{% trans 'Cart' %}">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="badge bg-primary {% if cart_count == 0 %}d-none{% endif %}">{{ cart_count }}</span>
+    </button>
+    {% endif %}
 {% endblock nav %}
 {% block sidebar %}{% endblock sidebar %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/product_detail.css" %}?v={% now "U" %}">
+    {% if affiliate_code %}
+    <link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={% now "U" %}">
+    {% endif %}
 {% endblock extra_css %}
 
 
 {% block content %}
-<section class="checkout-section bg-light py-5" style="margin-top: 70px;">
+<section class="checkout-section bg-light py-5" style="margin-top: {% if affiliate_code %}0{% else %}70{% endif %}px;">
     <div class="container">
         <h2 class="fw-black mb-4">{% trans "Checkout" %}</h2>
         <form method="POST" action="{% url 'frontend:checkout' %}" id="checkoutForm"

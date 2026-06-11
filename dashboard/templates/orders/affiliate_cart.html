@@ -1,0 +1,512 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}{% trans "Create Order" %}{% endblock dashTitle %}
+
+{% block extra_css %}
+<style>
+/* ── Custom Select (from index.css) ── */
+.custom-select-wrapper { position: relative; z-index: 10; }
+.custom-select-wrapper.active { z-index: 1050 !important; }
+.full-width { width: 100%; }
+.custom-select-label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-main); }
+.custom-select-display {
+    border: 2px solid var(--border-color);
+    padding: .375rem .75rem;
+    border-radius: 12px;
+    cursor: pointer;
+    background: var(--white-accent);
+    position: relative;
+    transition: border-color 0.2s;
+    min-height: 38px;
+}
+.custom-select-display:hover { border-color: var(--brand-secondary); }
+.custom-select-display .arrow {
+    position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; font-size: 1.3rem; color: var(--text-main);
+}
+[dir="rtl"] .custom-select-display .arrow { right: auto; left: 10px; }
+.custom-select-display.active { border-color: var(--brand-primary); }
+.custom-select-list {
+    list-style: none; padding: 0; margin: 5px 0 0 0;
+    border: 2px solid var(--border-color); border-radius: 12px;
+    position: absolute; top: 100%; left: 0; right: 0;
+    max-height: 200px; overflow-y: auto;
+    background: var(--white-accent); display: none; z-index: 1000;
+}
+.custom-select-list.show { display: block; }
+.custom-select-list li {
+    padding: 10px 15px; cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s ease; color: var(--text-main); background: var(--white-accent);
+}
+.custom-select-list li:last-child { border-bottom: none; }
+.custom-select-list li:hover { background: var(--brand-light); color: var(--brand-primary); padding-left: 20px; }
+[dir="rtl"] .custom-select-list li:hover { padding-left: 15px; padding-right: 20px; }
+
+/* ── Wizard Stepper ── */
+.wizard-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 2rem;
+    padding: 1.5rem 1rem;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.wizard-step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    border: 2.5px solid #dee2e6;
+    color: #adb5bd;
+    background: #fff;
+}
+.wizard-step.active .wizard-step-circle {
+    background: var(--brand-primary);
+    border-color: var(--brand-primary);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(183, 148, 84, 0.25);
+}
+.wizard-step.completed .wizard-step-circle {
+    background: var(--brand-primary);
+    border-color: var(--brand-primary);
+    color: #fff;
+}
+.wizard-step-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #adb5bd;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+.wizard-step.active .wizard-step-label { color: var(--brand-dark); }
+.wizard-step.completed .wizard-step-label { color: var(--brand-primary); }
+.wizard-connector {
+    height: 2.5px;
+    width: 60px;
+    background: #dee2e6;
+    margin: 0 1rem;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+    border-radius: 2px;
+}
+.wizard-connector.completed { background: var(--brand-primary); }
+
+/* ── Wizard Content Panels ── */
+.wizard-panel { display: none; animation: wizardFadeIn 0.35s ease; }
+.wizard-panel.active { display: block; }
+@keyframes wizardFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Catalog Grid ── */
+.cart-catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+.cart-catalog-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.cart-catalog-card.in-cart {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 2px rgba(183, 148, 84, 0.15);
+}
+.cart-catalog-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+.cart-catalog-card.in-cart:hover {
+    box-shadow: 0 12px 30px rgba(183, 148, 84, 0.1);
+}
+.cart-catalog-card .cart-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--brand-primary);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.25rem 0.6rem;
+    border-radius: 50px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.cart-catalog-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+.cart-catalog-card .body {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.cart-catalog-card .body h6 {
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+.cart-catalog-card .body .price {
+    font-weight: 900;
+    color: var(--brand-primary);
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+.cart-catalog-card .body .add-row {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: auto;
+}
+.cart-catalog-card .body .add-row input {
+    width: 54px;
+    border-radius: 50px;
+    border: 1.5px solid #dee2e6;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.3rem;
+}
+.cart-catalog-card .body .add-row .btn {
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 0.3rem 0.85rem;
+    flex: 1;
+}
+.cart-catalog-card .body .qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+.cart-catalog-card .body .qty-controls .qty-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--brand-primary);
+    background: #fff;
+    color: var(--brand-primary);
+    font-weight: 900;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1;
+}
+.cart-catalog-card .body .qty-controls .qty-btn:hover {
+    background: var(--brand-primary);
+    color: #fff;
+}
+.cart-catalog-card .body .qty-controls .qty-value {
+    font-weight: 900;
+    font-size: 1.05rem;
+    min-width: 28px;
+    text-align: center;
+}
+
+/* ── Cart Review Items ── */
+.cart-review-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f3f5;
+}
+.cart-review-item:last-of-type { border-bottom: none; }
+.cart-review-item img {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.cart-review-item .info { flex: 1; min-width: 0; }
+.cart-review-item .info .title { font-weight: 700; font-size: 0.95rem; }
+.cart-review-item .info .meta { font-size: 0.8rem; color: #6c757d; margin-top: 0.15rem; }
+.cart-review-item .qty-badge {
+    background: #f1f3f5;
+    border-radius: 50px;
+    padding: 0.3rem 0.85rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+.cart-review-item .remove-btn {
+    background: none; border: none; color: #dc3545;
+    font-size: 1rem; cursor: pointer; padding: 0.25rem 0.5rem;
+    opacity: 0.6; transition: opacity 0.2s;
+}
+.cart-review-item .remove-btn:hover { opacity: 1; }
+
+/* ── Navigation ── */
+.wizard-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f3f5;
+}
+
+/* ── Empty state ── */
+.cart-empty-icon { font-size: 2.5rem; color: #dee2e6; }
+
+/* ── Responsive ── */
+@media (max-width: 767.98px) {
+    .wizard-stepper { gap: 0.25rem; padding: 1rem 0.5rem; }
+    .wizard-connector { width: 24px; margin: 0 0.25rem; }
+    .wizard-step-label { display: none; }
+}
+</style>
+{% endblock extra_css %}
+
+{% block dashContent %}
+{% csrf_token %}
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="mb-4 text-center">
+        <h1 class="fw-black display-5 mb-1">{% trans "Create Order" %}</h1>
+        <p class="text-muted mb-0">{% trans "Select products, set quantities, and enter client details to create a new order." %}</p>
+    </div>
+
+    <!-- Wizard Stepper -->
+    <div class="wizard-stepper" id="wizardStepper">
+        <div class="wizard-step active" data-step="1">
+            <div class="wizard-step-circle">1</div>
+            <span class="wizard-step-label">{% trans "Products" %}</span>
+        </div>
+        <div class="wizard-connector" data-connector="1"></div>
+        <div class="wizard-step" data-step="2">
+            <div class="wizard-step-circle">2</div>
+            <span class="wizard-step-label">{% trans "Cart" %}</span>
+        </div>
+        <div class="wizard-connector" data-connector="2"></div>
+        <div class="wizard-step" data-step="3">
+            <div class="wizard-step-circle">3</div>
+            <span class="wizard-step-label">{% trans "Details" %}</span>
+        </div>
+    </div>
+
+    <!-- Step 1: Products -->
+    <div class="wizard-panel active" data-panel="1">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="fw-black mb-0">
+                <i class="fas fa-box-open me-2"></i>{% trans "Select Products" %}
+            </h5>
+            <span class="small text-muted">{{ catalog|length }} {% trans "products in your catalog" %} &middot;
+                <span class="fw-bold text-dark">{{ cart_items|length }}</span> {% trans "in cart" %}</span>
+        </div>
+
+        {% if catalog %}
+        <div class="cart-catalog-grid">
+            {% for item in catalog %}
+            {% with pid=item.product.pk|stringformat:"s" %}
+            <div class="cart-catalog-card{% if pid in cart_product_ids %} in-cart{% endif %}">
+                {% if pid in cart_product_ids %}
+                <span class="cart-badge"><i class="fas fa-check-circle"></i>{% trans "In Cart" %}</span>
+                {% endif %}
+                {% if item.primary_image %}
+                    <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" loading="lazy">
+                {% elif item.product.thumbnail %}
+                    <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" loading="lazy">
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height:150px;">
+                        <i class="fas fa-box-open fa-3x text-muted opacity-25"></i>
+                    </div>
+                {% endif %}
+                <div class="body">
+                    <h6>{{ item.product.title }}</h6>
+                    <div class="price">DZD {{ item.retail_price|floatformat:0|default:"0" }}</div>
+                    {% if pid in cart_product_ids %}
+                    <div class="qty-controls">
+                        <button type="button" class="qty-btn qty-dec"
+                                data-product-pk="{{ item.product.pk }}"
+                                data-title="{{ item.product.title }}"
+                                data-swal-title="{% trans 'Remove from cart?' %}"
+                                data-swal-text="{% trans 'Remove' %}"
+                                data-swal-confirm="{% trans 'Yes, remove' %}"
+                                data-swal-cancel="{% trans 'Cancel' %}">−</button>
+                        <span class="qty-value">{{ item.cart_qty }}</span>
+                        <button type="button" class="qty-btn qty-inc" data-product-pk="{{ item.product.pk }}" data-title="{{ item.product.title }}" data-max="{{ item.product.quantity }}">+</button>
+                    </div>
+                    {% else %}
+                    <div class="add-row">
+                        <input type="number" class="cart-qty-input" value="1" min="1" max="{{ item.product.quantity }}">
+                        <button type="button"
+                                class="btn btn-primary add-to-cart-btn"
+                                data-product-pk="{{ item.product.pk }}"
+                                data-title="{{ item.product.title }}">
+                            <i class="fas fa-cart-plus me-1"></i>{% trans "Add" %}
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-store-alt cart-empty-icon mb-3"></i>
+            <h5 class="fw-bold text-muted">{% trans "Your catalog is empty" %}</h5>
+            <p class="text-muted small">{% trans "Add products to your catalog before creating orders." %}</p>
+            <a href="{% url 'dash:affiliate_catalog' %}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">
+                <i class="fas fa-store me-2"></i>{% trans "Browse Products" %}
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="wizard-nav">
+            <div></div>
+            <button type="button" class="btn btn-dark rounded-pill px-5 fw-bold next-step" data-next="2" {% if not cart_items %}disabled{% endif %}>
+                {% trans "Review Cart" %} <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 2: Cart Review -->
+    <div class="wizard-panel" data-panel="2">
+        <h5 class="fw-black mb-3"><i class="fas fa-shopping-bag me-2"></i>{% trans "Cart Summary" %}</h5>
+
+        <div class="bg-white rounded-4 p-3 border" style="border-color:rgba(0,0,0,0.04);">
+            <div id="cartReviewContainer">
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                    <div class="cart-review-item" data-product-pk="{{ item.product_id }}">
+                        {% if item.thumbnail %}
+                        <img src="{{ item.thumbnail }}" alt="{{ item.title }}">
+                        {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center rounded-3" style="width:56px;height:56px;flex-shrink:0;">
+                            <i class="fas fa-box text-muted small"></i>
+                        </div>
+                        {% endif %}
+                        <div class="info">
+                            <div class="title">{{ item.title }}</div>
+                            <div class="meta">DZD {{ item.price|floatformat:0 }} each</div>
+                        </div>
+                        <span class="qty-badge">x{{ item.quantity }}</span>
+                        <span class="fw-bold" style="min-width:70px;text-align:right;">DZD {{ item.subtotal|floatformat:0 }}</span>
+                        <button type="button" class="remove-btn"
+                                data-product-pk="{{ item.product_id }}"
+                                data-title="{{ item.title }}"
+                                data-swal-title="{% trans 'Remove from cart?' %}"
+                                data-swal-text="{% trans 'Remove' %}"
+                                data-swal-confirm="{% trans 'Yes, remove' %}"
+                                data-swal-cancel="{% trans 'Cancel' %}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-between pt-3 mt-2" style="border-top:2px solid var(--brand-dark);">
+                        <span class="fw-black fs-5">{% trans "Total" %}</span>
+                        <span class="fw-black fs-5">DZD {{ cart_total|floatformat:0|default:"0" }}</span>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-shopping-bag cart-empty-icon mb-2"></i>
+                        <p class="small text-muted mb-0">{% trans "Cart is empty" %}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="wizard-nav">
+            <button type="button" class="btn btn-outline-dark rounded-pill px-4 fw-bold prev-step" data-prev="1">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Products" %}
+            </button>
+            <button type="button" class="btn btn-dark rounded-pill px-5 fw-bold next-step" data-next="3" {% if not cart_items %}disabled{% endif %}>
+                {% trans "Client Details" %} <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 3: Client Details -->
+    <div class="wizard-panel" data-panel="3">
+        <h5 class="fw-black mb-3"><i class="fas fa-user me-2"></i>{% trans "Client Details" %}</h5>
+
+        <div class="bg-white rounded-4 p-4 border" style="border-color:rgba(0,0,0,0.04);">
+            {% include "partials/errorList.html" with form_id="dashOrderForm" %}
+
+            <form id="dashOrderForm" class="form"
+                  data-swal-confirm-title="{% trans 'Confirm Order?' %}"
+                  data-swal-confirm-html="{% trans 'Create order for' %}"
+                  data-swal-confirm-text="{% trans 'Yes, place order' %}"
+                  data-swal-cancel-text="{% trans 'Cancel' %}">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" name="name" class="form-control" placeholder="{% trans 'Full Name' %}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="tel" name="phone" class="form-control" placeholder="{% trans 'Phone Number' %}" required>
+                    </div>
+                    <div class="col-md-6">
+                        {% include "components/custom_select.html" with id="dash-wilaya" label="" placeholder=_("Select wilaya") options=wilaya_options name="wilaya" %}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="custom-select-wrapper full-width" id="dash-commune">
+                            <label class="custom-select-label" for="dash-commune_input"></label>
+                            <div class="custom-select-display">
+                                <span class="selected-text">{% trans "Select commune" %}</span>
+                                <span class="arrow"><i class="fas fa-caret-down"></i></span>
+                            </div>
+                            <ul class="custom-select-list"></ul>
+                            <input type="hidden" id="dash-commune_input" name="commune" value="" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <textarea name="address" class="form-control" rows="2" placeholder="{% trans 'Address (optional)' %}"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="wizard-nav">
+            <button type="button" class="btn btn-outline-dark rounded-pill px-4 fw-bold prev-step" data-prev="2">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Cart" %}
+            </button>
+            <button type="submit" class="btn btn-dark rounded-pill px-5 fw-bold shadow-sm" id="placeOrderBtn" form="dashOrderForm">
+                <i class="fas fa-check-circle me-2"></i>{% trans "Place Order" %}
+            </button>
+        </div>
+    </div>
+
+</div>
+
+{{ communes_data|json_script:"dash-communes-data" }}
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="{% static 'js/affiliate_cart.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

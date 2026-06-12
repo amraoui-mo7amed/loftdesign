@@ -82,11 +82,16 @@ def affiliate_catalog(request):
 
     if is_semi and profile.parent_affiliate:
         # Semi-affiliate: only products in the parent affiliate's catalog
-        parent_product_ids = PartnerPrice.objects.filter(
-            buyer=profile.parent_affiliate.user,
-            is_active=True,
-        ).values_list("product_id", flat=True)
-        products = base_qs.filter(pk__in=parent_product_ids)
+        parent_product_ids = list(
+            PartnerPrice.objects.filter(
+                buyer=profile.parent_affiliate.user,
+                is_active=True,
+            ).values_list("product_id", flat=True)
+        )
+        if parent_product_ids:
+            products = base_qs.filter(pk__in=parent_product_ids)
+        else:
+            products = base_qs
     else:
         products = base_qs
 

@@ -10,7 +10,7 @@ def product_list(request):
         del request.session["affiliate_code"]
         request.session.modified = True
 
-    products = Product.objects.filter(is_active=True)
+    products = Product.objects.filter(is_active=True, show_in_global_store=True)
     categories = Category.objects.all()
     
     category_id = request.GET.get('category')
@@ -74,11 +74,17 @@ def product_list(request):
 from dashboard.utils import get_algeria_locations
 
 def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk, is_active=True)
-    wilaya_options, communes_data = get_algeria_locations()
-
-    affiliate_code = request.session.get("affiliate_code")
+    # Check query param first (for shared links), fall back to session
+    affiliate_code = request.GET.get("affiliate") or request.session.get("affiliate_code")
     if affiliate_code:
+        product = get_object_or_404(Product, pk=pk)
+    else:
+        product = get_object_or_404(Product, pk=pk, is_active=True)
+    wilaya_options, communes_data = get_algeria_locations()
+    if affiliate_code:
+        request.session["affiliate_code"] = affiliate_code
+        request.session.modified = True
+
         try:
             profile = UserProfile.objects.get(affiliate_code=affiliate_code, is_approved=True)
         except UserProfile.DoesNotExist:

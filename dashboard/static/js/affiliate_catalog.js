@@ -4,6 +4,66 @@ document.addEventListener("DOMContentLoaded", function () {
         csrfToken = csrfToken.value;
     }
 
+    // ── Share Button (copy link to clipboard) ────────────────────────
+    var shareBtns = document.querySelectorAll(".share-btn");
+    shareBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            var url = this.dataset.url;
+            var title = this.dataset.title;
+            var fullUrl = window.location.origin + url;
+
+            function showCopied() {
+                Swal.fire({
+                    icon: "success",
+                    title: "Link copied!",
+                    text: "\"" + title + "\" share link copied to clipboard.",
+                    timer: 2000,
+                    showConfirmButton: false,
+                    customClass: { popup: "rounded-4 border-0" }
+                });
+            }
+
+            function showError() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Could not copy",
+                    text: fullUrl,
+                    confirmButtonColor: "#b79454",
+                    customClass: {
+                        popup: "rounded-4 border-0",
+                        confirmButton: "rounded-pill px-4"
+                    }
+                });
+            }
+
+            function fallbackCopy() {
+                var textarea = document.createElement("textarea");
+                textarea.value = fullUrl;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand("copy");
+                    showCopied();
+                } catch (e) {
+                    showError();
+                }
+                document.body.removeChild(textarea);
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullUrl).then(function () {
+                    showCopied();
+                }).catch(function () {
+                    fallbackCopy();
+                });
+            } else {
+                fallbackCopy();
+            }
+        });
+    });
+
     // ── Update Pricing Form ─────────────────────────────────────────
     var pricingForm = document.getElementById("updatePricingForm");
     if (pricingForm) {
@@ -44,7 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                 });
                             }
                         }
-                        if (list.children.length) errorContainer.classList.remove("d-none");
+                        if (list.children.length) {
+                            errorContainer.classList.remove("d-none");
+                        }
                     }
                 }
             });

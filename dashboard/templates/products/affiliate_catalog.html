@@ -214,6 +214,14 @@
                         <i class="fas fa-plus-circle me-1"></i> {% trans "Add" %}
                     </button>
                     {% endif %}
+                    {% if item.in_catalog %}
+                    <button type="button"
+                            class="btn btn-outline-dark share-btn"
+                            data-url="{% url 'frontend:affiliate_redirect' request.user.profile.affiliate_code item.product.pk %}"
+                            data-title="{{ item.product.title }}">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>

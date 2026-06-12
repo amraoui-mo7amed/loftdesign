@@ -7,7 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from decimal import Decimal
 
-from dashboard.models import Product, Order
+from dashboard.models import Product, Order, PartnerPrice
+from user_auth.models import UserProfile
 from dashboard.utils import get_algeria_locations, notify_user, resolve_price
 
 
@@ -28,7 +29,18 @@ def _cart_total_items(cart):
 
 
 def _resolve_for_cart(request, product):
-    """Resolve price for the current request context."""
+    """Resolve price for the current request context — uses affiliate retail price if referred."""
+    affiliate_code = request.session.get("affiliate_code")
+    if affiliate_code:
+        try:
+            aff_profile = UserProfile.objects.get(affiliate_code=affiliate_code, is_approved=True)
+            pp = PartnerPrice.objects.filter(
+                product=product, buyer=aff_profile.user, is_active=True
+            ).first()
+            if pp and pp.retail_price is not None:
+                return pp.retail_price
+        except UserProfile.DoesNotExist:
+            pass
     seller_user = product.user or User.objects.filter(is_superuser=True).first()
     buyer_user = request.user if request.user.is_authenticated else None
     return resolve_price(product, seller_user, buyer_user)
@@ -51,7 +63,7 @@ def _get_cart_items_data(request):
         product = Product.objects.filter(pk=item_data["product_id"]).first()
         if not product:
             continue
-        price = item_data.get("resolved_price") or product.price
+        price = item_data.get("resolved_price") or product.loft_retail_price or "0"
         subtotal = float(price) * item_data["quantity"]
         items.append({
             "id": item_data["product_id"],
@@ -89,6 +101,10 @@ def cart_add(request):
 
     if key in cart:
         cart[key]["quantity"] += quantity
+        # Refresh the affiliate code in case it changed since first add
+        session_code = request.session.get("affiliate_code", "")
+        if session_code:
+            cart[key]["affiliate_code"] = session_code
     else:
         cart[key] = {
             "product_id": product.pk,
@@ -132,8 +148,9 @@ def cart_update(request):
     cart[key]["quantity"] = quantity
     _save_cart(request, cart)
 
-    product = get_object_or_404(Product, pk=item_id)
-    item_subtotal = (product.loft_retail_price or 0) * quantity
+    cart_item = cart.get(key, {})
+    unit_price = Decimal(str(cart_item.get("resolved_price", 0))) or Decimal("0")
+    item_subtotal = unit_price * quantity
 
     return JsonResponse({
         "success": True,
@@ -169,7 +186,7 @@ def cart_load(request):
         product = Product.objects.filter(pk=item_data["product_id"]).first()
         if not product:
             continue
-        price = item_data.get("resolved_price") or product.price
+        price = item_data.get("resolved_price") or product.loft_retail_price or "0"
         subtotal = float(price) * item_data["quantity"]
         items.append({
             "id": item_data["product_id"],
@@ -242,6 +259,8 @@ def cart_checkout(request):
                 if item_data.get("affiliate_code"):
                     referred_by = item_data["affiliate_code"]
                     break
+            if not referred_by:
+                referred_by = request.session.get("affiliate_code", "")
 
             Order.objects.create(
                 items=order_items,

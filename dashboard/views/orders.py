@@ -56,6 +56,35 @@ def order_list(request):
     for order in page_obj.object_list:
         order.items_json = json.dumps(order.items, ensure_ascii=False)
 
+    # Compute affiliate earnings for DELIVERED orders with referred_by
+    delivered_referred = [
+        o for o in page_obj.object_list
+        if o.referred_by and o.status == Order.OrderStatus.DELIVERED
+    ]
+    if delivered_referred:
+        all_product_ids = set()
+        for o in delivered_referred:
+            for item in o.items:
+                pid = item.get("product_id")
+                if pid:
+                    all_product_ids.add(pid)
+        loft_prices = {
+            lp.product_id: lp
+            for lp in LoftPrice.objects.filter(product_id__in=all_product_ids)
+        }
+        for o in delivered_referred:
+            earnings = Decimal("0.00")
+            for item in o.items:
+                product_id = item.get("product_id")
+                price = Decimal(str(item.get("price", 0))) or Decimal("0")
+                quantity = int(item.get("quantity", 1))
+                loft_price = loft_prices.get(product_id)
+                if loft_price:
+                    margin = price - loft_price.loft_retail_price
+                    if margin > 0:
+                        earnings += margin * quantity
+            o.commission_earned = earnings
+
     is_trusted = user_profile and user_profile.is_trusted
     context = {
         "page_obj": page_obj,
@@ -160,17 +189,42 @@ def affiliate_cart_checkout(request):
         request.session[DASHBOARD_CART_SESSION_KEY] = {}
         request.session.modified = True
 
+        creator_name = request.user.get_full_name() or request.user.username
+
+        # Notify admin
         admins = User.objects.filter(is_superuser=True)
         for admin in admins:
             notify_user(
                 admin,
-                _("New Order from Affiliate!"),
-                _("%(affiliate)s placed an order for %(products)s — %(name)s")
+                _("New Order from %(affiliate)s") % {"affiliate": creator_name},
+                _("%(affiliate)s placed an order for %(products)s — Customer: %(name)s")
                 % {
-                    "affiliate": request.user.get_full_name() or request.user.username,
+                    "affiliate": creator_name,
                     "products": ", ".join(product_titles),
                     "name": name,
                 },
+                notification_type=Notification.NotificationType.SUCCESS,
+                link="/dashboard/orders/",
+            )
+
+        # Notify the affiliate/semi-affiliate who created the order
+        notify_user(
+            request.user,
+            _("Order Created Successfully"),
+            _("You placed an order for %(products)s — %(name)s. Track it in your orders.")
+            % {"products": ", ".join(product_titles), "name": name},
+            notification_type=Notification.NotificationType.INFO,
+            link="/dashboard/orders/",
+        )
+
+        # If semi-affiliate, also notify their parent affiliate
+        if profile.role == UserProfile.roleChoices.SEMI_AFFILIATE and profile.parent_affiliate:
+            notify_user(
+                profile.parent_affiliate.user,
+                _("New Order from %(semi)s") % {"semi": creator_name},
+                _("%(semi)s placed an order for %(products)s — Customer: %(name)s")
+                % {"semi": creator_name, "products": ", ".join(product_titles), "name": name},
+                notification_type=Notification.NotificationType.INFO,
                 link="/dashboard/orders/",
             )
 
@@ -360,20 +414,22 @@ def order_detail(request, pk):
         referred_by_profile = UserProfile.objects.filter(
             affiliate_code=order.referred_by
         ).first()
-        if referred_by_profile:
+        if referred_by_profile and order.status == Order.OrderStatus.DELIVERED:
             affiliate_earned = Decimal("0.00")
+            product_ids = [item.get("product_id") for item in order.items if item.get("product_id")]
+            loft_prices = {
+                lp.product_id: lp
+                for lp in LoftPrice.objects.filter(product_id__in=product_ids)
+            }
             for item in order.items:
                 product_id = item.get("product_id")
                 price = Decimal(str(item.get("price", 0))) or Decimal("0")
                 quantity = int(item.get("quantity", 1))
-                if product_id:
-                    try:
-                        loft_price = LoftPrice.objects.get(product_id=product_id)
-                        margin = price - loft_price.loft_retail_price
-                        if margin > 0:
-                            affiliate_earned += margin * quantity
-                    except LoftPrice.DoesNotExist:
-                        pass
+                loft_price = loft_prices.get(product_id)
+                if loft_price:
+                    margin = price - loft_price.loft_retail_price
+                    if margin > 0:
+                        affiliate_earned += margin * quantity
 
     is_trusted = user_profile and user_profile.is_trusted
     return render(request, "orders/detail.html", {

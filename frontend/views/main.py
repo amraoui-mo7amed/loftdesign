@@ -17,9 +17,9 @@ def home_view(request):
     if not latest_portfolios.exists():
         latest_portfolios = Portfolio.objects.all()[:6]
 
-    latest_products = Product.objects.filter(is_active=True, is_featured=True)[:4]
+    latest_products = Product.objects.filter(is_active=True, is_featured=True, show_in_global_store=True)[:4]
     if not latest_products.exists():
-        latest_products = Product.objects.filter(is_active=True)[:4]
+        latest_products = Product.objects.filter(is_active=True, show_in_global_store=True)[:4]
 
     settings_obj = SiteSettings.objects.first()
     

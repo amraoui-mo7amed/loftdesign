@@ -1,10 +1,11 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from dashboard.models import Product, Order, Notification
+from dashboard.models import Product, Order, Notification, PartnerPrice
 from dashboard.utils import notify_user, resolve_price
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.db import transaction
+from user_auth.models import UserProfile
 
 def place_order(request):
     """AJAX view to handle product inquiry (order) submission"""
@@ -38,10 +39,23 @@ def place_order(request):
         if product.quantity < quantity:
             return JsonResponse({"success": False, "errors": {"quantity": [_("Requested quantity exceeds available stock.")]}})
 
-        # Resolve price
-        seller_user = product.user or User.objects.filter(is_superuser=True).first()
-        buyer_user = request.user if request.user.is_authenticated else None
-        resolved = resolve_price(product, seller_user, buyer_user)
+        # Resolve price — use affiliate's retail price if referred
+        affiliate_code = request.session.get("affiliate_code")
+        resolved = None
+        if affiliate_code:
+            try:
+                aff_profile = UserProfile.objects.get(affiliate_code=affiliate_code, is_approved=True)
+                pp = PartnerPrice.objects.filter(
+                    product=product, buyer=aff_profile.user, is_active=True
+                ).first()
+                if pp and pp.retail_price is not None:
+                    resolved = pp.retail_price
+            except UserProfile.DoesNotExist:
+                pass
+        if resolved is None:
+            seller_user = product.user or User.objects.filter(is_superuser=True).first()
+            buyer_user = request.user if request.user.is_authenticated else None
+            resolved = resolve_price(product, seller_user, buyer_user)
         if resolved is None:
             return JsonResponse({
                 "success": False,
@@ -67,7 +81,8 @@ def place_order(request):
                     customer_address=address,
                     wilaya=wilaya,
                     commune=commune,
-                    status=Order.OrderStatus.PENDING
+                    status=Order.OrderStatus.PENDING,
+                    referred_by=affiliate_code,
                 )
 
                 # Notify Admins
@@ -83,6 +98,31 @@ def place_order(request):
                         notification_type=Notification.NotificationType.SUCCESS,
                         link="/dashboard/orders/"
                     )
+
+                # Notify the referring affiliate (if any)
+                if affiliate_code:
+                    try:
+                        aff_profile = UserProfile.objects.get(affiliate_code=affiliate_code, is_approved=True)
+                        notify_user(
+                            user=aff_profile.user,
+                            title=_("New Lead via Your Store"),
+                            message=_("%(name)s placed an inquiry for %(product)s through your store.")
+                            % {"name": name, "product": product.title},
+                            notification_type=Notification.NotificationType.INFO,
+                            link="/dashboard/orders/",
+                        )
+                        # If semi-affiliate, also notify parent affiliate
+                        if aff_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE and aff_profile.parent_affiliate:
+                            notify_user(
+                                user=aff_profile.parent_affiliate.user,
+                                title=_("New Lead via Semi-Affiliate"),
+                                message=_("%(name)s placed an inquiry for %(product)s through %(semi)s's store.")
+                                % {"name": name, "product": product.title, "semi": aff_profile.user.get_full_name() or aff_profile.user.username},
+                                notification_type=Notification.NotificationType.INFO,
+                                link="/dashboard/orders/",
+                            )
+                    except UserProfile.DoesNotExist:
+                        pass
 
                 return JsonResponse({
                     "success": True,

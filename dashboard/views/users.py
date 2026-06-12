@@ -182,7 +182,7 @@ def user_details(request, pk):
     
     # Financial Analytics for Provider
     confirmed_orders = Order.objects.filter(
-        status__in=[Order.OrderStatus.PAID, Order.OrderStatus.DELIVERED]
+        status=Order.OrderStatus.DELIVERED
     )
     user_product_ids = set(
         Product.objects.filter(user=profile.user).values_list("id", flat=True)
@@ -212,7 +212,7 @@ def user_details(request, pk):
     total_earnings = Decimal("0.00")
     unpaid_earnings = Decimal("0.00")
     referred_orders_data = []
-    if profile.role == UserProfile.roleChoices.AFFILIATE:
+    if profile.role in (UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.SEMI_AFFILIATE):
         store, created = AffiliateStore.objects.get_or_create(
             affiliate=profile,
             defaults={"store_name": profile.user.get_full_name() or profile.user.username}
@@ -223,7 +223,7 @@ def user_details(request, pk):
         store_orders = referred_orders_qs.order_by("-created_at")[:10]
         for order in referred_orders_qs:
             earnings = Decimal("0.00")
-            if order.status in [Order.OrderStatus.PAID, Order.OrderStatus.DELIVERED]:
+            if order.status == Order.OrderStatus.DELIVERED:
                 for item in order.items:
                     product_id = item.get("product_id")
                     price = Decimal(str(item.get("price", 0))) or Decimal("0")

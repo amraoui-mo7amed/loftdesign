@@ -93,6 +93,18 @@
                         </div>
                     {% endif %}
 
+                    <!-- Commission (admin, affiliate, semi-affiliate) -->
+                    {% if order.referred_by and order.status == 'delivered' and order.commission_earned %}
+                    {% if not is_provider %}
+                    <div class="d-flex align-items-center gap-2 px-3 py-2 mb-3 rounded-3" style="background:#fef9ef;">
+                        <i class="fas fa-coins small" style="color:var(--brand-primary);"></i>
+                        <small class="fw-bold" style="color:var(--brand-primary);">
+                            {% trans "Commission" %}: {{ order.commission_earned|floatformat:2 }} DZD
+                        </small>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+
                     <!-- Actions -->
                     <div class="mt-auto d-flex gap-2">
                         <a href="{% url 'dash:order_detail' order.pk %}" class="view-details-btn d-flex align-items-center justify-content-center gap-2 text-decoration-none">

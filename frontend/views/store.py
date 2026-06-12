@@ -1,7 +1,23 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import Http404
 from django.utils.translation import gettext as _
 from user_auth.models import UserProfile
-from dashboard.models import PartnerPrice, AffiliateStore, StoreVisit
+from dashboard.models import PartnerPrice, AffiliateStore, StoreVisit, Product
+
+
+def affiliate_redirect(request, code, pk):
+    """Short redirect URL for sharing: /go/CODE/PK/"""
+    profile = get_object_or_404(
+        UserProfile, affiliate_code=code, is_approved=True
+    )
+    product = get_object_or_404(Product, pk=pk)
+    if not PartnerPrice.objects.filter(
+        product=product, buyer=profile.user, is_active=True
+    ).exists():
+        raise Http404(_("Product not available through this affiliate."))
+    request.session["affiliate_code"] = code
+    request.session.modified = True
+    return redirect("frontend:product_detail", pk=pk)
 
 
 def affiliate_store(request, code):

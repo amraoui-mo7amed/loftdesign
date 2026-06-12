@@ -28,4 +28,6 @@ urlpatterns = [
     path("affiliate/signup/", main.affiliate_signup, name="affiliate_signup"),
     # Affiliate Storefront
     path("store/<slug:code>/", store.affiliate_store, name="affiliate_store"),
+    # Short redirect for share links
+    path("go/<slug:code>/<int:pk>/", store.affiliate_redirect, name="affiliate_redirect"),
 ]

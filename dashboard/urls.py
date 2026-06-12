@@ -18,6 +18,7 @@ urlpatterns = [
     # Product Validation
     path("products/<int:pk>/approve/", products.product_approve, name="product_approve"),
     path("products/<int:pk>/reject/", products.product_reject, name="product_reject"),
+    path("products/<int:pk>/toggle-global/", products.product_toggle_global_store, name="product_toggle_global_store"),
     # Partner Pricing
     path("products/<int:product_pk>/prices/", products.partner_price_list, name="partner_price_list"),
     path("products/<int:product_pk>/prices/create/", products.partner_price_create, name="partner_price_create"),

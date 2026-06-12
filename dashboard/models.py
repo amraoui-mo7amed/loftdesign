@@ -192,6 +192,10 @@ class Product(models.Model):
     sku = models.CharField(_("SKU"), max_length=100, unique=True, blank=True, null=True)
     is_active = models.BooleanField(default=True, verbose_name=_("Is Active"))
     is_featured = models.BooleanField(default=False, verbose_name=_("Is Featured"))
+    show_in_global_store = models.BooleanField(
+        _("Show in Global Store"), default=True,
+        help_text=_("Uncheck to hide this product from the public storefront")
+    )
 
     # Pricing Workflow Fields
     status = models.CharField(

@@ -6,6 +6,37 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+    <style>
+        .editorial-global-toggle-wrap {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .editorial-global-toggle-wrap input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--brand-primary, #0d6efd);
+            margin: 0;
+        }
+        .editorial-global-toggle-label {
+            font-size: 0.55rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+            background: rgba(0,0,0,0.5);
+            padding: 1px 6px;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+            white-space: nowrap;
+            line-height: 1.4;
+        }
+    </style>
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -95,6 +126,14 @@
                     <span class="vr-badge-icon bg-warning text-dark" style="top:40px;" title="Pending"><i class="fas fa-clock"></i></span>
                 {% elif product.status == "rejected" %}
                     <span class="vr-badge-icon bg-danger text-white" style="top:40px;" title="Rejected"><i class="fas fa-ban"></i></span>
+                {% endif %}
+                {% if request.user.is_superuser %}
+                <div class="editorial-global-toggle-wrap">
+                    <input type="checkbox" class="editorial-global-toggle"
+                           {% if product.show_in_global_store %}checked{% endif %}
+                           data-url="{% url 'dash:product_toggle_global_store' product.pk %}">
+                    <span class="editorial-global-toggle-label">{% trans "Global" %}</span>
+                </div>
                 {% endif %}
             </div>
             
@@ -238,4 +277,5 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
     <script src="{% static 'js/product_pricing.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/product_global_toggle.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

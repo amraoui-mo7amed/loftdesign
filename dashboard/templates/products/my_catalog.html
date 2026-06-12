@@ -157,6 +157,14 @@
                             data-swal-cancel="{% trans 'Cancel' %}">
                         <i class="fas fa-minus-circle me-1"></i> {% trans "Remove" %}
                     </button>
+                    {% if request.user.profile.affiliate_code %}
+                    <button type="button"
+                            class="btn btn-outline-dark share-btn"
+                            data-url="{% url 'frontend:affiliate_redirect' request.user.profile.affiliate_code item.product.pk %}"
+                            data-title="{{ item.product.title }}">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>

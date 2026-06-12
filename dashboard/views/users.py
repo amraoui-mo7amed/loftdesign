@@ -218,9 +218,29 @@ def user_details(request, pk):
             defaults={"store_name": profile.user.get_full_name() or profile.user.username}
         )
         store_visits = StoreVisit.objects.filter(store=store).count()
-        referred_orders_qs = Order.objects.filter(referred_by=profile.affiliate_code)
+        referred_codes = [profile.affiliate_code]
+        if profile.role == UserProfile.roleChoices.AFFILIATE:
+            semi_codes = UserProfile.objects.filter(
+                parent_affiliate=profile, is_approved=True
+            ).exclude(affiliate_code__isnull=True).exclude(affiliate_code="").values_list("affiliate_code", flat=True)
+            referred_codes.extend(semi_codes)
+        referred_orders_qs = Order.objects.filter(referred_by__in=referred_codes)
         referred_order_count = referred_orders_qs.count()
         store_orders = referred_orders_qs.order_by("-created_at")[:10]
+
+        # Batch-load LoftPrices for all DELIVERED orders
+        delivered_referred = [o for o in referred_orders_qs if o.status == Order.OrderStatus.DELIVERED]
+        all_product_ids = set()
+        for o in delivered_referred:
+            for item in o.items:
+                pid = item.get("product_id")
+                if pid:
+                    all_product_ids.add(pid)
+        loft_prices = {
+            lp.product_id: lp
+            for lp in LoftPrice.objects.filter(product_id__in=all_product_ids)
+        }
+
         for order in referred_orders_qs:
             earnings = Decimal("0.00")
             if order.status == Order.OrderStatus.DELIVERED:
@@ -228,14 +248,10 @@ def user_details(request, pk):
                     product_id = item.get("product_id")
                     price = Decimal(str(item.get("price", 0))) or Decimal("0")
                     quantity = int(item.get("quantity", 1))
-                    if product_id:
-                        try:
-                            loft_price = LoftPrice.objects.get(product_id=product_id)
-                            margin = price - loft_price.loft_retail_price
-                            if margin > 0:
-                                earnings += margin * quantity
-                        except LoftPrice.DoesNotExist:
-                            pass
+                    if product_id and product_id in loft_prices:
+                        margin = price - loft_prices[product_id].loft_default_wholesale_price
+                        if margin > 0:
+                            earnings += margin * quantity
                 total_earnings += earnings
                 if not order.commission_paid:
                     unpaid_earnings += earnings

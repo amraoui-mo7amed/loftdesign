@@ -1,5 +1,4 @@
 from functools import lru_cache
-
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _, get_language
 

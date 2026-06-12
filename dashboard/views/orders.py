@@ -80,7 +80,7 @@ def order_list(request):
                 quantity = int(item.get("quantity", 1))
                 loft_price = loft_prices.get(product_id)
                 if loft_price:
-                    margin = price - loft_price.loft_retail_price
+                    margin = price - loft_price.loft_default_wholesale_price
                     if margin > 0:
                         earnings += margin * quantity
             o.commission_earned = earnings
@@ -427,7 +427,7 @@ def order_detail(request, pk):
                 quantity = int(item.get("quantity", 1))
                 loft_price = loft_prices.get(product_id)
                 if loft_price:
-                    margin = price - loft_price.loft_retail_price
+                    margin = price - loft_price.loft_default_wholesale_price
                     if margin > 0:
                         affiliate_earned += margin * quantity
 

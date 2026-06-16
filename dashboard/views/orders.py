@@ -417,11 +417,14 @@ def order_detail(request, pk):
                 return redirect("dash:order_list")
 
     referred_by_profile = None
+    parent_profile = None
     affiliate_earned = None
     if order.referred_by:
         referred_by_profile = UserProfile.objects.filter(
             affiliate_code=order.referred_by
         ).first()
+        if referred_by_profile and referred_by_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE:
+            parent_profile = referred_by_profile.parent_affiliate
         if referred_by_profile and order.status == Order.OrderStatus.DELIVERED:
             affiliate_earned = Decimal("0.00")
             product_ids = [item.get("product_id") for item in order.items if item.get("product_id")]
@@ -446,6 +449,7 @@ def order_detail(request, pk):
         "is_trusted": is_trusted,
         "is_affiliate_or_semi": is_affiliate_or_semi,
         "referred_by_profile": referred_by_profile,
+        "parent_profile": parent_profile,
         "affiliate_earned": affiliate_earned,
         "title": _("Order #%(id)s Details") % {"id": order.id},
     })

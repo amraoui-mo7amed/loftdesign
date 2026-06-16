@@ -164,6 +164,38 @@
                     <h6 class="fw-black mb-0 text-dark"><i class="fas fa-link me-2 text-primary"></i>{% trans "Referred By" %}</h6>
                 </div>
                 <div class="card-body">
+                    {% if parent_profile %}
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle fw-black text-white mb-2"
+                                     style="width:40px;height:40px;background:var(--brand-primary);font-size:0.85rem;">
+                                    {{ referred_by_profile.user.get_full_name|first|upper }}
+                                </div>
+                                <div class="fw-bold small">{{ referred_by_profile.user.get_full_name }}</div>
+                                <span class="badge bg-info rounded-pill px-2" style="font-size:0.6rem;">{{ referred_by_profile.get_role_display }}</span>
+                                <div class="mt-1"><code class="small">{{ referred_by_profile.affiliate_code }}</code></div>
+                                <a href="{% url 'dash:user_details' referred_by_profile.pk %}" class="btn btn-outline-dark btn-sm rounded-pill fw-bold mt-2 w-100" style="font-size:0.7rem;">
+                                    <i class="fas fa-user me-1"></i> {% trans "View Profile" %}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-6 border-start">
+                            <div class="text-center">
+                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle fw-black text-white mb-2"
+                                     style="width:40px;height:40px;background:#198754;font-size:0.85rem;">
+                                    {{ parent_profile.user.get_full_name|first|upper }}
+                                </div>
+                                <div class="fw-bold small">{{ parent_profile.user.get_full_name }}</div>
+                                <span class="badge bg-primary rounded-pill px-2" style="font-size:0.6rem;">{{ parent_profile.get_role_display }}</span>
+                                <div class="mt-1"><code class="small">{{ parent_profile.affiliate_code }}</code></div>
+                                <a href="{% url 'dash:user_details' parent_profile.pk %}" class="btn btn-outline-dark btn-sm rounded-pill fw-bold mt-2 w-100" style="font-size:0.7rem;">
+                                    <i class="fas fa-user me-1"></i> {% trans "View Profile" %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
                     <div class="d-flex align-items-center gap-3 mb-3">
                         <div class="d-flex align-items-center justify-content-center rounded-circle fw-black text-white"
                              style="width:44px;height:44px;background:var(--brand-primary);flex-shrink:0;">
@@ -179,17 +211,6 @@
                             {{ referred_by_profile.get_role_display }}
                         </span>
                     </div>
-                    {% if affiliate_earned is not None %}
-                    <div class="d-flex align-items-center gap-2 py-2 px-3 rounded-3" style="background:#f8f9fa;">
-                        <i class="fas fa-coins text-primary"></i>
-                        <div>
-                            <div class="info-label">{% trans "Commission Earned" %}</div>
-                            <div class="fw-black" style="color:var(--brand-primary);font-size:1.1rem;">
-                                {{ affiliate_earned|floatformat:2 }} <small>DZD</small>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
                     <div class="d-flex gap-2 mt-2">
                         <a href="{% url 'dash:user_details' referred_by_profile.pk %}" class="btn btn-outline-dark btn-sm rounded-pill fw-bold flex-grow-1">
                             <i class="fas fa-user me-1"></i> {% trans "View Profile" %}
@@ -200,6 +221,18 @@
                         </a>
                         {% endif %}
                     </div>
+                    {% endif %}
+                    {% if affiliate_earned is not None %}
+                    <div class="d-flex align-items-center gap-2 py-2 px-3 rounded-3 mt-3" style="background:#f8f9fa;">
+                        <i class="fas fa-coins text-primary"></i>
+                        <div>
+                            <div class="info-label">{% trans "Commission Earned" %}</div>
+                            <div class="fw-black" style="color:var(--brand-primary);font-size:1.1rem;">
+                                {{ affiliate_earned|floatformat:2 }} <small>DZD</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

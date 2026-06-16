@@ -40,7 +40,7 @@ def place_order(request):
             return JsonResponse({"success": False, "errors": {"quantity": [_("Requested quantity exceeds available stock.")]}})
 
         # Resolve price — use affiliate's retail price if referred
-        affiliate_code = request.session.get("affiliate_code")
+        affiliate_code = request.session.get("affiliate_code", "")
         resolved = None
         if affiliate_code:
             try:

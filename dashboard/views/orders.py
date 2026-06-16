@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.db.models import Q
 from decimal import Decimal
 from ..models import Order, Product, PartnerPrice, Notification, LoftPrice
 from dashboard.decorator import role_required
@@ -21,6 +22,7 @@ _AFFILIATE_ROLES = [_RC.AFFILIATE, _RC.SEMI_AFFILIATE]
 def order_list(request):
     """List orders — admins see all, providers see their products, affiliates see their catalog products"""
     status_filter = request.GET.get("status", "")
+    q = request.GET.get("q", "").strip()
     user_profile = getattr(request.user, "profile", None)
     role = user_profile.role if user_profile else None
     is_provider = role == _RC.PROVIDER
@@ -51,6 +53,14 @@ def order_list(request):
         orders = Order.objects.all().order_by("-created_at")
         if status_filter:
             orders = orders.filter(status=status_filter)
+
+    if q:
+        if isinstance(orders, list):
+            orders = [o for o in orders if q.lower() in (o.customer_name or "").lower() or q.lower() in (o.customer_phone or "").lower()]
+        else:
+            orders = orders.filter(
+                Q(customer_name__icontains=q) | Q(customer_phone__icontains=q)
+            )
 
     paginator = Paginator(orders, 15)
     page_number = request.GET.get("page")
@@ -89,10 +99,33 @@ def order_list(request):
             o.commission_earned = earnings
 
     is_trusted = user_profile and user_profile.is_trusted
+
+    status_options = [
+        {"value": s, "label": _(l)} for s, l in Order.OrderStatus.choices
+    ]
+    selected_status_label = None
+    for so in status_options:
+        if so["value"] == status_filter:
+            selected_status_label = so["label"]
+            break
+
+    filter_params = {}
+    if q:
+        filter_params["q"] = q
+    if status_filter:
+        filter_params["status"] = status_filter
+    base_query = "&".join(f"{k}={v}" for k, v in filter_params.items())
+    base_url = f"?{base_query}&" if base_query else "?"
+
     context = {
         "page_obj": page_obj,
         "status_filter": status_filter,
         "status_choices": Order.OrderStatus.choices,
+        "status_options": status_options,
+        "selected_status_label": selected_status_label,
+        "q": q,
+        "filter_params": filter_params,
+        "base_url": base_url,
         "title": _("Orders"),
         "is_provider": is_provider,
         "is_trusted": is_trusted,

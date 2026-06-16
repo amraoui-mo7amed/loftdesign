@@ -6,6 +6,37 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/orders.css' %}?v={% now 'U' %}">
+    <style>
+        .filter-btn {
+            border-radius: 40px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover {
+            border-color: var(--brand-primary, #0d6efd);
+            background: rgba(13,110,253,0.04);
+        }
+        .filter-btn.has-filters {
+            border-color: var(--brand-primary, #0d6efd);
+            background: rgba(13,110,253,0.08);
+            color: var(--brand-primary, #0d6efd);
+        }
+        .modal-search-input {
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            padding: 0.7rem 1.2rem;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+        .modal-search-input:focus {
+            border-color: var(--brand-primary, #0d6efd);
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+        }
+    </style>
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -16,18 +47,79 @@
             <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Orders" %}</h6>
             <h1 class="fw-black display-4 mb-0">{{ title }}</h1>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 align-items-center">
             {% if is_affiliate_or_semi %}
             <a href="{% url 'dash:affiliate_cart' %}" class="btn btn-dark rounded-pill px-4 fw-bold">
                 <i class="fas fa-plus-circle me-2"></i>{% trans "Create Order" %}
             </a>
             {% endif %}
-            <a href="?status=" class="btn btn-{% if not status_filter %}dark{% else %}light{% endif %} rounded-pill px-4 fw-bold">{% trans "All" %}</a>
-            {% for status, label in status_choices %}
-                <a href="?status={{ status }}" class="btn btn-{% if status_filter == status %}dark{% else %}light{% endif %} rounded-pill px-4 fw-bold">{{ label }}</a>
-            {% endfor %}
+            <button type="button" class="filter-btn {% if q or status_filter %}has-filters{% endif %}" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="fas fa-filter me-2"></i>{% trans "Filter" %}
+                {% if q or status_filter %}<span class="badge bg-primary ms-1"><i class="fas fa-check"></i></span>{% endif %}
+            </button>
         </div>
     </div>
+
+    <!-- Filter Modal -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header border-0 pb-0 p-4">
+                    <h5 class="modal-title fw-bold text-dark" id="filterModalLabel">
+                        {% trans "Filter Orders" %}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form method="get" action="{% url 'dash:order_list' %}">
+                    <div class="modal-body p-4">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small">{% trans "Search" %}</label>
+                            <input type="text" name="q" value="{{ q }}"
+                                   class="form-control modal-search-input"
+                                   placeholder="{% trans 'Customer name or phone...' %}">
+                        </div>
+
+                        <div class="mb-2">
+                            {% include "components/custom_select.html" with id="modalStatusSelect" name="status" label=_("Status") options=status_options value=status_filter select_title=selected_status_label|default:_("All Statuses") %}
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="page" value="1">
+
+                    <div class="modal-footer border-0 p-4 pt-0 gap-2">
+                        <a href="{% url 'dash:order_list' %}" class="btn btn-light rounded-3 px-4 fw-bold text-muted border-0 bg-light">
+                            {% trans "Reset All" %}
+                        </a>
+                        <button type="submit" class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm">
+                            {% trans "Apply Filters" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active filter indicators -->
+    {% if q or status_filter %}
+    <div class="d-flex flex-wrap gap-2 mb-4" data-aos="fade-up">
+        {% if q %}
+        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-bold">
+            <i class="fas fa-search me-1"></i> "{{ q }}"
+            <a href="?{% if status_filter %}status={{ status_filter }}{% endif %}" class="text-muted ms-2"><i class="fas fa-times"></i></a>
+        </span>
+        {% endif %}
+        {% if status_filter %}
+        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-bold">
+            <i class="fas fa-tag me-1"></i> {{ selected_status_label }}
+            <a href="?{% if q %}q={{ q }}{% endif %}" class="text-muted ms-2"><i class="fas fa-times"></i></a>
+        </span>
+        {% endif %}
+        <a href="{% url 'dash:order_list' %}" class="badge bg-dark text-white border-0 rounded-pill px-3 py-2 fw-bold text-decoration-none">
+            <i class="fas fa-times me-1"></i>{% trans "Clear All" %}
+        </a>
+    </div>
+    {% endif %}
 
     <div class="row g-4 reveal reveal-up">
         {% for order in page_obj %}
@@ -133,7 +225,7 @@
     </div>
 
     <div class="mt-5">
-        {% include "components/pagination.html" with page_obj=page_obj base_url='?' %}
+        {% include "components/pagination.html" with page_obj=page_obj base_url=base_url %}
     </div>
 </div>
 {% endblock dashContent %}

@@ -35,15 +35,18 @@ def order_list(request):
             item.get("product_id") in user_product_ids for item in o.items
         )]
     elif is_affiliate_or_semi:
-        catalog_ids = set(
-            PartnerPrice.objects.filter(
-                buyer=request.user, is_active=True
-            ).values_list("product_id", flat=True)
-        )
-        all_orders = Order.objects.all().order_by("-created_at")
-        orders = [o for o in all_orders if any(
-            item.get("product_id") in catalog_ids for item in o.items
-        )]
+        profile = getattr(request.user, "profile", None)
+        referred_codes = []
+        if profile and profile.affiliate_code:
+            referred_codes.append(profile.affiliate_code)
+            if profile.role == _RC.AFFILIATE:
+                semi_codes = UserProfile.objects.filter(
+                    parent_affiliate=profile, is_approved=True
+                ).exclude(affiliate_code__isnull=True).exclude(affiliate_code="").values_list("affiliate_code", flat=True)
+                referred_codes.extend(semi_codes)
+        orders = Order.objects.filter(referred_by__in=referred_codes).order_by("-created_at")
+        if status_filter:
+            orders = orders.filter(status=status_filter)
     else:
         orders = Order.objects.all().order_by("-created_at")
         if status_filter:
@@ -399,14 +402,19 @@ def order_detail(request, pk):
         if not order_ids.intersection(own_ids):
             return redirect("dash:order_list")
     elif is_affiliate_or_semi:
-        catalog_ids = set(
-            PartnerPrice.objects.filter(
-                buyer=request.user, is_active=True
-            ).values_list("product_id", flat=True)
-        )
-        order_ids = {item.get("product_id") for item in order.items}
-        if not order_ids.intersection(catalog_ids):
+        profile = getattr(request.user, "profile", None)
+        if not profile or not profile.affiliate_code:
             return redirect("dash:order_list")
+        if order.referred_by != profile.affiliate_code:
+            if profile.role != _RC.AFFILIATE:
+                return redirect("dash:order_list")
+            semi_codes = set(
+                UserProfile.objects.filter(
+                    parent_affiliate=profile, is_approved=True
+                ).exclude(affiliate_code__isnull=True).exclude(affiliate_code="").values_list("affiliate_code", flat=True)
+            )
+            if order.referred_by not in semi_codes:
+                return redirect("dash:order_list")
 
     referred_by_profile = None
     affiliate_earned = None

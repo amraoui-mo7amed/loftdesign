@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from decimal import Decimal
 
-from dashboard.models import Product, Order, PartnerPrice
+from dashboard.models import Product, Order, PartnerPrice, Notification
 from user_auth.models import UserProfile
 from dashboard.utils import get_algeria_locations, notify_user, resolve_price
 
@@ -283,6 +283,29 @@ def cart_checkout(request):
                     },
                     link="/dashboard/orders/"
                 )
+
+            if referred_by:
+                try:
+                    aff_profile = UserProfile.objects.get(affiliate_code=referred_by, is_approved=True)
+                    notify_user(
+                        user=aff_profile.user,
+                        title=_("New Order via Your Store"),
+                        message=_("%(name)s placed an order for %(products)s through your store.")
+                        % {"name": name, "products": ", ".join(product_titles)},
+                        notification_type=Notification.NotificationType.INFO,
+                        link="/dashboard/orders/",
+                    )
+                    if aff_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE and aff_profile.parent_affiliate:
+                        notify_user(
+                            user=aff_profile.parent_affiliate.user,
+                            title=_("New Order via Semi-Affiliate"),
+                            message=_("%(name)s placed an order for %(products)s through %(semi)s's store.")
+                            % {"name": name, "products": ", ".join(product_titles), "semi": aff_profile.user.get_full_name() or aff_profile.user.username},
+                            notification_type=Notification.NotificationType.INFO,
+                            link="/dashboard/orders/",
+                        )
+                except UserProfile.DoesNotExist:
+                    pass
 
             request.session[CART_SESSION_KEY] = {}
             request.session.modified = True

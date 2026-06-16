@@ -64,12 +64,20 @@
                     </div>
 
                     <div class="mt-auto p-3 border-top border-white-10">
-                        <a href="/" target="_blank"
+                        {% with role=request.user.profile.role %}
+                        {% if role == "affiliate" %}
+                            <a href="{% url 'frontend:affiliate_store' request.user.profile.affiliate_code %}" target="_blank"
+                        {% elif role == "semi_affiliate" and request.user.profile.parent_affiliate %}
+                            <a href="{% url 'frontend:affiliate_store' request.user.profile.parent_affiliate.affiliate_code %}" target="_blank"
+                        {% else %}
+                            <a href="/" target="_blank"
+                        {% endif %}
                            class="btn btn-outline-light w-100 mb-2 d-flex align-items-center justify-content-center gap-2 py-2 rounded-3 text-white border-white-10"
                            style="background: rgba(255, 255, 255, 0.05); font-weight: 700; font-size: 0.9rem; transition: all 0.2s ease;">
                             <i class="fas fa-globe text-primary"></i>
                             <span>{% trans "View Website" %}</span>
                         </a>
+                        {% endwith %}
                         <a href="{% url "user_auth:logout" %}"
                            class="btn btn-outline-danger w-100 border-0 d-flex align-items-center justify-content-center gap-2 py-2 rounded-3"
                            style="background: rgba(var(--brand-danger-rgb, 220, 53, 69), 0.1)">

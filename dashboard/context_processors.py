@@ -22,6 +22,14 @@ def _build_menu(is_authenticated, is_superuser, role):
     is_affiliate = role == "affiliate"
     is_semi_affiliate = role == "semi_affiliate"
 
+    # Billing — admin (all), affiliate (self+semi), semi (self)
+    if is_admin or is_affiliate or is_semi_affiliate:
+        menu.append({
+            "title": _("Billing"),
+            "icon": "fas fa-file-invoice-dollar",
+            "url_name": "dash:facturation_list",
+        })
+
     # Admin only links
     if is_admin:
         menu.append({

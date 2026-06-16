@@ -1,0 +1,172 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}{% trans "Billing" %} — {{ target.user.get_full_name|default:target.user.username }}{% endblock dashTitle %}
+
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+<style>
+    .back-link {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #6c757d;
+        transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--brand-primary, #0d6efd); }
+    .billing-stat-value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+    }
+    .billing-stat-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+    }
+    .summary-card {
+        border-radius: 16px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .role-badge {
+        font-size: 0.6rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        padding: 2px 10px;
+        border-radius: 20px;
+    }
+    .order-table thead th {
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        border-bottom: 2px solid #f0f0f0;
+        padding: 0.75rem 1rem;
+    }
+    .order-table tbody td {
+        padding: 0.75rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f5f5f5;
+    }
+    .order-table tbody tr:hover { background: #fafafa; }
+</style>
+{% endblock css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+    <a href="{% url 'dash:facturation_list' %}" class="back-link mb-4 d-inline-flex">
+        <i class="fas fa-arrow-left"></i> {% trans "Back to Billing" %}
+    </a>
+
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4" data-aos="fade-down">
+        <div>
+            <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-1">{% trans "Billing" %}</h6>
+            <h2 class="fw-black mb-1">{{ target.user.get_full_name|default:target.user.username }}</h2>
+            <div class="d-flex align-items-center gap-2">
+                <span class="role-badge
+                    {% if target.role == 'affiliate' %}bg-primary text-white
+                    {% elif target.role == 'semi_affiliate' %}bg-info text-white
+                    {% else %}bg-secondary text-white{% endif %}">
+                    {{ target.get_role_display }}
+                </span>
+                <code class="small text-muted">{{ target.affiliate_code }}</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary row -->
+    <div class="row g-4 mb-5" data-aos="fade-up">
+        <div class="col-lg-3 col-md-6">
+            <div class="summary-card p-4">
+                <div class="billing-stat-label">{% trans "Orders" %}</div>
+                <div class="billing-stat-value">{{ stats.orders_count }}</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="summary-card p-4">
+                <div class="billing-stat-label">{% trans "Earned" %}</div>
+                <div class="billing-stat-value text-primary">DZD {{ stats.total_earned|floatformat:0 }}</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="summary-card p-4">
+                <div class="billing-stat-label">{% trans "Paid" %}</div>
+                <div class="billing-stat-value text-success">DZD {{ stats.total_paid|floatformat:0 }}</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="summary-card p-4">
+                <div class="billing-stat-label">{% trans "Unpaid" %}</div>
+                <div class="billing-stat-value {% if stats.total_unpaid > 0 %}text-danger{% else %}text-success{% endif %}">
+                    DZD {{ stats.total_unpaid|floatformat:0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden" data-aos="fade-up">
+        <div class="card-header bg-white border-0 py-3 px-4">
+            <h5 class="fw-bold mb-0">{% trans "Delivered Orders" %}</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table order-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>{% trans "Order" %}</th>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "Items" %}</th>
+                            <th class="text-end">{% trans "Total" %}</th>
+                            <th class="text-end">{% trans "Commission" %}</th>
+                            <th class="text-center">{% trans "Paid" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in stats.orders %}
+                        <tr>
+                            <td class="fw-bold">
+                                <a href="{% url 'dash:order_detail' entry.order.id %}" class="text-decoration-none">
+                                    {{ entry.order.order_number }}
+                                </a>
+                            </td>
+                            <td>{{ entry.order.created_at|date:"d/m/Y" }}</td>
+                            <td>{{ entry.order.items|length }}</td>
+                            <td class="text-end fw-bold">DZD {{ entry.order.total_amount|floatformat:0 }}</td>
+                            <td class="text-end fw-bold {% if entry.commission > 0 %}text-primary{% endif %}">
+                                DZD {{ entry.commission|floatformat:0 }}
+                            </td>
+                            <td class="text-center">
+                                {% if entry.order.commission_paid %}
+                                    <span class="badge bg-success">{% trans "Paid" %}</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">{% trans "Unpaid" %}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="fas fa-box-open fa-2x mb-2 opacity-50 d-block"></i>
+                                {% trans "No delivered orders for this affiliate." %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock dashContent %}

@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 18:15+0000\n"
+"POT-Creation-Date: 2026-06-16 21:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,7 +64,9 @@ msgstr "Tableau de bord"
 #: dashboard/templates/facturation/list.html:92
 #: dashboard/views/facturation.py:136
 msgid "Billing"
-msgstr "Facturation"#: dashboard/context_processors.py:36 dashboard/views/users.py:470
+msgstr "Facturation"
+
+#: dashboard/context_processors.py:36 dashboard/views/users.py:470
 #, fuzzy
 #| msgid "Affiliate"
 msgid "Affiliates"
@@ -116,9 +118,9 @@ msgstr "Produits"
 
 #: dashboard/context_processors.py:74 dashboard/context_processors.py:80
 #: dashboard/models.py:414 dashboard/templates/facturation/detail.html:92
-#: dashboard/templates/facturation/list.html:195
-#: dashboard/templates/orders/list.html:16 dashboard/views/dashboard.py:73
-#: dashboard/views/orders.py:96
+#: dashboard/templates/facturation/list.html:192
+#: dashboard/templates/orders/list.html:47 dashboard/views/dashboard.py:73
+#: dashboard/views/orders.py:129
 msgid "Orders"
 msgstr "Commandes"
 
@@ -414,7 +416,10 @@ msgstr "Visualiser dans votre espace"
 
 #: dashboard/models.py:197
 msgid "Uncheck to hide this product from the public storefront"
-msgstr "Décochez pour masquer ce produit de la boutique publique"#: dashboard/models.py:202 dashboard/models.py:408
+msgstr "Décochez pour masquer ce produit de la boutique publique"
+
+#: dashboard/models.py:202 dashboard/models.py:408
+#: dashboard/templates/orders/list.html:84
 #: dashboard/templates/users/affiliate_list.html:237
 #: dashboard/templates/users/details.html:308
 #: dashboard/templates/users/profile_edit.html:66
@@ -466,7 +471,7 @@ msgstr "Motif du refus"
 
 #: dashboard/models.py:222 dashboard/models.py:242 dashboard/models.py:272
 #: dashboard/models.py:303 dashboard/models.py:327 dashboard/models.py:447
-#: dashboard/models.py:504 dashboard/templates/orders/detail.html:220
+#: dashboard/models.py:504 dashboard/templates/orders/detail.html:253
 msgid "Product"
 msgstr "Produit"
 
@@ -595,7 +600,7 @@ msgstr "Confirmer le mot de passe"
 #: dashboard/templates/facturation/detail.html:133
 #: dashboard/templates/facturation/detail.html:152
 #: dashboard/templates/facturation/list.html:116
-#: dashboard/templates/facturation/list.html:203
+#: dashboard/templates/facturation/list.html:200
 #: dashboard/templates/users/details.html:354
 msgid "Paid"
 msgstr "Payé"
@@ -1037,7 +1042,7 @@ msgid "Back to Billing"
 msgstr "Retour à la liste"
 
 #: dashboard/templates/facturation/detail.html:98
-#: dashboard/templates/facturation/list.html:199
+#: dashboard/templates/facturation/list.html:196
 #: dashboard/templates/users/details.html:310
 msgid "Earned"
 msgstr "Gagné"
@@ -1045,7 +1050,7 @@ msgstr "Gagné"
 #: dashboard/templates/facturation/detail.html:110
 #: dashboard/templates/facturation/detail.html:154
 #: dashboard/templates/facturation/list.html:122
-#: dashboard/templates/facturation/list.html:209
+#: dashboard/templates/facturation/list.html:206
 #, fuzzy
 #| msgid "Unpaid Balance"
 msgid "Unpaid"
@@ -1069,7 +1074,7 @@ msgstr "Articles"
 
 #: dashboard/templates/facturation/detail.html:131
 #: dashboard/templates/orders/affiliate_cart.html:433
-#: dashboard/templates/orders/detail.html:243
+#: dashboard/templates/orders/detail.html:276
 #: frontend/templates/cart/checkout.html:103
 #, fuzzy
 #| msgid "Total Projects"
@@ -1077,7 +1082,7 @@ msgid "Total"
 msgstr "Projets"
 
 #: dashboard/templates/facturation/detail.html:132
-#: dashboard/templates/orders/list.html:102
+#: dashboard/templates/orders/list.html:194
 #: dashboard/templates/users/details.html:311
 #: dashboard/templates/users/profile_edit.html:55
 #: dashboard/templatetags/tags.py:59
@@ -1097,6 +1102,7 @@ msgid "Finance"
 msgstr "Annuler"
 
 #: dashboard/templates/facturation/list.html:95
+#: dashboard/templates/orders/list.html:57
 #: dashboard/templates/users/semi_affiliate_list.html:144
 #, fuzzy
 #| msgid "Filter Users"
@@ -1117,41 +1123,44 @@ msgstr "Total des utilisateurs"
 msgid "Total Earned"
 msgstr "Total des utilisateurs"
 
-#: dashboard/templates/facturation/list.html:139
+#: dashboard/templates/facturation/list.html:136
 #, fuzzy
 #| msgid "Affiliate"
 msgid "Filter Billing"
 msgstr "Affiliation"
 
-#: dashboard/templates/facturation/list.html:147
+#: dashboard/templates/facturation/list.html:144
+#: dashboard/templates/orders/list.html:77
 #: dashboard/templates/users/semi_affiliate_list.html:263
 msgid "Search"
 msgstr "Mot-clé de recherche"
 
-#: dashboard/templates/facturation/list.html:150
+#: dashboard/templates/facturation/list.html:147
 #, fuzzy
 #| msgid "Name, email, or affiliate code..."
 msgid "Name or affiliate code..."
 msgstr "Nom, e-mail ou code d'affilié..."
 
-#: dashboard/templates/facturation/list.html:154
+#: dashboard/templates/facturation/list.html:151
 #: dashboard/templates/users/details.html:160 user_auth/models.py:17
 msgid "Role"
 msgstr "Rôle"
 
-#: dashboard/templates/facturation/list.html:154
+#: dashboard/templates/facturation/list.html:151
 #, fuzzy
 #| msgid "All Collections"
 msgid "All Roles"
 msgstr "Collection"
 
-#: dashboard/templates/facturation/list.html:160
+#: dashboard/templates/facturation/list.html:157
+#: dashboard/templates/orders/list.html:92
 #: dashboard/templates/users/affiliate_list.html:243
 #: dashboard/templates/users/list.html:89
 msgid "Reset All"
 msgstr "Tout réinitialiser"
 
-#: dashboard/templates/facturation/list.html:163
+#: dashboard/templates/facturation/list.html:160
+#: dashboard/templates/orders/list.html:95
 #: dashboard/templates/users/affiliate_list.html:246
 #: dashboard/templates/users/list.html:92
 #: dashboard/templates/users/semi_affiliate_list.html:279
@@ -1159,7 +1168,7 @@ msgstr "Tout réinitialiser"
 msgid "Apply Filters"
 msgstr "Appliquer les filtres"
 
-#: dashboard/templates/facturation/list.html:219
+#: dashboard/templates/facturation/list.html:216
 #, fuzzy
 #| msgid "No products match your filters."
 msgid "No billing data found matching your filters."
@@ -1195,7 +1204,7 @@ msgid "Remove Inquiry?"
 msgstr "Envoyer une demande"
 
 #: dashboard/templates/leads/list.html:59
-#: dashboard/templates/orders/list.html:119
+#: dashboard/templates/orders/list.html:211
 msgid "This action cannot be undone."
 msgstr "Cette action ne peut pas être annulée."
 
@@ -1205,7 +1214,7 @@ msgstr "Aucune demande de contact pour le moment."
 
 #: dashboard/templates/orders/affiliate_cart.html:5
 #: dashboard/templates/orders/affiliate_cart.html:300
-#: dashboard/templates/orders/list.html:22 dashboard/views/orders.py:252
+#: dashboard/templates/orders/list.html:53 dashboard/views/orders.py:286
 #, fuzzy
 #| msgid "Create Project"
 msgid "Create Order"
@@ -1215,7 +1224,11 @@ msgstr "Créer un projet"
 msgid ""
 "Select products, set quantities, and enter client details to create a new "
 "order."
-msgstr "Sélectionnez les produits, définissez les quantités et saisissez les informations du client pour créer une nouvelle commande."#: dashboard/templates/orders/affiliate_cart.html:313
+msgstr ""
+"Sélectionnez les produits, définissez les quantités et saisissez les "
+"informations du client pour créer une nouvelle commande."
+
+#: dashboard/templates/orders/affiliate_cart.html:313
 #: frontend/templates/affiliate_store.html:113
 #: frontend/templates/cart/cart.html:11
 #: frontend/templates/cart/checkout.html:11
@@ -1224,7 +1237,7 @@ msgid "Cart"
 msgstr "Panier"
 
 #: dashboard/templates/orders/affiliate_cart.html:318
-#: dashboard/templates/orders/list.html:111
+#: dashboard/templates/orders/list.html:203
 #: dashboard/templates/products/affiliate_catalog.html:195
 #: dashboard/templates/users/details.html:212
 #, fuzzy
@@ -1246,7 +1259,9 @@ msgstr "Produit absent de votre catalogue."
 
 #: dashboard/templates/orders/affiliate_cart.html:329
 msgid "in cart"
-msgstr "dans le panier"#: dashboard/templates/orders/affiliate_cart.html:338
+msgstr "dans le panier"
+
+#: dashboard/templates/orders/affiliate_cart.html:338
 #, fuzzy
 #| msgid "Open Cart"
 msgid "In Cart"
@@ -1361,7 +1376,9 @@ msgstr "Créé le"
 
 #: dashboard/templates/orders/affiliate_cart.html:465
 msgid "Yes, place order"
-msgstr "Oui, passer la commande"#: dashboard/templates/orders/affiliate_cart.html:475
+msgstr "Oui, passer la commande"
+
+#: dashboard/templates/orders/affiliate_cart.html:475
 #, fuzzy
 #| msgid "Select Category"
 msgid "Select wilaya"
@@ -1422,67 +1439,87 @@ msgstr "Nom complet"
 msgid "Location"
 msgstr "Notifications"
 
-#: dashboard/templates/orders/detail.html:186
-#, fuzzy
-#| msgid "Commission Rate"
-msgid "Commission Earned"
-msgstr "Taux de commission"
-
-#: dashboard/templates/orders/detail.html:195
+#: dashboard/templates/orders/detail.html:179
+#: dashboard/templates/orders/detail.html:193
+#: dashboard/templates/orders/detail.html:216
 #, fuzzy
 #| msgid "View Full Profile"
 msgid "View Profile"
 msgstr "Voir le profil complet"
 
-#: dashboard/templates/orders/detail.html:212
+#: dashboard/templates/orders/detail.html:229
+#, fuzzy
+#| msgid "Commission Rate"
+msgid "Commission Earned"
+msgstr "Taux de commission"
+
+#: dashboard/templates/orders/detail.html:245
 #, fuzzy
 #| msgid "Add Product"
 msgid "Ordered Products"
 msgstr "Ajouter un produit"
 
-#: dashboard/templates/orders/detail.html:213
+#: dashboard/templates/orders/detail.html:246
 #, fuzzy
 #| msgid "Product"
 msgid "product"
 msgstr "Produit"
 
-#: dashboard/templates/orders/detail.html:221
+#: dashboard/templates/orders/detail.html:254
 msgid "Qty"
 msgstr "Qté"
 
-#: dashboard/templates/orders/detail.html:222
+#: dashboard/templates/orders/detail.html:255
 #, fuzzy
 #| msgid "Price"
 msgid "Unit Price"
 msgstr "Prix"
 
-#: dashboard/templates/orders/detail.html:223
+#: dashboard/templates/orders/detail.html:256
 #: frontend/templates/cart/cart.html:84
 #: frontend/templates/cart/cart_drawer.html:30
 msgid "Subtotal"
 msgstr "Sous-total"
 
-#: dashboard/templates/orders/detail.html:238
-#: dashboard/templates/orders/detail.html:239
-#: dashboard/templates/orders/detail.html:244
+#: dashboard/templates/orders/detail.html:271
+#: dashboard/templates/orders/detail.html:272
+#: dashboard/templates/orders/detail.html:277
 msgid "DA"
 msgstr "DA"
 
-#: dashboard/templates/orders/list.html:25
-#: dashboard/templates/users/affiliate_list.html:237
-#: dashboard/views/products.py:102 dashboard/views/users.py:459
-msgid "All"
-msgstr "Tout"
+#: dashboard/templates/orders/list.html:69
+#, fuzzy
+#| msgid "Filter Users"
+msgid "Filter Orders"
+msgstr "Filtrer les utilisateurs"
 
-#: dashboard/templates/orders/list.html:53
+#: dashboard/templates/orders/list.html:80
+#, fuzzy
+#| msgid "Customer Name"
+msgid "Customer name or phone..."
+msgstr "Nom du client"
+
+#: dashboard/templates/orders/list.html:84
+#, fuzzy
+#| msgid "All Status"
+msgid "All Statuses"
+msgstr "Tous les statuts"
+
+#: dashboard/templates/orders/list.html:119
+#: dashboard/templates/users/affiliate_list.html:195
+#: dashboard/templates/users/list.html:30
+msgid "Clear All"
+msgstr "Tout effacer"
+
+#: dashboard/templates/orders/list.html:145
 msgid "more"
 msgstr "plus"
 
-#: dashboard/templates/orders/list.html:118
+#: dashboard/templates/orders/list.html:210
 msgid "Remove Order?"
 msgstr "Supprimer la commande ?"
 
-#: dashboard/templates/orders/list.html:130
+#: dashboard/templates/orders/list.html:222
 msgid "No orders found."
 msgstr "Aucune commande trouvée."
 
@@ -1977,7 +2014,11 @@ msgstr "Cliquez pour changer l'image"
 
 #: dashboard/templates/products/edit.html:179
 msgid "Set wholesale & retail prices and click Save to approve this product."
-msgstr "Définissez les prix de gros et de détail et cliquez sur Enregistrer pour approuver ce produit."#: dashboard/templates/products/edit.html:184
+msgstr ""
+"Définissez les prix de gros et de détail et cliquez sur Enregistrer pour "
+"approuver ce produit."
+
+#: dashboard/templates/products/edit.html:184
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -2002,7 +2043,9 @@ msgstr "Rechercher par titre de produit..."
 
 #: dashboard/templates/products/list.html:135
 msgid "Global"
-msgstr "Global"#: dashboard/templates/products/list.html:149
+msgstr "Global"
+
+#: dashboard/templates/products/list.html:149
 msgid "Leads"
 msgstr "Prospects"
 
@@ -2213,16 +2256,22 @@ msgstr "NOM D'UTILISATEUR"
 
 #: dashboard/templates/products/store_settings.html:292
 msgid "DESCRIPTION"
-msgstr "DESCRIPTION"#: dashboard/templates/products/store_settings.html:294
+msgstr "DESCRIPTION"
+
+#: dashboard/templates/products/store_settings.html:294
 #: dashboard/templates/users/details.html:407
 msgid "Describe your store..."
 msgstr "Décrivez votre boutique..."
 
 #: dashboard/templates/products/store_settings.html:298
 msgid "HEADER COLOR"
-msgstr "COULEUR DE L'EN-TÊTE"#: dashboard/templates/products/store_settings.html:309
+msgstr "COULEUR DE L'EN-TÊTE"
+
+#: dashboard/templates/products/store_settings.html:309
 msgid "AFFILIATE CODE"
-msgstr "CODE D'AFFILIÉ"#: dashboard/templates/products/store_settings.html:317
+msgstr "CODE D'AFFILIÉ"
+
+#: dashboard/templates/products/store_settings.html:317
 #, fuzzy
 #| msgid "Enter your username"
 msgid "Your store:"
@@ -2230,20 +2279,34 @@ msgstr "Entrez votre nom d'utilisateur"
 
 #: dashboard/templates/products/store_settings.html:325
 msgid "STORE LOGO"
-msgstr "LOGO DE LA BOUTIQUE"#: dashboard/templates/products/store_settings.html:337
+msgstr "LOGO DE LA BOUTIQUE"
+
+#: dashboard/templates/products/store_settings.html:337
 msgid "Click or drag to upload logo"
-msgstr "Cliquez ou glissez-déposez pour importer le logo"#: dashboard/templates/products/store_settings.html:339
+msgstr "Cliquez ou glissez-déposez pour importer le logo"
+
+#: dashboard/templates/products/store_settings.html:339
 #: dashboard/templates/products/store_settings.html:364
 msgid "NEW"
-msgstr "NOUVEAU"#: dashboard/templates/products/store_settings.html:346
+msgstr "NOUVEAU"
+
+#: dashboard/templates/products/store_settings.html:346
 msgid "Square image recommended. PNG or JPG."
-msgstr "Image carrée recommandée. PNG ou JPG."#: dashboard/templates/products/store_settings.html:350
+msgstr "Image carrée recommandée. PNG ou JPG."
+
+#: dashboard/templates/products/store_settings.html:350
 msgid "STORE BANNER"
-msgstr "BANNIÈRE DE LA BOUTIQUE"#: dashboard/templates/products/store_settings.html:362
+msgstr "BANNIÈRE DE LA BOUTIQUE"
+
+#: dashboard/templates/products/store_settings.html:362
 msgid "Click or drag to upload banner"
-msgstr "Cliquez ou glissez-déposez pour importer la bannière"#: dashboard/templates/products/store_settings.html:371
+msgstr "Cliquez ou glissez-déposez pour importer la bannière"
+
+#: dashboard/templates/products/store_settings.html:371
 msgid "Landscape image recommended. 1200×400px."
-msgstr "Image paysage recommandée. 1200×400px."#: dashboard/templates/settings/update.html:5
+msgstr "Image paysage recommandée. 1200×400px."
+
+#: dashboard/templates/settings/update.html:5
 #, fuzzy
 #| msgid "Sales Settings"
 msgid "Global Site Settings"
@@ -2303,11 +2366,6 @@ msgstr ""
 msgid "Filter Affiliates"
 msgstr "Affiliation"
 
-#: dashboard/templates/users/affiliate_list.html:195
-#: dashboard/templates/users/list.html:30
-msgid "Clear All"
-msgstr "Tout effacer"
-
 #: dashboard/templates/users/affiliate_list.html:196
 #: dashboard/templates/users/list.html:31
 msgid "Clear"
@@ -2328,6 +2386,11 @@ msgstr "Mot-clé de recherche"
 #| msgid "Name, Username, Email..."
 msgid "Name, Email..."
 msgstr "Nom, Nom d'utilisateur, E-mail..."
+
+#: dashboard/templates/users/affiliate_list.html:237
+#: dashboard/views/products.py:102 dashboard/views/users.py:459
+msgid "All"
+msgstr "Tout"
 
 #: dashboard/templates/users/affiliate_list.html:262
 #: dashboard/templates/users/details.html:152
@@ -2956,135 +3019,143 @@ msgstr "Administrateur"
 
 #: dashboard/views/facturation.py:150
 msgid "You can only view your own billing."
-msgstr "Vous ne pouvez consulter que votre propre facturation."#: dashboard/views/facturation.py:155
+msgstr "Vous ne pouvez consulter que votre propre facturation."
+
+#: dashboard/views/facturation.py:155
 msgid "You can only view your own billing or your semi-affiliates."
-msgstr "Vous ne pouvez consulter que votre propre facturation ou celle de vos semi-affiliés."#: dashboard/views/facturation.py:163
+msgstr ""
+"Vous ne pouvez consulter que votre propre facturation ou celle de vos semi-"
+"affiliés."
+
+#: dashboard/views/facturation.py:163
 #, python-format
 msgid "Billing — %(name)s"
-msgstr "Facturation — %(name)s"#: dashboard/views/orders.py:156
+msgstr "Facturation — %(name)s"
+
+#: dashboard/views/orders.py:189
 #, fuzzy
 #| msgid "Title and Description are required"
 msgid "Name and phone are required."
 msgstr "Le titre et la description sont obligatoires"
 
-#: dashboard/views/orders.py:159
+#: dashboard/views/orders.py:192
 #, fuzzy
 #| msgid "Your portfolio is empty."
 msgid "Cart is empty."
 msgstr "Votre portfolio est vide."
 
-#: dashboard/views/orders.py:202
+#: dashboard/views/orders.py:236
 #, fuzzy, python-format
 #| msgid "Price for affiliates."
 msgid "New Order from %(affiliate)s"
 msgstr "Prix pour les affiliés."
 
-#: dashboard/views/orders.py:203
+#: dashboard/views/orders.py:237
 #, fuzzy, python-format
 #| msgid "New order for %(products)s by %(name)s"
 msgid "%(affiliate)s placed an order for %(products)s — Customer: %(name)s"
 msgstr "Nouvelle commande de %(products)s par %(name)s"
 
-#: dashboard/views/orders.py:216
+#: dashboard/views/orders.py:250
 #, fuzzy
 #| msgid "Project updated successfully"
 msgid "Order Created Successfully"
 msgstr "Projet mis à jour avec succès"
 
-#: dashboard/views/orders.py:217
+#: dashboard/views/orders.py:251
 #, fuzzy, python-format
 #| msgid "New order for %(products)s by %(name)s"
 msgid ""
 "You placed an order for %(products)s — %(name)s. Track it in your orders."
 msgstr "Nouvelle commande de %(products)s par %(name)s"
 
-#: dashboard/views/orders.py:227
+#: dashboard/views/orders.py:261
 #, fuzzy, python-format
 #| msgid "New contact lead from %(name)s"
 msgid "New Order from %(semi)s"
 msgstr "Nouveau prospect de contact de %(name)s"
 
-#: dashboard/views/orders.py:228
+#: dashboard/views/orders.py:262
 #, fuzzy, python-format
 #| msgid "New order for %(products)s by %(name)s"
 msgid "%(semi)s placed an order for %(products)s — Customer: %(name)s"
 msgstr "Nouvelle commande de %(products)s par %(name)s"
 
-#: dashboard/views/orders.py:236
+#: dashboard/views/orders.py:270
 #, fuzzy
 #| msgid "Project updated successfully"
 msgid "Order created successfully!"
 msgstr "Projet mis à jour avec succès"
 
-#: dashboard/views/orders.py:272 dashboard/views/partner_prices.py:202
+#: dashboard/views/orders.py:306 dashboard/views/partner_prices.py:202
 msgid "Product not in your catalog."
 msgstr "Produit absent de votre catalogue."
 
-#: dashboard/views/orders.py:283
+#: dashboard/views/orders.py:317
 #, fuzzy
 #| msgid "Price not configured for this product."
 msgid "No retail price configured for this product."
 msgstr "Prix non configuré pour ce produit."
 
-#: dashboard/views/orders.py:292
+#: dashboard/views/orders.py:326
 #, fuzzy, python-format
 #| msgid "items available"
 msgid "Only %(qty)s available."
 msgstr "articles disponibles"
 
-#: dashboard/views/orders.py:307 frontend/views/cart.py:120
+#: dashboard/views/orders.py:341 frontend/views/cart.py:120
 #, python-format
 msgid "%(title)s added to cart."
 msgstr "%(title)s a été ajouté au panier."
 
-#: dashboard/views/orders.py:327
+#: dashboard/views/orders.py:361
 #, fuzzy, python-format
 #| msgid "Item removed from cart."
 msgid "%(title)s removed from cart."
 msgstr "Article retiré du panier."
 
-#: dashboard/views/orders.py:349
+#: dashboard/views/orders.py:383
 #, fuzzy
 #| msgid "Only trusted providers can create products."
 msgid "Only trusted providers can update order status."
 msgstr "Seuls les fournisseurs de confiance peuvent créer des produits."
 
-#: dashboard/views/orders.py:358
+#: dashboard/views/orders.py:392
 msgid "You can only update orders for your own products."
 msgstr "Vous ne pouvez modifier que les commandes de vos propres produits."
 
-#: dashboard/views/orders.py:370
+#: dashboard/views/orders.py:404
 #, fuzzy, python-format
 #| msgid "Order status updated"
 msgid "Order #%(id)s Status Updated"
 msgstr "Statut de la commande mis à jour"
 
-#: dashboard/views/orders.py:372
+#: dashboard/views/orders.py:406
 #, python-format
 msgid "%(provider)s changed order #%(id)s from «%(old)s» to «%(new)s»"
 msgstr "%(provider)s a modifié la commande #%(id)s de «%(old)s» à «%(new)s»"
 
-#: dashboard/views/orders.py:383
+#: dashboard/views/orders.py:417
 msgid "Order status updated"
 msgstr "Statut de la commande mis à jour"
 
-#: dashboard/views/orders.py:450
+#: dashboard/views/orders.py:488
 #, fuzzy, python-format
 #| msgid "Order status updated"
 msgid "Order #%(id)s Details"
 msgstr "Statut de la commande mis à jour"
 
-#: dashboard/views/orders.py:460
+#: dashboard/views/orders.py:498
 msgid "Order removed"
 msgstr "Commande supprimée"
 
-#: dashboard/views/orders.py:474
+#: dashboard/views/orders.py:512
 #, fuzzy
 #| msgid "Commission Rate"
 msgid "Commission marked as paid"
 msgstr "Taux de commission"
 
-#: dashboard/views/orders.py:474
+#: dashboard/views/orders.py:512
 #, fuzzy
 #| msgid "Email is required."
 msgid "Commission marked as unpaid"
@@ -3105,7 +3176,8 @@ msgstr "Nom du produit"
 msgid ""
 "\"%(product)s\" has been added to your catalog with purchase price "
 "DZD%(price)s."
-msgstr ""%(product)s" a été ajouté à votre catalogue avec un prix d'achat de DZD%(price)s."%(product)s\" a été ajouté à votre catalogue avec un prix d'achat de "
+msgstr ""
+"\"%(product)s\" a été ajouté à votre catalogue avec un prix d'achat de "
 "DZD%(price)s."
 
 #: dashboard/views/partner_prices.py:173
@@ -3115,7 +3187,7 @@ msgstr "Nouvel ajout au catalogue"
 #: dashboard/views/partner_prices.py:174
 #, python-format
 msgid "%(affiliate)s added \"%(product)s\" to their catalog."
-msgstr "%(affiliate)s a ajouté "%(product)s" à son catalogue."%(product)s\" à son catalogue."
+msgstr "%(affiliate)s a ajouté \"%(product)s\" à son catalogue."
 
 #: dashboard/views/partner_prices.py:185
 #, fuzzy
@@ -3130,7 +3202,7 @@ msgstr "Prix des affiliés mis à jour"
 #: dashboard/views/partner_prices.py:230
 #, python-format
 msgid "%(affiliate)s updated %(field)s prices for \"%(product)s\"."
-msgstr "%(affiliate)s a mis à jour les prix %(field)s de "%(product)s"."%(product)s\"."
+msgstr "%(affiliate)s a mis à jour les prix %(field)s de \"%(product)s\"."
 
 #: dashboard/views/partner_prices.py:242
 #, fuzzy
@@ -3329,7 +3401,8 @@ msgstr "Nom du client"
 #: dashboard/views/products.py:522
 #, python-format
 msgid "Admin set a custom price for \"%(product)s\" — DZD%(price)s."
-msgstr "L'administrateur a défini un prix personnalisé pour "%(product)s" — DZD%(price)s."%(product)s\" — "
+msgstr ""
+"L'administrateur a défini un prix personnalisé pour \"%(product)s\" — "
 "DZD%(price)s."
 
 #: dashboard/views/products.py:530
@@ -3966,7 +4039,9 @@ msgstr "Commande"
 
 #: frontend/templates/products/affiliate_product_detail.html:187
 msgid "Leave your details and we will confirm your order."
-msgstr "Laissez vos coordonnées et nous confirmerons votre commande."#: frontend/templates/products/affiliate_product_detail.html:270
+msgstr "Laissez vos coordonnées et nous confirmerons votre commande."
+
+#: frontend/templates/products/affiliate_product_detail.html:270
 #, fuzzy
 #| msgid "Powered by"
 msgid "Powered By"
@@ -4117,32 +4192,39 @@ msgstr "Article retiré du panier."
 msgid "No valid items in cart."
 msgstr "Aucun article valide dans le panier."
 
-#: frontend/views/cart.py:279
+#: frontend/views/cart.py:273
 #, fuzzy
 #| msgid "New Product"
 msgid "New Order!"
 msgstr "Nouveau produit"
 
-#: frontend/views/cart.py:280
+#: frontend/views/cart.py:274
 #, python-format
 msgid "New order for %(products)s by %(name)s"
 msgstr "Nouvelle commande de %(products)s par %(name)s"
 
-#: frontend/views/cart.py:292
+#: frontend/views/cart.py:286
 msgid "New Order via Your Store"
-msgstr "Nouvelle commande via votre boutique"#: frontend/views/cart.py:293
+msgstr "Nouvelle commande via votre boutique"
+
+#: frontend/views/cart.py:287
 #, python-format
 msgid "%(name)s placed an order for %(products)s through your store."
-msgstr "%(name)s a passé une commande pour %(products)s via votre boutique."#: frontend/views/cart.py:301
+msgstr "%(name)s a passé une commande pour %(products)s via votre boutique."
+
+#: frontend/views/cart.py:295
 #, fuzzy
 #| msgid "Affiliate"
 msgid "New Order via Semi-Affiliate"
 msgstr "Affiliation"
 
-#: frontend/views/cart.py:302
+#: frontend/views/cart.py:296
 #, python-format
 msgid "%(name)s placed an order for %(products)s through %(semi)s's store."
-msgstr "%(name)s a passé une commande pour %(products)s via la boutique de %(semi)s."#: frontend/views/cart.py:313
+msgstr ""
+"%(name)s a passé une commande pour %(products)s via la boutique de %(semi)s."
+
+#: frontend/views/cart.py:308
 #, fuzzy
 #| msgid "Project updated successfully"
 msgid "Order placed successfully!"
@@ -4284,10 +4366,14 @@ msgstr "Nouvelle demande de %(name)s pour le produit : %(product)s"
 
 #: frontend/views/orders.py:108
 msgid "New Lead via Your Store"
-msgstr "Nouveau prospect via votre boutique"#: frontend/views/orders.py:109
+msgstr "Nouveau prospect via votre boutique"
+
+#: frontend/views/orders.py:109
 #, python-format
 msgid "%(name)s placed an inquiry for %(product)s through your store."
-msgstr "%(name)s a fait une demande pour %(product)s via votre boutique."#: frontend/views/orders.py:118
+msgstr "%(name)s a fait une demande pour %(product)s via votre boutique."
+
+#: frontend/views/orders.py:118
 #, fuzzy
 #| msgid "Affiliate"
 msgid "New Lead via Semi-Affiliate"
@@ -4298,7 +4384,7 @@ msgstr "Affiliation"
 msgid "%(name)s placed an inquiry for %(product)s through %(semi)s's store."
 msgstr ""
 
-#: frontend/views/orders.py:129
+#: frontend/views/orders.py:132
 msgid ""
 "Your inquiry has been sent successfully. Our team will contact you soon."
 msgstr ""
@@ -4325,11 +4411,11 @@ msgstr "Prix : décroissant"
 msgid "Name: A-Z"
 msgstr "Nom : A-Z"
 
-#: frontend/views/products.py:126
+#: frontend/views/products.py:130
 msgid "No 3D model available for this product"
 msgstr "Aucun modèle 3D disponible pour ce produit"
 
-#: frontend/views/store.py:17
+#: frontend/views/store.py:18
 msgid "Product not available through this affiliate."
 msgstr ""
 

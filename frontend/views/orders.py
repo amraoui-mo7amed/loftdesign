@@ -124,6 +124,9 @@ def place_order(request):
                     except UserProfile.DoesNotExist:
                         pass
 
+                request.session.pop("affiliate_code", None)
+                request.session.modified = True
+
                 return JsonResponse({
                     "success": True,
                     "message": _("Your inquiry has been sent successfully. Our team will contact you soon.")

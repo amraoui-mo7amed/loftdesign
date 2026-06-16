@@ -75,7 +75,7 @@ from dashboard.utils import get_algeria_locations
 
 def product_detail(request, pk):
     # Check query param first (for shared links), fall back to session
-    affiliate_code = request.GET.get("affiliate") or request.session.get("affiliate_code")
+    affiliate_code = request.GET.get("affiliate")
     if affiliate_code:
         product = get_object_or_404(Product, pk=pk)
     else:

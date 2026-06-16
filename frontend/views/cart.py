@@ -302,6 +302,7 @@ def cart_checkout(request):
                     pass
 
             request.session[CART_SESSION_KEY] = {}
+            request.session.pop("affiliate_code", None)
             request.session.modified = True
 
         messages.success(request, _("Order placed successfully!"))

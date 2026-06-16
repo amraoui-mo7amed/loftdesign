@@ -190,6 +190,7 @@ def affiliate_cart_checkout(request):
             )
 
         request.session[DASHBOARD_CART_SESSION_KEY] = {}
+        request.session.pop("affiliate_code", None)
         request.session.modified = True
 
         creator_name = request.user.get_full_name() or request.user.username

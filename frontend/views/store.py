@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from user_auth.models import UserProfile
 from dashboard.models import PartnerPrice, AffiliateStore, StoreVisit, Product
@@ -17,7 +18,7 @@ def affiliate_redirect(request, code, pk):
         raise Http404(_("Product not available through this affiliate."))
     request.session["affiliate_code"] = code
     request.session.modified = True
-    return redirect("frontend:product_detail", pk=pk)
+    return redirect(f"{reverse('frontend:product_detail', args=[pk])}?affiliate={code}")
 
 
 def affiliate_store(request, code):

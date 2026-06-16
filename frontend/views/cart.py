@@ -254,13 +254,7 @@ def cart_checkout(request):
             if not order_items:
                 return JsonResponse({"success": False, "errors": [_("No valid items in cart.")]})
 
-            referred_by = ""
-            for item_data in cart.values():
-                if item_data.get("affiliate_code"):
-                    referred_by = item_data["affiliate_code"]
-                    break
-            if not referred_by:
-                referred_by = request.session.get("affiliate_code", "")
+            referred_by = request.session.get("affiliate_code", "")
 
             Order.objects.create(
                 items=order_items,

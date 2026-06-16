@@ -84,7 +84,11 @@ def product_detail(request, pk):
     if affiliate_code:
         request.session["affiliate_code"] = affiliate_code
         request.session.modified = True
+    else:
+        request.session.pop("affiliate_code", None)
+        request.session.modified = True
 
+    if affiliate_code:
         try:
             profile = UserProfile.objects.get(affiliate_code=affiliate_code, is_approved=True)
         except UserProfile.DoesNotExist:

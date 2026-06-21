@@ -3,7 +3,7 @@ from functools import lru_cache
 
 
 @lru_cache(maxsize=128)
-def _build_menu(is_authenticated, is_superuser, role):
+def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
     """
     Build menu from primitive args so lru_cache works (User objects aren't hashable).
     """
@@ -69,7 +69,7 @@ def _build_menu(is_authenticated, is_superuser, role):
         })
 
     # Admin, Provider, and Affiliate links
-    if is_admin or role == "provider":
+    if is_admin or (role == "provider" and is_trusted):
         menu.append({
             "title": _("Products"),
             "icon": "fas fa-box-open",
@@ -121,7 +121,9 @@ def dashboard_sidebar(request):
     """
     is_auth = request.user.is_authenticated
     is_super = request.user.is_superuser
-    role = getattr(request.user.profile, "role", None) if hasattr(request.user, "profile") else None
+    profile = getattr(request.user, "profile", None) if hasattr(request.user, "profile") else None
+    role = getattr(profile, "role", None)
+    is_trusted = getattr(profile, "is_trusted", False) if profile else False
     return {
-        "dashboard_menu": _build_menu(is_auth, is_super, role),
+        "dashboard_menu": _build_menu(is_auth, is_super, role, is_trusted),
     }

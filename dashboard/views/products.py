@@ -77,6 +77,11 @@ def category_create(request):
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_list(request):
     """View to list products (filtered by user if not admin)"""
+    if not request.user.is_superuser:
+        profile = getattr(request.user, "profile", None)
+        if not profile or not profile.is_trusted:
+            raise PermissionDenied(_("Only trusted providers can access this page."))
+
     query = request.GET.get("q", "")
     status_filter = request.GET.get("status", "")
 
@@ -234,6 +239,11 @@ def product_create(request):
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_update(request, pk):
     """View to update product (checks ownership)"""
+    if not request.user.is_superuser:
+        profile = getattr(request.user, "profile", None)
+        if not profile or not profile.is_trusted:
+            raise PermissionDenied(_("Only trusted providers can access this page."))
+
     is_admin = request.user.is_superuser
     if is_admin:
         product = get_object_or_404(Product, pk=pk)
@@ -326,6 +336,11 @@ def product_update(request, pk):
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_delete(request, pk):
     """AJAX delete for product (checks ownership)"""
+    if not request.user.is_superuser:
+        profile = getattr(request.user, "profile", None)
+        if not profile or not profile.is_trusted:
+            return JsonResponse({"success": False, "message": _("Permission denied.")}, status=403)
+
     if request.method == "POST":
         if request.user.is_superuser:
             product = get_object_or_404(Product, pk=pk)

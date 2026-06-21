@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 from django.db import transaction
@@ -108,10 +109,14 @@ ORDER_TRANSITIONS = {
 @role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER] + _AFFILIATE_ROLES)
 def order_list(request):
     """List orders — admins see all, providers see their products, affiliates see their catalog products"""
-    status_filter = request.GET.get("status", "")
-    q = request.GET.get("q", "").strip()
     user_profile = getattr(request.user, "profile", None)
     role = user_profile.role if user_profile else None
+
+    if role == _RC.PROVIDER and (not user_profile or not user_profile.is_trusted):
+        raise PermissionDenied(_("Only trusted providers can access this page."))
+
+    status_filter = request.GET.get("status", "")
+    q = request.GET.get("q", "").strip()
     is_admin = role == _RC.ADMIN
     is_provider = role == _RC.PROVIDER
     is_affiliate_or_semi = role in _AFFILIATE_ROLES

@@ -108,6 +108,28 @@
                     {% endif %}
                 </div>
 
+                {# ── Parent Affiliate Pricing (semi only) ─────────── #}
+                {% if is_semi and parent_affiliate %}
+                <div class="detail-card">
+                    <div class="detail-card-header"><i class="fas fa-user-tie"></i> {% trans "Parent Affiliate Pricing" %}</div>
+                    <div class="text-center mb-3">
+                        <span class="small fw-bold">{{ parent_affiliate.store_name|default:parent_affiliate.user.username }}</span>
+                    </div>
+                    {% if parent_pp %}
+                    <div class="price-row">
+                        <span class="price-row-label">{% trans "Wholesale Price" %}</span>
+                        <span class="price-row-value">DZD{{ parent_pp.wholesale_price|floatformat:0 }}</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-row-label">{% trans "Affiliate Cost" %}</span>
+                        <span class="price-row-value text-muted">DZD{{ parent_pp.purchase_price|floatformat:0 }}</span>
+                    </div>
+                    {% else %}
+                    <p class="small text-muted mb-0 text-center">{% trans "Parent affiliate has not added this product yet." %}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
                 {# ── Your Pricing Form ─────────────────────────── #}
                 {% if in_catalog %}
                 <form id="updatePricingForm" class="form" method="POST" action="{% url 'dash:catalog_update_pricing' product.pk %}">

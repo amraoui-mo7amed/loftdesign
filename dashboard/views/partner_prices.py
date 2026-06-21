@@ -54,13 +54,17 @@ def catalog_details(request, product_pk):
     ).first()
 
     profile = get_object_or_404(UserProfile, user=request.user)
-    if profile.role == _SEMI and profile.parent_affiliate:
+    is_semi = profile.role == _SEMI
+
+    parent_affiliate = None
+    parent_pp = None
+    if is_semi and profile.parent_affiliate:
+        parent_affiliate = profile.parent_affiliate
         parent_pp = PartnerPrice.objects.filter(
-            product=product, buyer=profile.parent_affiliate.user, is_active=True,
+            product=product, buyer=parent_affiliate.user, is_active=True,
         ).first()
-        available_qty = product.quantity
-    else:
-        available_qty = product.quantity
+
+    available_qty = product.quantity
 
     return render(request, "products/catalog_details.html", {
         "product": product,
@@ -73,6 +77,9 @@ def catalog_details(request, product_pk):
         "price_configured": loft_price is not None,
         "gallery": list(product.gallery_images.all()),
         "tags": [t.strip() for t in product.tags.split(",") if t.strip()] if product.tags else [],
+        "is_semi": is_semi,
+        "parent_affiliate": parent_affiliate,
+        "parent_pp": parent_pp,
     })
 
 

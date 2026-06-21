@@ -6,89 +6,7 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/orders.css' %}?v={% now 'U' %}">
-    <style>
-        .order-detail-header {
-            background: linear-gradient(135deg, var(--brand-dark) 0%, #1a1a2e 100%);
-            border-radius: 20px;
-            padding: 2rem;
-            color: #fff;
-        }
-        .order-detail-header .badge-status {
-            font-size: 0.8rem;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .info-card {
-            border: none;
-            border-radius: 16px;
-            background: #fff;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            height: 100%;
-        }
-        .info-card .card-header {
-            background: transparent;
-            border-bottom: 2px solid #f0f0f0;
-            padding: 1.25rem 1.5rem;
-        }
-        .info-card .card-body {
-            padding: 1.5rem;
-        }
-        .info-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 800;
-            color: #adb5bd;
-            margin-bottom: 0.25rem;
-        }
-        .info-value {
-            font-weight: 700;
-            color: var(--brand-dark);
-            font-size: 0.95rem;
-        }
-        .items-table thead th {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 800;
-            color: #adb5bd;
-            border-bottom: 2px solid #f0f0f0;
-            padding: 1rem 0.75rem;
-        }
-        .items-table tbody td {
-            padding: 1rem 0.75rem;
-            vertical-align: middle;
-            border-bottom: 1px solid #f5f5f5;
-        }
-        .items-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-        .item-thumb {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-        .item-title {
-            font-weight: 700;
-            color: var(--brand-dark);
-            font-size: 0.9rem;
-        }
-        .total-row td {
-            font-weight: 800;
-            font-size: 1rem;
-            padding-top: 1.25rem !important;
-            border-top: 2px solid #dee2e6 !important;
-        }
-        .total-amount {
-            color: var(--brand-primary, #d4a853);
-            font-size: 1.15rem;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/wallet.css' %}?v={% now 'U' %}">
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -147,96 +65,85 @@
                         <div class="info-value">{{ order.wilaya }} - {{ order.commune }}</div>
                     </div>
                     {% if order.customer_address %}
-                    <div>
+                    <div class="mb-3">
                         <div class="info-label">{% trans "Address" %}</div>
                         <div class="info-value">{{ order.customer_address }}</div>
                     </div>
                     {% endif %}
-                </div>
-            </div>
-        </div>
 
-        <!-- Referred By -->
-        {% if referred_by_profile %}
-        <div class="col-lg-4">
-            <div class="info-card">
-                <div class="card-header">
-                    <h6 class="fw-black mb-0 text-dark"><i class="fas fa-link me-2 text-primary"></i>{% trans "Referred By" %}</h6>
-                </div>
-                <div class="card-body">
+                    {% if referred_by_profile %}
+                    <hr class="my-3">
+                    <div class="info-label mb-2"><i class="fas fa-link me-1 text-primary"></i>{% trans "Referred By" %}</div>
                     {% if parent_profile %}
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div class="text-center">
-                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle fw-black text-white mb-2"
-                                     style="width:40px;height:40px;background:var(--brand-primary);font-size:0.85rem;">
+                    <div class="d-flex flex-column flex-sm-row gap-2 align-items-sm-stretch">
+                        <div class="flex-fill text-center text-sm-start p-2 rounded-3" style="background:#f8f9fa;">
+                            <span class="tx-type-badge bg-info text-white">{{ referred_by_profile.get_role_display }}</span>
+                            <div class="d-flex align-items-center justify-content-center justify-content-sm-start gap-2 mt-2">
+                                <div class="d-flex align-items-center justify-content-center rounded-circle fw-black text-white flex-shrink-0"
+                                     style="width:36px;height:36px;background:#0dcaf0;font-size:0.8rem;">
                                     {{ referred_by_profile.user.get_full_name|first|upper }}
                                 </div>
-                                <div class="fw-bold small">{{ referred_by_profile.user.get_full_name }}</div>
-                                <span class="badge bg-info rounded-pill px-2" style="font-size:0.6rem;">{{ referred_by_profile.get_role_display }}</span>
-                                <div class="mt-1"><code class="small">{{ referred_by_profile.affiliate_code }}</code></div>
-                                <a href="{% url 'dash:user_details' referred_by_profile.pk %}" class="btn btn-outline-dark btn-sm rounded-pill fw-bold mt-2 w-100" style="font-size:0.7rem;">
-                                    <i class="fas fa-user me-1"></i> {% trans "View Profile" %}
-                                </a>
+                                <div class="min-width-0">
+                                    <div class="fw-bold small">{{ referred_by_profile.user.get_full_name }}</div>
+                                    <code class="small">{{ referred_by_profile.affiliate_code }}</code>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-6 border-start">
-                            <div class="text-center">
-                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle fw-black text-white mb-2"
-                                     style="width:40px;height:40px;background:#198754;font-size:0.85rem;">
+                        <div class="d-none d-sm-flex align-items-center justify-content-center flex-shrink-0">
+                            <i class="fas fa-arrow-right text-muted" style="font-size:0.6rem;"></i>
+                        </div>
+                        <div class="flex-fill text-center text-sm-start p-2 rounded-3" style="background:#f8f9fa;">
+                            <span class="tx-type-badge bg-primary text-white">{{ parent_profile.get_role_display }}</span>
+                            <div class="d-flex align-items-center justify-content-center justify-content-sm-start gap-2 mt-2">
+                                <div class="d-flex align-items-center justify-content-center rounded-circle fw-black text-white flex-shrink-0"
+                                     style="width:36px;height:36px;background:var(--brand-primary);font-size:0.8rem;">
                                     {{ parent_profile.user.get_full_name|first|upper }}
                                 </div>
-                                <div class="fw-bold small">{{ parent_profile.user.get_full_name }}</div>
-                                <span class="badge bg-primary rounded-pill px-2" style="font-size:0.6rem;">{{ parent_profile.get_role_display }}</span>
-                                <div class="mt-1"><code class="small">{{ parent_profile.affiliate_code }}</code></div>
-                                <a href="{% url 'dash:user_details' parent_profile.pk %}" class="btn btn-outline-dark btn-sm rounded-pill fw-bold mt-2 w-100" style="font-size:0.7rem;">
-                                    <i class="fas fa-user me-1"></i> {% trans "View Profile" %}
-                                </a>
+                                <div class="min-width-0">
+                                    <div class="fw-bold small">{{ parent_profile.user.get_full_name }}</div>
+                                    <code class="small">{{ parent_profile.affiliate_code }}</code>
+                                </div>
                             </div>
                         </div>
                     </div>
                     {% else %}
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="d-flex align-items-center justify-content-center rounded-circle fw-black text-white"
-                             style="width:44px;height:44px;background:var(--brand-primary);flex-shrink:0;">
+                    <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:#f8f9fa;">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle fw-black text-white flex-shrink-0"
+                             style="width:38px;height:38px;background:var(--brand-primary);font-size:0.85rem;">
                             {{ referred_by_profile.user.get_full_name|first|upper }}
                         </div>
                         <div>
-                            <div class="fw-bold">{{ referred_by_profile.user.get_full_name }}</div>
-                            <span class="badge bg-dark rounded-pill px-3 py-1 small">{{ referred_by_profile.affiliate_code }}</span>
+                            <div class="fw-bold small">{{ referred_by_profile.user.get_full_name }}</div>
+                            <span class="tx-type-badge {% if referred_by_profile.role == 'affiliate' %}bg-primary{% else %}bg-info{% endif %} text-white me-1">
+                                {{ referred_by_profile.get_role_display }}
+                            </span>
+                            <code class="small">{{ referred_by_profile.affiliate_code }}</code>
                         </div>
                     </div>
-                    <div class="mb-2">
-                        <span class="badge {% if referred_by_profile.role == 'affiliate' %}bg-primary{% else %}bg-info{% endif %} rounded-pill px-3 py-2">
-                            {{ referred_by_profile.get_role_display }}
-                        </span>
-                    </div>
-                    <div class="d-flex gap-2 mt-2">
-                        <a href="{% url 'dash:user_details' referred_by_profile.pk %}" class="btn btn-outline-dark btn-sm rounded-pill fw-bold flex-grow-1">
-                            <i class="fas fa-user me-1"></i> {% trans "View Profile" %}
+                    {% endif %}
+                    {% if is_admin %}
+                    <div class="d-flex flex-wrap gap-1 mt-2">
+                        <a href="{% url 'dash:user_details' referred_by_profile.pk %}"
+                           class="ref-link">
+                            <i class="fas fa-user me-1" style="font-size:0.6rem;"></i>
+                            {% if referred_by_profile.role == 'affiliate' %}
+                            {% trans "View Affiliate Profile" %}
+                            {% else %}
+                            {% trans "View Semi-Affiliate Profile" %}
+                            {% endif %}
                         </a>
-                        {% if referred_by_profile.store %}
-                        <a href="{% url 'frontend:affiliate_store' referred_by_profile.affiliate_code %}" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill fw-bold">
-                            <i class="fas fa-external-link-alt"></i>
+                        {% if parent_profile %}
+                        <a href="{% url 'dash:user_details' parent_profile.pk %}"
+                           class="ref-link">
+                            <i class="fas fa-user me-1" style="font-size:0.6rem;"></i>{% trans "View Affiliate Profile" %}
                         </a>
                         {% endif %}
                     </div>
                     {% endif %}
-                    {% if affiliate_earned is not None %}
-                    <div class="d-flex align-items-center gap-2 py-2 px-3 rounded-3 mt-3" style="background:#f8f9fa;">
-                        <i class="fas fa-coins text-primary"></i>
-                        <div>
-                            <div class="info-label">{% trans "Commission Earned" %}</div>
-                            <div class="fw-black" style="color:var(--brand-primary);font-size:1.1rem;">
-                                {{ affiliate_earned|floatformat:2 }} <small>DZD</small>
-                            </div>
-                        </div>
-                    </div>
                     {% endif %}
                 </div>
             </div>
         </div>
-        {% endif %}
 
         <!-- Order Items -->
         <div class="col-lg-8">

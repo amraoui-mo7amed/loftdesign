@@ -26,8 +26,11 @@ urlpatterns = [
     # Affiliate
     path("signup/", auth_views.signup_view, name="affiliate_signup_page"),
     path("affiliate/signup/", main.affiliate_signup, name="affiliate_signup"),
-    # Affiliate Storefront
-    path("store/<slug:code>/", store.affiliate_store, name="affiliate_store"),
+    # Affiliate & Semi-Affiliate Storefronts
+    path("a/<slug:code>/", store.affiliate_store, name="affiliate_store"),
+    path("s/<slug:code>/", store.semi_affiliate_store, name="semi_affiliate_store"),
+    # Legacy redirect: /store/{code}/ -> /a/{code}/
+    path("store/<slug:code>/", store.legacy_store_redirect, name="legacy_store_redirect"),
     # Short redirect for share links
     path("go/<slug:code>/<int:pk>/", store.affiliate_redirect, name="affiliate_redirect"),
 ]

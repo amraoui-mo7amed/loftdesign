@@ -9,13 +9,100 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from django.db.models import Q
 from decimal import Decimal
-from ..models import Order, Product, PartnerPrice, Notification, LoftPrice
+from ..models import Order, Product, PartnerPrice, Notification
 from dashboard.decorator import role_required
-from dashboard.utils import notify_user, get_dash_cart, save_dash_cart, DASHBOARD_CART_SESSION_KEY, get_algeria_locations
+from dashboard.utils import notify_user, get_dash_cart, save_dash_cart, DASHBOARD_CART_SESSION_KEY, get_algeria_locations, check_low_stock, compute_item_profit
 from user_auth.models import UserProfile
 
 _RC = UserProfile.roleChoices
 _AFFILIATE_ROLES = [_RC.AFFILIATE, _RC.SEMI_AFFILIATE]
+
+
+def _admin_transitions_for_order(order):
+    """Admin transitions — hides SUPPLIER_FULFILLING if no provider involved."""
+    has_provider = False
+    for item in order.items:
+        pid = item.get("product_id")
+        if pid:
+            try:
+                p = Product.objects.get(pk=pid)
+                if p.user and not p.user.is_superuser:
+                    has_provider = True
+                    break
+            except Product.DoesNotExist:
+                pass
+
+    transitions = {
+        Order.OrderStatus.PENDING: [
+            Order.OrderStatus.ADMIN_VALIDATED,
+            Order.OrderStatus.CANCELLED,
+        ],
+        Order.OrderStatus.STORE_VALIDATED: [
+            Order.OrderStatus.ADMIN_VALIDATED,
+            Order.OrderStatus.CANCELLED,
+        ],
+        Order.OrderStatus.SHIPPED: [
+            Order.OrderStatus.DELIVERED,
+            Order.OrderStatus.CANCELLED,
+        ],
+    }
+
+    if has_provider:
+        transitions[Order.OrderStatus.ADMIN_VALIDATED] = [
+            Order.OrderStatus.SUPPLIER_FULFILLING,
+            Order.OrderStatus.CANCELLED,
+        ]
+        transitions[Order.OrderStatus.SUPPLIER_FULFILLING] = [
+            Order.OrderStatus.SHIPPED,
+            Order.OrderStatus.DELIVERED,
+            Order.OrderStatus.CANCELLED,
+        ]
+    else:
+        # Admin-created product — no validation needed, ship/deliver directly
+        transitions[Order.OrderStatus.PENDING] = [
+            Order.OrderStatus.SHIPPED,
+            Order.OrderStatus.DELIVERED,
+            Order.OrderStatus.CANCELLED,
+        ]
+        transitions[Order.OrderStatus.ADMIN_VALIDATED] = []
+        transitions[Order.OrderStatus.SUPPLIER_FULFILLING] = []
+
+    return transitions
+
+
+ORDER_TRANSITIONS = {
+    _RC.ADMIN.value: {
+        Order.OrderStatus.PENDING: [
+            Order.OrderStatus.ADMIN_VALIDATED,
+            Order.OrderStatus.CANCELLED,
+        ],
+        Order.OrderStatus.STORE_VALIDATED: [
+            Order.OrderStatus.ADMIN_VALIDATED,
+            Order.OrderStatus.CANCELLED,
+        ],
+        Order.OrderStatus.ADMIN_VALIDATED: [
+            Order.OrderStatus.SUPPLIER_FULFILLING,
+            Order.OrderStatus.SHIPPED,
+            Order.OrderStatus.DELIVERED,
+            Order.OrderStatus.CANCELLED,
+        ],
+        Order.OrderStatus.SUPPLIER_FULFILLING: [
+            Order.OrderStatus.SHIPPED,
+            Order.OrderStatus.DELIVERED,
+            Order.OrderStatus.CANCELLED,
+        ],
+        Order.OrderStatus.SHIPPED: [
+            Order.OrderStatus.DELIVERED,
+            Order.OrderStatus.CANCELLED,
+        ],
+    },
+    _RC.PROVIDER.value: {
+        Order.OrderStatus.ADMIN_VALIDATED: [
+            Order.OrderStatus.SUPPLIER_FULFILLING,
+        ],
+    },
+    _RC.SEMI_AFFILIATE.value: {},
+}
 
 
 @role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER] + _AFFILIATE_ROLES)
@@ -25,6 +112,7 @@ def order_list(request):
     q = request.GET.get("q", "").strip()
     user_profile = getattr(request.user, "profile", None)
     role = user_profile.role if user_profile else None
+    is_admin = role == _RC.ADMIN
     is_provider = role == _RC.PROVIDER
     is_affiliate_or_semi = role in _AFFILIATE_ROLES
 
@@ -68,35 +156,48 @@ def order_list(request):
 
     for order in page_obj.object_list:
         order.items_json = json.dumps(order.items, ensure_ascii=False)
-
-    # Compute affiliate earnings for DELIVERED orders with referred_by
-    delivered_referred = [
-        o for o in page_obj.object_list
-        if o.referred_by and o.status == Order.OrderStatus.DELIVERED
-    ]
-    if delivered_referred:
-        all_product_ids = set()
-        for o in delivered_referred:
-            for item in o.items:
+        # Per-order allowed transitions for the current user
+        if is_admin:
+            transitions = _admin_transitions_for_order(order)
+        else:
+            transitions = ORDER_TRANSITIONS.get(role, {})
+        allowed_statuses = transitions.get(order.status, [])
+        order.allowed_next_statuses = [
+            {"value": s, "label": _(dict(Order.OrderStatus.choices)[s])}
+            for s in allowed_statuses
+        ]
+        # Show commission based on role
+        order.display_commission = None
+        order.profit_breakdown = []
+        if order.referred_by and order.status == Order.OrderStatus.DELIVERED:
+            if is_provider:
+                order.display_commission = None
+            else:
+                from decimal import Decimal
+                total_commission = Decimal(str(order.loft_share or 0)) + Decimal(str(order.affiliate_share or 0)) + Decimal(str(order.semi_share or 0))
+                order.display_commission = total_commission
+            # Per-item profit breakdown for admin
+            for item in order.items:
                 pid = item.get("product_id")
+                price = item.get("price", 0)
+                qty = item.get("quantity", 1)
+                title = item.get("title", "")
                 if pid:
-                    all_product_ids.add(pid)
-        loft_prices = {
-            lp.product_id: lp
-            for lp in LoftPrice.objects.filter(product_id__in=all_product_ids)
-        }
-        for o in delivered_referred:
-            earnings = Decimal("0.00")
-            for item in o.items:
-                product_id = item.get("product_id")
-                price = Decimal(str(item.get("price", 0))) or Decimal("0")
-                quantity = int(item.get("quantity", 1))
-                loft_price = loft_prices.get(product_id)
-                if loft_price:
-                    margin = price - loft_price.loft_default_wholesale_price
-                    if margin > 0:
-                        earnings += margin * quantity
-            o.commission_earned = earnings
+                    try:
+                        p = Product.objects.get(pk=pid)
+                        profit = compute_item_profit(p, price, qty, order.referred_by)
+                        order.profit_breakdown.append({
+                            "title": title,
+                            "qty": qty,
+                            "price": float(price) * int(qty),
+                            "supplier": float(profit["supplier_share"]),
+                            "loft": float(profit["loft_share"]),
+                            "affiliate": float(profit["affiliate_share"]),
+                            "semi": float(profit["semi_share"]),
+                        })
+                    except Product.DoesNotExist:
+                        pass
+        order.profit_breakdown_json = json.dumps(order.profit_breakdown)
 
     is_trusted = user_profile and user_profile.is_trusted
 
@@ -210,8 +311,9 @@ def affiliate_cart_checkout(request):
                 product_titles.append(product.title)
                 product.quantity -= qty
                 product.save()
+                check_low_stock(product)
 
-            Order.objects.create(
+            order = Order.objects.create(
                 buyer=request.user,
                 items=order_items,
                 customer_name=name,
@@ -221,7 +323,8 @@ def affiliate_cart_checkout(request):
                 commune=commune,
                 referred_by=profile.affiliate_code,
             )
-
+ 
+ 
         request.session[DASHBOARD_CART_SESSION_KEY] = {}
         request.session.pop("affiliate_code", None)
         request.session.modified = True
@@ -363,9 +466,9 @@ def affiliate_cart_remove(request, product_pk):
     })
 
 
-@role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER])
+@role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER] + _AFFILIATE_ROLES)
 def order_update_status(request, pk):
-    """AJAX view to update order status — only admins and trusted providers"""
+    """AJAX view to update order status with role-based transitions"""
     if request.method == "POST":
         order = get_object_or_404(Order, pk=pk)
         new_status = request.POST.get("status")
@@ -374,9 +477,27 @@ def order_update_status(request, pk):
             return JsonResponse({"success": False}, status=400)
 
         user_profile = getattr(request.user, "profile", None)
-        is_provider = user_profile and user_profile.role == UserProfile.roleChoices.PROVIDER
+        role = user_profile.role if user_profile else None
+        is_admin = role == _RC.ADMIN
+        is_provider = role == _RC.PROVIDER
+        is_affiliate = role == _RC.AFFILIATE
+        is_semi = role == _RC.SEMI_AFFILIATE
 
-        if is_provider:
+        # Permission matrix — use transitions for the role
+        role_value = user_profile.role if user_profile else None
+        role_transitions = _admin_transitions_for_order(order) if is_admin else ORDER_TRANSITIONS.get(role_value, {})
+
+        if is_admin:
+            allowed = role_transitions.get(order.status, [])
+            if new_status not in allowed:
+                return JsonResponse({
+                    "success": False,
+                    "message": _("Admin cannot change from %(current)s to %(new)s.") % {
+                        "current": order.get_status_display(),
+                        "new": dict(Order.OrderStatus.choices).get(new_status, new_status),
+                    },
+                })
+        elif is_provider:
             if not user_profile.is_trusted:
                 return JsonResponse({
                     "success": False,
@@ -391,28 +512,194 @@ def order_update_status(request, pk):
                     "success": False,
                     "message": _("You can only update orders for your own products."),
                 })
+            allowed = role_transitions.get(order.status, [])
+            if new_status not in allowed:
+                return JsonResponse({
+                    "success": False,
+                    "message": _("You cannot change from %(current)s to %(new)s.") % {
+                        "current": order.get_status_display(),
+                        "new": dict(Order.OrderStatus.choices).get(new_status, new_status),
+                    },
+                })
+        elif is_affiliate or is_semi:
+            allowed = role_transitions.get(order.status, [])
+            if new_status not in allowed:
+                return JsonResponse({
+                    "success": False,
+                    "message": _("You can only validate pending orders."),
+                })
+            # Ensure they can only validate their own orders
+            profile = getattr(request.user, "profile", None)
+            if not profile or not profile.affiliate_code:
+                return JsonResponse({"success": False, "message": _("Permission denied.")})
+            if is_affiliate:
+                valid_codes = [profile.affiliate_code]
+                semi_codes = UserProfile.objects.filter(
+                    parent_affiliate=profile, is_approved=True
+                ).exclude(affiliate_code__isnull=True).values_list("affiliate_code", flat=True)
+                valid_codes.extend(semi_codes)
+            else:
+                valid_codes = [profile.affiliate_code]
+            if order.referred_by not in valid_codes:
+                return JsonResponse({"success": False, "message": _("Permission denied.")})
 
         old_display = order.get_status_display()
         order.status = new_status
+
+        # If order is marked DELIVERED, compute profit and credit wallets
+        if new_status == Order.OrderStatus.DELIVERED:
+            from dashboard.utils import compute_order_profit, credit_wallets_for_order
+            compute_order_profit(order)
+            credit_wallets_for_order(order)
+
         order.save()
 
-        if is_provider:
-            admins = User.objects.filter(is_superuser=True)
+        # ── Find all relevant parties for notifications ─────────
+        admins = User.objects.filter(is_superuser=True)
+
+        provider_ids = set()
+        for item in order.items:
+            pid = item.get("product_id")
+            if pid:
+                try:
+                    p = Product.objects.get(pk=pid)
+                    if p.user:
+                        provider_ids.add(p.user)
+                except Product.DoesNotExist:
+                    pass
+
+        referred_user = None
+        if order.referred_by:
+            ref_profile = UserProfile.objects.filter(
+                affiliate_code=order.referred_by, is_approved=True
+            ).first()
+            if ref_profile:
+                referred_user = ref_profile.user
+
+        order_label = order.order_number or f"#{order.id}"
+        actor_name = request.user.get_full_name() or request.user.username
+
+        # ── Status-specific notifications ───────────────────────
+        if new_status == Order.OrderStatus.STORE_VALIDATED:
             for admin in admins:
                 notify_user(
-                    user=admin,
-                    title=_("Order #%(id)s Status Updated") % {"id": order.id},
-                    message=_(
-                        "%(provider)s changed order #%(id)s from «%(old)s» to «%(new)s»"
-                    ) % {
-                        "provider": request.user.get_full_name() or request.user.username,
-                        "id": order.id,
-                        "old": old_display,
-                        "new": dict(Order.OrderStatus.choices).get(new_status, new_status),
-                    },
-                    notification_type=Notification.NotificationType.INFO,
+                    admin,
+                    _("Order #%(num)s Validated") % {"num": order_label},
+                    _('%(name)s validated order #%(num)s.') % {"name": actor_name, "num": order_label},
+                    notification_type="info",
                     link="/dashboard/orders/",
                 )
+
+        elif new_status == Order.OrderStatus.ADMIN_VALIDATED:
+            for provider in provider_ids:
+                if provider and provider != request.user:
+                    notify_user(
+                        provider,
+                        _("Order Ready for Fulfillment"),
+                        _('Order #%(num)s has been validated and is ready for your fulfillment.')
+                        % {"num": order_label},
+                        notification_type="info",
+                        link="/dashboard/orders/",
+                    )
+            if referred_user and referred_user != request.user and not referred_user.is_superuser:
+                notify_user(
+                    referred_user,
+                    _("Order #%(num)s Validated") % {"num": order_label},
+                    _('Loft Design validated order #%(num)s.') % {"num": order_label},
+                    notification_type="info",
+                    link="/dashboard/orders/",
+                )
+
+        elif new_status == Order.OrderStatus.SUPPLIER_FULFILLING:
+            if not is_admin:
+                for admin in admins:
+                    notify_user(
+                        admin,
+                        _("Order Ready for Delivery"),
+                        _('Provider marked order #%(num)s as fulfilled — ready for delivery.')
+                        % {"num": order_label},
+                        notification_type="info",
+                        link="/dashboard/orders/",
+                    )
+            if referred_user and referred_user != request.user and not referred_user.is_superuser:
+                notify_user(
+                    referred_user,
+                    _("Order #%(num)s Being Fulfilled") % {"num": order_label},
+                    _('Order #%(num)s is now being fulfilled by the supplier.')
+                    % {"num": order_label},
+                    notification_type="info",
+                    link="/dashboard/orders/",
+                )
+
+        elif new_status == Order.OrderStatus.SHIPPED:
+            for provider in provider_ids:
+                if provider and provider != request.user:
+                    notify_user(
+                        provider,
+                        _("Order #%(num)s Shipped") % {"num": order_label},
+                        _('Order #%(num)s has been shipped.') % {"num": order_label},
+                        notification_type="info",
+                        link="/dashboard/orders/",
+                    )
+            if referred_user and referred_user != request.user and not referred_user.is_superuser:
+                notify_user(
+                    referred_user,
+                    _("Order #%(num)s Shipped") % {"num": order_label},
+                    _('Order #%(num)s has been shipped.') % {"num": order_label},
+                    notification_type="info",
+                    link="/dashboard/orders/",
+                )
+
+        elif new_status == Order.OrderStatus.DELIVERED:
+            for provider in provider_ids:
+                if provider and provider != request.user:
+                    notify_user(
+                        provider,
+                        _("Order #%(num)s Delivered") % {"num": order_label},
+                        _('Order #%(num)s has been delivered.') % {"num": order_label},
+                        notification_type="success",
+                        link="/dashboard/orders/",
+                    )
+            if referred_user and referred_user != request.user and not referred_user.is_superuser:
+                notify_user(
+                    referred_user,
+                    _("Order #%(num)s Delivered — Commission Earned") % {"num": order_label},
+                    _('Order #%(num)s has been delivered. Your commission has been credited to your wallet.')
+                    % {"num": order_label},
+                    notification_type="success",
+                    link="/dashboard/wallet/",
+                )
+
+        elif new_status == Order.OrderStatus.CANCELLED:
+            for provider in provider_ids:
+                if provider and provider != request.user:
+                    notify_user(
+                        provider,
+                        _("Order #%(num)s Cancelled") % {"num": order_label},
+                        _('Order #%(num)s has been cancelled by %(name)s.')
+                        % {"num": order_label, "name": actor_name},
+                        notification_type="warning",
+                        link="/dashboard/orders/",
+                    )
+            if referred_user and referred_user != request.user and not referred_user.is_superuser:
+                notify_user(
+                    referred_user,
+                    _("Order #%(num)s Cancelled") % {"num": order_label},
+                    _('Order #%(num)s has been cancelled by %(name)s.')
+                    % {"num": order_label, "name": actor_name},
+                    notification_type="warning",
+                    link="/dashboard/orders/",
+                )
+            for admin in admins:
+                if admin != request.user:
+                    notify_user(
+                        admin,
+                        _("Order #%(num)s Cancelled") % {"num": order_label},
+                        _('Order #%(num)s has been cancelled by %(name)s.')
+                        % {"num": order_label, "name": actor_name},
+                        notification_type="warning",
+                        link="/dashboard/orders/",
+                    )
 
         return JsonResponse({"success": True, "message": _("Order status updated")})
 
@@ -454,34 +741,26 @@ def order_detail(request, pk):
     parent_profile = None
     affiliate_earned = None
     if order.referred_by:
-        referred_by_profile = UserProfile.objects.filter(
+        referred_by_profile = UserProfile.objects.select_related("parent_affiliate").filter(
             affiliate_code=order.referred_by
         ).first()
-        if referred_by_profile and referred_by_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE:
+        if referred_by_profile and referred_by_profile.parent_affiliate:
             parent_profile = referred_by_profile.parent_affiliate
-        if referred_by_profile and order.status == Order.OrderStatus.DELIVERED:
-            affiliate_earned = Decimal("0.00")
-            product_ids = [item.get("product_id") for item in order.items if item.get("product_id")]
-            loft_prices = {
-                lp.product_id: lp
-                for lp in LoftPrice.objects.filter(product_id__in=product_ids)
-            }
-            for item in order.items:
-                product_id = item.get("product_id")
-                price = Decimal(str(item.get("price", 0))) or Decimal("0")
-                quantity = int(item.get("quantity", 1))
-                loft_price = loft_prices.get(product_id)
-                if loft_price:
-                    margin = price - loft_price.loft_default_wholesale_price
-                    if margin > 0:
-                        affiliate_earned += margin * quantity
+        elif referred_by_profile and referred_by_profile.role == _RC.SEMI_AFFILIATE:
+            parent_profile = UserProfile.objects.filter(
+                semi_affiliates=referred_by_profile
+            ).first()
+    if order.referred_by and order.status == Order.OrderStatus.DELIVERED:
+        affiliate_earned = (order.affiliate_share or 0) + (order.semi_share or 0)
 
     is_trusted = user_profile and user_profile.is_trusted
+    is_admin = role == _RC.ADMIN
     return render(request, "orders/detail.html", {
         "order": order,
         "is_provider": is_provider,
         "is_trusted": is_trusted,
         "is_affiliate_or_semi": is_affiliate_or_semi,
+        "is_admin": is_admin,
         "referred_by_profile": referred_by_profile,
         "parent_profile": parent_profile,
         "affiliate_earned": affiliate_earned,
@@ -496,21 +775,6 @@ def order_delete(request, pk):
         order = get_object_or_404(Order, pk=pk)
         order.delete()
         return JsonResponse({"success": True, "message": _("Order removed")})
-    return JsonResponse({"success": False}, status=400)
-
-
-@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
-def order_toggle_commission(request, pk):
-    """AJAX: toggle commission_paid on an order"""
-    if request.method == "POST":
-        order = get_object_or_404(Order, pk=pk)
-        order.commission_paid = not order.commission_paid
-        order.save(update_fields=["commission_paid"])
-        return JsonResponse({
-            "success": True,
-            "commission_paid": order.commission_paid,
-            "message": _("Commission marked as paid") if order.commission_paid else _("Commission marked as unpaid"),
-        })
     return JsonResponse({"success": False}, status=400)
 
 

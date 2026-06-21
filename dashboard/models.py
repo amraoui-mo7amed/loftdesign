@@ -366,8 +366,10 @@ class Order(models.Model):
 
     class OrderStatus(models.TextChoices):
         PENDING = "pending", _("Pending")
-        CONFIRMED = "confirmed", _("Confirmed")
-        PAID = "paid", _("Paid")
+        STORE_VALIDATED = "store_validated", _("Validate")
+        ADMIN_VALIDATED = "admin_validated", _("Validate")
+        SUPPLIER_FULFILLING = "supplier_fulfilling", _("Supplier Fulfilling")
+        SHIPPED = "shipped", _("Shipped")
         DELIVERED = "delivered", _("Delivered")
         CANCELLED = "cancelled", _("Cancelled")
 
@@ -401,6 +403,24 @@ class Order(models.Model):
         _("Commission Paid"), default=False,
         help_text=_("Whether the affiliate commission for this order has been settled")
     )
+
+    supplier_share = models.DecimalField(
+        _("Supplier Share"), max_digits=12, decimal_places=2, default=0.00,
+        help_text=_("Amount paid to supplier for this order")
+    )
+    loft_share = models.DecimalField(
+        _("Loft Share"), max_digits=12, decimal_places=2, default=0.00,
+        help_text=_("Loft Design's profit from this order")
+    )
+    affiliate_share = models.DecimalField(
+        _("Affiliate Share"), max_digits=12, decimal_places=2, default=0.00,
+        help_text=_("Affiliate's profit from this order")
+    )
+    semi_share = models.DecimalField(
+        _("Semi-Affiliate Share"), max_digits=12, decimal_places=2, default=0.00,
+        help_text=_("Semi-affiliate's profit from this order")
+    )
+
     status = models.CharField(
         max_length=20, 
         choices=OrderStatus.choices, 

@@ -118,14 +118,16 @@ document.addEventListener("DOMContentLoaded", function () {
     addBtns.forEach(function (btn) {
         btn.addEventListener("click", function () {
             var url = this.dataset.url;
-            var name = this.dataset.name;
+            var formData = new FormData();
+            formData.append("quantity", 1);
 
             fetch(url, {
                 method: "POST",
                 headers: {
                     "X-Requested-With": "XMLHttpRequest",
                     "X-CSRFToken": csrfToken
-                }
+                },
+                body: formData
             })
             .then(function (r) { return r.json(); })
             .then(function (data) {

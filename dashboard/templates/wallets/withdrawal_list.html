@@ -1,0 +1,260 @@
+{% extends 'dash/dash_index.html' %}
+{% load i18n static %}
+
+{% block dashTitle %}{{ title }}{% endblock dashTitle %}
+
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/wallet.css" %}?v={% now "U" %}">
+{% endblock css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4"
+     id="withdrawalContainer"
+     data-csrf="{{ csrf_token }}"
+     data-handle-url="{% url 'dash:handle_withdrawal' 0 %}"
+     data-trans-approve="{% trans 'approve' %}"
+     data-trans-reject="{% trans 'reject' %}"
+     data-trans-confirm="{% trans 'Confirm' %}"
+     data-trans-confirm-text="{% trans 'Are you sure you want to' %}"
+     data-trans-this-withdrawal="{% trans 'this withdrawal?' %}"
+     data-trans-yes="{% trans 'Yes' %}"
+     data-trans-cancel="{% trans 'Cancel' %}"
+     data-trans-error="{% trans 'Error' %}">
+    {% csrf_token %}
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4" data-aos="fade-down">
+        <div>
+            <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Finance" %}</h6>
+            <h1 class="fw-black display-4 mb-0">{{ title }}</h1>
+        </div>
+        <div class="d-flex gap-2">
+            {% if target_user %}
+            <a href="{% url 'dash:withdrawal_request_list' %}" class="filter-btn fw-bold text-decoration-none">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Withdrawals" %}
+            </a>
+            {% endif %}
+            <button type="button" class="filter-btn fw-bold" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="fas fa-sliders-h me-2"></i>{% trans "Filters" %}
+                {% if q or role_filter or date_from or date_to %}
+                <span class="badge bg-primary rounded-pill ms-1">{{ q|yesno:"1," }}{{ role_filter|yesno:"1," }}{{ date_from|yesno:"1," }}{{ date_to|yesno:"1," }}</span>
+                {% endif %}
+            </button>
+            <a href="{% url 'dash:wallet_list' %}" class="filter-btn fw-bold text-decoration-none">
+                <i class="fas fa-wallet me-2"></i>{% trans "Wallets" %}
+            </a>
+        </div>
+    </div>
+
+    {% if is_user_list %}
+    {% if q or role_filter or date_from or date_to %}
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        {% if q %}<span class="tx-type-badge bg-dark text-white">{% trans "Search" %}: {{ q }}</span>{% endif %}
+        {% if role_filter %}<span class="tx-type-badge bg-primary text-white">{% trans "Role" %}: {{ role_filter }}</span>{% endif %}
+        {% if date_from %}<span class="tx-type-badge bg-secondary text-white">{% trans "From" %}: {{ date_from }}</span>{% endif %}
+        {% if date_to %}<span class="tx-type-badge bg-secondary text-white">{% trans "To" %}: {{ date_to }}</span>{% endif %}
+        <a href="?" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold">{% trans "Clear all" %}</a>
+    </div>
+    {% endif %}
+
+    {% if page_obj.object_list %}
+    <div class="tx-grid" data-aos="fade-up">
+        {% for u in page_obj.object_list %}
+        <a href="{% url 'dash:user_withdrawals' u.id %}" class="text-decoration-none">
+            <div class="tx-card cursor-pointer">
+                <div class="tx-card-top">
+                    <div class="tx-card-info">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <span class="tx-card-source">{{ u.get_full_name|default:u.username }}</span>
+                            <span class="tx-card-meta">{{ u.email }}</span>
+                        </div>
+                        <div class="tx-card-desc">
+                            {% trans "Last withdrawal" %}: {{ u.last_withdrawal|date:"d/m/Y H:i"|default:"—" }}
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-end gap-1">
+                        <div class="tx-card-amount text-warning">{{ u.total_withdrawn|default:0|floatformat:0 }} DZD</div>
+                        {% if u.pending_count %}
+                        <span class="tx-type-badge bg-warning text-white">{{ u.pending_count }} {% trans "pending" %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-users fa-3x text-muted opacity-25 mb-3"></i>
+        <p class="text-muted">{% trans "No users with withdrawals found." %}</p>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- ── Per-user withdrawal transactions mode ──────────── -->
+    {% if target_user %}
+    <div class="mb-3 d-flex align-items-center gap-2">
+        <span class="fw-bold fs-5">{{ target_user.get_full_name|default:target_user.username }}</span>
+        <span class="tx-card-meta">{{ target_user.email }}</span>
+    </div>
+    {% endif %}
+
+    <form method="get" class="d-flex justify-content-between align-items-center gap-3 mb-4" data-aos="fade-up">
+        <div class="d-flex gap-2">
+            <button type="button" class="filter-btn fw-bold" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="fas fa-sliders-h me-2"></i>{% trans "Filters" %}
+                {% if status_filter or date_from or date_to %}
+                <span class="badge bg-primary rounded-pill ms-1">!</span>
+                {% endif %}
+            </button>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            {% if status_filter or date_from or date_to %}
+            <a href="?" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold">{% trans "Clear" %}</a>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if status_filter or date_from or date_to %}
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        {% if status_filter %}
+        <span class="tx-type-badge bg-secondary text-white">{% trans "Status" %}: {{ status_filter }}</span>
+        {% endif %}
+        {% if date_from %}
+        <span class="tx-type-badge bg-secondary text-white">{% trans "From" %}: {{ date_from }}</span>
+        {% endif %}
+        {% if date_to %}
+        <span class="tx-type-badge bg-secondary text-white">{% trans "To" %}: {{ date_to }}</span>
+        {% endif %}
+        <a href="?" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold">{% trans "Clear" %}</a>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+    <!-- Filter Modal (shared for both modes) -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <form method="get">
+                <div class="modal-header border-0 pb-0 p-4">
+                    <h5 class="modal-title fw-bold text-dark">{% trans "Filters" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Search" %}</label>
+                        <input type="text" name="q" value="{{ q }}" class="form-control rounded-3" placeholder="{% trans 'Name or email...' %}">
+                    </div>
+                    {% if is_user_list %}
+                    <div class="mb-3">
+                        {% include "components/custom_select.html" with id="roleSelect" name="role" options=role_choices value=role_filter placeholder=_("All Roles") label=_("Role") %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Date From" %}</label>
+                        <input type="date" name="date_from" value="{{ date_from }}" class="form-control rounded-3">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Date To" %}</label>
+                        <input type="date" name="date_to" value="{{ date_to }}" class="form-control rounded-3">
+                    </div>
+                    {% else %}
+                    <div class="mb-3">
+                        {% include "components/custom_select.html" with id="statusSelect" name="status" options=status_choices value=status_filter placeholder=_("All Statuses") label=_("Status") %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Date From" %}</label>
+                        <input type="date" name="date_from" value="{{ date_from }}" class="form-control rounded-3">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Date To" %}</label>
+                        <input type="date" name="date_to" value="{{ date_to }}" class="form-control rounded-3">
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0 gap-2">
+                    <a href="?" class="btn btn-light rounded-3 px-4 fw-bold text-muted border-0 bg-light">
+                        {% trans "Reset" %}
+                    </a>
+                    <button type="submit" class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm">
+                        <i class="fas fa-check me-2"></i>{% trans "Apply" %}
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if not is_user_list %}
+    <h5 class="fw-black mb-3 text-dark">{% trans "Requests" %}</h5>
+
+    {% if page_obj.object_list %}
+    <div class="tx-grid" data-aos="fade-up">
+        {% for tx in page_obj.object_list %}
+        <div class="tx-card tx-{{ tx.transaction_type }}">
+            <div class="tx-card-top">
+                <div class="tx-card-info">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="tx-type-badge bg-warning text-white">{% trans "Withdrawal" %}</span>
+                        {% if tx.status == "pending" %}
+                        <span class="tx-type-badge bg-warning text-white">{% trans "Pending" %}</span>
+                        {% elif tx.status == "completed" %}
+                        <span class="tx-type-badge bg-success text-white">{% trans "Approved" %}</span>
+                        {% else %}
+                        <span class="tx-type-badge bg-danger text-white">{% trans "Rejected" %}</span>
+                        {% endif %}
+                        <span class="tx-card-meta">{{ tx.created_at|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="tx-card-desc">{{ tx.description }}</div>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="tx-card-amount text-warning">
+                        -{{ tx.amount|floatformat:0 }} DZD
+                    </div>
+                </div>
+            </div>
+            <div class="tx-card-bottom">
+                <small class="text-muted">
+                    {% if tx.status == "pending" %}
+                    <i class="fas fa-clock text-warning me-1"></i>{% trans "Awaiting approval" %}
+                    {% elif tx.status == "completed" %}
+                    <i class="fas fa-check-circle text-success me-1"></i>{% trans "Approved" %}
+                    {% else %}
+                    <i class="fas fa-times-circle text-danger me-1"></i>{% trans "Rejected" %}
+                    {% endif %}
+                </small>
+                <div class="d-flex gap-1">
+                    {% if tx.status == "pending" %}
+                    <button class="btn btn-sm btn-success rounded-pill px-3 approve-btn fw-bold" data-id="{{ tx.pk }}" title="{% trans 'Approve' %}">
+                        <i class="fas fa-check me-1"></i>{% trans "Approve" %}
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger rounded-pill px-3 reject-btn fw-bold" data-id="{{ tx.pk }}" title="{% trans 'Reject' %}">
+                        <i class="fas fa-times me-1"></i>{% trans "Reject" %}
+                    </button>
+                    {% else %}
+                    <span class="small text-muted">—</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-inbox fa-3x text-muted opacity-25 mb-3"></i>
+        <p class="text-muted">{% trans "No withdrawal requests." %}</p>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="mt-4">
+        {% include "components/pagination.html" with page_obj=page_obj %}
+    </div>
+    {% endif %}
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="{% static "js/withdrawal_list.js" %}?v={% now "U" %}"></script>
+{% endblock extra_js %}

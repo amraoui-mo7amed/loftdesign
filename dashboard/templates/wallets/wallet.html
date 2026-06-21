@@ -1,0 +1,285 @@
+{% extends 'dash/dash_index.html' %}
+{% load i18n static %}
+
+{% block dashTitle %}{% if is_own %}{% trans "My Wallet" %}{% else %}{{ target_user.get_full_name|default:target_user.username }} - {% trans "Wallet" %}{% endif %}{% endblock dashTitle %}
+
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/wallet.css" %}?v={% now "U" %}">
+{% endblock css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4"
+     id="walletContainer"
+     data-wallet-withdraw-url="{% url 'dash:wallet_withdraw' %}"
+     data-processing-text="{% trans 'Processing...' %}"
+     data-error-text="{% trans 'Error' %}"
+     data-error-msg="{% trans 'An error occurred.' %}"
+     data-submit-text="{% trans 'Submit Request' %}">
+    {% csrf_token %}
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4" data-aos="fade-down">
+        <div>
+            <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2">{% trans "Finance" %}</h6>
+            <h1 class="fw-black display-4 mb-0">
+                {% if is_own %}{% trans "My Wallet" %}{% else %}{{ target_user.get_full_name|default:target_user.username }}{% endif %}
+            </h1>
+        </div>
+        <div class="d-flex gap-2">
+            {% if is_admin %}
+            <a href="{% url 'dash:wallet_list' %}" class="filter-btn fw-bold text-decoration-none">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Wallets" %}
+            </a>
+            {% endif %}
+            {% if wallet.balance > 0 %}
+            <button class="filter-btn fw-bold" data-bs-toggle="modal" data-bs-target="#withdrawModal">
+                <i class="fas fa-hand-holding-usd me-2"></i>{% trans "Withdraw" %}
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5" data-aos="fade-up">
+        <div class="col-lg-3 col-md-6">
+            <div class="card wallet-card p-4 border-0 shadow-sm">
+                <div class="wallet-stat-label">{% trans "Available Balance" %}</div>
+                <div class="wallet-stat-value text-success">{{ wallet.balance|floatformat:0 }} <small class="fs-6 fw-bold">DZD</small></div>
+                <small class="text-muted">{% trans "Ready for withdrawal" %}</small>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card wallet-card p-4 border-0 shadow-sm">
+                <div class="wallet-stat-label">{% trans "Pending Balance" %}</div>
+                <div class="wallet-stat-value text-warning">{{ wallet.pending_balance|floatformat:0 }} <small class="fs-6 fw-bold">DZD</small></div>
+                <small class="text-muted">{% trans "Awaiting delivery confirmation" %}</small>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card wallet-card p-4 border-0 shadow-sm">
+                <div class="wallet-stat-label">{% trans "Total Earnings" %}</div>
+                <div class="wallet-stat-value text-primary">{{ total_earned|floatformat:0 }} <small class="fs-6 fw-bold">DZD</small></div>
+                <small class="text-muted">{% trans "Lifetime earnings" %}</small>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card wallet-card p-4 border-0 shadow-sm">
+                <div class="wallet-stat-label">{% trans "Withdrawn" %}</div>
+                <div class="wallet-stat-value text-info">{{ total_withdrawn|floatformat:0 }} <small class="fs-6 fw-bold">DZD</small></div>
+                <small class="text-muted">{% trans "Total withdrawn to date" %}</small>
+            </div>
+        </div>
+    </div>
+
+    <form id="filterForm" method="get" class="d-flex justify-content-between align-items-center gap-3 mb-4" data-aos="fade-up">
+        <button type="button" class="filter-btn fw-bold" data-bs-toggle="modal" data-bs-target="#filterModal">
+            <i class="fas fa-sliders-h me-2"></i>{% trans "Filters" %}
+            {% if q or type_filter or status_filter %}
+            <span class="badge bg-primary rounded-pill ms-1">{{ q|yesno:"1," }}{{ type_filter|yesno:"1," }}{{ status_filter|yesno:"1," }}</span>
+            {% endif %}
+        </button>
+        <div class="d-flex align-items-center gap-2">
+            {% if q or type_filter or status_filter %}
+            <a href="?" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold">{% trans "Clear" %}</a>
+            {% endif %}
+            {% if is_admin %}
+            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill clear-wallet-btn"
+                    data-url="{% url 'dash:wallet_clear' target_user.id %}"
+                    data-swal-title="{% trans 'Clear Wallet?' %}"
+                    data-swal-text="{% trans 'Delete all transactions and reset balance to 0?' %}"
+                    data-swal-confirm="{% trans 'Yes, clear it' %}"
+                    data-swal-cancel="{% trans 'Cancel' %}">
+                <i class="fas fa-trash-alt me-1"></i>{% trans "Clear All" %}
+            </button>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if q or type_filter or status_filter %}
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        {% if q %}
+        <span class="tx-type-badge bg-dark text-white">{% trans "Search" %}: {{ q }}</span>
+        {% endif %}
+        {% if type_filter %}
+        <span class="tx-type-badge bg-primary text-white">{% trans "Type" %}: {{ type_filter }}</span>
+        {% endif %}
+        {% if status_filter %}
+        <span class="tx-type-badge bg-secondary text-white">{% trans "Status" %}: {{ status_filter }}</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header border-0 pb-0 p-4">
+                    <h5 class="modal-title fw-bold text-dark">{% trans "Filter Transactions" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Search" %}</label>
+                        <input type="text" name="q" value="{{ q }}" class="form-control rounded-3" placeholder="{% trans 'Description, source, product...' %}">
+                    </div>
+                    <div class="mb-4">
+                        {% include "components/custom_select.html" with id="txTypeSelect" name="type" options=type_choices value=type_filter placeholder=_("All Types") label=_("Transaction Type") %}
+                    </div>
+                    <div class="mb-2">
+                        {% include "components/custom_select.html" with id="txStatusSelect" name="status" options=status_choices value=status_filter placeholder=_("All Statuses") label=_("Status") %}
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0 gap-2">
+                    <a href="?" class="btn btn-light rounded-3 px-4 fw-bold text-muted border-0 bg-light">
+                        {% trans "Reset" %}
+                    </a>
+                    <button type="submit" class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm" form="filterForm">
+                        <i class="fas fa-check me-2"></i>{% trans "Apply" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5 class="fw-black mb-3 text-dark">{% trans "Transaction History" %}</h5>
+
+    {% if page_obj.object_list %}
+    <div class="tx-grid" data-aos="fade-up">
+        {% for tx in page_obj.object_list %}
+        <div class="tx-card tx-{{ tx.transaction_type }}">
+            <div class="tx-card-top">
+                <div class="tx-card-info">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        {% if tx.transaction_type == "earning" %}
+                        <span class="tx-type-badge bg-success text-white">{% trans "Earning" %}</span>
+                        {% elif tx.transaction_type == "withdrawal" %}
+                        <span class="tx-type-badge bg-warning text-white">{% trans "Withdrawal" %}</span>
+                        {% else %}
+                        <span class="tx-type-badge bg-info text-white">{% trans "Adjustment" %}</span>
+                        {% endif %}
+                        <span class="tx-card-meta">{{ tx.created_at|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    {% if is_admin and tx.source_user %}
+                    <span class="tx-card-source">{{ tx.source_user.get_full_name|default:tx.source_user.username }}</span>
+                    {% elif not is_own and tx.source_user %}
+                    <span class="tx-card-source">{{ tx.source_user.get_full_name|default:tx.source_user.username }}</span>
+                    {% endif %}
+                    {% if tx.source_product %}
+                    <span class="tx-card-product">{{ tx.source_product.title }}</span>
+                    {% endif %}
+                    {% if tx.unit_price and tx.quantity %}
+                    <div class="tx-card-calc">
+                        <span class="tx-card-price">{{ tx.unit_price|floatformat:0 }} DZD</span>
+                        <span class="tx-card-times">&times;</span>
+                        <span class="tx-card-qty">{{ tx.quantity }}</span>
+                        <span class="tx-card-eq">=</span>
+                        <span class="tx-card-total">{{ tx.amount|floatformat:0 }} DZD</span>
+                    </div>
+                    {% endif %}
+                    <div class="tx-card-desc">{{ tx.description }}</div>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="tx-card-amount {% if tx.transaction_type == 'earning' %}text-success{% elif tx.transaction_type == 'withdrawal' %}text-warning{% else %}text-info{% endif %}">
+                        {% if tx.transaction_type == "earning" %}+{% elif tx.transaction_type == "withdrawal" %}-{% endif %}{{ tx.amount|floatformat:0 }} DZD
+                    </div>
+                    {% if is_admin %}
+                    <button type="button" class="chain-detail-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#chainDetailModal"
+                            data-chain='{{ tx.chain_details_json|safe }}'
+                            title="{% trans 'View chain details' %}">
+                        <i class="fas fa-sitemap me-1"></i>{% trans "Chain" %}
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="tx-card-bottom">
+                <small class="text-muted">
+                    {% if tx.status == "completed" %}
+                    <i class="fas fa-check-circle text-success me-1"></i>{% trans "Completed" %}
+                    {% elif tx.status == "pending" %}
+                    <i class="fas fa-clock text-warning me-1"></i>{% trans "Pending" %}
+                    {% else %}
+                    <i class="fas fa-times-circle text-danger me-1"></i>{% trans "Failed" %}
+                    {% endif %}
+                </small>
+                {% if tx.order %}
+                <a href="{% url 'dash:order_detail' tx.order.pk %}" class="small text-decoration-none fw-bold">
+                    <i class="fas fa-external-link-alt me-1"></i>{% trans "Order" %} #{{ tx.order.id }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-receipt fa-3x text-muted opacity-25 mb-3"></i>
+        <p class="text-muted">{% trans "No transactions yet." %}</p>
+    </div>
+    {% endif %}
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="mt-4">
+        {% include "components/pagination.html" with page_obj=page_obj %}
+    </div>
+    {% endif %}
+
+    {% if wallet.balance > 0 %}
+    <div class="modal fade" id="withdrawModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+            <div class="modal-header border-0 pb-0 p-4">
+                <h5 class="modal-title fw-bold text-dark">{% if is_admin %}{% trans "Withdraw" %}{% else %}{% trans "Request Withdrawal" %}{% endif %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="withdrawForm">
+                {% csrf_token %}
+                <div class="modal-body p-4">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Available Balance" %}</label>
+                        <div class="fs-3 fw-black">{{ wallet.balance|floatformat:0 }} DZD</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Amount (DZD)" %}</label>
+                        <input type="number" name="amount" class="form-control form-control-lg rounded-3" min="1" max="{{ wallet.balance|floatformat:0 }}" step="1" required placeholder="{% trans 'Enter amount...' %}">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0 gap-2">
+                    <button type="button" class="btn btn-light rounded-3 px-4 fw-bold text-muted border-0 bg-light" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm">
+                        <i class="fas fa-paper-plane me-2"></i>{% if is_admin %}{% trans "Withdraw" %}{% else %}{% trans "Submit Request" %}{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Chain Detail Modal -->
+<div class="modal fade" id="chainDetailModal" tabindex="-1" aria-hidden="true"
+     data-i18n='{"No chain data available.":"{% trans "No chain data available."|escapejs %}","Supplier":"{% trans "Supplier"|escapejs %}","Loft Design":"{% trans "Loft Design"|escapejs %}","Loft":"{% trans "Loft"|escapejs %}","Affiliate":"{% trans "Affiliate"|escapejs %}","Semi-Affiliate":"{% trans "Semi-Affiliate"|escapejs %}","Semi":"{% trans "Semi"|escapejs %}","Purchased":"{% trans "Purchased"|escapejs %}","Sold":"{% trans "Sold"|escapejs %}","Item Profit":"{% trans "Item Profit"|escapejs %}","Order Total":"{% trans "Order Total"|escapejs %}}'>
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+            <div class="modal-header border-0 pb-0 p-4">
+                <h5 class="modal-title fw-bold">{% trans "Chain Details" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 py-4" id="chainModalBody">
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="{% static "js/wallet.js" %}?v={% now "U" %}"></script>
+{% if is_admin %}
+<script src="{% static "js/wallet_admin.js" %}?v={% now "U" %}"></script>
+<script src="{% static "js/wallet_chain.js" %}?v={% now "U" %}"></script>
+{% endif %}
+{% endblock extra_js %}

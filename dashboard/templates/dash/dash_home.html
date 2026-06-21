@@ -39,13 +39,21 @@
 
         <!-- ======= Stats Cards ======= -->
         <div class="row mb-4" data-aos="fade-up">
-            {% include "components/stat_card.html" with title=stat_1.title value=stat_1.value icon=stat_1.icon color=stat_1.color trend=stat_1.trend trend_dir="up" %}
+            {% include "components/stat_card.html" with title=stat_1.title value=stat_1.value icon=stat_1.icon color=stat_1.color %}
             
-            {% include "components/stat_card.html" with title=stat_2.title value=stat_2.value icon=stat_2.icon color=stat_2.color trend=stat_2.trend trend_dir="up" %}
+            {% include "components/stat_card.html" with title=stat_2.title value=stat_2.value icon=stat_2.icon color=stat_2.color %}
             
-            {% include "components/stat_card.html" with title=stat_3.title value=stat_3.value icon=stat_3.icon color=stat_3.color trend=stat_3.trend trend_dir=stat_3.trend_dir|default:"down" trend_color=stat_3.trend_color|default:"success" %}
+            {% include "components/stat_card.html" with title=stat_3.title value=stat_3.value icon=stat_3.icon color=stat_3.color %}
             
             {% include "components/stat_card.html" with title=stat_4.title value=stat_4.value icon=stat_4.icon color=stat_4.color %}
+
+            {% if stat_5 %}
+            {% include "components/stat_card.html" with title=stat_5.title value=stat_5.value icon=stat_5.icon color=stat_5.color %}
+            {% endif %}
+
+            {% if stat_6 %}
+            {% include "components/stat_card.html" with title=stat_6.title value=stat_6.value icon=stat_6.icon color=stat_6.color %}
+            {% endif %}
         </div>
 
         <!-- ======= Main Section ======= -->
@@ -69,18 +77,10 @@
                 {% else %}
                     <div class="card shadow-sm chart-card h-100"
                          id="salesWeekChartCard"
-                         data-bs-labels='["{% trans "Sat" %}", "{% trans "Sun" %}", "{% trans "Mon" %}", "{% trans "Tue" %}", "{% trans "Wed" %}", "{% trans "Thu" %}", "{% trans "Fri" %}"]'
+                         data-bs-labels='{{ chart_labels|safe|default:"[]" }}'
                          data-bs-values='{{ chart_values|safe }}'>
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">{{ chart_title }}</h6>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    {% trans "Last 7 Days" %}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">{% trans "Last 30 Days" %}</a></li>
-                                </ul>
-                            </div>
+                        <div class="card-header bg-transparent border-0 pt-4 px-4">
+                            <h6 class="fw-bold mb-0">{{ chart_title }}</h6>
                         </div>
                         <div class="card-body">
                             <div style="height: 300px;">

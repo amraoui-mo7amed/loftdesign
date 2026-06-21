@@ -62,3 +62,86 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = _("User Profile")
         verbose_name_plural = _("User Profiles")
+
+
+class Wallet(models.Model):
+    """Wallet for each business account — tracks earnings and pending balance"""
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="wallet",
+        verbose_name=_("User")
+    )
+    balance = models.DecimalField(
+        _("Balance (DZD)"), max_digits=12, decimal_places=2, default=0.00,
+        help_text=_("Available balance that can be withdrawn")
+    )
+    pending_balance = models.DecimalField(
+        _("Pending Balance (DZD)"), max_digits=12, decimal_places=2, default=0.00,
+        help_text=_("Earnings from orders not yet delivered")
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Wallet")
+        verbose_name_plural = _("Wallets")
+
+    def __str__(self):
+        return f"{self.user.get_full_name() or self.user.username} — {self.balance} DZD"
+
+
+class Transaction(models.Model):
+    class TransactionType(models.TextChoices):
+        EARNING = "earning", _("Earning")
+        WITHDRAWAL = "withdrawal", _("Withdrawal")
+        ADJUSTMENT = "adjustment", _("Adjustment")
+
+    class TransactionStatus(models.TextChoices):
+        PENDING = "pending", _("Pending")
+        COMPLETED = "completed", _("Completed")
+        FAILED = "failed", _("Failed")
+
+    wallet = models.ForeignKey(
+        Wallet, on_delete=models.CASCADE, related_name="transactions",
+        verbose_name=_("Wallet")
+    )
+    transaction_type = models.CharField(
+        _("Type"), max_length=20, choices=TransactionType.choices,
+        default=TransactionType.EARNING
+    )
+    amount = models.DecimalField(
+        _("Amount (DZD)"), max_digits=12, decimal_places=2
+    )
+    description = models.CharField(
+        _("Description"), max_length=500, blank=True
+    )
+    order = models.ForeignKey(
+        "dashboard.Order", on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="transactions", verbose_name=_("Order")
+    )
+    source_user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="sourced_transactions", verbose_name=_("Source User")
+    )
+    source_product = models.ForeignKey(
+        "dashboard.Product", on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="transaction_sources", verbose_name=_("Source Product")
+    )
+    unit_price = models.DecimalField(
+        _("Unit Price (DZD)"), max_digits=12, decimal_places=2, null=True, blank=True,
+    )
+    quantity = models.PositiveIntegerField(
+        _("Quantity"), null=True, blank=True,
+    )
+    status = models.CharField(
+        _("Status"), max_length=20, choices=TransactionStatus.choices,
+        default=TransactionStatus.COMPLETED
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Transaction")
+        verbose_name_plural = _("Transactions")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.get_transaction_type_display()} — {self.amount} DZD"

@@ -310,6 +310,7 @@
 .notification-list {
     max-height: 350px;
     overflow: hidden;
+    overflow-y: auto;
 }
 
 /* Icon circle in dropdown items */

@@ -22,16 +22,21 @@ def _build_menu(is_authenticated, is_superuser, role):
     is_affiliate = role == "affiliate"
     is_semi_affiliate = role == "semi_affiliate"
 
-    # Billing — admin (all), affiliate (self+semi), semi (self)
-    if is_admin or is_affiliate or is_semi_affiliate:
+    # Wallet — all business roles
+    if is_admin or is_affiliate or is_semi_affiliate or role == "provider":
         menu.append({
-            "title": _("Billing"),
-            "icon": "fas fa-file-invoice-dollar",
-            "url_name": "dash:facturation_list",
+            "title": _("Wallet"),
+            "icon": "fas fa-wallet",
+            "url_name": "dash:wallet_list",
         })
 
     # Admin only links
     if is_admin:
+        menu.append({
+            "title": _("Withdrawals"),
+            "icon": "fas fa-hand-holding-usd",
+            "url_name": "dash:withdrawal_request_list",
+        })
         menu.append({
             "title": _("Affiliates"),
             "icon": "fas fa-handshake",

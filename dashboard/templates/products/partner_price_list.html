@@ -28,6 +28,9 @@
                 <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Custom Affiliate Prices" %}</h5>
                 {% if prices %}
                 <div class="table-responsive">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>{% trans "Master Stock" %}: <strong>{{ product.quantity }}</strong> {% trans "units" %}</span>
+                    </div>
                     <table class="table align-middle">
                         <thead class="table-light">
                             <tr>

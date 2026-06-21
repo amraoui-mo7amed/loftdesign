@@ -1,0 +1,96 @@
+.store-hero {
+    height: 70vh;
+    min-height: 500px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+.store-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+.store-hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+}
+.store-hero .container {
+    position: relative;
+    z-index: 2;
+}
+.store-hero-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.store-hero-logo-pl {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    border: 3px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #fff;
+}
+.affiliate-cart-float {
+    position: fixed;
+    top: 20px;
+    z-index: 1030;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.affiliate-cart-float:hover {
+    background: rgba(0,0,0,0.55);
+    transform: scale(1.08);
+    color: #fff;
+}
+.affiliate-cart-float .badge {
+    position: absolute;
+    top: -4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    line-height: 20px;
+    border-radius: 10px;
+}
+[dir="ltr"] .affiliate-cart-float {
+    right: 20px;
+}
+[dir="ltr"] .affiliate-cart-float .badge {
+    right: -4px;
+}
+[dir="rtl"] .affiliate-cart-float {
+    left: 20px;
+}
+[dir="rtl"] .affiliate-cart-float .badge {
+    left: -4px;
+}
+body.affiliate-store .cart-fab {
+    display: none !important;
+}

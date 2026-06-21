@@ -53,11 +53,21 @@ def catalog_details(request, product_pk):
         product=product, buyer=request.user, is_active=True,
     ).first()
 
+    profile = get_object_or_404(UserProfile, user=request.user)
+    if profile.role == _SEMI and profile.parent_affiliate:
+        parent_pp = PartnerPrice.objects.filter(
+            product=product, buyer=profile.parent_affiliate.user, is_active=True,
+        ).first()
+        available_qty = product.quantity
+    else:
+        available_qty = product.quantity
+
     return render(request, "products/catalog_details.html", {
         "product": product,
         "loft_price": loft_price,
         "partner_price": pp,
         "in_catalog": pp is not None,
+        "available_qty": available_qty,
         "purchase_price": pp.purchase_price if pp else (loft_price.loft_default_wholesale_price if loft_price else None),
         "retail_price": pp.retail_price if pp and pp.retail_price else (loft_price.loft_retail_price if loft_price else None),
         "price_configured": loft_price is not None,
@@ -102,15 +112,31 @@ def affiliate_catalog(request):
         ).select_related("product")
     }
 
+    parent_prices = {}
+    if is_semi and profile.parent_affiliate:
+        parent_prices = {
+            pp.product_id: pp
+            for pp in PartnerPrice.objects.filter(
+                buyer=profile.parent_affiliate.user, is_active=True
+            )
+        }
+
     catalog = []
     for product in products:
         pp = existing_prices.get(product.pk)
         loft_price = getattr(product, "loft_price", None)
 
+        if is_semi and profile.parent_affiliate:
+            parent_pp = parent_prices.get(product.pk)
+            available_qty = product.quantity
+        else:
+            available_qty = product.quantity
+
         catalog.append({
             "product": product,
             "in_catalog": pp is not None,
             "partner_price": pp,
+            "available_qty": available_qty,
             "purchase_price": (
                 pp.purchase_price
                 if pp
@@ -132,7 +158,7 @@ def affiliate_catalog(request):
 
 @role_required(allowed_roles=[_AFF, _SEMI])
 def affiliate_catalog_add(request, product_pk):
-    """AJAX: Create PartnerPrice — affiliate adds product to their catalog"""
+    """AJAX: Create PartnerPrice — affiliate adds product to their catalog with quantity"""
     if request.method != "POST":
         return JsonResponse({"success": False}, status=400)
 
@@ -147,12 +173,29 @@ def affiliate_catalog_add(request, product_pk):
             "errors": {"system": [_("Price not configured for this product.")]},
         })
 
-    PartnerPrice.objects.update_or_create(
+    # Determine seller and purchase price
+    profile = get_object_or_404(UserProfile, user=request.user)
+    if profile.role == _SEMI and profile.parent_affiliate:
+        parent_pp = PartnerPrice.objects.filter(
+            product=product, buyer=profile.parent_affiliate.user, is_active=True
+        ).first()
+        if parent_pp:
+            seller = profile.parent_affiliate.user
+            purchase_price = parent_pp.wholesale_price or parent_pp.purchase_price
+        else:
+            seller = product.user
+            purchase_price = loft_price.loft_default_wholesale_price
+    else:
+        seller = product.user
+        purchase_price = loft_price.loft_default_wholesale_price
+
+    pp, created = PartnerPrice.objects.update_or_create(
         product=product,
-        seller=product.user,
+        seller=seller,
         buyer=request.user,
         defaults={
-            "purchase_price": loft_price.loft_default_wholesale_price,
+            "purchase_price": purchase_price,
+            "wholesale_price": loft_price.loft_retail_price,
             "retail_price": loft_price.loft_retail_price,
             "is_active": True,
         }
@@ -162,14 +205,14 @@ def affiliate_catalog_add(request, product_pk):
         request.user,
         _("Product Added!"),
         _('"%(product)s" has been added to your catalog with purchase price DZD%(price)s.')
-        % {"product": product.title, "price": loft_price.loft_default_wholesale_price},
+        % {"product": product.title, "price": purchase_price},
         notification_type="success",
         link=reverse("dash:affiliate_catalog"),
     )
 
-    if product.user and product.user != request.user:
+    if seller and seller != request.user:
         notify_user(
-            product.user,
+            seller,
             _("New Catalog Addition"),
             _('%(affiliate)s added "%(product)s" to their catalog.')
             % {
@@ -245,7 +288,8 @@ def catalog_update_pricing(request, product_pk):
 
 @role_required(allowed_roles=[_AFF, _SEMI])
 def affiliate_catalog_remove(request, product_pk):
-    """AJAX: Deactivate PartnerPrice — remove product from affiliate catalog"""
+    """AJAX: Deactivate PartnerPrice — remove product from catalog only.
+    No stock or profit reversals — earnings stay as earned."""
     if request.method != "POST":
         return JsonResponse({"success": False}, status=400)
 
@@ -254,9 +298,11 @@ def affiliate_catalog_remove(request, product_pk):
         product=product, buyer=request.user, is_active=True
     ).first()
 
-    if pp:
-        pp.is_active = False
-        pp.save()
+    if not pp:
+        return JsonResponse({"success": False, "errors": {"system": [_("Product not in your catalog.")]}})
+
+    pp.is_active = False
+    pp.save()
 
     return JsonResponse({
         "success": True,

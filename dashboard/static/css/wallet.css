@@ -1,0 +1,202 @@
+.wallet-stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+.wallet-stat-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+}
+.wallet-card {
+    border-radius: 16px;
+    border: 1px solid #f0f0f0;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+.wallet-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border-color: var(--brand-primary, #0d6efd);
+}
+.wallet-card .card-title {
+    font-weight: 800;
+    font-size: 1rem;
+}
+.filter-btn {
+    border-radius: 40px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    transition: all 0.2s;
+}
+.filter-btn:hover {
+    border-color: var(--brand-primary, #0d6efd);
+    background: rgba(13,110,253,0.04);
+}
+.tx-type-badge {
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 2px 10px;
+    border-radius: 20px;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+.cursor-pointer:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
+.tx-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #f0f0f0;
+    padding: 1.25rem 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.tx-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+}
+.tx-card.tx-earning::before { background: #198754; }
+.tx-card.tx-withdrawal::before { background: #ffc107; }
+.tx-card.tx-adjustment::before { background: #0dcaf0; }
+.tx-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    border-color: var(--brand-primary, #0d6efd);
+}
+.tx-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+.tx-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.tx-card-meta {
+    font-size: 0.75rem;
+    color: #adb5bd;
+    font-weight: 500;
+}
+.tx-card-source {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--brand-dark, #212529);
+}
+.tx-card-product {
+    font-size: 0.8rem;
+    color: var(--brand-primary, #0d6efd);
+    font-weight: 600;
+}
+.tx-card-desc {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+.tx-card-calc {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+.tx-card-price {
+    color: var(--brand-primary, #0d6efd);
+}
+.tx-card-times {
+    color: #adb5bd;
+    font-weight: 400;
+}
+.tx-card-qty {
+    color: var(--brand-dark, #212529);
+}
+.tx-card-eq {
+    color: #adb5bd;
+    font-weight: 400;
+}
+.tx-card-total {
+    color: var(--brand-primary, #0d6efd);
+}
+.tx-card-amount {
+    font-size: 1.15rem;
+    font-weight: 800;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.tx-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f5f5f5;
+}
+
+.chain-detail-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    border: 1px solid #d0d0d0;
+    background: #fff;
+    color: #6c757d;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.chain-detail-btn:hover {
+    border-color: var(--brand-primary, #0d6efd);
+    background: rgba(13,110,253,0.05);
+    color: var(--brand-primary, #0d6efd);
+}
+
+[dir="rtl"] .tx-card::before {
+    left: auto;
+    right: 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.tx-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+@media (min-width: 768px) {
+    .tx-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (min-width: 1200px) {
+    .tx-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .tx-card-top {
+        flex-direction: column;
+    }
+}

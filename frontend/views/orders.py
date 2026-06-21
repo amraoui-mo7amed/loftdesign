@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from dashboard.models import Product, Order, Notification, PartnerPrice
-from dashboard.utils import notify_user, resolve_price
+from dashboard.utils import notify_user, resolve_price, check_low_stock
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.db import transaction
@@ -68,6 +68,8 @@ def place_order(request):
                 product.quantity -= quantity
                 product.save()
 
+                check_low_stock(product)
+
                 order = Order.objects.create(
                     items=[{
                         "product_id": product.pk,
@@ -84,7 +86,7 @@ def place_order(request):
                     status=Order.OrderStatus.PENDING,
                     referred_by=affiliate_code,
                 )
-
+ 
                 # Notify Admins
                 admins = User.objects.filter(is_superuser=True)
                 for admin in admins:

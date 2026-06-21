@@ -73,4 +73,140 @@
     color: #fff;
 }
 
+.filter-btn {
+    border-radius: 40px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    transition: all 0.2s;
+}
+.filter-btn:hover {
+    border-color: var(--brand-primary, #0d6efd);
+    background: rgba(13,110,253,0.04);
+}
+.filter-btn.has-filters {
+    border-color: var(--brand-primary, #0d6efd);
+    background: rgba(13,110,253,0.08);
+    color: var(--brand-primary, #0d6efd);
+}
+.modal-search-input {
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+.modal-search-input:focus {
+    border-color: var(--brand-primary, #0d6efd);
+    box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+}
+
+/* Order Detail Styles */
+
+.order-detail-header {
+    background: linear-gradient(135deg, var(--brand-dark) 0%, #1a1a2e 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    color: #fff;
+}
+.order-detail-header .badge-status {
+    font-size: 0.8rem;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.info-card {
+    border: none;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    height: 100%;
+}
+.info-card .card-header {
+    background: transparent;
+    border-bottom: 2px solid #f0f0f0;
+    padding: 1.25rem 1.5rem;
+}
+.info-card .card-body {
+    padding: 1.5rem;
+}
+.info-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+    color: #adb5bd;
+    margin-bottom: 0.25rem;
+}
+.info-value {
+    font-weight: 700;
+    color: var(--brand-dark);
+    font-size: 0.95rem;
+}
+.items-table thead th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+    color: #adb5bd;
+    border-bottom: 2px solid #f0f0f0;
+    padding: 1rem 0.75rem;
+}
+.items-table tbody td {
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f5f5f5;
+}
+.items-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.item-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.item-title {
+    font-weight: 700;
+    color: var(--brand-dark);
+    font-size: 0.9rem;
+}
+.total-row td {
+    font-weight: 800;
+    font-size: 1rem;
+    padding-top: 1.25rem !important;
+    border-top: 2px solid #dee2e6 !important;
+}
+.total-amount {
+    color: var(--brand-primary, #d4a853);
+    font-size: 1.15rem;
+}
+.ref-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+}
+.ref-link:hover {
+    color: var(--brand-primary);
+    background: #fff;
+    border-color: var(--brand-primary);
+}
+.min-width-0 {
+    min-width: 0;
+}
+
 

@@ -6,22 +6,7 @@
     {% trans "User Details" %}
 {% endblock dashTitle %}
 
-{% block extra_css %}
-<style>
-.order-status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-}
-.recent-order-row {
-    transition: background 0.15s;
-}
-.recent-order-row:hover {
-    background: rgba(13, 110, 253, 0.04);
-}
-</style>
-{% endblock extra_css %}
+{% block extra_css %}{% endblock extra_css %}
 
 {% block extra_js %}
     <script src="{% static "js/users.js" %}?v={% now "U" %}"></script>
@@ -308,7 +293,6 @@
                                             <th class="py-3 px-4 small text-muted fw-bold">{% trans "Status" %}</th>
                                             <th class="py-3 px-4 small text-muted fw-bold">{% trans "Amount" %}</th>
                                             <th class="py-3 px-4 small text-muted fw-bold">{% trans "Earned" %}</th>
-                                            <th class="py-3 px-4 small text-muted fw-bold">{% trans "Commission" %}</th>
                                             <th class="py-3 px-4 small text-muted fw-bold">{% trans "Date" %}</th>
                                         </tr>
                                     </thead>
@@ -339,20 +323,6 @@
                                             </td>
                                             <td class="py-3 px-4">
                                                 <span class="fw-bold small" style="color:var(--brand-primary);">{{ item.earnings|floatformat:0 }} DZD</span>
-                                            </td>
-                                            <td class="py-3 px-4">
-                                                <button type="button"
-                                                        class="btn btn-sm rounded-pill fw-bold commission-toggle-btn border-0 px-3 py-1 {% if order.commission_paid %}btn-success{% else %}btn-outline-secondary{% endif %}"
-                                                        data-url="{% url 'dash:order_toggle_commission' order.pk %}"
-                                                        data-paid="{{ order.commission_paid|lower }}"
-                                                        data-swal-title="{% if order.commission_paid %}{% trans 'Mark as unpaid?' %}{% else %}{% trans 'Mark commission as paid?' %}{% endif %}"
-                                                        data-swal-text="{% if order.commission_paid %}{% trans 'This will add the amount back to the unpaid balance.' %}{% else %}{% trans 'This will deduct this order from the unpaid balance.' %}{% endif %}"
-                                                        data-swal-confirm="{% trans 'Yes' %}"
-                                                        data-swal-cancel="{% trans 'Cancel' %}"
-                                                        data-swal-confirm-color="{% if order.commission_paid %}#dc3545{% else %}#198754{% endif %}"
-                                                        data-swal-icon="question">
-                                                    {% if order.commission_paid %}<i class="fas fa-check-circle me-1"></i> {% trans "Paid" %}{% else %}{% trans "Mark Paid" %}{% endif %}
-                                                </button>
                                             </td>
                                             <td class="py-3 px-4">
                                                 <span class="small text-muted">{{ order.created_at|date:"d M Y" }}</span>

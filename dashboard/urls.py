@@ -1,5 +1,5 @@
 from django.urls import path
-from dashboard.views import dashboard, users, notifications, portfolio, products, orders, settings, partner_prices, facturation
+from dashboard.views import dashboard, users, notifications, portfolio, products, orders, settings, partner_prices, wallets
 
 app_name = "dash"
 
@@ -10,9 +10,6 @@ urlpatterns = [
     path("portfolio/create/", portfolio.portfolio_create, name="portfolio_create"),
     path("portfolio/<int:pk>/update/", portfolio.portfolio_update, name="portfolio_update"),
     path("portfolio/<int:pk>/delete/", portfolio.portfolio_delete, name="portfolio_delete"),
-    # Billing
-    path("billing/", facturation.facturation_list, name="facturation_list"),
-    path("billing/<int:profile_id>/", facturation.facturation_detail, name="facturation_detail"),
     # Products
     path("products/", products.product_list, name="product_list"),
     path("products/create/", products.product_create, name="product_create"),
@@ -48,7 +45,6 @@ urlpatterns = [
     path("orders/<int:pk>/", orders.order_detail, name="order_detail"),
     path("orders/<int:pk>/status/", orders.order_update_status, name="order_update_status"),
     path("orders/<int:pk>/delete/", orders.order_delete, name="order_delete"),
-    path("orders/<int:pk>/toggle-commission/", orders.order_toggle_commission, name="order_toggle_commission"),
     # Affiliate Dashboard Cart
     path("orders/cart/", orders.affiliate_cart_checkout, name="affiliate_cart"),
     path("orders/cart/<int:product_pk>/add/", orders.affiliate_cart_add, name="affiliate_cart_add"),
@@ -68,6 +64,15 @@ urlpatterns = [
     path("semi-affiliates/", users.semi_affiliate_list, name="semi_affiliate_list"),
     path("semi-affiliates/create/", users.semi_affiliate_create, name="semi_affiliate_create"),
     path("semi-affiliates/<int:pk>/delete/", users.semi_affiliate_delete, name="semi_affiliate_delete"),
+    # Wallet
+    path("wallet/", wallets.wallet_list, name="wallet_list"),
+    path("wallet/self/", wallets.wallet_detail, name="wallet_detail"),
+    path("wallet/<int:user_id>/", wallets.wallet_detail, name="wallet_user_detail"),
+    path("wallet/withdraw/", wallets.request_withdrawal, name="wallet_withdraw"),
+    path("wallet/withdrawals/", wallets.withdrawal_request_list, name="withdrawal_request_list"),
+    path("wallet/withdrawals/<int:user_id>/", wallets.user_withdrawals, name="user_withdrawals"),
+    path("wallet/withdrawals/<int:pk>/handle/", wallets.handle_withdrawal, name="handle_withdrawal"),
+    path("wallet/<int:user_id>/clear/", wallets.clear_wallet, name="wallet_clear"),
     # Notifications
     path("notifications/stream/",notifications.notifications_stream,name="notifications_stream"),
     path("notifications/unread-count/",notifications.get_unread_count,name="notifications_unread_count",),

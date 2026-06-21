@@ -9,7 +9,7 @@ from decimal import Decimal
 
 from dashboard.models import Product, Order, PartnerPrice, Notification
 from user_auth.models import UserProfile
-from dashboard.utils import get_algeria_locations, notify_user, resolve_price
+from dashboard.utils import get_algeria_locations, notify_user, resolve_price, check_low_stock
 
 
 CART_SESSION_KEY = "cart"
@@ -250,13 +250,14 @@ def cart_checkout(request):
 
                 product.quantity -= item_data["quantity"]
                 product.save()
+                check_low_stock(product)
 
             if not order_items:
                 return JsonResponse({"success": False, "errors": [_("No valid items in cart.")]})
 
             referred_by = request.session.get("affiliate_code", "")
 
-            Order.objects.create(
+            order = Order.objects.create(
                 items=order_items,
                 customer_name=name,
                 customer_phone=phone,
@@ -265,7 +266,7 @@ def cart_checkout(request):
                 commune=commune,
                 referred_by=referred_by,
             )
-
+ 
             admins = User.objects.filter(is_superuser=True)
             for admin in admins:
                 notify_user(

@@ -6,37 +6,6 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/orders.css' %}?v={% now 'U' %}">
-    <style>
-        .filter-btn {
-            border-radius: 40px;
-            padding: 0.6rem 1.5rem;
-            font-weight: 700;
-            font-size: 0.85rem;
-            border: 1px solid #e0e0e0;
-            background: #fff;
-            transition: all 0.2s;
-        }
-        .filter-btn:hover {
-            border-color: var(--brand-primary, #0d6efd);
-            background: rgba(13,110,253,0.04);
-        }
-        .filter-btn.has-filters {
-            border-color: var(--brand-primary, #0d6efd);
-            background: rgba(13,110,253,0.08);
-            color: var(--brand-primary, #0d6efd);
-        }
-        .modal-search-input {
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            padding: 0.7rem 1.2rem;
-            font-size: 0.9rem;
-            transition: border-color 0.2s;
-        }
-        .modal-search-input:focus {
-            border-color: var(--brand-primary, #0d6efd);
-            box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
-        }
-    </style>
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -152,16 +121,20 @@
                         <div class="dropdown">
                             <span class="badge rounded-pill status-badge 
                                 {% if order.status == 'pending' %}bg-warning text-dark
-                                {% elif order.status == 'processing' %}bg-info text-white
-                                {% elif order.status == 'completed' %}bg-success text-white
-                                {% else %}bg-danger text-white{% endif %}"
-                                {% if not is_affiliate_or_semi and not is_provider or is_trusted %}data-bs-toggle="dropdown"{% endif %}>
+                                {% elif order.status == 'store_validated' %}bg-info text-white
+                                {% elif order.status == 'admin_validated' %}bg-primary text-white
+                                {% elif order.status == 'supplier_fulfilling' %}bg-secondary text-white
+                                {% elif order.status == 'shipped' %}bg-info text-white
+                                {% elif order.status == 'delivered' %}bg-success text-white
+                                {% elif order.status == 'cancelled' %}bg-danger text-white
+                                {% else %}bg-light text-dark{% endif %}"
+                                {% if order.allowed_next_statuses %}data-bs-toggle="dropdown"{% endif %}>
                                 {{ order.get_status_display }}
                             </span>
-                            {% if not is_affiliate_or_semi and not is_provider or is_trusted %}
+                            {% if order.allowed_next_statuses %}
                             <ul class="dropdown-menu shadow border-0 rounded-3">
-                                {% for status, label in status_choices %}
-                                <li><button class="dropdown-item update-status-btn" data-url="{% url 'dash:order_update_status' order.pk %}" data-status="{{ status }}">{{ label }}</button></li>
+                                {% for s in order.allowed_next_statuses %}
+                                <li><button class="dropdown-item update-status-btn" data-url="{% url 'dash:order_update_status' order.pk %}" data-status="{{ s.value }}">{{ s.label }}</button></li>
                                 {% endfor %}
                             </ul>
                             {% endif %}
@@ -185,14 +158,23 @@
                         </div>
                     {% endif %}
 
-                    <!-- Commission (admin, affiliate, semi-affiliate) -->
-                    {% if order.referred_by and order.status == 'delivered' and order.commission_earned %}
+                    <!-- Commission + breakdown (admin, affiliate, semi-affiliate) -->
+                    {% if order.display_commission %}
                     {% if not is_provider %}
                     <div class="d-flex align-items-center gap-2 px-3 py-2 mb-3 rounded-3" style="background:#fef9ef;">
                         <i class="fas fa-coins small" style="color:var(--brand-primary);"></i>
-                        <small class="fw-bold" style="color:var(--brand-primary);">
-                            {% trans "Commission" %}: {{ order.commission_earned|floatformat:2 }} DZD
+                        <small class="fw-bold flex-grow-1" style="color:var(--brand-primary);">
+                            {% trans "Commission" %}: {{ order.display_commission|floatformat:2 }} DZD
                         </small>
+                        {% if not is_affiliate_or_semi %}
+                        <button type="button" class="btn btn-sm p-0 border-0 bg-transparent text-primary fw-bold breakdown-btn"
+                                data-order-id="{{ order.id }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#profitBreakdownModal"
+                                data-breakdown='{{ order.profit_breakdown_json|safe }}'>
+                            <i class="fas fa-chart-pie"></i>
+                        </button>
+                        {% endif %}
                     </div>
                     {% endif %}
                     {% endif %}
@@ -230,8 +212,30 @@
 </div>
 {% endblock dashContent %}
 
+<!-- Profit Breakdown Modal -->
+<div class="modal fade" id="profitBreakdownModal" tabindex="-1" aria-hidden="true"
+     data-breakdown='{"no_data": "{% trans "No profit data available." %}", "product": "{% trans "Product" %}", "qty": "{% trans "Qty" %}", "total": "{% trans "Total" %}", "supplier": "{% trans "Supplier" %}", "loft": "{% trans "Loft" %}", "affiliate": "{% trans "Affiliate" %}", "semi": "{% trans "Semi" %}", "totals": "{% trans "Totals" %}}'>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">
+                    <i class="fas fa-chart-pie text-primary me-2"></i>
+                    {% trans "Profit Breakdown" %} — <span id="breakdownOrderId" class="text-muted"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 py-4" id="breakdownModalBody">
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
     <script src="{% static 'js/orders.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/profit_breakdown.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

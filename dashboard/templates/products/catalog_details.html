@@ -86,14 +86,37 @@
                     </div>
                     {% endif %}
 
-                    <div class="price-row">
-                        <span class="price-row-label">{% trans "Default Wholesale" %}</span>
-                        <span class="price-row-value">DZD{{ loft_price.loft_default_wholesale_price|floatformat:0 }}</span>
+                    {% if is_semi and parent_pp %}
+                    <div class="px-3 py-2 mb-2 rounded-3" style="background:var(--brand-muted);">
+                        <div class="small fw-bold mb-2 text-muted">
+                            <i class="fas fa-link me-1"></i> {% trans "Parent Affiliate's Prices" %}
+                        </div>
+                        <div class="price-row">
+                            <span class="price-row-label">{% trans "Affiliate Wholesale" %}</span>
+                            <span class="price-row-value">DZD{{ parent_pp.wholesale_price|default:parent_pp.purchase_price|floatformat:0 }}</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-row-label">{% trans "Affiliate Retail" %}</span>
+                            <span class="price-row-value">DZD{{ parent_pp.retail_price|default:parent_pp.wholesale_price|default:parent_pp.purchase_price|floatformat:0 }}</span>
+                        </div>
                     </div>
-                    <div class="price-row">
-                        <span class="price-row-label">{% trans "Suggested Retail" %}</span>
-                        <span class="price-row-value">DZD{{ loft_price.loft_retail_price|floatformat:0 }}</span>
+                    {% endif %}
+
+                    {% if loft_price %}
+                    <div class="px-3 py-2 mb-2 rounded-3" style="background:#f8f9fa;">
+                        <div class="small fw-bold mb-2 text-muted">
+                            <i class="fas fa-building me-1"></i> {% trans "Loft Design's Prices" %}
+                        </div>
+                        <div class="price-row">
+                            <span class="price-row-label">{% trans "Default Wholesale" %}</span>
+                            <span class="price-row-value">DZD{{ loft_price.loft_default_wholesale_price|floatformat:0 }}</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-row-label">{% trans "Suggested Retail" %}</span>
+                            <span class="price-row-value">DZD{{ loft_price.loft_retail_price|floatformat:0 }}</span>
+                        </div>
                     </div>
+                    {% endif %}
                     {% if product.sku %}
                     <div class="price-row">
                         <span class="price-row-label">{% trans "SKU" %}</span>
@@ -108,28 +131,6 @@
                     {% endif %}
                 </div>
 
-                {# ── Parent Affiliate Pricing (semi only) ─────────── #}
-                {% if is_semi and parent_affiliate %}
-                <div class="detail-card">
-                    <div class="detail-card-header"><i class="fas fa-user-tie"></i> {% trans "Parent Affiliate Pricing" %}</div>
-                    <div class="text-center mb-3">
-                        <span class="small fw-bold">{{ parent_affiliate.store_name|default:parent_affiliate.user.username }}</span>
-                    </div>
-                    {% if parent_pp %}
-                    <div class="price-row">
-                        <span class="price-row-label">{% trans "Wholesale Price" %}</span>
-                        <span class="price-row-value">DZD{{ parent_pp.wholesale_price|floatformat:0 }}</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-row-label">{% trans "Affiliate Cost" %}</span>
-                        <span class="price-row-value text-muted">DZD{{ parent_pp.purchase_price|floatformat:0 }}</span>
-                    </div>
-                    {% else %}
-                    <p class="small text-muted mb-0 text-center">{% trans "Parent affiliate has not added this product yet." %}</p>
-                    {% endif %}
-                </div>
-                {% endif %}
-
                 {# ── Your Pricing Form ─────────────────────────── #}
                 {% if in_catalog %}
                 <form id="updatePricingForm" class="form" method="POST" action="{% url 'dash:catalog_update_pricing' product.pk %}">
@@ -139,9 +140,9 @@
                         <div class="detail-card-header"><i class="fas fa-tags"></i> {% trans "Your Resale Prices" %}</div>
 
                         <div class="mb-3">
-                            <label class="fw-bold small mb-1 text-muted">{% trans "Purchase Price (set by Loft)" %}</label>
+                            <label class="fw-bold small mb-1 text-muted">{% if is_semi %}{% trans "Purchase Price (from your affiliate)" %}{% else %}{% trans "Purchase Price (set by Loft)" %}{% endif %}</label>
                             <input type="number" class="pricing-input form-control w-100" value="{{ partner_price.purchase_price|floatformat:0 }}" readonly disabled>
-                            <div class="form-text small mt-1">{% trans "Your cost. Set by Loft Design." %}</div>
+                            <div class="form-text small mt-1">{% if is_semi %}{% trans "Your cost. Set by your parent affiliate." %}{% else %}{% trans "Your cost. Set by Loft Design." %}{% endif %}</div>
                         </div>
 
                         <div class="row g-3 mb-3">

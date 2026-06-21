@@ -55,31 +55,34 @@ def catalog_details(request, product_pk):
 
     profile = get_object_or_404(UserProfile, user=request.user)
     is_semi = profile.role == _SEMI
-
-    parent_affiliate = None
     parent_pp = None
     if is_semi and profile.parent_affiliate:
-        parent_affiliate = profile.parent_affiliate
         parent_pp = PartnerPrice.objects.filter(
-            product=product, buyer=parent_affiliate.user, is_active=True,
+            product=product, buyer=profile.parent_affiliate.user, is_active=True,
         ).first()
 
     available_qty = product.quantity
+
+    if is_semi and profile.parent_affiliate and parent_pp:
+        ref_purchase = parent_pp.wholesale_price or parent_pp.purchase_price
+        ref_retail = parent_pp.retail_price or parent_pp.wholesale_price or parent_pp.purchase_price
+    else:
+        ref_purchase = loft_price.loft_default_wholesale_price if loft_price else None
+        ref_retail = loft_price.loft_retail_price if loft_price else None
 
     return render(request, "products/catalog_details.html", {
         "product": product,
         "loft_price": loft_price,
         "partner_price": pp,
+        "parent_pp": parent_pp,
         "in_catalog": pp is not None,
         "available_qty": available_qty,
-        "purchase_price": pp.purchase_price if pp else (loft_price.loft_default_wholesale_price if loft_price else None),
-        "retail_price": pp.retail_price if pp and pp.retail_price else (loft_price.loft_retail_price if loft_price else None),
+        "purchase_price": pp.purchase_price if pp else ref_purchase,
+        "retail_price": pp.retail_price if pp and pp.retail_price else ref_retail,
+        "is_semi": is_semi,
         "price_configured": loft_price is not None,
         "gallery": list(product.gallery_images.all()),
         "tags": [t.strip() for t in product.tags.split(",") if t.strip()] if product.tags else [],
-        "is_semi": is_semi,
-        "parent_affiliate": parent_affiliate,
-        "parent_pp": parent_pp,
     })
 
 

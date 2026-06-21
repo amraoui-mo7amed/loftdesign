@@ -100,6 +100,8 @@ def affiliate_catalog(request):
         )
         if parent_product_ids:
             products = base_qs.filter(pk__in=parent_product_ids)
+        elif is_semi:
+            products = Product.objects.none()
         else:
             products = base_qs
     else:
@@ -180,11 +182,10 @@ def affiliate_catalog_add(request, product_pk):
             product=product, buyer=profile.parent_affiliate.user, is_active=True
         ).first()
         if parent_pp:
-            seller = profile.parent_affiliate.user
             purchase_price = parent_pp.wholesale_price or parent_pp.purchase_price
         else:
-            seller = product.user
             purchase_price = loft_price.loft_default_wholesale_price
+        seller = profile.parent_affiliate.user
     else:
         seller = product.user
         purchase_price = loft_price.loft_default_wholesale_price

@@ -245,6 +245,10 @@ def resolve_chain(product, referred_by_code):
                         ).first()
                         if aff_pp:
                             levels["affiliate_wholesale"] = aff_pp.wholesale_price or aff_pp.purchase_price
+                        else:
+                            # Upstream affiliate PartnerPrice missing — degrade chain
+                            levels["semi_wholesale"] = None
+                            levels["affiliate_wholesale"] = None
             else:
                 # Affiliate referred the order directly
                 aff_pp = PartnerPrice.objects.filter(

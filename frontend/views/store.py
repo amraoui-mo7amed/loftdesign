@@ -75,6 +75,8 @@ def _log_store_visit(request, store):
 def affiliate_store(request, code):
     """Public mini-storefront for an affiliate (/a/CODE/)"""
     profile, store = _get_store_context(code)
+    if profile.role == UserProfile.roleChoices.SEMI_AFFILIATE:
+        return redirect("frontend:semi_affiliate_store", code=code)
     if profile.role != UserProfile.roleChoices.AFFILIATE:
         raise Http404
     catalog = _build_catalog(profile)

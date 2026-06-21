@@ -1,6 +1,7 @@
-.affiliate-store {
-    overflow: hidden;
-    overflow-y: auto;
+.affiliate-store .store-hero {
+height: 80vh;
+padding-top: 35vh;
+padding-bottom: 10vh;
 }
 .store-hero-bg {
     position: absolute;

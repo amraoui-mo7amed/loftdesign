@@ -117,8 +117,8 @@ def order_list(request):
 
     status_filter = request.GET.get("status", "")
     q = request.GET.get("q", "").strip()
-    is_admin = role == _RC.ADMIN
-    is_provider = role == _RC.PROVIDER
+    is_admin = role == _RC.ADMIN or request.user.is_superuser
+    is_provider = (not request.user.is_superuser) and role == _RC.PROVIDER
     is_affiliate_or_semi = role in _AFFILIATE_ROLES
 
     if is_provider:
@@ -483,10 +483,11 @@ def order_update_status(request, pk):
 
         user_profile = getattr(request.user, "profile", None)
         role = user_profile.role if user_profile else None
-        is_admin = role == _RC.ADMIN
-        is_provider = role == _RC.PROVIDER
-        is_affiliate = role == _RC.AFFILIATE
-        is_semi = role == _RC.SEMI_AFFILIATE
+        is_superuser = request.user.is_superuser
+        is_admin = role == _RC.ADMIN or is_superuser
+        is_provider = (not is_superuser) and role == _RC.PROVIDER
+        is_affiliate = (not is_superuser) and role == _RC.AFFILIATE
+        is_semi = (not is_superuser) and role == _RC.SEMI_AFFILIATE
 
         # Permission matrix — use transitions for the role
         role_value = user_profile.role if user_profile else None
@@ -717,8 +718,9 @@ def order_detail(request, pk):
     order = get_object_or_404(Order, pk=pk)
     user_profile = getattr(request.user, "profile", None)
     role = user_profile.role if user_profile else None
-    is_provider = role == _RC.PROVIDER
-    is_affiliate_or_semi = role in _AFFILIATE_ROLES
+    is_superuser = request.user.is_superuser
+    is_provider = (not is_superuser) and role == _RC.PROVIDER
+    is_affiliate_or_semi = (not is_superuser) and role in _AFFILIATE_ROLES
 
     if is_provider:
         own_ids = set(
@@ -759,7 +761,7 @@ def order_detail(request, pk):
         affiliate_earned = (order.affiliate_share or 0) + (order.semi_share or 0)
 
     is_trusted = user_profile and user_profile.is_trusted
-    is_admin = role == _RC.ADMIN
+    is_admin = role == _RC.ADMIN or request.user.is_superuser
     return render(request, "orders/detail.html", {
         "order": order,
         "is_provider": is_provider,

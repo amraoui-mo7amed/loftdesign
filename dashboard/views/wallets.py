@@ -27,7 +27,7 @@ def wallet_list(request):
     """Unified wallet list — admin sees all, affiliate sees own + semi, semi/provider see own."""
     profile = request.user.profile
     role = profile.role
-    is_admin = role == ADMIN
+    is_admin = role == ADMIN or request.user.is_superuser
 
     # Semi-affiliates go directly to their own wallet
     if role == SEMI:

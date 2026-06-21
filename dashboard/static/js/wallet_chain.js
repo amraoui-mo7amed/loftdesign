@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var levels = [];
 
             if (c.supplier_wholesale > 0) {
-                levels.push({ label: _("Supplier"), color: 'danger', textClass: 'text-light', bgClass: 'bg-danger', purchased: '\u2014', sold: c.supplier_wholesale, profit: p.supplier });
+                levels.push({ label: _("Provider"), color: 'danger', textClass: 'text-light', bgClass: 'bg-danger', purchased: '\u2014', sold: c.supplier_wholesale, profit: p.supplier });
             }
 
             levels.push({ label: _("Loft Design"), color: 'warning', textClass: 'text-warning', bgClass: 'bg-warning bg-opacity-10', purchased: c.supplier_wholesale > 0 ? c.supplier_wholesale : '\u2014', sold: c.loft_wholesale, profit: p.loft });
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 levels.push({ label: _("Semi-Affiliate"), color: 'success', textClass: 'text-light', bgClass: 'bg-success', purchased: c.affiliate_wholesale !== null ? c.affiliate_wholesale : c.loft_wholesale, sold: c.retail_price_charged, profit: p.semi });
             }
 
-            var profitColors = { danger: 'text-light', warning: 'text-warning', info: 'text-info', success: 'text-success' };
+            var profitColors = { danger: 'text-danger', warning: 'text-warning', info: 'text-info', success: 'text-success' };
 
             html += '<div class="row g-2">';
             levels.forEach(function (lvl) {
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
             '</div>' +
             '<hr class="my-2">' +
             '<div class="row g-2 text-center">' +
-            (t.supplier_share > 0 ? '<div class="col-6 col-md-3"><div class="p-2 rounded-3 bg-danger"><small class="text-light fw-bold d-block">' + _("Supplier") + '</small><span class="fw-black text-light">' + t.supplier_share.toFixed(2) + ' DZD</span></div></div>' : '') +
+            (t.supplier_share > 0 ? '<div class="col-6 col-md-3"><div class="p-2 rounded-3 bg-danger"><small class="text-light fw-bold d-block">' + _("Provider") + '</small><span class="fw-black text-light">' + t.supplier_share.toFixed(2) + ' DZD</span></div></div>' : '') +
             '<div class="col-6 col-md-3"><div class="p-2 rounded-3 bg-warning bg-opacity-10"><small class="text-warning fw-bold d-block">' + _("Loft") + '</small><span class="fw-black">' + t.loft_share.toFixed(2) + ' DZD</span></div></div>' +
             (t.affiliate_share > 0 ? '<div class="col-6 col-md-3"><div class="p-2 rounded-3 bg-info bg-opacity-10"><small class="text-info fw-bold d-block">' + _("Affiliate") + '</small><span class="fw-black">' + t.affiliate_share.toFixed(2) + ' DZD</span></div></div>' : '') +
             (t.semi_share > 0 ? '<div class="col-6 col-md-3"><div class="p-2 rounded-3 bg-success"><small class="text-light fw-bold d-block">' + _("Semi") + '</small><span class="fw-black text-light">' + t.semi_share.toFixed(2) + ' DZD</span></div></div>' : '') +

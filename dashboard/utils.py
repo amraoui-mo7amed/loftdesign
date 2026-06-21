@@ -289,7 +289,7 @@ def compute_item_profit(product, price_paid, quantity, referred_by_code):
         semi_share = (price - aff_base) * qty
     elif aff_base is not None:
         loft_share = (loft_base - supplier_base) * qty
-        affiliate_share = (price - loft_base) * qty
+        affiliate_share = (aff_base - loft_base) * qty
         semi_share = Decimal("0.00")
     else:
         loft_share = (price - supplier_base) * qty

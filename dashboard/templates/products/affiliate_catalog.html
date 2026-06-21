@@ -66,10 +66,6 @@
                 </div>
 
                 <div class="catalog-card-actions">
-                    <a href="{% url 'dash:catalog_details' item.product.pk %}"
-                       class="btn btn-outline-secondary">
-                        <i class="fas fa-eye me-1"></i> {% trans "Details" %}
-                    </a>
                     {% if item.in_catalog %}
                     <button type="button"
                             class="btn btn-outline-danger remove-catalog"
@@ -82,18 +78,23 @@
                         <i class="fas fa-minus-circle me-1"></i> {% trans "Remove" %}
                     </button>
                     {% else %}
-<button type="button"
-                        class="btn btn-primary add-catalog"
-                        data-url="{% url 'dash:affiliate_catalog_add' item.product.pk %}"
-                        {% if not item.price_configured %}disabled{% endif %}>
-                    <i class="fas fa-plus-circle me-1"></i> {% trans "Add" %}
-                </button>
+                    <button type="button"
+                            class="btn btn-primary add-catalog"
+                            data-url="{% url 'dash:affiliate_catalog_add' item.product.pk %}"
+                            {% if not item.price_configured %}disabled{% endif %}>
+                        <i class="fas fa-plus-circle me-1"></i> {% trans "Add" %}
+                    </button>
                     {% endif %}
+                    <a href="{% url 'dash:catalog_details' item.product.pk %}"
+                       class="btn btn-outline-secondary">
+                        <i class="fas fa-eye me-1"></i>{% trans "Details" %}
+                    </a>
                     {% if item.in_catalog %}
                     <button type="button"
-                            class="btn btn-outline-dark share-btn"
+                            class="share-btn"
                             data-url="{% url 'frontend:affiliate_redirect' request.user.profile.affiliate_code item.product.pk %}"
-                            data-title="{{ item.product.title }}">
+                            data-title="{{ item.product.title }}"
+                            title="{% trans 'Share' %}">
                         <i class="fas fa-share-alt"></i>
                     </button>
                     {% endif %}

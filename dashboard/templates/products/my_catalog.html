@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="catalog-card-actions">
-                    <a href="{% url 'dash:catalog_details' item.product.pk %}" class="btn btn-outline-secondary">
+                    <a href="{% url 'dash:catalog_details' item.product.pk %}" class="btn btn-primary">
                         <i class="fas fa-edit me-1"></i> {% trans "Manage" %}
                     </a>
                     <button type="button"
@@ -74,9 +74,10 @@
                     </button>
                     {% if request.user.profile.affiliate_code %}
                     <button type="button"
-                            class="btn btn-outline-dark share-btn"
+                            class="share-btn"
                             data-url="{% url 'frontend:affiliate_redirect' request.user.profile.affiliate_code item.product.pk %}"
-                            data-title="{{ item.product.title }}">
+                            data-title="{{ item.product.title }}"
+                            title="{% trans 'Share' %}">
                         <i class="fas fa-share-alt"></i>
                     </button>
                     {% endif %}

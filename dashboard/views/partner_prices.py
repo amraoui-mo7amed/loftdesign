@@ -176,26 +176,27 @@ def affiliate_catalog_add(request, product_pk):
     # Determine seller and purchase price
     profile = get_object_or_404(UserProfile, user=request.user)
     if profile.role == _SEMI and profile.parent_affiliate:
+        seller = profile.parent_affiliate.user
         parent_pp = PartnerPrice.objects.filter(
-            product=product, buyer=profile.parent_affiliate.user, is_active=True
+            product=product, buyer=seller, is_active=True
         ).first()
-        if parent_pp:
-            seller = profile.parent_affiliate.user
-            purchase_price = parent_pp.wholesale_price or parent_pp.purchase_price
-        else:
-            seller = product.user
-            purchase_price = loft_price.loft_default_wholesale_price
+        purchase_price = (
+            parent_pp.wholesale_price or parent_pp.purchase_price
+            if parent_pp
+            else loft_price.loft_default_wholesale_price
+        )
     else:
         seller = product.user
         purchase_price = loft_price.loft_default_wholesale_price
 
+    is_semi = profile.role == _SEMI
     pp, created = PartnerPrice.objects.update_or_create(
         product=product,
         seller=seller,
         buyer=request.user,
         defaults={
             "purchase_price": purchase_price,
-            "wholesale_price": loft_price.loft_retail_price,
+            "wholesale_price": purchase_price if is_semi else loft_price.loft_retail_price,
             "retail_price": loft_price.loft_retail_price,
             "is_active": True,
         }

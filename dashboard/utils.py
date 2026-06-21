@@ -237,11 +237,12 @@ def resolve_chain(product, referred_by_code):
                 ).first()
                 if semi_pp:
                     levels["retail_price_charged"] = semi_pp.retail_price or semi_pp.purchase_price
-                    levels["semi_wholesale"] = semi_pp.wholesale_price or semi_pp.purchase_price
-                    # Find affiliate's PartnerPrice (affiliate buys from admin)
-                    if semi_pp.seller:
+                    levels["semi_wholesale"] = semi_pp.purchase_price or semi_pp.wholesale_price
+                    # Find affiliate's PartnerPrice via parent_affiliate relationship
+                    parent_affiliate = referred_profile.parent_affiliate
+                    if parent_affiliate:
                         aff_pp = PartnerPrice.objects.filter(
-                            product=product, buyer=semi_pp.seller, is_active=True
+                            product=product, buyer=parent_affiliate.user, is_active=True
                         ).first()
                         if aff_pp:
                             levels["affiliate_wholesale"] = aff_pp.wholesale_price or aff_pp.purchase_price

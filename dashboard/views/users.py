@@ -193,13 +193,12 @@ def user_details(request, pk):
     ]
     
     confirmed_sales_count = len(confirmed_orders)
-    total_confirmed_price = sum(
-        sum(
-            (float(item.get("price", 0)) or 0) * int(item.get("quantity", 1))
-            for item in o.items
-        )
-        for o in confirmed_orders
-    )
+    total_confirmed_price = Decimal("0")
+    for o in confirmed_orders:
+        for item in o.items:
+            price = Decimal(str(item.get("price", 0) or 0))
+            qty = int(item.get("quantity", 1))
+            total_confirmed_price += price * qty
 
     # Debt: Total commission earned by the platform from this provider
     total_debt = (total_confirmed_price * profile.commission) / 100

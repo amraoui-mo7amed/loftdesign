@@ -1,4 +1,8 @@
 /* ── Affiliate Store Product Detail (Standalone) ── */
+body.affiliate-store {
+    overflow: hidden;
+    overflow-y: auto;
+}
 
 /* Store Hero Section */
 body.affiliate-store .store-hero {

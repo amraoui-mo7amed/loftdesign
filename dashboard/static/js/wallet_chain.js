@@ -57,7 +57,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 levels.push({ label: _("Provider"), color: 'danger', textClass: 'text-light', bgClass: 'bg-danger', purchased: '\u2014', sold: c.supplier_wholesale, profit: p.supplier });
             }
 
-            levels.push({ label: _("Loft Design"), color: 'warning', textClass: 'text-warning', bgClass: 'bg-warning bg-opacity-10', purchased: c.supplier_wholesale > 0 ? c.supplier_wholesale : '\u2014', sold: c.loft_wholesale, profit: p.loft });
+            var loftPurchased = (c.admin_cost_basis != null) ? c.admin_cost_basis : (c.supplier_wholesale > 0 ? c.supplier_wholesale : '\u2014');
+            levels.push({ label: _("Loft Design"), color: 'warning', textClass: 'text-warning', bgClass: 'bg-warning bg-opacity-10', purchased: loftPurchased, sold: c.loft_wholesale, profit: p.loft });
 
             if (c.affiliate_wholesale !== null) {
                 levels.push({ label: _("Affiliate"), color: 'info', textClass: 'text-info', bgClass: 'bg-info bg-opacity-10', purchased: c.loft_wholesale, sold: c.affiliate_wholesale, profit: p.affiliate });

@@ -171,17 +171,14 @@ def order_list(request):
             {"value": s, "label": _(dict(Order.OrderStatus.choices)[s])}
             for s in allowed_statuses
         ]
-        # Show commission based on role
-        order.display_commission = None
+        # Chain breakdown for admin
+        order.chain_details_json = None
         order.profit_breakdown = []
-        if order.referred_by and order.status == Order.OrderStatus.DELIVERED:
-            if is_provider:
-                order.display_commission = None
-            else:
-                from decimal import Decimal
-                total_commission = Decimal(str(order.loft_share or 0)) + Decimal(str(order.affiliate_share or 0)) + Decimal(str(order.semi_share or 0))
-                order.display_commission = total_commission
-            # Per-item profit breakdown for admin
+        if order.referred_by and order.status == Order.OrderStatus.DELIVERED and is_admin:
+            from dashboard.utils import build_order_chain_breakdown
+            chain_data = build_order_chain_breakdown(order)
+            order.chain_details_json = json.dumps(chain_data)
+            # Per-item profit breakdown
             for item in order.items:
                 pid = item.get("product_id")
                 price = item.get("price", 0)
@@ -233,6 +230,7 @@ def order_list(request):
         "filter_params": filter_params,
         "base_url": base_url,
         "title": _("Orders"),
+        "is_admin": is_admin,
         "is_provider": is_provider,
         "is_trusted": is_trusted,
         "is_affiliate_or_semi": is_affiliate_or_semi,

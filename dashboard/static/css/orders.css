@@ -73,6 +73,16 @@
     color: #fff;
 }
 
+.chain-btn {
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+}
+
+.chain-btn:hover {
+    background: #6366f1;
+    color: #fff;
+}
+
 .filter-btn {
     border-radius: 40px;
     padding: 0.6rem 1.5rem;

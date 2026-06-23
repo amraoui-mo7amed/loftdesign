@@ -158,33 +158,21 @@
                         </div>
                     {% endif %}
 
-                    <!-- Commission + breakdown (admin, affiliate, semi-affiliate) -->
-                    {% if order.display_commission %}
-                    {% if not is_provider %}
-                    <div class="d-flex align-items-center gap-2 px-3 py-2 mb-3 rounded-3" style="background:#fef9ef;">
-                        <i class="fas fa-coins small" style="color:var(--brand-primary);"></i>
-                        <small class="fw-bold flex-grow-1" style="color:var(--brand-primary);">
-                            {% trans "Commission" %}: {{ order.display_commission|floatformat:2 }} DZD
-                        </small>
-                        {% if not is_affiliate_or_semi %}
-                        <button type="button" class="btn btn-sm p-0 border-0 bg-transparent text-primary fw-bold breakdown-btn"
-                                data-order-id="{{ order.id }}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#profitBreakdownModal"
-                                data-breakdown='{{ order.profit_breakdown_json|safe }}'>
-                            <i class="fas fa-chart-pie"></i>
-                        </button>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                    {% endif %}
-
                     <!-- Actions -->
                     <div class="mt-auto d-flex gap-2">
                         <a href="{% url 'dash:order_detail' order.pk %}" class="view-details-btn d-flex align-items-center justify-content-center gap-2 text-decoration-none">
                             <i class="fas fa-eye"></i>{% trans "Details" %}
                         </a>
-                        
+
+                        {% if is_admin and order.chain_details_json %}
+                        <button type="button" class="delete-order-btn chain-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#chainDetailModal"
+                                data-chain='{{ order.chain_details_json|safe }}'>
+                            <i class="fas fa-link"></i>
+                        </button>
+                        {% endif %}
+
                         {% if not is_provider and not is_affiliate_or_semi %}
                         <button type="button" class="delete-order-btn delete-btn" 
                                 data-url="{% url 'dash:order_delete' order.pk %}"
@@ -209,33 +197,52 @@
     <div class="mt-5">
         {% include "components/pagination.html" with page_obj=page_obj base_url=base_url %}
     </div>
-</div>
-{% endblock dashContent %}
 
-<!-- Profit Breakdown Modal -->
-<div class="modal fade" id="profitBreakdownModal" tabindex="-1" aria-hidden="true"
-     data-breakdown='{"no_data": "{% trans "No profit data available." %}", "product": "{% trans "Product" %}", "qty": "{% trans "Qty" %}", "total": "{% trans "Total" %}", "supplier": "{% trans "Supplier" %}", "loft": "{% trans "Loft" %}", "affiliate": "{% trans "Affiliate" %}", "semi": "{% trans "Semi" %}", "totals": "{% trans "Totals" %}}'>
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content rounded-4 border-0 shadow-lg">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">
-                    <i class="fas fa-chart-pie text-primary me-2"></i>
-                    {% trans "Profit Breakdown" %} — <span id="breakdownOrderId" class="text-muted"></span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- Profit Breakdown Modal -->
+    <div class="modal fade" id="profitBreakdownModal" tabindex="-1" aria-hidden="true"
+         data-breakdown='{"no_data": "{% trans "No profit data available." %}", "product": "{% trans "Product" %}", "qty": "{% trans "Qty" %}", "total": "{% trans "Total" %}", "supplier": "{% trans "Supplier" %}", "loft": "{% trans "Loft" %}", "affiliate": "{% trans "Affiliate" %}", "semi": "{% trans "Semi" %}", "totals": "{% trans "Totals" %}}'>
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">
+                        <i class="fas fa-chart-pie text-primary me-2"></i>
+                        {% trans "Profit Breakdown" %} — <span id="breakdownOrderId" class="text-muted"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4 py-4" id="breakdownModalBody">
+                    <div class="text-center py-4 text-muted">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body px-4 py-4" id="breakdownModalBody">
-                <div class="text-center py-4 text-muted">
-                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+        </div>
+    </div>
+
+    <!-- Chain Detail Modal -->
+    <div class="modal fade" id="chainDetailModal" tabindex="-1" aria-hidden="true"
+         data-i18n='{"No chain data available.":"{% trans "No chain data available."|escapejs %}","Provider":"{% trans "Provider"|escapejs %}","Loft Design":"{% trans "Loft Design"|escapejs %}","Loft":"{% trans "Loft"|escapejs %}","Affiliate":"{% trans "Affiliate"|escapejs %}","Semi-Affiliate":"{% trans "Semi-Affiliate"|escapejs %}","Semi":"{% trans "Semi"|escapejs %}","Purchased":"{% trans "Purchased"|escapejs %}","Sold":"{% trans "Sold"|escapejs %}","Item Profit":"{% trans "Item Profit"|escapejs %}","Order Total":"{% trans "Order Total"|escapejs %}}'>
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header border-0 pb-0 p-4">
+                    <h5 class="modal-title fw-bold">{% trans "Chain Details" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4 py-4" id="chainModalBody">
+                    <div class="text-center py-4 text-muted">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock dashContent %}
 
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
     <script src="{% static 'js/orders.js' %}?v={% now 'U' %}"></script>
     <script src="{% static 'js/profit_breakdown.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/wallet_chain.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

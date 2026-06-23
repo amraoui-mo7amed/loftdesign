@@ -204,7 +204,7 @@ def resolve_chain(product, referred_by_code):
     Each level earns: (price_they_charge - price_they_pay) per unit sold.
     """
     levels = {
-        "supplier_wholesale": Decimal("0.00"),
+        "supplier_wholesale": None,
         "loft_wholesale": Decimal("0.00"),
         "affiliate_wholesale": None,
         "semi_wholesale": None,
@@ -282,20 +282,37 @@ def compute_item_profit(product, price_paid, quantity, referred_by_code):
     aff_base = chain["affiliate_wholesale"]
     semi_base = chain["semi_wholesale"]
 
-    supplier_share = supplier_base * qty
+    has_supplier = supplier_base is not None
 
-    if semi_base is not None and aff_base is not None:
-        loft_share = (loft_base - supplier_base) * qty
-        affiliate_share = (aff_base - loft_base) * qty
-        semi_share = (price - aff_base) * qty
-    elif aff_base is not None:
-        loft_share = (loft_base - supplier_base) * qty
-        affiliate_share = (aff_base - loft_base) * qty
-        semi_share = Decimal("0.00")
+    if has_supplier:
+        supplier_share = supplier_base * qty
+        if semi_base is not None and aff_base is not None:
+            loft_share = (loft_base - supplier_base) * qty
+            affiliate_share = (aff_base - loft_base) * qty
+            semi_share = (price - aff_base) * qty
+        elif aff_base is not None:
+            loft_share = (loft_base - supplier_base) * qty
+            affiliate_share = (aff_base - loft_base) * qty
+            semi_share = Decimal("0.00")
+        else:
+            loft_share = (price - supplier_base) * qty
+            affiliate_share = Decimal("0.00")
+            semi_share = Decimal("0.00")
     else:
-        loft_share = (price - supplier_base) * qty
-        affiliate_share = Decimal("0.00")
-        semi_share = Decimal("0.00")
+        supplier_share = Decimal("0.00")
+        total_available = price * qty
+        if semi_base is not None and aff_base is not None:
+            affiliate_share = max((aff_base - loft_base) * qty, Decimal("0.00"))
+            semi_share = max((price - aff_base) * qty, Decimal("0.00"))
+            loft_share = max(total_available - affiliate_share - semi_share, Decimal("0.00"))
+        elif aff_base is not None:
+            affiliate_share = max((aff_base - loft_base) * qty, Decimal("0.00"))
+            semi_share = Decimal("0.00")
+            loft_share = max(total_available - affiliate_share, Decimal("0.00"))
+        else:
+            affiliate_share = Decimal("0.00")
+            semi_share = Decimal("0.00")
+            loft_share = total_available
 
     return {
         "supplier_share": max(supplier_share, Decimal("0.00")),
@@ -358,6 +375,7 @@ def build_order_chain_breakdown(order):
 
     referred_code = order.referred_by or ""
     items_breakdown = []
+    has_admin_supplier = False
 
     for item in order.items:
         pid = item.get("product_id")
@@ -375,20 +393,30 @@ def build_order_chain_breakdown(order):
         chain = resolve_chain(product, referred_code)
         profit = compute_item_profit(product, price, qty, referred_code)
 
+        supplier_price = SupplierPrice.objects.filter(product=product).first()
+        is_admin_supplier = supplier_price and supplier_price.supplier and supplier_price.supplier.is_superuser
+        if is_admin_supplier:
+            has_admin_supplier = True
+            chain["supplier_wholesale"] = None
+            chain["admin_cost_basis"] = float(supplier_price.loft_purchase_price)
+        else:
+            chain["admin_cost_basis"] = None
+
         items_breakdown.append({
             "title": title,
             "qty": qty,
             "price": float(price),
             "subtotal": float(price * qty),
             "chain": {
-                "supplier_wholesale": float(chain["supplier_wholesale"]),
+                "supplier_wholesale": float(chain["supplier_wholesale"]) if chain["supplier_wholesale"] is not None else None,
                 "loft_wholesale": float(chain["loft_wholesale"]),
                 "affiliate_wholesale": float(chain["affiliate_wholesale"]) if chain["affiliate_wholesale"] is not None else None,
                 "semi_wholesale": float(chain["semi_wholesale"]) if chain["semi_wholesale"] is not None else None,
                 "retail_price_charged": float(chain["retail_price_charged"]) if chain["retail_price_charged"] else None,
+                "admin_cost_basis": chain["admin_cost_basis"],
             },
             "profits": {
-                "supplier": float(profit["supplier_share"]),
+                "supplier": 0.0 if is_admin_supplier else float(profit["supplier_share"]),
                 "loft": float(profit["loft_share"]),
                 "affiliate": float(profit["affiliate_share"]),
                 "semi": float(profit["semi_share"]),
@@ -408,7 +436,7 @@ def build_order_chain_breakdown(order):
         "items": items_breakdown,
         "totals": {
             "total": float(order.total_price()),
-            "supplier_share": float(order.supplier_share),
+            "supplier_share": 0.0 if has_admin_supplier else float(order.supplier_share),
             "loft_share": float(order.loft_share),
             "affiliate_share": float(order.affiliate_share),
             "semi_share": float(order.semi_share),
@@ -446,12 +474,19 @@ def credit_wallets_for_order(order):
                 from .models import Product
                 product = Product.objects.get(pk=product_id)
                 profit = compute_item_profit(product, price, qty, referred_code)
+                sp = SupplierPrice.objects.filter(product=product).first()
+                if sp and sp.supplier and sp.supplier.is_superuser:
+                    display_supplier = Decimal("0.00")
+                    display_loft = profit["supplier_share"] + profit["loft_share"]
+                else:
+                    display_supplier = profit["supplier_share"]
+                    display_loft = profit["loft_share"]
                 product_details.append({
                     "title": product.title,
                     "qty": qty,
                     "price": price,
-                    "supplier": profit["supplier_share"],
-                    "loft": profit["loft_share"],
+                    "supplier": display_supplier,
+                    "loft": display_loft,
                     "affiliate": profit["affiliate_share"],
                     "semi": profit["semi_share"],
                 })
@@ -478,20 +513,26 @@ def credit_wallets_for_order(order):
     # Determine who gets what
     credit_entries = []
 
-    # 1. Supplier
+    # 1. Supplier — skip superuser suppliers (combined into loft share)
     if order.supplier_share > 0:
         for user in supplier_users:
-            if user:
+            if user and not user.is_superuser:
                 credit_entries.append((
                     user, order.supplier_share,
                     _("Supplier payment for order %(num)s") % {"num": order_label},
                 ))
 
-    # 2. Loft (admin)
-    if order.loft_share > 0:
+    # 2. Loft (admin) — includes supplier share when admin acts as own supplier
+    loft_amount = order.loft_share
+    if order.supplier_share > 0:
+        has_admin_supplier = any(u and u.is_superuser for u in supplier_users)
+        if has_admin_supplier:
+            loft_amount += order.supplier_share
+
+    if loft_amount > 0:
         for admin in User.objects.filter(is_superuser=True):
             credit_entries.append((
-                admin, order.loft_share,
+                admin, loft_amount,
                 _("Loft Design profit for order %(num)s") % {"num": order_label},
             ))
 
@@ -538,9 +579,10 @@ def credit_wallets_for_order(order):
             _("Customer: %(name)s") % {"name": customer_name},
             "",
             _("Product: %(title)s × %(qty)s") % {"title": pd["title"], "qty": pd["qty"]},
-            _("  Supplier:    DZD%(amount)s") % {"amount": f"{pd['supplier']:,.2f}"},
             _("  Loft Design: DZD%(amount)s") % {"amount": f"{pd['loft']:,.2f}"},
         ]
+        if pd["supplier"] > 0:
+            lines.insert(-1, _("  Supplier:    DZD%(amount)s") % {"amount": f"{pd['supplier']:,.2f}"})
         if pd["affiliate"] > 0:
             lines.append(_("  Affiliate:   DZD%(amount)s") % {"amount": f"{pd['affiliate']:,.2f}"})
         if pd["semi"] > 0:

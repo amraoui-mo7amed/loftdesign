@@ -146,6 +146,8 @@
                     <button type="button" class="editorial-btn text-success approve-btn" title="Approve"
                             data-url="{% url 'dash:product_approve' product.pk %}"
                             data-product="{{ product.title }}"
+                            data-purchase-price="{{ product.loft_purchase_price|floatformat:0 }}"
+                            data-provider-name="{{ product.user.get_full_name|default:product.user.username }}"
                             data-approve-label="{% trans 'Set the pricing for this product' %}">
                         <i class="fas fa-check"></i>
                     </button>
@@ -195,6 +197,11 @@
                 <form id="approveForm" class="form" method="POST">
                     {% csrf_token %}
                     <p class="text-muted mb-4" id="approveProductName"></p>
+                    <div id="approveProviderInfo" class="alert alert-info rounded-3 py-2 px-3 mb-4 d-none">
+                        <i class="fas fa-user me-1"></i>
+                        <span id="approveProviderName"></span>
+                        &mdash; {% trans "Asking" %}: <strong id="approveProviderPrice"></strong>
+                    </div>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-bold">{% trans "Wholesale Price (DZD)" %}</label>

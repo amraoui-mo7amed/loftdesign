@@ -11,6 +11,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     (this.dataset.approveLabel || "Set the pricing for this product") +
                     "</span>";
             }
+            var providerInfo = document.getElementById("approveProviderInfo");
+            var providerName = document.getElementById("approveProviderName");
+            var providerPrice = document.getElementById("approveProviderPrice");
+            if (providerInfo && providerName && providerPrice) {
+                var pp = this.dataset.purchasePrice;
+                var pn = this.dataset.providerName;
+                if (pp && pn) {
+                    providerName.textContent = pn;
+                    providerPrice.textContent = pp + " DZD";
+                    providerInfo.classList.remove("d-none");
+                } else {
+                    providerInfo.classList.add("d-none");
+                }
+            }
             var form = document.getElementById("approveForm");
             if (form) form.action = this.dataset.url;
             var modal = new bootstrap.Modal(document.getElementById("approveModal"));

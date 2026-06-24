@@ -37,6 +37,16 @@
                         <label class="form-label fw-bold">{% trans "Full Description" %}</label>
                         <textarea name="description" class="form-control" rows="8" >{{ product.description }}</textarea>
                     </div>
+                    {% if is_admin and product.user and product.user != request.user %}
+                    <div class="alert alert-info rounded-3 py-2 px-3 mb-3 d-flex align-items-center gap-2 flex-wrap">
+                        <i class="fas fa-info-circle"></i>
+                        <span class="fw-bold">{% trans "Provider" %}:</span>
+                        <span>{{ product.user.get_full_name|default:product.user.username }}</span>
+                        <span class="text-muted mx-1">|</span>
+                        <span class="fw-bold">{% trans "Asking" %}:</span>
+                        <span class="fw-bold text-primary">DZD{{ product.loft_purchase_price|floatformat:0 }}</span>
+                    </div>
+                    {% endif %}
                     <div class="row mb-0">
                         {% if is_admin %}
                         <div class="col-md-4">

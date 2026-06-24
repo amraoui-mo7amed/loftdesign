@@ -17,6 +17,9 @@
         <h1 class="fw-black display-5 mb-1">{% trans "Partner Pricing" %}</h1>
         <p class="text-muted mb-0">
             <strong>{{ product.title }}</strong>
+            {% if product.user and not product.user.is_superuser %}
+            — {% trans "Provider" %}: <span class="text-primary fw-bold">DZD{{ product.loft_purchase_price|floatformat:0 }}</span>
+            {% endif %}
             — {% trans "Wholesale" %}: DZD{{ product.loft_wholesale_price|floatformat:0 }}
             | {% trans "Retail" %}: DZD{{ product.loft_retail_price|floatformat:0 }}
         </p>

@@ -38,13 +38,24 @@
                         <textarea name="description" class="form-control" rows="8" >{{ product.description }}</textarea>
                     </div>
                     {% if is_admin and product.user and product.user != request.user %}
-                    <div class="alert alert-info rounded-3 py-2 px-3 mb-3 d-flex align-items-center gap-2 flex-wrap">
-                        <i class="fas fa-info-circle"></i>
-                        <span class="fw-bold">{% trans "Provider" %}:</span>
-                        <span>{{ product.user.get_full_name|default:product.user.username }}</span>
-                        <span class="text-muted mx-1">|</span>
-                        <span class="fw-bold">{% trans "Asking" %}:</span>
-                        <span class="fw-bold text-primary">DZD{{ product.loft_purchase_price|floatformat:0 }}</span>
+                    <div class="alert alert-info rounded-3 py-2 px-3 mb-3">
+                        <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                            <i class="fas fa-user"></i>
+                            <span class="fw-bold">{{ product.user.get_full_name|default:product.user.username }}</span>
+                            <span class="text-muted mx-1">|</span>
+                            <span class="fw-bold">{% trans "Purchase" %}:</span>
+                            <span class="fw-bold text-primary">DZD{{ product.loft_purchase_price|floatformat:0 }}</span>
+                        </div>
+                        {% if product.loft_wholesale_price or product.loft_retail_price %}
+                        <div class="small d-flex gap-3 flex-wrap text-muted">
+                            {% if product.loft_wholesale_price %}
+                            <span>{% trans "Suggested Wholesale" %}: <strong class="text-dark">DZD{{ product.loft_wholesale_price|floatformat:0 }}</strong></span>
+                            {% endif %}
+                            {% if product.loft_retail_price %}
+                            <span>{% trans "Suggested Retail" %}: <strong class="text-dark">DZD{{ product.loft_retail_price|floatformat:0 }}</strong></span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
                     </div>
                     {% endif %}
                     <div class="row mb-0">

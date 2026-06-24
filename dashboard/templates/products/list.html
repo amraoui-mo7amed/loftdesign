@@ -148,6 +148,8 @@
                             data-product="{{ product.title }}"
                             data-purchase-price="{{ product.loft_purchase_price|floatformat:0 }}"
                             data-provider-name="{{ product.user.get_full_name|default:product.user.username }}"
+                            data-provider-wholesale="{{ product.loft_wholesale_price|default:'' }}"
+                            data-provider-retail="{{ product.loft_retail_price|default:'' }}"
                             data-approve-label="{% trans 'Set the pricing for this product' %}">
                         <i class="fas fa-check"></i>
                     </button>
@@ -198,9 +200,15 @@
                     {% csrf_token %}
                     <p class="text-muted mb-4" id="approveProductName"></p>
                     <div id="approveProviderInfo" class="alert alert-info rounded-3 py-2 px-3 mb-4 d-none">
-                        <i class="fas fa-user me-1"></i>
-                        <span id="approveProviderName"></span>
-                        &mdash; {% trans "Asking" %}: <strong id="approveProviderPrice"></strong>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <i class="fas fa-user"></i>
+                            <span class="fw-bold" id="approveProviderName"></span>
+                        </div>
+                        <div class="small mt-1 d-flex gap-3 flex-wrap">
+                            <span>{% trans "Purchase" %}: <strong id="approveProviderPrice"></strong></span>
+                            <span>{% trans "Suggested Wholesale" %}: <strong id="approveProviderWholesale"></strong></span>
+                            <span>{% trans "Suggested Retail" %}: <strong id="approveProviderRetail"></strong></span>
+                        </div>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-6">

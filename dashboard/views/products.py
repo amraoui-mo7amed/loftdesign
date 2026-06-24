@@ -176,8 +176,8 @@ def product_create(request):
             if is_provider:
                 product_kwargs["status"] = Product.ProductStatus.PENDING
                 product_kwargs["is_active"] = False
-                product_kwargs["loft_wholesale_price"] = None
-                product_kwargs["loft_retail_price"] = None
+                product_kwargs["loft_wholesale_price"] = wholesale or None
+                product_kwargs["loft_retail_price"] = retail or None
             else:
                 product_kwargs["status"] = Product.ProductStatus.APPROVED
                 product_kwargs["is_active"] = request.POST.get("is_active") == "on"

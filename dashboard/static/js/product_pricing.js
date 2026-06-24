@@ -14,13 +14,24 @@ document.addEventListener("DOMContentLoaded", function () {
             var providerInfo = document.getElementById("approveProviderInfo");
             var providerName = document.getElementById("approveProviderName");
             var providerPrice = document.getElementById("approveProviderPrice");
+            var providerWholesale = document.getElementById("approveProviderWholesale");
+            var providerRetail = document.getElementById("approveProviderRetail");
             if (providerInfo && providerName && providerPrice) {
                 var pp = this.dataset.purchasePrice;
                 var pn = this.dataset.providerName;
+                var pw = this.dataset.providerWholesale;
+                var pr = this.dataset.providerRetail;
                 if (pp && pn) {
                     providerName.textContent = pn;
                     providerPrice.textContent = pp + " DZD";
+                    providerWholesale.textContent = (pw ? pw + " DZD" : "—");
+                    providerRetail.textContent = (pr ? pr + " DZD" : "—");
                     providerInfo.classList.remove("d-none");
+                    // Pre-fill admin inputs with provider's suggestions
+                    var wsInput = document.querySelector("#approveForm input[name='loft_wholesale_price']");
+                    var rtInput = document.querySelector("#approveForm input[name='loft_retail_price']");
+                    if (wsInput && pw) wsInput.value = pw;
+                    if (rtInput && pr) rtInput.value = pr;
                 } else {
                     providerInfo.classList.add("d-none");
                 }

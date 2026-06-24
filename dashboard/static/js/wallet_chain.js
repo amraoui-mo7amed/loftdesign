@@ -54,10 +54,18 @@ document.addEventListener("DOMContentLoaded", function () {
             var levels = [];
 
             if (c.supplier_wholesale > 0) {
-                levels.push({ label: _("Provider"), color: 'danger', textClass: 'text-light', bgClass: 'bg-danger', purchased: '\u2014', sold: c.supplier_wholesale, profit: p.supplier });
+                var label = _("Provider");
+                if (c.supplier_commission) {
+                    label += ' (' + parseFloat(c.supplier_commission).toFixed(0) + '%)';
+                }
+                var provExtra = '';
+                if (c.commission_amount != null) {
+                    provExtra = '<div class="small text-danger fw-bold mt-1"><i class="fas fa-minus-circle me-1"></i>' + _("Commission") + ': &minus;' + c.commission_amount.toFixed(2) + ' DZD</div>';
+                }
+                levels.push({ label: label, color: 'danger', textClass: 'text-light', bgClass: 'bg-danger', purchased: '\u2014', sold: c.supplier_wholesale, profit: p.supplier, extra: provExtra });
             }
 
-            var loftPurchased = (c.admin_cost_basis != null) ? c.admin_cost_basis : (c.supplier_wholesale > 0 ? c.supplier_wholesale : '\u2014');
+            var loftPurchased = (c.admin_cost_basis != null) ? c.admin_cost_basis : (c.supplier_net != null ? c.supplier_net : (c.supplier_wholesale > 0 ? c.supplier_wholesale : '\u2014'));
             levels.push({ label: _("Loft Design"), color: 'warning', textClass: 'text-warning', bgClass: 'bg-warning bg-opacity-10', purchased: loftPurchased, sold: c.loft_wholesale, profit: p.loft });
 
             if (c.affiliate_wholesale !== null) {
@@ -85,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     '<span class="text-muted">' + _("Purchased") + ': <strong>' + purchasedDisplay + '</strong></span>' +
                     '<span class="text-muted">' + _("Sold") + ': <strong>' + soldDisplay + '</strong></span>' +
                     '</div>' +
+                    (lvl.extra || '') +
                     '</div>' +
                     '</div>';
             });

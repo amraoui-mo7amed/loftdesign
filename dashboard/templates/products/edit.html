@@ -188,11 +188,43 @@
                             <i class="fas fa-tags me-2"></i> {% trans "Affiliate Pricing" %}
                         </a>
                         {% endif %}
+
+                        {% if price_history %}
+                        <button type="button" class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" data-bs-toggle="collapse" data-bs-target="#priceHistoryPanel">
+                            <i class="fas fa-history me-2"></i> {% trans "Price History" %}
+                        </button>
+                        {% endif %}
                         <a href="{% url 'dash:product_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border py-3">
                             {% trans "Cancel" %}
                         </a>
                     </div>
                 </div>
+
+                {% if price_history %}
+                <div class="collapse mt-3" id="priceHistoryPanel">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h5 class="fw-bold mb-3 border-bottom pb-2">
+                            <i class="fas fa-history me-2"></i>{% trans "Price History" %}
+                        </h5>
+                        <ul class="list-unstyled mb-0" style="max-height: 400px; overflow-y: auto;">
+                            {% for h in price_history %}
+                            <li class="py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-light text-dark fw-bold px-2 py-1">{{ h.field_name }}</span>
+                                    <small class="text-muted">{{ h.created_at|date:"d M, H:i" }}</small>
+                                </div>
+                                <div class="small mt-1">
+                                    {% if h.user %}<span class="text-muted">{{ h.user.get_full_name|default:h.user.username }}</span> &rarr;{% endif %}
+                                    {% if h.old_value is not None %}<span class="text-decoration-line-through text-danger">{{ h.old_value|floatformat:2 }}</span>{% else %}<span class="text-muted">—</span>{% endif %}
+                                    <i class="fas fa-arrow-right mx-1 small"></i>
+                                    <span class="fw-bold text-success">{{ h.new_value|floatformat:2 }} DZD</span>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </form>

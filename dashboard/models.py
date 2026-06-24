@@ -534,3 +534,34 @@ class StoreVisit(models.Model):
 
     def __str__(self):
         return f"Visit to {self.store} on {self.created_at:%Y-%m-%d}"
+
+
+class PriceHistory(models.Model):
+    """Tracks changes to wholesale/retail prices across all roles"""
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="price_history",
+        verbose_name=_("Product")
+    )
+    user = models.ForeignKey(
+        userModel, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="price_changes", verbose_name=_("User")
+    )
+    field_name = models.CharField(
+        _("Price Field"), max_length=100,
+        help_text=_("e.g. loft_purchase_price, loft_wholesale, loft_retail, partner_wholesale, partner_retail")
+    )
+    old_value = models.DecimalField(
+        _("Old Value (DZD)"), max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    new_value = models.DecimalField(
+        _("New Value (DZD)"), max_digits=10, decimal_places=2
+    )
+    created_at = models.DateTimeField(_("Changed At"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Price History")
+        verbose_name_plural = _("Price Histories")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.product.title[:30]} — {self.field_name}: {self.old_value} → {self.new_value}"

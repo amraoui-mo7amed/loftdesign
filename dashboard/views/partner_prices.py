@@ -260,6 +260,8 @@ def catalog_update_pricing(request, product_pk):
     retail = request.POST.get("retail_price")
 
     changes = []
+    old_wholesale = pp.wholesale_price
+    old_retail = pp.retail_price
     if wholesale is not None and wholesale != "":
         wholesale = float(wholesale) if wholesale else None
         if wholesale != pp.wholesale_price:
@@ -270,6 +272,12 @@ def catalog_update_pricing(request, product_pk):
         if retail != pp.retail_price:
             pp.retail_price = retail
             changes.append("retail")
+    if changes:
+        from dashboard.utils import log_price_change
+        if "wholesale" in changes:
+            log_price_change(pp.product, request.user, "partner_wholesale", old_wholesale, pp.wholesale_price)
+        if "retail" in changes:
+            log_price_change(pp.product, request.user, "partner_retail", old_retail, pp.retail_price)
     pp.save()
 
     if changes:

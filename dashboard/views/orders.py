@@ -50,7 +50,6 @@ def _admin_transitions_for_order(order):
 
     if has_provider:
         transitions[Order.OrderStatus.ADMIN_VALIDATED] = [
-            Order.OrderStatus.SUPPLIER_FULFILLING,
             Order.OrderStatus.CANCELLED,
         ]
         transitions[Order.OrderStatus.SUPPLIER_FULFILLING] = [

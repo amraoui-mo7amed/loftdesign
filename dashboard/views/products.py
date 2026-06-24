@@ -250,6 +250,11 @@ def product_update(request, pk):
     else:
         product = get_object_or_404(Product, pk=pk, user=request.user)
 
+    # Snapshot old prices for PriceHistory
+    old_purchase = product.loft_purchase_price
+    old_wholesale = product.loft_wholesale_price
+    old_retail = product.loft_retail_price
+
     if request.method == "POST":
         product.title = request.POST.get("title")
         category_id = request.POST.get("category")
@@ -319,6 +324,19 @@ def product_update(request, pk):
         for i, img in enumerate(request.FILES.getlist("gallery_images")):
             ProductImage.objects.create(product=product, image=img, order=i)
 
+        # Log price changes
+        from dashboard.utils import log_price_change
+        if is_admin:
+            if product.loft_purchase_price != old_purchase:
+                log_price_change(product, request.user, "loft_purchase_price", old_purchase, product.loft_purchase_price)
+            if product.loft_wholesale_price != old_wholesale:
+                log_price_change(product, request.user, "loft_wholesale", old_wholesale, product.loft_wholesale_price)
+            if product.loft_retail_price != old_retail:
+                log_price_change(product, request.user, "loft_retail", old_retail, product.loft_retail_price)
+        else:
+            if product.loft_purchase_price != old_purchase:
+                log_price_change(product, request.user, "loft_purchase_price", old_purchase, product.loft_purchase_price)
+
         try:
             product.save()
             return JsonResponse({
@@ -329,8 +347,10 @@ def product_update(request, pk):
             return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
 
     categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
+    price_history = product.price_history.select_related("user").order_by("-created_at")[:20]
     return render(request, "products/edit.html", {
-        "product": product, "categories": categories, "is_admin": is_admin
+        "product": product, "categories": categories, "is_admin": is_admin,
+        "price_history": price_history,
     })
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
@@ -407,6 +427,11 @@ def product_approve(request, pk):
                             "loft_purchase_price": product.loft_purchase_price or 0,
                         }
                     )
+
+                # Log price changes
+                from dashboard.utils import log_price_change
+                log_price_change(product, request.user, "loft_wholesale", None, wholesale)
+                log_price_change(product, request.user, "loft_retail", None, retail)
 
                 # Notify the provider
                 if product.user:

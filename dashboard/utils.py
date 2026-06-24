@@ -192,7 +192,7 @@ def save_dash_cart(request, cart):
 
 
 from decimal import Decimal
-from .models import PartnerPrice, LoftPrice, SupplierPrice
+from .models import PartnerPrice, LoftPrice, SupplierPrice, PriceHistory
 
 
 def resolve_chain(product, referred_by_code):
@@ -205,6 +205,7 @@ def resolve_chain(product, referred_by_code):
     """
     levels = {
         "supplier_wholesale": None,
+        "supplier_commission": None,
         "loft_wholesale": Decimal("0.00"),
         "affiliate_wholesale": None,
         "semi_wholesale": None,
@@ -214,7 +215,15 @@ def resolve_chain(product, referred_by_code):
     # 1. Supplier level
     supplier_price = SupplierPrice.objects.filter(product=product).first()
     if supplier_price:
-        levels["supplier_wholesale"] = supplier_price.loft_purchase_price
+        if supplier_price.supplier and not supplier_price.supplier.is_superuser:
+            # Provider product — commission deducted from their wholesale
+            profile = getattr(supplier_price.supplier, "profile", None)
+            commission = Decimal(str(profile.commission)) if profile and profile.commission else Decimal("0.00")
+            levels["supplier_wholesale"] = supplier_price.loft_purchase_price
+            levels["supplier_commission"] = commission
+        else:
+            # Admin as supplier — use stored purchase price
+            levels["supplier_wholesale"] = supplier_price.loft_purchase_price
 
     # 2. Loft level
     loft_price = LoftPrice.objects.filter(product=product, is_active=True).first()
@@ -267,8 +276,15 @@ def compute_item_profit(product, price_paid, quantity, referred_by_code):
     Compute profit distribution for a single order item.
     All levels in the chain earn at delivery per the per-sale model.
 
-    Supplier:     supplier_wholesale × qty
-    Loft:         (loft_wholesale − supplier_wholesale) × qty
+    For provider products (commission-based):
+      supplier_wholesale = price × (1 − commission/100)
+      Provider:          supplier_wholesale × qty
+      Loft:              (loft_wholesale − supplier_wholesale) × qty
+
+    For admin-created products (margin-based):
+      Provider:          supplier_wholesale × qty
+      Loft:              (loft_wholesale − supplier_wholesale) × qty
+
     Affiliate:    (aff_wholesale − loft_wholesale) × qty  (if in chain)
     Semi:         (price − aff_wholesale) × qty            (if in chain)
     """
@@ -278,24 +294,31 @@ def compute_item_profit(product, price_paid, quantity, referred_by_code):
     qty = int(quantity)
 
     supplier_base = chain["supplier_wholesale"]
+    supplier_commission = chain["supplier_commission"]
     loft_base = chain["loft_wholesale"]
     aff_base = chain["affiliate_wholesale"]
     semi_base = chain["semi_wholesale"]
 
-    has_supplier = supplier_base is not None
+    # Commission deducted from provider's stated wholesale
+    if supplier_commission is not None:
+        actual_supplier_base = supplier_base * (Decimal("1.00") - supplier_commission / Decimal("100.00"))
+    else:
+        actual_supplier_base = supplier_base
+
+    has_supplier = actual_supplier_base is not None
 
     if has_supplier:
-        supplier_share = supplier_base * qty
+        supplier_share = actual_supplier_base * qty
         if semi_base is not None and aff_base is not None:
-            loft_share = (loft_base - supplier_base) * qty
+            loft_share = (loft_base - actual_supplier_base) * qty
             affiliate_share = (aff_base - loft_base) * qty
             semi_share = (price - aff_base) * qty
         elif aff_base is not None:
-            loft_share = (loft_base - supplier_base) * qty
+            loft_share = (loft_base - actual_supplier_base) * qty
             affiliate_share = (aff_base - loft_base) * qty
             semi_share = Decimal("0.00")
         else:
-            loft_share = (price - supplier_base) * qty
+            loft_share = (price - actual_supplier_base) * qty
             affiliate_share = Decimal("0.00")
             semi_share = Decimal("0.00")
     else:
@@ -395,12 +418,21 @@ def build_order_chain_breakdown(order):
 
         supplier_price = SupplierPrice.objects.filter(product=product).first()
         is_admin_supplier = supplier_price and supplier_price.supplier and supplier_price.supplier.is_superuser
+
         if is_admin_supplier:
             has_admin_supplier = True
-            chain["supplier_wholesale"] = None
             chain["admin_cost_basis"] = float(supplier_price.loft_purchase_price)
         else:
             chain["admin_cost_basis"] = None
+
+        # Commission amount + net for display
+        if chain["supplier_commission"] is not None and chain["supplier_wholesale"] is not None:
+            wholesale_dec = Decimal(str(chain["supplier_wholesale"]))
+            commission_amt = float(wholesale_dec * chain["supplier_commission"] / Decimal("100.00"))
+            supplier_net = float(wholesale_dec * (Decimal("1.00") - chain["supplier_commission"] / Decimal("100.00")))
+        else:
+            commission_amt = None
+            supplier_net = None
 
         items_breakdown.append({
             "title": title,
@@ -409,6 +441,9 @@ def build_order_chain_breakdown(order):
             "subtotal": float(price * qty),
             "chain": {
                 "supplier_wholesale": float(chain["supplier_wholesale"]) if chain["supplier_wholesale"] is not None else None,
+                "supplier_commission": float(chain["supplier_commission"]) if chain["supplier_commission"] is not None else None,
+                "commission_amount": commission_amt,
+                "supplier_net": supplier_net,
                 "loft_wholesale": float(chain["loft_wholesale"]),
                 "affiliate_wholesale": float(chain["affiliate_wholesale"]) if chain["affiliate_wholesale"] is not None else None,
                 "semi_wholesale": float(chain["semi_wholesale"]) if chain["semi_wholesale"] is not None else None,
@@ -675,6 +710,17 @@ def check_low_stock(product, threshold=5):
                 notification_type="warning",
                 link=reverse("dash:product_list"),
             )
+
+
+def log_price_change(product, user, field_name, old_value, new_value):
+    """Record a price change in PriceHistory"""
+    PriceHistory.objects.create(
+        product=product,
+        user=user,
+        field_name=field_name,
+        old_value=old_value,
+        new_value=new_value,
+    )
 
 
 def get_algeria_locations():

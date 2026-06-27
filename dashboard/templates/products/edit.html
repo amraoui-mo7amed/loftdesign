@@ -73,39 +73,39 @@
                         {% endif %}
                     </div>
                     {% endif %}
-                    <div class="row mb-0">
+                    <div class="row g-3 mb-0">
                         {% if is_admin %}
-                        <div class="col-md-4">
+                        <div class="col-md-6 col-lg-4">
                             <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
-                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" value="{{ product.loft_purchase_price|stringformat:'.2f' }}" lang="en">
+                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control form-control-lg" value="{{ product.loft_purchase_price|stringformat:'.2f' }}" lang="en">
                             <div class="form-text small">{% trans "What Loft pays the supplier." %}</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6 col-lg-4">
                             <label class="form-label fw-bold">{% trans "Wholesale (DZD)" %}</label>
-                            <input type="number" name="loft_wholesale_price" step="0.01" class="form-control" value="{{ product.loft_wholesale_price|default:''|stringformat:'.2f' }}" lang="en">
+                            <input type="number" name="loft_wholesale_price" step="0.01" class="form-control form-control-lg" value="{{ product.loft_wholesale_price|default:''|stringformat:'.2f' }}" lang="en">
                             <div class="form-text small">{% trans "Price for affiliates." %}</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6 col-lg-4">
                             <label class="form-label fw-bold">{% trans "Retail (DZD)" %}</label>
-                            <input type="number" name="loft_retail_price" step="0.01" class="form-control" value="{{ product.loft_retail_price|default:''|stringformat:'.2f' }}" lang="en">
+                            <input type="number" name="loft_retail_price" step="0.01" class="form-control form-control-lg" value="{{ product.loft_retail_price|default:''|stringformat:'.2f' }}" lang="en">
                             <div class="form-text small">{% trans "Price for end clients." %}</div>
                         </div>
                         {% else %}
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
-                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" value="{{ product.loft_purchase_price|stringformat:'.2f' }}" lang="en">
+                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control form-control-lg" value="{{ product.loft_purchase_price|stringformat:'.2f' }}" lang="en">
                             <div class="form-text small">{% trans "The price Loft Design will pay you per unit." %}</div>
                         </div>
                         {% endif %}
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4">
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6 col-lg-4">
                             <label class="form-label fw-bold">{% trans "Available Quantity" %}</label>
-                            <input type="number" name="quantity" class="form-control" value="{{ product.quantity }}" min="0" required>
+                            <input type="number" name="quantity" class="form-control form-control-lg" value="{{ product.quantity }}" min="0" required>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6 col-lg-4">
                             <label class="form-label fw-bold">{% trans "Tags" %}</label>
-                            <input type="text" name="tags" class="form-control" value="{{ product.tags }}">
+                            <input type="text" name="tags" class="form-control form-control-lg" value="{{ product.tags }}">
                         </div>
                     </div>
                 </div>

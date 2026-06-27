@@ -80,7 +80,7 @@
                     <div class="viewer-container overflow-hidden">
                         {% with all_images=product.gallery_images.all %}
                         <div class="position-relative" id="productGallery" data-images="{{ product.thumbnail.url }}{% for img in all_images %},{{ img.image.url }}{% endfor %}">
-                            <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal gallery-main-img" style="height: 550px; object-fit: cover;" alt="{{ product.title }}" id="galleryMainImg">
+                            <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal gallery-main-img" style="max-height: 450px; height: auto; min-height: 300px; object-fit: cover;" alt="{{ product.title }}" id="galleryMainImg">
                             {% if all_images %}
                             <button class="gallery-arrow gallery-prev" type="button" aria-label="{% trans 'Previous' %}"><i class="fas fa-chevron-left"></i></button>
                             <button class="gallery-arrow gallery-next" type="button" aria-label="{% trans 'Next' %}"><i class="fas fa-chevron-right"></i></button>

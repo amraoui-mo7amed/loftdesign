@@ -36,11 +36,11 @@
         <div class="row g-5">
             <!-- 1. Interactive Product Gallery (Left) -->
             <div class="col-lg-7" data-aos="fade-right">
-                <div class="product-sticky-gallery sticky-top" style="top: 100px; max-height: calc(100vh - 120px); overflow-y: auto;">
+                <div class="product-sticky-gallery sticky-top" style="top: 100px;">
                     <div class="viewer-container rounded-5 shadow-2xl overflow-hidden mb-4">
                         {% with all_images=product.gallery_images.all %}
                         <div class="position-relative" id="productGallery" data-images="{{ product.thumbnail.url }}{% for img in all_images %},{{ img.image.url }}{% endfor %}">
-                            <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal gallery-main-img" style="height: 650px; object-fit: cover;" alt="{{ product.title }}" id="galleryMainImg">
+                            <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal gallery-main-img" style="max-height: 450px; height: auto; min-height: 300px; object-fit: cover;" alt="{{ product.title }}" id="galleryMainImg">
                             {% if all_images %}
                             <button class="gallery-arrow gallery-prev" type="button" aria-label="{% trans 'Previous' %}"><i class="fas fa-chevron-left"></i></button>
                             <button class="gallery-arrow gallery-next" type="button" aria-label="{% trans 'Next' %}"><i class="fas fa-chevron-right"></i></button>

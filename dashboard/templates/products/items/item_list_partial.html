@@ -2,7 +2,7 @@
 {% load static %}
 
 {% if items %}
-<div class="row g-2 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6">
+<div class="row g-2 row-cols-2">
     {% for item in items %}
     <div class="col">
         <div class="item-card card border-0 shadow-sm rounded-3 p-2 text-center h-100" data-item-id="{{ item.id }}">

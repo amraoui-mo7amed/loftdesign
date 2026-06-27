@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         var html =
-            '<div class="row g-2 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6">';
+            '<div class="row g-2 row-cols-2">';
         items.forEach(function (item) {
             var thumbHtml = item.thumbnail
                 ? '<img src="' + item.thumbnail + '" alt="' + item.name + '" class="rounded-2 w-100" style="height:70px;object-fit:cover;">'

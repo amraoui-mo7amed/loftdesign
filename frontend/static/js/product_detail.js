@@ -117,28 +117,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const affStockDot = document.getElementById('affStockDot');
     const galleryMainImg = document.getElementById('galleryMainImg');
     const galleryThumbs = document.getElementById('galleryThumbs');
+    const selectedVariantInfo = document.getElementById('selectedVariantInfo');
+    const selectedVariantName = document.getElementById('selectedVariantName');
+    const selectedVariantDim = document.getElementById('selectedVariantDim');
 
     if (variantBtns.length > 0) {
         variantBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                variantBtns.forEach(b => b.classList.remove('active', 'border-2', 'border-dark'));
-                this.classList.add('active', 'border-2', 'border-dark');
+                variantBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
 
                 var itemId = this.dataset.itemId;
+                var itemName = this.dataset.itemName;
+                var itemColor = this.dataset.itemColor;
+                var itemDim = this.dataset.itemDimensions;
                 var itemThumb = this.dataset.itemThumbnail;
                 var itemGallery = this.dataset.itemGallery;
                 var itemStock = parseInt(this.dataset.itemStock) || 0;
+                var inStock = itemStock > 0;
 
-                // Update all Add to Cart buttons
+                // Update Add to Cart buttons
                 addToCartBtns.forEach(function(b) { b.dataset.itemId = itemId; });
 
-                // Update all order form hidden inputs
+                // Update order form hidden inputs
                 orderItemIds.forEach(function(el) { el.value = itemId; });
 
                 // Update stock displays
-                var inStock = itemStock > 0;
                 if (stockText) stockText.textContent = inStock ? 'In Stock' : 'Out of Stock';
                 if (affStockText) affStockText.textContent = inStock ? 'In Stock' : 'Out of Stock';
+
+                // Update selected variant info
+                if (selectedVariantInfo) {
+                    var img = selectedVariantInfo.querySelector('img');
+                    if (img && itemThumb) img.src = itemThumb;
+                    if (selectedVariantName) selectedVariantName.textContent = itemName;
+                    if (selectedVariantDim) {
+                        selectedVariantDim.textContent = itemDim || '';
+                        selectedVariantDim.classList.toggle('d-none', !itemDim);
+                    }
+                }
 
                 // Swap gallery images if item has its own
                 if (itemThumb && galleryMainImg) {

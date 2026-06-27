@@ -6,6 +6,10 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+    <style>
+        .file-drop-zone:hover { border-color: #0d6efd !important; background: #f0f7ff; }
+        .file-drop-zone.dragover { border-color: #0d6efd !important; background: #e8f4ff; }
+    </style>
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -21,151 +25,181 @@
 
     <form method="POST" enctype="multipart/form-data" class="form" id="portfolioForm">
         {% csrf_token %}
-        <div class="row g-4">
-            <div class="col-lg-8" data-aos="fade-right">
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Product Details" %}</h5>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">{% trans "Product Name" %}</label>
-                        <input type="text" name="title" class="form-control form-control-lg" placeholder="e.g. Modern Sofa" required>
-                    </div>
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <label class="form-label fw-bold mb-0">{% trans "Category" %}</label>
-                            {% if request.user.is_superuser %}
-                            <a href="{% url 'dash:category_list' %}" class="small text-primary fw-bold text-decoration-none">
-                                <i class="fas fa-cog me-1"></i> {% trans "Manage Categories" %}
-                            </a>
-                            {% endif %}
-                        </div>
-                        {% include "components/custom_select.html" with name="category" options=categories placeholder=_("Select Category") %}
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">{% trans "Full Description" %}</label>
-                        <textarea name="description" class="form-control" rows="8" placeholder="Product details, dimensions, materials..." required></textarea>
-                    </div>
-                    <div class="row mb-0">
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
-                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control" placeholder="e.g. 1000" lang="en" {% if is_provider %}required{% endif %}>
-                            <div class="form-text small">{% if is_provider %}{% trans "Your cost from supplier." %}{% else %}{% trans "What Loft pays the supplier." %}{% endif %}</div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">{% trans "Wholesale (DZD)" %}</label>
-                            <input type="number" name="loft_wholesale_price" step="0.01" class="form-control" placeholder="e.g. 1500" lang="en">
-                            <div class="form-text small">{% trans "Price for affiliates." %}</div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">{% trans "Retail (DZD)" %}</label>
-                            <input type="number" name="loft_retail_price" step="0.01" class="form-control" placeholder="e.g. 2000" lang="en">
-                            <div class="form-text small">{% trans "Price for end clients." %}</div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">{% trans "Available Quantity" %}</label>
-                            <input type="number" name="quantity" class="form-control" placeholder="1" value="1" min="0" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">{% trans "Tags" %}</label>
-                            <input type="text" name="tags" class="form-control" placeholder="Furniture, Modern, Wood">
-                        </div>
-                    </div>
+
+        <!-- Product Details -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" data-aos="fade-up">
+            <h5 class="fw-bold mb-4 border-bottom pb-2">
+                <i class="fas fa-info-circle me-2 text-primary"></i>{% trans "Product Details" %}
+            </h5>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">{% trans "Product Name" %}</label>
+                    <input type="text" name="title" class="form-control form-control-lg" placeholder="e.g. Modern Sofa" required>
                 </div>
-                
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Sales Settings" %}</h5>
-                    <div class="mb-0">
-                        <label class="form-label fw-bold">{% trans "External Affiliate/Buy Link" %}</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-link text-primary"></i></span>
-                            <input type="url" name="external_link" class="form-control" placeholder="https://example.com/product">
-                        </div>
-                        <div class="form-text mt-2 small">{% trans "Leave empty if product is sold directly through this platform." %}</div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label fw-bold mb-0">{% trans "Category" %}</label>
+                        {% if request.user.is_superuser %}
+                        <a href="{% url 'dash:category_list' %}" class="small text-primary fw-bold text-decoration-none">
+                            <i class="fas fa-cog me-1"></i> {% trans "Manage Categories" %}
+                        </a>
+                        {% endif %}
                     </div>
+                    {% include "components/custom_select.html" with name="category" options=categories placeholder=_("Select Category") %}
                 </div>
+                <div class="col-12">
+                    <label class="form-label fw-bold">{% trans "Full Description" %}</label>
+                    <textarea name="description" class="form-control" rows="6" placeholder="Product details, dimensions, materials..." required></textarea>
+                </div>
+            </div>
+        </div>
 
-                <!-- Gallery Section -->
-                <div class="card border-0 shadow-sm rounded-4 p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                        <h5 class="fw-bold mb-0">{% trans "Product Gallery" %}</h5>
-                        <span class="badge bg-light text-primary">{% trans "Multiple Images" %}</span>
+        <!-- Pricing -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" data-aos="fade-up">
+            <h5 class="fw-bold mb-4 border-bottom pb-2">
+                <i class="fas fa-tags me-2 text-primary"></i>{% trans "Pricing" %}
+            </h5>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
+                    <input type="number" name="loft_purchase_price" step="0.01" class="form-control form-control-lg" placeholder="e.g. 1000" lang="en" {% if is_provider %}required{% endif %}>
+                    <div class="form-text small">{% if is_provider %}{% trans "Your cost from supplier." %}{% else %}{% trans "What Loft pays the supplier." %}{% endif %}</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">{% trans "Wholesale (DZD)" %}</label>
+                    <input type="number" name="loft_wholesale_price" step="0.01" class="form-control form-control-lg" placeholder="e.g. 1500" lang="en">
+                    <div class="form-text small">{% trans "Price for affiliates." %}</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">{% trans "Retail (DZD)" %}</label>
+                    <input type="number" name="loft_retail_price" step="0.01" class="form-control form-control-lg" placeholder="e.g. 2000" lang="en">
+                    <div class="form-text small">{% trans "Price for end clients." %}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Media -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" data-aos="fade-up">
+            <h5 class="fw-bold mb-4 border-bottom pb-2">
+                <i class="fas fa-image me-2 text-primary"></i>{% trans "Media" %}
+            </h5>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">{% trans "Thumbnail" %} *</label>
+                    <div class="file-drop-zone rounded-4 p-4 text-center" id="createThumbDrop"
+                         style="border: 2px dashed #adb5bd; cursor: pointer; transition: all .25s ease; background: #fff;">
+                        <div id="createThumbPreview">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary opacity-50 mb-2"></i>
+                            <p class="text-muted small mb-0 fw-bold">{% trans "Click to upload" %}</p>
+                        </div>
+                        <img id="createThumbImg" class="d-none rounded-3 w-100" style="max-height: 200px; object-fit: contain;" alt="">
                     </div>
-
-                    <div class="file-drop-zone mb-3" id="galleryDropZone">
-                        <i class="fas fa-images fa-3x"></i>
-                        <h6 class="fw-bold">{% trans "Drop your gallery images here" %}</h6>
-                        <p class="text-muted small">{% trans "Or click to browse your files" %}</p>
-                        <input type="file" name="gallery_images" multiple class="d-none" accept="image/*">
+                    <input type="file" name="thumbnail" id="createThumbInput" class="d-none" accept="image/*" required>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label fw-bold">{% trans "Gallery Images" %}</label>
+                    <div class="file-drop-zone rounded-4 p-4 text-center" id="createGalleryDrop"
+                         style="border: 2px dashed #adb5bd; cursor: pointer; transition: all .25s ease; background: #fff;">
+                        <i class="fas fa-images fa-2x text-primary opacity-50 mb-2"></i>
+                        <p class="text-muted small mb-0 fw-bold">{% trans "Drop images here or click to select multiple" %}</p>
                     </div>
+                    <input type="file" name="gallery_images" id="createGalleryInput" class="d-none" multiple accept="image/*">
+                    <div id="createGalleryPreview" class="d-flex flex-wrap gap-2 mt-3"></div>
+                </div>
+            </div>
+        </div>
 
-                    <div id="galleryPreviewContainer" class="preview-grid">
+        <!-- Sales Settings -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" data-aos="fade-up">
+            <h5 class="fw-bold mb-4 border-bottom pb-2">
+                <i class="fas fa-link me-2 text-primary"></i>{% trans "Sales Settings" %}
+            </h5>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">{% trans "Available Quantity" %}</label>
+                    <input type="number" name="quantity" class="form-control form-control-lg" placeholder="1" value="1" min="0" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">{% trans "Tags" %}</label>
+                    <input type="text" name="tags" class="form-control form-control-lg" placeholder="Furniture, Modern, Wood">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">{% trans "External Affiliate/Buy Link" %}</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="fas fa-link text-primary"></i></span>
+                        <input type="url" name="external_link" class="form-control form-control-lg" placeholder="https://example.com/product">
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-lg-4" data-aos="fade-left">
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Product Image" %}</h5>
-                    <div class="file-drop-zone p-2">
-                        <div id="thumbPreviewContainer">
-                            <i class="fas fa-image fa-2x mb-2"></i>
-                            <p class="text-muted small mb-0">{% trans "Upload High Quality Thumbnail" %}</p>
+        <!-- 3D Model & Visibility -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" data-aos="fade-up">
+            <h5 class="fw-bold mb-4 border-bottom pb-2">
+                <i class="fas fa-cube me-2 text-primary"></i>{% trans "3D Model & Visibility" %}
+            </h5>
+            <div class="row g-4 align-items-end">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">{% trans "3D Model" %}</label>
+                    <div class="file-drop-zone rounded-4 p-3 text-center" id="createModelDrop"
+                         style="border: 2px dashed #adb5bd; cursor: pointer; transition: all .25s ease; background: #fff;">
+                        <div id="createModelPreview">
+                            <i class="fas fa-cube fa-2x text-primary opacity-50 mb-1"></i>
+                            <p class="text-muted small mb-0">{% trans "Upload GLB or GLTF" %}</p>
                         </div>
-                        <input type="file" name="thumbnail" class="d-none" accept="image/*" required>
                     </div>
-                </div>
-
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "3D Model" %}</h5>
-                    <div class="file-drop-zone p-2">
-                        <div id="modelPreviewContainer">
-                            <i class="fas fa-cube fa-2x mb-2"></i>
-                            <p class="text-muted small mb-0">{% trans "Upload GLB or GLTF 3D Model" %}</p>
-                        </div>
-                        <input type="file" name="model_3d" class="d-none" accept=".glb,.gltf,model/gltf-binary,model/gltf+json">
-                    </div>
-                    <div class="form-text mt-2 small">{% trans "Optional. Supported formats: GLB, GLTF" %}</div>
-                    <div id="modelStatus" class="mt-2 d-none">
+                    <input type="file" name="model_3d" id="createModelInput" class="d-none" accept=".glb,.gltf,model/gltf-binary,model/gltf+json">
+                    <div id="createModelStatus" class="mt-2 d-none">
                         <div class="d-flex justify-content-between small mb-1">
-                            <span id="modelStatusText" class="fw-semibold"></span>
-                            <span id="modelStatusSize" class="text-muted"></span>
+                            <span id="createModelStatusText" class="fw-semibold"></span>
+                            <span id="createModelStatusSize" class="text-muted"></span>
                         </div>
                         <div class="progress" style="height:4px;">
-                            <div id="modelStatusBar" class="progress-bar" role="progressbar" style="width:0%"></div>
+                            <div id="createModelStatusBar" class="progress-bar" role="progressbar" style="width:0%"></div>
                         </div>
                     </div>
+                    <div class="form-text small mt-1">{% trans "Optional. Supported formats: GLB, GLTF" %}</div>
                 </div>
-
-                {% if not is_provider %}
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Visibility" %}</h5>
-                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center mb-3">
-                        <label class="form-check-label fw-bold">{% trans "Active in Store" %}</label>
+                <div class="col-md-3">
+                    {% if not is_provider %}
+                    <label class="form-label fw-bold">{% trans "Active in Store" %}</label>
+                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center mt-2">
+                        <label class="form-check-label">{% trans "Active" %}</label>
                         <input class="form-check-input ms-0 mt-0" type="checkbox" name="is_active" checked style="width: 50px; height: 24px;">
                     </div>
-                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
-                        <label class="form-check-label fw-bold">{% trans "Is Featured" %}</label>
+                    {% endif %}
+                </div>
+                <div class="col-md-3">
+                    {% if not is_provider %}
+                    <label class="form-label fw-bold">{% trans "Is Featured" %}</label>
+                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center mt-2">
+                        <label class="form-check-label">{% trans "Featured" %}</label>
                         <input class="form-check-input ms-0 mt-0" type="checkbox" name="is_featured" style="width: 50px; height: 24px;">
                     </div>
-                </div>
-                {% endif %}
-
-                <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Publish" %}</h5>
-                    <div class="d-flex flex-column gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-lg py-3">
-                            <i class="fas fa-plus-circle me-2"></i> {% if is_provider %}{% trans "Submit for Review" %}{% else %}{% trans "Add Product" %}{% endif %}
-                        </button>
-                        <a href="{% url 'dash:product_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border py-3">
-                            {% trans "Cancel" %}
-                        </a>
-                    </div>
-                    {% if is_provider %}
-                    <div class="alert alert-warning mt-3 mb-0 small rounded-3">
-                        <i class="fas fa-info-circle me-1"></i> {% trans "After submission, an admin will review your product and set the wholesale/retail prices before it goes live." %}
-                    </div>
                     {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="card border-0 shadow-sm rounded-4 p-4" data-aos="fade-up">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    {% if is_provider %}
+                    <p class="text-muted small mb-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        {% trans "After submission, an admin will review your product and set the wholesale/retail prices before it goes live." %}
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'dash:product_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border px-5">
+                        {% trans "Cancel" %}
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-lg px-5">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        {% if is_provider %}{% trans "Submit for Review" %}{% else %}{% trans "Add Product" %}{% endif %}
+                    </button>
                 </div>
             </div>
         </div>

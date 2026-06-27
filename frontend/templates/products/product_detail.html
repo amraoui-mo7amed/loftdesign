@@ -91,7 +91,7 @@
                             <div class="d-flex flex-wrap gap-2" id="variantPicker">
                                 {% for item in items %}
                                 <button type="button"
-                                        class="variant-btn btn btn-outline-dark rounded-3 p-2 text-center {% if forloop.first %}active border-2 border-dark{% endif %}"
+                                        class="variant-btn btn btn-outline-dark rounded-3 p-2 text-center {% if forloop.first %}active{% endif %}"
                                         data-item-id="{{ item.id }}"
                                         data-item-name="{{ item.name }}"
                                         data-item-color="{{ item.color }}"
@@ -103,18 +103,38 @@
                                     {% if item.thumbnail %}
                                     <img src="{{ item.thumbnail.url }}" alt="{{ item.name }}"
                                          class="d-block mx-auto mb-1 rounded-2"
-                                         style="width: 60px; height: 60px; object-fit: cover;">
+                                         style="width: 70px; height: 70px; object-fit: cover;">
                                     {% endif %}
-                                    <span class="small fw-bold d-block">{{ item.name }}</span>
+                                    <span class="variant-name fw-bold d-block">{{ item.name }}</span>
                                     {% if item.dimensions %}
-                                    <span class="small text-muted">{{ item.dimensions }}</span>
+                                    <span class="variant-dim text-muted d-block">{{ item.dimensions }}</span>
                                     {% endif %}
-                                    {% if item.stock_quantity %}
-                                    <span class="small text-muted d-block mt-1">{{ item.stock_quantity }} {% trans "left" %}</span>
+                                    {% if item.stock_quantity <= 3 and item.stock_quantity > 0 %}
+                                    <span class="variant-stock text-warning fw-bold d-block mt-1">{{ item.stock_quantity }} {% trans "left" %}</span>
+                                    {% elif item.stock_quantity == 0 %}
+                                    <span class="variant-stock text-danger fw-bold d-block mt-1">{% trans "Sold Out" %}</span>
+                                    {% elif item.stock_quantity > 0 %}
+                                    <span class="variant-stock text-success fw-bold d-block mt-1">{% trans "In Stock" %}</span>
                                     {% endif %}
                                 </button>
                                 {% endfor %}
                             </div>
+                            {% with first=items.0 %}
+                            <div id="selectedVariantInfo" class="d-flex align-items-center gap-3 mt-3 p-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if first.thumbnail %}
+                                    <img src="{{ first.thumbnail.url }}" alt="{{ first.name }}"
+                                         class="rounded-2" style="width: 44px; height: 44px; object-fit: cover;">
+                                    {% endif %}
+                                    <div>
+                                        <span class="fw-bold small d-block" id="selectedVariantName">{{ first.name }}</span>
+                                        {% if first.dimensions %}
+                                        <span class="text-muted small" id="selectedVariantDim">{{ first.dimensions }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endwith %}
                         </div>
                         {% endif %}
 

@@ -154,3 +154,51 @@
     right: auto;
     left: 30px;
 }
+
+/* ── Variant Picker ───────────────────────────────────────── */
+#variantPicker .variant-btn {
+    min-width: 110px;
+    transition: all 0.25s ease;
+    border-color: #dee2e6;
+}
+#variantPicker .variant-btn:hover {
+    border-color: #adb5bd;
+    background: #f8f9fa;
+}
+#variantPicker .variant-btn.active {
+    border-color: #000 !important;
+    background: #fff !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+#variantPicker .variant-btn img {
+    transition: transform 0.25s ease;
+}
+#variantPicker .variant-btn.active img {
+    transform: scale(1.08);
+}
+#variantPicker .variant-btn .variant-name {
+    font-size: 0.8rem;
+    line-height: 1.2;
+}
+#variantPicker .variant-btn .variant-dim {
+    font-size: 0.7rem;
+}
+#variantPicker .variant-btn .variant-stock {
+    font-size: 0.7rem;
+}
+
+#selectedVariantInfo {
+    transition: all 0.3s ease;
+}
+#selectedVariantInfo .variant-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+[dir="rtl"] #variantPicker .variant-btn {
+    text-align: center;
+}

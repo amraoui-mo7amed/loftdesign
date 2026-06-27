@@ -232,6 +232,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("itemFormModalLabel").textContent = "Add Item";
         document.getElementById("itemFormSubmitText").textContent = "Save Item";
         document.getElementById("itemForm").action = "/dashboard/products/" + pk + "/items/create/";
+        var thumbInput = document.getElementById("itemThumbnailInput");
+        if (thumbInput) thumbInput.required = true;
     });
 
     // ── Open Edit Modal ─────────────────────────────────────────────
@@ -297,6 +299,9 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
+        var thumbInput = document.getElementById("itemThumbnailInput");
+        if (thumbInput) thumbInput.required = false;
+
         var modal = new bootstrap.Modal(document.getElementById("itemFormModal"));
         modal.show();
     }
@@ -350,9 +355,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ── Form Submit (AJAX) ──────────────────────────────────────────
+    var submitting = false;
     document.getElementById("itemForm").addEventListener("submit", function (e) {
+        if (!this.checkValidity()) return;
         e.preventDefault();
+        if (submitting) return;
+        submitting = true;
+
         var form = this;
+        var submitBtn = form.querySelector('[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
+
         var formData = new FormData(form);
 
         // Build dimension string before submission
@@ -374,6 +387,8 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {
+            submitting = false;
+            if (submitBtn) submitBtn.disabled = false;
             if (data.success) {
                 var modal = bootstrap.Modal.getInstance(document.getElementById("itemFormModal"));
                 if (modal) modal.hide();

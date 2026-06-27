@@ -172,6 +172,9 @@
                                             <img src="{{ item.thumbnail }}" alt="{{ item.title }}" class="item-thumb" onerror="this.style.display='none'">
                                             {% endif %}
                                             <span class="item-title">{{ item.title }}</span>
+                                            {% if item.item_name %}
+                                            <span class="small text-muted fw-bold ms-1">{{ item.item_name }}</span>
+                                            {% endif %}
                                         </div>
                                     </td>
                                     <td class="text-center fw-bold">{{ item.quantity }}</td>

@@ -348,9 +348,10 @@ def product_update(request, pk):
 
     categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
     price_history = product.price_history.select_related("user").order_by("-created_at")[:20]
+    items = product.items.filter(is_active=True).prefetch_related("gallery_images")
     return render(request, "products/edit.html", {
         "product": product, "categories": categories, "is_admin": is_admin,
-        "price_history": price_history,
+        "price_history": price_history, "items": items,
     })
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])

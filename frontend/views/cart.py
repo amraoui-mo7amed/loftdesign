@@ -65,16 +65,22 @@ def _get_cart_items_data(request):
             continue
         price = item_data.get("resolved_price") or product.loft_retail_price or "0"
         subtotal = float(price) * item_data["quantity"]
+        display_title = product.title
+        display_thumbnail = product.thumbnail.url if product.thumbnail else ""
+        if item_data.get("item_id"):
+            display_title += f" — {item_data.get('item_name', '')}"
+            if item_data.get("item_thumbnail"):
+                display_thumbnail = item_data["item_thumbnail"]
         items.append({
-            "id": item_data["product_id"],
+            "id": item_data.get("item_id") or item_data["product_id"],
             "product_id": product.pk,
             "product": product,
-            "title": product.title,
+            "title": display_title,
             "price": str(price),
             "quantity": item_data["quantity"],
             "subtotal": subtotal,
             "subtotal_str": f"{subtotal:.0f}",
-            "thumbnail": product.thumbnail.url if product.thumbnail else "",
+            "thumbnail": display_thumbnail,
         })
     return items
 
@@ -82,11 +88,23 @@ def _get_cart_items_data(request):
 @require_POST
 def cart_add(request):
     product_id = request.POST.get("product_id")
+    item_id = request.POST.get("item_id")
     quantity = int(request.POST.get("quantity", 1))
 
     product = get_object_or_404(Product, pk=product_id, is_active=True)
     if quantity < 1:
         return JsonResponse({"success": False, "message": _("Invalid quantity.")})
+
+    # Check item stock if variant selected
+    item = None
+    if item_id:
+        from dashboard.models import ProductItem
+        item = get_object_or_404(ProductItem, pk=item_id, product=product, is_active=True)
+        if item.stock_quantity < quantity:
+            return JsonResponse({
+                "success": False,
+                "message": _("Requested quantity exceeds available stock for this variant.")
+            })
 
     # Resolve price before adding
     resolved = _resolve_for_cart(request, product)
@@ -97,11 +115,10 @@ def cart_add(request):
         })
 
     cart = _get_cart(request)
-    key = str(product_id)
+    key = str(item_id) if item_id else str(product_id)
 
     if key in cart:
         cart[key]["quantity"] += quantity
-        # Refresh the affiliate code in case it changed since first add
         session_code = request.session.get("affiliate_code", "")
         if session_code:
             cart[key]["affiliate_code"] = session_code
@@ -112,6 +129,10 @@ def cart_add(request):
             "resolved_price": str(resolved),
             "affiliate_code": request.session.get("affiliate_code", ""),
         }
+        if item:
+            cart[key]["item_id"] = item.pk
+            cart[key]["item_name"] = item.name
+            cart[key]["item_thumbnail"] = item.thumbnail.url if item.thumbnail else ""
 
     _save_cart(request, cart)
 
@@ -188,14 +209,20 @@ def cart_load(request):
             continue
         price = item_data.get("resolved_price") or product.loft_retail_price or "0"
         subtotal = float(price) * item_data["quantity"]
+        display_title = product.title
+        display_thumbnail = product.thumbnail.url if product.thumbnail else ""
+        if item_data.get("item_id"):
+            display_title += f" — {item_data.get('item_name', '')}"
+            if item_data.get("item_thumbnail"):
+                display_thumbnail = item_data["item_thumbnail"]
         items.append({
-            "id": item_data["product_id"],
+            "id": item_data.get("item_id") or item_data["product_id"],
             "product_id": product.pk,
-            "title": product.title,
+            "title": display_title,
             "price": str(price),
             "quantity": item_data["quantity"],
             "subtotal": str(subtotal),
-            "thumbnail": product.thumbnail.url if product.thumbnail else "",
+            "thumbnail": display_thumbnail,
             "url": product.get_absolute_url() if hasattr(product, "get_absolute_url") else "#",
         })
 
@@ -239,18 +266,29 @@ def cart_checkout(request):
                     continue
 
                 price = item_data.get("resolved_price") or str(product.loft_retail_price or "")
-                order_items.append({
+                item_entry = {
                     "product_id": product.pk,
                     "title": product.title,
                     "price": price,
                     "quantity": item_data["quantity"],
                     "thumbnail": product.thumbnail.url if product.thumbnail else "",
-                })
+                }
+                if item_data.get("item_id"):
+                    item_entry["item_id"] = item_data["item_id"]
+                    item_entry["item_name"] = item_data.get("item_name", "")
+                    from dashboard.models import ProductItem
+                    variant = ProductItem.objects.filter(pk=item_data["item_id"]).first()
+                    if variant:
+                        item_entry["item_thumbnail"] = variant.thumbnail.url if variant.thumbnail else ""
+                        variant.stock_quantity -= item_data["quantity"]
+                        variant.save()
+                order_items.append(item_entry)
                 product_titles.append(product.title)
 
-                product.quantity -= item_data["quantity"]
-                product.save()
-                check_low_stock(product)
+                if not item_data.get("item_id"):
+                    product.quantity -= item_data["quantity"]
+                    product.save()
+                    check_low_stock(product)
 
             if not order_items:
                 return JsonResponse({"success": False, "errors": [_("No valid items in cart.")]})

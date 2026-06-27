@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from dashboard.models import Product, Order, Notification, PartnerPrice
+from dashboard.models import Product, ProductItem, Order, Notification, PartnerPrice
 from dashboard.utils import notify_user, resolve_price, check_low_stock
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
@@ -11,6 +11,7 @@ def place_order(request):
     """AJAX view to handle product inquiry (order) submission"""
     if request.method == "POST":
         product_id = request.POST.get("product_id")
+        item_id = request.POST.get("item_id")
         name = request.POST.get("name")
         phone = request.POST.get("phone")
         address = request.POST.get("address")
@@ -35,8 +36,13 @@ def place_order(request):
 
         product = get_object_or_404(Product, id=product_id)
         
-        # Check stock availability
-        if product.quantity < quantity:
+        # Check stock — item-level or product-level
+        item = None
+        if item_id:
+            item = get_object_or_404(ProductItem, pk=item_id, product=product, is_active=True)
+            if item.stock_quantity < quantity:
+                return JsonResponse({"success": False, "errors": {"quantity": [_("Requested quantity exceeds available stock for this variant.")]}})
+        elif product.quantity < quantity:
             return JsonResponse({"success": False, "errors": {"quantity": [_("Requested quantity exceeds available stock.")]}})
 
         # Resolve price — use affiliate's retail price if referred
@@ -64,20 +70,26 @@ def place_order(request):
 
         try:
             with transaction.atomic():
-                # Deduct stock
-                product.quantity -= quantity
-                product.save()
-
-                check_low_stock(product)
+                order_item = {
+                    "product_id": product.pk,
+                    "title": product.title,
+                    "price": str(resolved),
+                    "quantity": quantity,
+                    "thumbnail": product.thumbnail.url if product.thumbnail else "",
+                }
+                if item:
+                    order_item["item_id"] = item.pk
+                    order_item["item_name"] = item.name
+                    order_item["item_thumbnail"] = item.thumbnail.url if item.thumbnail else ""
+                    item.stock_quantity -= quantity
+                    item.save()
+                else:
+                    product.quantity -= quantity
+                    product.save()
+                    check_low_stock(product)
 
                 order = Order.objects.create(
-                    items=[{
-                        "product_id": product.pk,
-                        "title": product.title,
-                        "price": str(resolved),
-                        "quantity": quantity,
-                        "thumbnail": product.thumbnail.url if product.thumbnail else "",
-                    }],
+                    items=[order_item],
                     customer_name=name,
                     customer_phone=phone,
                     customer_address=address,

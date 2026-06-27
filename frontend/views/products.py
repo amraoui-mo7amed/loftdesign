@@ -114,6 +114,8 @@ def product_detail(request, pk):
         profile = store = partner_price = None
         template = "products/product_detail.html"
 
+    items = product.items.filter(is_active=True).prefetch_related("gallery_images")
+
     return render(request, template, {
         "product": product,
         "wilaya_options": wilaya_options,
@@ -121,6 +123,7 @@ def product_detail(request, pk):
         "profile": profile,
         "store": store,
         "partner_price": partner_price,
+        "items": items,
     })
 
 

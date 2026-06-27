@@ -23,7 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.target.closest(".btn-add-to-cart")) {
             var btn = e.target.closest(".btn-add-to-cart");
             var productId = btn.dataset.productId;
-            addToCart(productId, 1, btn);
+            var itemId = btn.dataset.itemId;
+            addToCart(productId, itemId, 1, btn);
         }
         // Cart drawer close/open
         if (e.target.closest("#cartIcon") || e.target.closest(".cart-trigger")) {
@@ -139,10 +140,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    function addToCart(productId, quantity, btn) {
+    function addToCart(productId, itemId, quantity, btn) {
         var formData = new FormData();
         formData.append("product_id", productId);
         formData.append("quantity", quantity);
+        if (itemId) formData.append("item_id", itemId);
 
         var originalHtml = btn.innerHTML;
         btn.disabled = true;

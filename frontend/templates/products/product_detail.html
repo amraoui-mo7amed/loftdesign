@@ -77,23 +77,55 @@
                             <div class="col-md-6 mt-4 mt-md-0">
                                 <span class="text-muted text-uppercase smaller fw-bold d-block mb-2">{% trans "Availability" %}</span>
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="dot-pulse"></span>
-                                    <span class="fw-black text-uppercase small text-dark">
-                                        {% if product.quantity > 0 %}{% trans "In Stock" %}{% else %}{% trans "Out of Stock" %}{% endif %}
+                                    <span class="dot-pulse" id="stockDot"></span>
+                                    <span class="fw-black text-uppercase small text-dark" id="stockText">
+                                        {% if product.available_stock > 0 %}{% trans "In Stock" %}{% else %}{% trans "Out of Stock" %}{% endif %}
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        {% if product.quantity > 0 %}
-                        
+
+                        {% if items %}
                         <div class="mt-4 pt-3 border-top">
+                            <h6 class="fw-bold small text-uppercase text-muted mb-3">{% trans "Select Variant" %}</h6>
+                            <div class="d-flex flex-wrap gap-2" id="variantPicker">
+                                {% for item in items %}
+                                <button type="button"
+                                        class="variant-btn btn btn-outline-dark rounded-3 p-2 text-center {% if forloop.first %}active border-2 border-dark{% endif %}"
+                                        data-item-id="{{ item.id }}"
+                                        data-item-name="{{ item.name }}"
+                                        data-item-color="{{ item.color }}"
+                                        data-item-dimensions="{{ item.dimensions }}"
+                                        data-item-stock="{{ item.stock_quantity }}"
+                                        data-item-thumbnail="{% if item.thumbnail %}{{ item.thumbnail.url }}{% endif %}"
+                                        data-item-gallery="{% for img in item.gallery_images.all %}{{ img.image.url }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                                        style="min-width: 100px;">
+                                    {% if item.thumbnail %}
+                                    <img src="{{ item.thumbnail.url }}" alt="{{ item.name }}"
+                                         class="d-block mx-auto mb-1 rounded-2"
+                                         style="width: 60px; height: 60px; object-fit: cover;">
+                                    {% endif %}
+                                    <span class="small fw-bold d-block">{{ item.name }}</span>
+                                    {% if item.dimensions %}
+                                    <span class="small text-muted">{{ item.dimensions }}</span>
+                                    {% endif %}
+                                    {% if item.stock_quantity %}
+                                    <span class="small text-muted d-block mt-1">{{ item.stock_quantity }} {% trans "left" %}</span>
+                                    {% endif %}
+                                </button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-4 pt-3 border-top" id="addToCartSection">
                             <button type="button"
                                     class="btn btn-dark btn-lg rounded-pill px-5 fw-bold shadow-sm btn-add-to-cart w-100"
-                                    data-product-id="{{ product.pk }}">
+                                    data-product-id="{{ product.pk }}"
+                                    {% if items %}data-item-id="{{ items.0.id }}"{% endif %}>
                                 <i class="fas fa-cart-plus me-2"></i>{% trans "Add to Cart" %}
                             </button>
                         </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -139,6 +171,7 @@
                               data-select-commune="{% trans 'Select Commune' %}">
                             {% csrf_token %}
                             <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="item_id" id="orderItemId" value="">
                             
                             <div class="mb-3">
                                 <label class="form-label fw-bold small text-uppercase">{% trans "Full Name" %}</label>
@@ -152,7 +185,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold small text-uppercase">{% trans "Quantity" %}</label>
-                                    <input type="number" name="quantity" class="form-control rounded-3" value="1" min="1" max="{{ product.quantity }}" required>
+                                    <input type="number" name="quantity" class="form-control rounded-3" value="1" min="1" max="{{ product.available_stock }}" required>
                                 </div>
                             </div>
 

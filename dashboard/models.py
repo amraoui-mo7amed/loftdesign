@@ -226,12 +226,24 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def available_stock(self):
+        items = self.items.filter(is_active=True)
+        if items.exists():
+            return sum(items.values_list("stock_quantity", flat=True)) or 0
+        return self.quantity or 0
+
     def save(self, *args, **kwargs):
         try:
             qty = int(self.quantity)
         except (ValueError, TypeError):
             qty = 0
-        self.is_active = qty > 0 and self.status == self.ProductStatus.APPROVED
+        if self.pk:
+            item_stock = sum(self.items.filter(is_active=True).values_list("stock_quantity", flat=True)) or 0
+        else:
+            item_stock = 0
+        effective = qty or item_stock
+        self.is_active = effective > 0 and self.status == self.ProductStatus.APPROVED
         super().save(*args, **kwargs)
 
 
@@ -565,3 +577,48 @@ class PriceHistory(models.Model):
 
     def __str__(self):
         return f"{self.product.title[:30]} — {self.field_name}: {self.old_value} → {self.new_value}"
+
+
+class ProductItem(models.Model):
+    """Variant/item of a product with its own media and stock"""
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="items",
+        verbose_name=_("Product")
+    )
+    name = models.CharField(_("Item Name"), max_length=200)
+    color = models.CharField(_("Color"), max_length=100, blank=True)
+    dimensions = models.CharField(_("Dimensions"), max_length=200, blank=True)
+    thumbnail = models.ImageField(
+        _("Thumbnail"), upload_to="product_items/", blank=True
+    )
+    stock_quantity = models.PositiveIntegerField(_("Stock"), default=0)
+    order = models.PositiveIntegerField(_("Order"), default=0)
+    is_active = models.BooleanField(_("Is Active"), default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Product Item")
+        verbose_name_plural = _("Product Items")
+        ordering = ["order", "created_at"]
+
+    def __str__(self):
+        return f"{self.product.title} — {self.name}"
+
+
+class ProductItemImage(models.Model):
+    """Gallery image for a product item"""
+    item = models.ForeignKey(
+        ProductItem, on_delete=models.CASCADE, related_name="gallery_images",
+        verbose_name=_("Item")
+    )
+    image = models.ImageField(_("Image"), upload_to="product_items/gallery/")
+    order = models.PositiveIntegerField(_("Order"), default=0)
+
+    class Meta:
+        verbose_name = _("Item Image")
+        verbose_name_plural = _("Item Images")
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"Image {self.order} for {self.item}"

@@ -6,6 +6,14 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+    <style>
+        .file-drop-zone:hover { border-color: #0d6efd !important; background: #f0f7ff; }
+        .file-drop-zone.dragover { border-color: #0d6efd !important; background: #e8f4ff; }
+        input[type="color"].form-control-color { padding: 2px; }
+        #variantPicker .variant-btn.active { border-color: #000 !important; background: #f8f9fa; }
+        .tracking-wider { letter-spacing: 0.05em; }
+        .btn-group input[type="radio"]:checked + label { background: #000; color: #fff; border-color: #000; }
+    </style>
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -19,7 +27,7 @@
 
     {% include "partials/errorList.html" with form_id="portfolioForm" %}
 
-    <form method="POST" enctype="multipart/form-data" class="form" id="portfolioForm">
+    <form method="POST" enctype="multipart/form-data" class="form" id="portfolioForm" data-product-id="{{ product.pk }}">
         {% csrf_token %}
         <div class="row g-4">
             <div class="col-lg-8" data-aos="fade-right">
@@ -180,6 +188,8 @@
                     </div>
                 </div>
 
+                {% include "products/items/section.html" %}
+
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Visibility" %}</h5>
                     <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center mb-3">
@@ -249,10 +259,13 @@
             </div>
         </div>
     </form>
+
+    {% include "products/items/form_modal.html" %}
 </div>
 {% endblock dashContent %}
 
 {% block extra_js %}
     <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
     <script src="{% static 'js/products.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/product_items.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

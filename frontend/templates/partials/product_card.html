@@ -10,7 +10,7 @@
                  style="object-fit: cover">
         {% endif %}
         
-        {% if product.quantity > 0 %}
+        {% if product.available_stock > 0 %}
         <button type="button"
                 class="btn btn-dark btn-sm position-absolute top-0 end-0 m-3 rounded-pill px-3 fw-bold shadow btn-add-to-cart add-to-cart-overlay"
                 data-product-id="{{ product.pk }}"

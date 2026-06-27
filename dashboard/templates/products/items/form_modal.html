@@ -1,0 +1,169 @@
+{% load i18n %}
+{% load static %}
+
+<!-- Item Form Modal -->
+<div class="modal fade" id="itemFormModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 pt-4 px-5 pb-0">
+                <div>
+                    <h5 class="fw-black mb-1" id="itemFormModalLabel">{% trans "New Variant" %}</h5>
+                    <p class="text-muted small mb-0">{% trans "Configure a product variant with its own media, color, dimensions, and stock." %}</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-5 pt-4 pb-5">
+                {% include "partials/errorList.html" with form_id="itemForm" %}
+                <form id="itemForm" class="form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" id="itemIdInput" value="">
+
+                    <div class="row g-4">
+                        <!-- Left Column: Media Uploads -->
+                        <div class="col-lg-5">
+                            <div class="card bg-light border-0 rounded-4 p-4 h-100">
+                                <h6 class="fw-bold small text-uppercase text-muted tracking-wider mb-3">
+                                    <i class="fas fa-images me-2"></i>{% trans "Media" %}
+                                </h6>
+
+                                <!-- Thumbnail -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small">{% trans "Thumbnail" %}</label>
+                                    <div class="file-drop-zone rounded-4" id="itemThumbDrop"
+                                         style="border: 2px dashed #adb5bd; padding: 30px 20px; text-align: center; cursor: pointer; transition: all .25s ease; background: #fff;">
+                                        <div id="itemThumbPreview">
+                                            <div class="mb-2">
+                                                <i class="fas fa-cloud-upload-alt fa-3x text-primary opacity-50"></i>
+                                            </div>
+                                            <p class="text-muted small mb-1 fw-bold">{% trans "Drop thumbnail here" %}</p>
+                                            <p class="text-muted small mb-0">{% trans "or click to browse" %}</p>
+                                        </div>
+                                        <img id="itemThumbImg" class="d-none rounded-3 w-100" style="max-height: 200px; object-fit: contain;" alt="">
+                                    </div>
+                                    <input type="file" name="thumbnail" id="itemThumbnailInput" class="d-none" accept="image/*">
+                                    <div class="form-text small mt-2">
+                                        <i class="fas fa-info-circle me-1"></i>{% trans "Square 1:1 ratio recommended" %}
+                                    </div>
+                                </div>
+
+                                <!-- Gallery -->
+                                <div>
+                                    <label class="form-label fw-bold small">{% trans "Gallery Images" %}</label>
+                                    <div class="file-drop-zone rounded-4" id="itemGalleryDrop"
+                                         style="border: 2px dashed #adb5bd; padding: 24px 20px; text-align: center; cursor: pointer; transition: all .25s ease; background: #fff;">
+                                        <div class="mb-2">
+                                            <i class="fas fa-images fa-2x text-primary opacity-50"></i>
+                                        </div>
+                                        <p class="text-muted small mb-0 fw-bold">{% trans "Drop images here" %}</p>
+                                        <p class="text-muted small mb-0">{% trans "or click to select multiple" %}</p>
+                                    </div>
+                                    <input type="file" name="gallery_images" id="itemGalleryInput" class="d-none" multiple accept="image/*">
+                                    <div id="itemGalleryPreview" class="d-flex flex-wrap gap-2 mt-3"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Fields -->
+                        <div class="col-lg-7">
+                            <div class="d-flex flex-column gap-4">
+                                <!-- Name -->
+                                <div>
+                                    <label class="form-label fw-bold small text-uppercase text-muted tracking-wider">
+                                        <i class="fas fa-tag me-1"></i>{% trans "Variant Name" %} *
+                                    </label>
+                                    <input type="text" name="name" id="itemNameInput" class="form-control form-control-lg rounded-3"
+                                           placeholder="e.g. Matte Black, Walnut Finish, Brushed Steel" required>
+                                </div>
+
+                                <!-- Color -->
+                                <div>
+                                    <label class="form-label fw-bold small text-uppercase text-muted tracking-wider">
+                                        <i class="fas fa-palette me-1"></i>{% trans "Color" %}
+                                    </label>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="position-relative" style="width: 56px; height: 56px;">
+                                            <input type="color" name="color" id="itemColorInput"
+                                                   class="form-control form-control-color m-0 p-0 border-0 rounded-3 shadow-sm"
+                                                   style="width: 56px; height: 56px; cursor: pointer;"
+                                                   value="#6C757D">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <input type="text" id="itemColorText" class="form-control rounded-3"
+                                                   placeholder="{% trans 'Color name (e.g. Midnight Black)' %}" maxlength="50">
+                                            <div class="form-text small mt-1">
+                                                {% trans "Leave blank to use hex value as name" %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dimensions -->
+                                <div>
+                                    <label class="form-label fw-bold small text-uppercase text-muted tracking-wider">
+                                        <i class="fas fa-ruler-combined me-1"></i>{% trans "Dimensions" %}
+                                    </label>
+                                    <div class="bg-light rounded-3 p-3">
+                                        <div class="row g-2 align-items-end">
+                                            <div class="col-3">
+                                                <label class="small text-muted fw-bold mb-1">{% trans "Width" %}</label>
+                                                <input type="number" id="dimWidth" class="form-control rounded-3" placeholder="0" min="0" step="0.1">
+                                            </div>
+                                            <div class="col-auto pb-2">
+                                                <span class="fw-black fs-5 text-muted">&times;</span>
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="small text-muted fw-bold mb-1">{% trans "Depth" %}</label>
+                                                <input type="number" id="dimDepth" class="form-control rounded-3" placeholder="0" min="0" step="0.1">
+                                            </div>
+                                            <div class="col-auto pb-2">
+                                                <span class="fw-black fs-5 text-muted">&times;</span>
+                                            </div>
+                                            <div class="col">
+                                                <label class="small text-muted fw-bold mb-1">{% trans "Height" %}</label>
+                                                <input type="number" id="dimHeight" class="form-control rounded-3" placeholder="0" min="0" step="0.1">
+                                            </div>
+                                            <div class="col-auto">
+                                                <label class="small text-muted fw-bold mb-1">{% trans "Unit" %}</label>
+                                                <div class="btn-group w-100" role="group" id="dimUnitGroup">
+                                                    <input type="radio" class="btn-check" name="dimUnit" id="unitMm" value="mm" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary fw-bold px-3" for="unitMm">mm</label>
+                                                    <input type="radio" class="btn-check" name="dimUnit" id="unitCm" value="cm" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary fw-bold px-3" for="unitCm">cm</label>
+                                                    <input type="radio" class="btn-check" name="dimUnit" id="unitM" value="m" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary fw-bold px-3" for="unitM">m</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="dimensions" id="itemDimensionsInput" value="">
+                                    <div class="form-text small mt-1">
+                                        <i class="fas fa-arrows-alt-h me-1"></i>{% trans "Leave blank if dimensions don't apply" %}
+                                    </div>
+                                </div>
+
+                                <!-- Stock -->
+                                <div>
+                                    <label class="form-label fw-bold small text-uppercase text-muted tracking-wider">
+                                        <i class="fas fa-cubes me-1"></i>{% trans "Stock Quantity" %}
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white"><i class="fas fa-box text-muted"></i></span>
+                                        <input type="number" name="stock_quantity" id="itemStockInput" class="form-control rounded-end-3"
+                                               value="0" min="0" style="max-width: 160px;">
+                                        <span class="text-muted small ms-2 align-self-center">{% trans "units available" %}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Submit -->
+                                <button type="submit" class="btn btn-dark btn-lg rounded-3 fw-bold py-3 mt-2 shadow-sm">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <span id="itemFormSubmitText">{% trans "Save Variant" %}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 from django.urls import path
-from dashboard.views import dashboard, users, notifications, portfolio, products, orders, settings, partner_prices, wallets
+from dashboard.views import dashboard, users, notifications, portfolio, products, orders, settings, partner_prices, wallets, product_items
 
 app_name = "dash"
 
@@ -23,6 +23,11 @@ urlpatterns = [
     path("products/<int:product_pk>/prices/", products.partner_price_list, name="partner_price_list"),
     path("products/<int:product_pk>/prices/create/", products.partner_price_create, name="partner_price_create"),
     path("prices/<int:pk>/delete/", products.partner_price_delete, name="partner_price_delete"),
+    # Product Items / Variants
+    path("products/<int:product_pk>/items/", product_items.item_list, name="item_list"),
+    path("products/<int:product_pk>/items/create/", product_items.item_create, name="item_create"),
+    path("items/<int:pk>/update/", product_items.item_update, name="item_update"),
+    path("items/<int:pk>/delete/", product_items.item_delete, name="item_delete"),
     # Affiliate Catalog
     path("affiliate/catalog/", partner_prices.affiliate_catalog, name="affiliate_catalog"),
     path("affiliate/my-catalog/", partner_prices.my_catalog, name="my_catalog"),

@@ -140,23 +140,50 @@
                                 <small class="fs-6 fw-bold">DZD</small>
                             </span>
                             <span class="d-flex align-items-center gap-1 small fw-bold">
-                                <span class="dot-pulse" style="background:{% if product.quantity > 0 %}#198754{% else %}#6c757d{% endif %};--pulse-color:{% if product.quantity > 0 %}#198754{% else %}#6c757d{% endif %};"></span>
-                                {% if product.quantity > 0 %}{% trans "In Stock" %}{% else %}{% trans "Out of Stock" %}{% endif %}
+                                <span class="dot-pulse" id="affStockDot" style="background:{% if product.available_stock > 0 %}#198754{% else %}#6c757d{% endif %};--pulse-color:{% if product.available_stock > 0 %}#198754{% else %}#6c757d{% endif %};"></span>
+                                <span id="affStockText">{% if product.available_stock > 0 %}{% trans "In Stock" %}{% else %}{% trans "Out of Stock" %}{% endif %}</span>
                             </span>
                         </div>
                     </div>
 
+                    {% if items %}
+                    <div class="mb-4">
+                        <h6 class="fw-bold small text-uppercase text-muted mb-3">{% trans "Select Variant" %}</h6>
+                        <div class="d-flex flex-wrap gap-2" id="variantPicker">
+                            {% for item in items %}
+                            <button type="button"
+                                    class="variant-btn btn btn-outline-dark rounded-3 p-2 text-center {% if forloop.first %}active border-2 border-dark{% endif %}"
+                                    data-item-id="{{ item.id }}"
+                                    data-item-name="{{ item.name }}"
+                                    data-item-color="{{ item.color }}"
+                                    data-item-stock="{{ item.stock_quantity }}"
+                                    data-item-thumbnail="{% if item.thumbnail %}{{ item.thumbnail.url }}{% endif %}"
+                                    style="min-width: 100px;">
+                                {% if item.thumbnail %}
+                                <img src="{{ item.thumbnail.url }}" alt="{{ item.name }}"
+                                     class="d-block mx-auto mb-1 rounded-2"
+                                     style="width: 60px; height: 60px; object-fit: cover;">
+                                {% endif %}
+                                <span class="small fw-bold d-block">{{ item.name }}</span>
+                                {% if item.dimensions %}
+                                <span class="small text-muted">{{ item.dimensions }}</span>
+                                {% endif %}
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <!-- Add to Cart -->
-                    {% if product.quantity > 0 %}
-                    <div class="mb-5">
+                    <div class="mb-5" id="affAddToCartSection">
                         <button type="button"
                                 class="btn btn-lg rounded-pill px-5 fw-bold shadow-sm btn-add-to-cart w-100"
                                 style="background:{{ store.header_bg_color }};border-color:{{ store.header_bg_color }};color:#fff;"
-                                data-product-id="{{ product.pk }}">
+                                data-product-id="{{ product.pk }}"
+                                {% if items %}data-item-id="{{ items.0.id }}"{% endif %}>
                             <i class="fas fa-cart-plus me-2"></i>{% trans "Add to Cart" %}
                         </button>
                     </div>
-                    {% endif %}
 
                     <hr style="opacity:0.15;">
 
@@ -193,6 +220,7 @@
                               data-select-commune="{% trans 'Select Commune' %}">
                             {% csrf_token %}
                             <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="item_id" id="affOrderItemId" value="">
 
                             <div class="mb-2">
                                 <input type="text" name="name" class="form-control rounded-3" placeholder="{% trans 'Full Name' %}" required>
@@ -203,7 +231,7 @@
                                     <input type="tel" name="phone" class="form-control rounded-3" placeholder="{% trans 'Phone Number' %}" required>
                                 </div>
                                 <div class="col-5">
-                                    <input type="number" name="quantity" class="form-control rounded-3" value="1" min="1" max="{{ product.quantity }}" required>
+                                    <input type="number" name="quantity" class="form-control rounded-3" value="1" min="1" max="{{ product.available_stock }}" required>
                                 </div>
                             </div>
 

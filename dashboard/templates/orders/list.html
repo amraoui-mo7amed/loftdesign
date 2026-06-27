@@ -110,6 +110,9 @@
                                 <h6 class="fw-black mb-0 text-truncate" style="max-width: 150px;">
                                     {{ first_item.title }}
                                 </h6>
+                                {% if first_item.item_name %}
+                                <span class="small text-muted fw-bold">{{ first_item.item_name }}</span>
+                                {% endif %}
                                 {% if order.items|length > 1 %}
                                 <span class="smaller text-muted fw-bold">+{{ order.items|length|add:"-1" }} {% trans "more" %}</span>
                                 {% endif %}

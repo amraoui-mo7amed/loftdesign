@@ -73,7 +73,7 @@
 
             <!-- Gallery Column -->
             <div class="col-lg-7">
-                <div class="product-sticky-gallery sticky-top" style="top: 100px;">
+                <div class="product-sticky-gallery">
                     <div class="viewer-container overflow-hidden">
                         {% with all_images=product.gallery_images.all %}
                         <div class="position-relative" id="productGallery" data-images="{{ product.thumbnail.url }}{% for img in all_images %},{{ img.image.url }}{% endfor %}">

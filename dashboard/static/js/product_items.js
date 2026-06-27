@@ -181,34 +181,34 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         var html =
-            '<div class="table-responsive"><table class="table align-middle mb-0">' +
-            '<thead class="table-light"><tr>' +
-            '<th style="width: 60px;">Image</th><th>Name</th><th>Color</th><th>Dimensions</th>' +
-            '<th class="text-center">Stock</th><th class="text-end">Actions</th>' +
-            "</tr></thead><tbody>";
+            '<div class="row g-2 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6">';
         items.forEach(function (item) {
             var thumbHtml = item.thumbnail
-                ? '<img src="' + item.thumbnail + '" alt="' + item.name + '" class="rounded-3" style="width:50px;height:50px;object-fit:cover;">'
-                : '<div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="width:50px;height:50px;"><i class="fas fa-box text-muted opacity-50"></i></div>';
+                ? '<img src="' + item.thumbnail + '" alt="' + item.name + '" class="rounded-2 w-100" style="height:70px;object-fit:cover;">'
+                : '<div class="bg-light rounded-2 d-flex align-items-center justify-content-center" style="height:70px;"><i class="fas fa-box text-muted opacity-25"></i></div>';
             var colorHtml = item.color
-                ? '<span class="d-inline-block rounded-circle me-1" style="width:14px;height:14px;background:' + item.color.toLowerCase() + ';vertical-align:middle;"></span> ' + item.color
-                : '<span class="text-muted small">&mdash;</span>';
+                ? '<span class="d-inline-block rounded-circle flex-shrink-0" style="width:10px;height:10px;background:' + item.color.toLowerCase() + ';"></span>' +
+                  '<span class="small text-muted text-truncate d-inline-block" style="max-width:80px;"> ' + item.color + '</span>'
+                : '<span class="small text-muted">&mdash;</span>';
             var stockBadge = item.stock_quantity > 0
-                ? '<span class="badge bg-success-subtle text-success rounded-pill px-3">' + item.stock_quantity + "</span>"
-                : '<span class="badge bg-danger-subtle text-danger rounded-pill px-3">' + item.stock_quantity + "</span>";
+                ? '<span class="badge bg-success-subtle text-success rounded-pill px-2 mt-1">' + item.stock_quantity + "</span>"
+                : '<span class="badge bg-danger-subtle text-danger rounded-pill px-2 mt-1">' + item.stock_quantity + "</span>";
             html +=
-                '<tr data-item-id="' + item.id + '">' +
-                "<td>" + thumbHtml + "</td>" +
-                '<td class="fw-bold">' + item.name + "</td>" +
-                "<td>" + colorHtml + "</td>" +
-                '<td class="small text-muted">' + (item.dimensions || "&mdash;") + "</td>" +
-                '<td class="text-center">' + stockBadge + "</td>" +
-                '<td class="text-end">' +
-                '<button type="button" class="btn btn-sm btn-outline-primary rounded-pill edit-item-btn me-1" data-item-id="' + item.id + '"><i class="fas fa-edit"></i></button>' +
-                '<button type="button" class="btn btn-sm btn-outline-danger rounded-pill delete-item-btn" data-item-id="' + item.id + '" data-item-name="' + item.name + '"><i class="fas fa-trash-alt"></i></button>' +
-                "</td></tr>";
+                '<div class="col">' +
+                '<div class="item-card card border-0 shadow-sm rounded-3 p-2 text-center h-100" data-item-id="' + item.id + '">' +
+                '<div class="position-relative item-card-media">' + thumbHtml +
+                '<div class="item-card-actions position-absolute top-0 end-0 d-flex gap-1 p-1 opacity-0" style="transition:opacity 0.2s;">' +
+                '<button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm edit-item-btn" data-item-id="' + item.id + '" style="width:26px;height:26px;font-size:11px;line-height:1;"><i class="fas fa-edit"></i></button>' +
+                '<button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm delete-item-btn" data-item-id="' + item.id + '" data-item-name="' + item.name + '" style="width:26px;height:26px;font-size:11px;line-height:1;"><i class="fas fa-trash-alt"></i></button>' +
+                "</div></div>" +
+                '<div class="mt-1">' +
+                '<span class="fw-bold small d-block text-truncate" title="' + item.name + '">' + item.name + '</span>' +
+                '<div class="d-flex align-items-center justify-content-center gap-1 mt-1">' + colorHtml + "</div>" +
+                (item.dimensions ? '<span class="small text-muted d-block text-truncate mt-1">' + item.dimensions + '</span>' : "") +
+                stockBadge +
+                "</div></div></div>";
         });
-        html += "</tbody></table></div>";
+        html += "</div>";
         container.innerHTML = html;
         attachItemEvents();
     }

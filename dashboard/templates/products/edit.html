@@ -13,6 +13,11 @@
         #variantPicker .variant-btn.active { border-color: #000 !important; background: #f8f9fa; }
         .tracking-wider { letter-spacing: 0.05em; }
         .btn-group input[type="radio"]:checked + label { background: #000; color: #fff; border-color: #000; }
+        .item-card { transition: box-shadow 0.2s, transform 0.2s; }
+        .item-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1) !important; transform: translateY(-2px); }
+        .item-card:hover .item-card-actions { opacity: 1 !important; }
+        .item-card-actions .btn { opacity: 0.85; }
+        .item-card-actions .btn:hover { opacity: 1; }
     </style>
 {% endblock extra_css %}
 

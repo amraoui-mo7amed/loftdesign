@@ -65,12 +65,10 @@
 
                     <div class="mt-auto p-3 border-top border-white-10">
                         {% with role=request.user.profile.role code=request.user.profile.affiliate_code %}
-                        {% if role == "affiliate" %}
-                            <a href="{% url 'frontend:affiliate_store' code %}" target="_blank"
-                        {% elif role == "semi_affiliate" %}
-                            <a href="{% url 'frontend:semi_affiliate_store' code %}" target="_blank"
+                        {% if role == "semi_affiliate" and request.user.profile.parent_affiliate %}
+                            <a href="{% url 'frontend:affiliate_store' request.user.profile.parent_affiliate.affiliate_code %}" target="_blank"
                         {% else %}
-                            <a href="/" target="_blank"
+                            <a href="{% url 'frontend:product_list' %}" target="_blank"
                         {% endif %}
                            class="btn btn-outline-light w-100 mb-2 d-flex align-items-center justify-content-center gap-2 py-2 rounded-3 text-white border-white-10"
                            style="background: rgba(255, 255, 255, 0.05); font-weight: 700; font-size: 0.9rem; transition: all 0.2s ease;">

@@ -35,7 +35,7 @@
             <div class="col-lg-7" data-aos="fade-right">
                 <!-- Gallery — sticky -->
                 <div class="product-sticky-gallery">
-                    <div class="viewer-container rounded-5 shadow-2xl overflow-hidden mb-4">
+                    <div class="viewer-container position-relative rounded-5 shadow-2xl overflow-hidden mb-4">
                         {% with all_images=product.gallery_images.all %}
                         <div class="position-relative" id="productGallery" data-images="{{ product.thumbnail.url }}{% for img in all_images %},{{ img.image.url }}{% endfor %}">
                             <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal gallery-main-img" style="max-height: 450px; height: auto; min-height: 300px; object-fit: cover;" alt="{{ product.title }}" id="galleryMainImg">

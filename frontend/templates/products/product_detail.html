@@ -13,9 +13,6 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/products_list.css" %}?v={% now "U" %}">
     <link rel="stylesheet" href="{% static "css/product_detail.css" %}?v={% now "U" %}">
-    {% if product.model_3d %}
-    <link rel="stylesheet" href="{% static "css/product_viewer.css" %}?v={% now "U" %}">
-    {% endif %}
     {% if product.gallery_images.all %}
     <link rel="stylesheet" href="{% static "css/gallery.css" %}?v={% now "U" %}">
     {% endif %}

@@ -22,9 +22,6 @@
     }
 </style>
 <link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={% now "U" %}">
-{% if product.model_3d %}
-<link rel="stylesheet" href="{% static "css/product_viewer.css" %}?v={% now "U" %}">
-{% endif %}
 {% if product.gallery_images.all %}
 <link rel="stylesheet" href="{% static "css/gallery.css" %}?v={% now "U" %}">
 {% endif %}

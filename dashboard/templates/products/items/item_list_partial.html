@@ -2,58 +2,65 @@
 {% load static %}
 
 {% if items %}
-<div class="row g-2 row-cols-2">
+<div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
     {% for item in items %}
     <div class="col">
-        <div class="item-card card border-0 shadow-sm rounded-3 p-2 text-center h-100" data-item-id="{{ item.id }}">
-            <div class="position-relative item-card-media">
+        <div class="item-card card border-0 shadow-sm rounded-top-3 h-100" data-item-id="{{ item.id }}">
+            <div class="position-relative">
                 {% if item.thumbnail %}
                 <img src="{{ item.thumbnail.url }}" alt="{{ item.name }}"
-                     class="rounded-2 w-100" style="height: 70px; object-fit: cover;">
+                     class="rounded-top-2 w-100" style="height: 110px; object-fit: cover;">
                 {% else %}
-                <div class="bg-light rounded-2 d-flex align-items-center justify-content-center" style="height: 70px;">
-                    <i class="fas fa-box text-muted opacity-25"></i>
+                <div class="bg-light rounded-top-2 d-flex align-items-center justify-content-center" style="height: 110px;">
+                    <i class="fas fa-box fa-2x text-muted opacity-25"></i>
                 </div>
                 {% endif %}
-                <div class="item-card-actions position-absolute top-0 end-0 d-flex gap-1 p-1 opacity-0" style="transition: opacity 0.2s;">
+                <div class="item-card-actions position-absolute top-0 end-0 d-flex gap-1 p-2 opacity-0" style="transition: opacity 0.2s;">
                     <button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm edit-item-btn"
                             data-item-id="{{ item.id }}" title="{% trans 'Edit' %}"
-                            style="width: 26px; height: 26px; font-size: 11px; line-height: 1;">
-                        <i class="fas fa-edit"></i>
+                            style="width: 28px; height: 28px; font-size: 12px; line-height: 1;">
+                        <i class="fas fa-pen"></i>
                     </button>
                     <button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm delete-item-btn"
                             data-item-id="{{ item.id }}" data-item-name="{{ item.name }}"
                             data-url="{% url 'dash:item_delete' item.id %}"
                             title="{% trans 'Delete' %}"
-                            style="width: 26px; height: 26px; font-size: 11px; line-height: 1;">
+                            style="width: 28px; height: 28px; font-size: 12px; line-height: 1;">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
             </div>
-            <div class="mt-1">
+            <div class="p-2 bg-white rounded-bottom-3">
                 <span class="fw-bold small d-block text-truncate" title="{{ item.name }}">{{ item.name }}</span>
-                <div class="d-flex align-items-center justify-content-center gap-1 mt-1">
+                <div class="d-flex align-items-center gap-1 mt-1" style="min-height: 1.2em;">
                     {% if item.color %}
                     <span class="d-inline-block rounded-circle flex-shrink-0" style="width: 10px; height: 10px; background: {{ item.color|lower }};"></span>
                     <span class="small text-muted text-truncate d-inline-block" style="max-width: 80px;">{{ item.color }}</span>
                     {% else %}
-                    <span class="small text-muted">—</span>
+                    <span class="small text-muted">&mdash;</span>
                     {% endif %}
                 </div>
                 {% if item.dimensions %}
-                <span class="small text-muted d-block text-truncate mt-1">{{ item.dimensions }}</span>
+                <span class="small text-muted d-block text-truncate">{{ item.dimensions }}</span>
+                {% else %}
+                <span class="small text-muted d-block" style="min-height: 1.2em;"></span>
                 {% endif %}
-                <span class="badge {% if item.stock_quantity > 0 %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %} rounded-pill px-2 mt-1">
-                    {{ item.stock_quantity }}
-                </span>
+                <div class="mt-1">
+                    <span class="badge {% if item.stock_quantity > 0 %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %} rounded-pill px-2">
+                        {{ item.stock_quantity }}
+                    </span>
+                </div>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
 {% else %}
-<div class="text-center py-4" id="noItemsPlaceholder">
-    <i class="fas fa-box-open fa-3x text-muted opacity-25 mb-3"></i>
-    <p class="text-muted mb-0">{% trans "No items yet. Click 'Add Item' to create product variants." %}</p>
+<div class="text-center py-5" id="noItemsPlaceholder">
+    <div class="mb-3">
+        <i class="fas fa-cubes fa-3x text-muted opacity-25"></i>
+    </div>
+    <p class="text-muted mb-2 fw-bold">{% trans "No variants yet" %}</p>
+    <p class="text-muted small mb-0">{% trans "Click 'Add Variant' to create product options like color, size, or finish." %}</p>
 </div>
 {% endif %}

@@ -13,11 +13,13 @@
         #variantPicker .variant-btn.active { border-color: #000 !important; background: #f8f9fa; }
         .tracking-wider { letter-spacing: 0.05em; }
         .btn-group input[type="radio"]:checked + label { background: #000; color: #fff; border-color: #000; }
-        .item-card { transition: box-shadow 0.2s, transform 0.2s; }
-        .item-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1) !important; transform: translateY(-2px); }
+        .item-card { transition: box-shadow 0.25s, transform 0.25s; cursor: default; }
+        .item-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important; transform: translateY(-3px); }
         .item-card:hover .item-card-actions { opacity: 1 !important; }
-        .item-card-actions .btn { opacity: 0.85; }
-        .item-card-actions .btn:hover { opacity: 1; }
+        .item-card-actions .btn { opacity: 0.9; }
+        .item-card-actions .btn:hover { opacity: 1; transform: scale(1.15); }
+        .items-section-header .btn-outline-primary { border-color: #dee2e6; }
+        .items-section-header .btn-outline-primary:hover { border-color: #0d6efd; }
     </style>
 {% endblock extra_css %}
 
@@ -150,6 +152,9 @@
                     <div id="galleryPreviewContainer" class="preview-grid">
                     </div>
                 </div>
+
+                <!-- Product Items / Variants Section (Full Width) -->
+                {% include "products/items/section.html" %}
             </div>
 
             <div class="col-lg-4" data-aos="fade-left">
@@ -192,8 +197,6 @@
                         </div>
                     </div>
                 </div>
-
-                {% include "products/items/section.html" %}
 
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Visibility" %}</h5>

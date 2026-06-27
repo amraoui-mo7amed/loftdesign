@@ -181,31 +181,31 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         var html =
-            '<div class="row g-2 row-cols-2">';
+            '<div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">';
         items.forEach(function (item) {
             var thumbHtml = item.thumbnail
-                ? '<img src="' + item.thumbnail + '" alt="' + item.name + '" class="rounded-2 w-100" style="height:70px;object-fit:cover;">'
-                : '<div class="bg-light rounded-2 d-flex align-items-center justify-content-center" style="height:70px;"><i class="fas fa-box text-muted opacity-25"></i></div>';
+                ? '<img src="' + item.thumbnail + '" alt="' + item.name + '" class="rounded-top-2 w-100" style="height:110px;object-fit:cover;">'
+                : '<div class="bg-light rounded-top-2 d-flex align-items-center justify-content-center" style="height:110px;"><i class="fas fa-box fa-2x text-muted opacity-25"></i></div>';
             var colorHtml = item.color
                 ? '<span class="d-inline-block rounded-circle flex-shrink-0" style="width:10px;height:10px;background:' + item.color.toLowerCase() + ';"></span>' +
                   '<span class="small text-muted text-truncate d-inline-block" style="max-width:80px;"> ' + item.color + '</span>'
                 : '<span class="small text-muted">&mdash;</span>';
             var stockBadge = item.stock_quantity > 0
-                ? '<span class="badge bg-success-subtle text-success rounded-pill px-2 mt-1">' + item.stock_quantity + "</span>"
-                : '<span class="badge bg-danger-subtle text-danger rounded-pill px-2 mt-1">' + item.stock_quantity + "</span>";
+                ? '<span class="badge bg-success-subtle text-success rounded-pill px-2">' + item.stock_quantity + "</span>"
+                : '<span class="badge bg-danger-subtle text-danger rounded-pill px-2">' + item.stock_quantity + "</span>";
             html +=
                 '<div class="col">' +
-                '<div class="item-card card border-0 shadow-sm rounded-3 p-2 text-center h-100" data-item-id="' + item.id + '">' +
-                '<div class="position-relative item-card-media">' + thumbHtml +
-                '<div class="item-card-actions position-absolute top-0 end-0 d-flex gap-1 p-1 opacity-0" style="transition:opacity 0.2s;">' +
-                '<button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm edit-item-btn" data-item-id="' + item.id + '" style="width:26px;height:26px;font-size:11px;line-height:1;"><i class="fas fa-edit"></i></button>' +
-                '<button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm delete-item-btn" data-item-id="' + item.id + '" data-item-name="' + item.name + '" style="width:26px;height:26px;font-size:11px;line-height:1;"><i class="fas fa-trash-alt"></i></button>' +
+                '<div class="item-card card border-0 shadow-sm rounded-top-3 h-100" data-item-id="' + item.id + '">' +
+                '<div class="position-relative">' + thumbHtml +
+                '<div class="item-card-actions position-absolute top-0 end-0 d-flex gap-1 p-2 opacity-0" style="transition:opacity 0.2s;">' +
+                '<button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm edit-item-btn" data-item-id="' + item.id + '" title="Edit" style="width:28px;height:28px;font-size:12px;line-height:1;"><i class="fas fa-pen"></i></button>' +
+                '<button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm delete-item-btn" data-item-id="' + item.id + '" data-item-name="' + item.name + '" title="Delete" style="width:28px;height:28px;font-size:12px;line-height:1;"><i class="fas fa-trash-alt"></i></button>' +
                 "</div></div>" +
-                '<div class="mt-1">' +
+                '<div class="p-2 border-top-0 bg-white rounded-bottom-3">' +
                 '<span class="fw-bold small d-block text-truncate" title="' + item.name + '">' + item.name + '</span>' +
-                '<div class="d-flex align-items-center justify-content-center gap-1 mt-1">' + colorHtml + "</div>" +
-                (item.dimensions ? '<span class="small text-muted d-block text-truncate mt-1">' + item.dimensions + '</span>' : "") +
-                stockBadge +
+                '<div class="d-flex align-items-center gap-1 mt-1" style="min-height:1.2em;">' + colorHtml + "</div>" +
+                (item.dimensions ? '<span class="small text-muted d-block text-truncate">' + item.dimensions + '</span>' : '<span class="small text-muted d-block" style="min-height:1.2em;"></span>') +
+                '<div class="mt-1">' + stockBadge + "</div>" +
                 "</div></div></div>";
         });
         html += "</div>";
@@ -353,6 +353,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // ── Attach events to server-rendered buttons ──────────────────
+    attachItemEvents();
 
     // ── Form Submit (AJAX) ──────────────────────────────────────────
     var submitting = false;

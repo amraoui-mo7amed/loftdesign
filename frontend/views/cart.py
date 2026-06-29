@@ -82,6 +82,7 @@ def _get_cart_items_data(request):
                     "stock_quantity": v.stock_quantity,
                     "thumbnail_url": v.thumbnail.url if v.thumbnail else "",
                     "is_selected": str(v.pk) == str(item_data["item_id"]),
+                    "gallery_images": ",".join([img.image.url for img in v.gallery_images.all()]),
                 })
         items.append({
             "id": item_data.get("item_id") or item_data["product_id"],

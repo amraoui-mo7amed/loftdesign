@@ -155,50 +155,48 @@
     left: 30px;
 }
 
-/* ── Variant Picker ───────────────────────────────────────── */
-#variantPicker .variant-btn {
-    min-width: 110px;
-    transition: all 0.25s ease;
-    border-color: #dee2e6;
+/* ── Variant Picker (List Rows) ──────────────────────────── */
+#variantPicker .variant-row {
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border-color: #dee2e6 !important;
 }
-#variantPicker .variant-btn:hover {
-    border-color: #adb5bd;
+#variantPicker .variant-row:hover {
     background: #f8f9fa;
+    border-color: #adb5bd !important;
 }
-#variantPicker .variant-btn.active {
+#variantPicker .variant-row.active {
+    background: #fff;
     border-color: #000 !important;
-    background: #fff !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
-#variantPicker .variant-btn img {
-    transition: transform 0.25s ease;
+#variantPicker .variant-row .badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25em 0.5em;
+    min-width: 28px;
+    text-align: center;
 }
-#variantPicker .variant-btn.active img {
-    transform: scale(1.08);
+#variantPicker .variant-row .view-variant-btn {
+    opacity: 0.5;
+    transition: opacity 0.15s ease, background 0.15s ease;
 }
-#variantPicker .variant-btn .variant-name {
-    font-size: 0.8rem;
-    line-height: 1.2;
+#variantPicker .variant-row:hover .view-variant-btn {
+    opacity: 1;
 }
-#variantPicker .variant-btn .variant-dim {
-    font-size: 0.7rem;
-}
-#variantPicker .variant-btn .variant-stock {
-    font-size: 0.7rem;
+#variantPicker .variant-row .view-variant-btn:hover {
+    background: #e9ecef !important;
+    border-color: #adb5bd !important;
 }
 
 #selectedVariantInfo {
     transition: all 0.3s ease;
 }
-#selectedVariantInfo .variant-swatch {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: inline-block;
-    border: 2px solid #dee2e6;
-    flex-shrink: 0;
-}
 
-[dir="rtl"] #variantPicker .variant-btn {
-    text-align: center;
+/* ── Variant Detail Modal ───────────────────────────────── */
+#variantDetailModal .modal-content {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+#variantDetailModal .modal-variant-gallery-wrap img:hover {
+    border-color: #adb5bd !important;
 }

@@ -74,34 +74,56 @@
                                     <i class="fas fa-exchange-alt me-1"></i>{% trans "Change Variant" %}
                                 </button>
                                 <div class="collapse mt-2" id="cartVariantPicker-{{ item.id }}">
-                                    <div class="d-flex flex-wrap gap-2">
+                                    <div class="d-flex flex-column gap-1">
                                         {% for v in item.available_variants %}
-                                        <button type="button"
-                                                class="variant-switch-btn btn btn-sm {% if v.is_selected %}btn-dark{% else %}btn-outline-secondary{% endif %} rounded-3 text-start p-2"
-                                                style="min-width:80px;"
-                                                data-old-item-id="{{ item.id }}"
-                                                data-new-item-id="{{ v.id }}"
-                                                {% if v.is_selected or v.stock_quantity < 1 %}disabled{% endif %}>
-                                            {% if v.thumbnail_url %}
-                                            <img src="{{ v.thumbnail_url }}" alt="{{ v.name }}"
-                                                 class="d-block mx-auto rounded mb-1"
-                                                 style="width:48px;height:48px;object-fit:cover;"
-                                                 onerror="this.style.display='none'">
-                                            {% endif %}
-                                            <span class="d-block text-center small">{{ v.name|truncatechars:12 }}</span>
-                                            {% if v.dimensions %}
-                                            <span class="d-block text-center text-muted" style="font-size:10px;">{{ v.dimensions }}</span>
-                                            {% endif %}
-                                            <span class="d-block text-center" style="font-size:10px;">
-                                                {% if v.stock_quantity < 1 %}
-                                                    <span class="text-danger">{% trans "Out of stock" %}</span>
-                                                {% elif v.stock_quantity < 5 %}
-                                                    <span class="text-warning">{{ v.stock_quantity }} {% trans "left" %}</span>
+                                        <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-3 border variant-switch-row
+                                                    {% if v.is_selected %}active{% endif %}
+                                                    {% if v.stock_quantity < 1 %}out-of-stock{% endif %}"
+                                             data-old-item-id="{{ item.id }}"
+                                             data-new-item-id="{{ v.id }}"
+                                             data-item-name="{{ v.name }}"
+                                             data-item-color="{{ v.color }}"
+                                             data-item-dimensions="{{ v.dimensions }}"
+                                             data-item-stock="{{ v.stock_quantity }}"
+                                             data-item-thumbnail="{{ v.thumbnail_url }}"
+                                             data-item-gallery="{% if v.gallery_images %}{{ v.gallery_images }}{% endif %}"
+                                             style="transition: background 0.15s;{% if v.stock_quantity < 1 %}opacity:0.5;{% endif %}">
+                                            <div class="flex-shrink-0 rounded-2 overflow-hidden" style="width: 40px; height: 40px;">
+                                                {% if v.thumbnail_url %}
+                                                <img src="{{ v.thumbnail_url }}" alt="{{ v.name }}"
+                                                     class="w-100 h-100" style="object-fit: cover;">
                                                 {% else %}
-                                                    <span class="text-success">{% trans "In stock" %}</span>
+                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                                                    <i class="fas fa-cube text-muted opacity-25" style="font-size: 0.9rem;"></i>
+                                                </div>
                                                 {% endif %}
+                                            </div>
+                                            <div class="flex-grow-1 min-w-0">
+                                                <div class="fw-semibold small text-truncate">
+                                                    {{ v.name }}
+                                                    {% if v.is_selected %}<span class="badge bg-dark ms-1" style="font-size:0.6rem;vertical-align:middle;">{% trans "Selected" %}</span>{% endif %}
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2 small text-muted">
+                                                    {% if v.color %}
+                                                    <span class="d-inline-flex align-items-center gap-1">
+                                                        <span class="d-inline-block rounded-circle flex-shrink-0" style="width: 7px; height: 7px; background: {{ v.color|lower }}; border: 1px solid rgba(0,0,0,0.05);"></span>
+                                                        {{ v.color }}
+                                                    </span>
+                                                    {% endif %}
+                                                    {% if v.dimensions %}
+                                                    <span>{{ v.dimensions }}</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <span class="badge {% if v.stock_quantity > 0 %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %} flex-shrink-0" style="border-radius: 0; font-size: 0.72rem; font-weight: 700; padding: 0.25em 0.5em; min-width: 28px; text-align: center;">
+                                                {{ v.stock_quantity }}
                                             </span>
-                                        </button>
+                                            <button type="button" class="btn btn-light btn-sm p-0 cart-view-variant-btn"
+                                                    title="{% trans 'View Details' %}"
+                                                    style="width: 26px; height: 26px; font-size: 10px; line-height: 1; border: 1px solid #dee2e6;">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -149,6 +171,43 @@
     </div>
 </section>
 {% endblock content %}
+
+<!-- Variant Detail Modal -->
+<div class="modal fade" id="variantDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 overflow-hidden">
+            <div class="modal-header border-0 p-4 pb-0">
+                <h5 class="modal-title fw-bold">{% trans "Variant Details" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-7">
+                        <div class="rounded-3 overflow-hidden mb-3 bg-light d-flex align-items-center justify-content-center" style="min-height: 250px;">
+                            <img src="" alt="" class="w-100 modal-variant-thumb" style="max-height: 350px; object-fit: cover; display: none;">
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap modal-variant-gallery-wrap">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <h4 class="fw-bold mb-2" id="modalVariantName"></h4>
+                        <div class="d-flex align-items-center gap-2 mb-2" id="modalVariantColor">
+                            <span class="d-inline-block rounded-circle flex-shrink-0" style="width: 12px; height: 12px; border: 1px solid rgba(0,0,0,0.1);"></span>
+                            <span class="text-muted small"></span>
+                        </div>
+                        <div class="mb-2 text-muted small" id="modalVariantDim"></div>
+                        <div class="mb-3" id="modalVariantStock">
+                            <span class="badge fs-6 px-3 py-2"></span>
+                        </div>
+                        <button type="button" class="btn btn-dark w-100 rounded-pill fw-bold modal-select-variant">
+                            <i class="fas fa-check me-2"></i>{% trans "Select This Variant" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% block extra_js %}
     <script src="{% static 'js/cart.js' %}?v={% now 'U' %}"></script>

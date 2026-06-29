@@ -405,3 +405,49 @@
         padding-right: 90px;
     }
 }
+
+/* ── Cart Variant Switch Rows ──────────────────────────── */
+.variant-switch-row {
+    cursor: default;
+    transition: all 0.15s ease;
+    border-color: #dee2e6 !important;
+    user-select: none;
+}
+.variant-switch-row:not(.active):not(.out-of-stock) {
+    cursor: pointer;
+}
+.variant-switch-row:not(.active):not(.out-of-stock):hover {
+    background: #f8f9fa;
+    border-color: #adb5bd !important;
+}
+.variant-switch-row.active {
+    background: #fff;
+    border-color: #000 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.variant-switch-row .badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25em 0.5em;
+    min-width: 28px;
+    text-align: center;
+}
+.variant-switch-row .cart-view-variant-btn {
+    opacity: 0.5;
+    transition: opacity 0.15s ease, background 0.15s ease;
+}
+.variant-switch-row:hover .cart-view-variant-btn {
+    opacity: 1;
+}
+.variant-switch-row .cart-view-variant-btn:hover {
+    background: #e9ecef !important;
+    border-color: #adb5bd !important;
+}
+
+/* ── Variant Detail Modal (shared with product_detail) ── */
+#variantDetailModal .modal-content {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+#variantDetailModal .modal-variant-gallery-wrap img:hover {
+    border-color: #adb5bd !important;
+}

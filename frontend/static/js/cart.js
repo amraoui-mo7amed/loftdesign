@@ -56,7 +56,34 @@ document.addEventListener("DOMContentLoaded", function () {
             var btn = e.target.closest(".cart-item-remove");
             removeCartItem(btn.dataset.itemId);
         }
-        // Variant switch on checkout
+        // Variant switch on cart page (list rows)
+        if (e.target.closest(".variant-switch-row:not(.active):not(.out-of-stock)")) {
+            var row = e.target.closest(".variant-switch-row:not(.active):not(.out-of-stock)");
+            if (e.target.closest(".cart-view-variant-btn")) return;
+            switchVariant(row.dataset.oldItemId, row.dataset.newItemId, row);
+        }
+        // View variant details from cart
+        if (e.target.closest(".cart-view-variant-btn")) {
+            var btn = e.target.closest(".cart-view-variant-btn");
+            var row = btn.closest(".variant-switch-row");
+            if (row) openCartVariantModal(row);
+        }
+        // Modal select variant button in cart
+        if (e.target.closest(".modal-select-variant")) {
+            var selectBtn = e.target.closest(".modal-select-variant");
+            var oldId = selectBtn.dataset.oldItemId;
+            var newId = selectBtn.dataset.newItemId;
+            if (oldId && newId) {
+                var targetRow = document.querySelector('.variant-switch-row[data-old-item-id="' + oldId + '"][data-new-item-id="' + newId + '"]');
+                if (targetRow && !targetRow.classList.contains("active") && !targetRow.classList.contains("out-of-stock")) {
+                    switchVariant(oldId, newId, targetRow);
+                }
+            }
+            var modalEl = document.getElementById('variantDetailModal');
+            var bsModal = bootstrap.Modal.getInstance(modalEl);
+            if (bsModal) bsModal.hide();
+        }
+        // Legacy variant switch buttons (backward compat)
         if (e.target.closest(".variant-switch-btn:not([disabled])")) {
             var btn = e.target.closest(".variant-switch-btn:not([disabled])");
             switchVariant(btn.dataset.oldItemId, btn.dataset.newItemId, btn);
@@ -237,14 +264,19 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    function switchVariant(oldItemId, newItemId, btn) {
+    function switchVariant(oldItemId, newItemId, element) {
         var formData = new FormData();
         formData.append("old_item_id", oldItemId);
         formData.append("new_item_id", newItemId);
 
-        btn.disabled = true;
-        var originalHtml = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        var isRow = element.classList.contains("variant-switch-row");
+        var originalHtml, originalDisabled;
+        if (!isRow) {
+            originalHtml = element.innerHTML;
+            originalDisabled = element.disabled;
+            element.disabled = true;
+            element.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        }
 
         fetch("/cart/switch-variant/", {
             method: "POST",
@@ -259,40 +291,155 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     updateBadge(data.cart_total);
                     showMiniNotif(data.message);
-                    var container = btn.closest(".variant-switch-btn");
-                    if (container) container.classList.remove("btn-dark");
                     if (data.item) {
                         var pageItem = document.querySelector('.cart-page-item[data-item-id="' + oldItemId + '"]');
                         if (pageItem) {
                             pageItem.dataset.itemId = newItemId;
-                            var titleEl = pageItem.querySelector(".text-truncate");
+                            var titleEl = pageItem.querySelector("h5");
                             if (titleEl) titleEl.textContent = data.item.title;
                             var thumbEl = pageItem.querySelector("img");
                             if (thumbEl) thumbEl.src = data.item.thumbnail;
                         }
                     }
+                    // Update variant rows
+                    var allRows = document.querySelectorAll('.variant-switch-row[data-old-item-id="' + oldItemId + '"]');
+                    allRows.forEach(function (r) {
+                        r.classList.remove("active");
+                        var badge = r.querySelector(".badge.bg-dark.ms-1");
+                        if (badge) badge.remove();
+                        r.dataset.oldItemId = newItemId;
+                    });
+                    if (isRow) {
+                        element.classList.add("active");
+                        var nameEl = element.querySelector(".text-truncate");
+                        if (nameEl) {
+                            var badge = document.createElement("span");
+                            badge.className = "badge bg-dark ms-1";
+                            badge.style.cssText = "font-size:0.6rem;vertical-align:middle;";
+                            badge.textContent = "Selected";
+                            nameEl.appendChild(badge);
+                        }
+                    }
+                    // Legacy buttons
                     var allBtns = document.querySelectorAll('.variant-switch-btn[data-old-item-id="' + oldItemId + '"]');
                     allBtns.forEach(function (b) {
                         b.disabled = false;
                         b.classList.remove("btn-dark");
                         b.classList.add("btn-outline-secondary");
-                        b.innerHTML = b.dataset.originalHtml || b.innerHTML;
+                        if (b.dataset.originalHtml) b.innerHTML = b.dataset.originalHtml;
                     });
-                    btn.classList.remove("btn-outline-secondary");
-                    btn.classList.add("btn-dark");
-                    btn.disabled = true;
+                    if (!isRow) {
+                        element.classList.remove("btn-outline-secondary");
+                        element.classList.add("btn-dark");
+                        element.disabled = true;
+                    }
                     if (typeof reloadPageSummary === "function") reloadPageSummary();
                 } else {
                     showMiniNotif(data.message || "Error");
                 }
-                btn.disabled = false;
-                btn.innerHTML = originalHtml;
+                if (!isRow) {
+                    element.disabled = false;
+                    element.innerHTML = originalHtml;
+                }
             })
             .catch(function () {
-                btn.disabled = false;
-                btn.innerHTML = originalHtml;
+                if (!isRow) {
+                    element.disabled = false;
+                    element.innerHTML = originalHtml;
+                }
                 showMiniNotif("An error occurred.");
             });
+    }
+
+    // ── Cart Variant Detail Modal ──────────────────────────────
+    function openCartVariantModal(row) {
+        var modal = document.getElementById('variantDetailModal');
+        if (!modal) return;
+
+        var itemName = row.dataset.itemName;
+        var itemColor = row.dataset.itemColor;
+        var itemDim = row.dataset.itemDimensions;
+        var itemThumb = row.dataset.itemThumbnail;
+        var itemGallery = row.dataset.itemGallery;
+        var itemStock = parseInt(row.dataset.itemStock) || 0;
+
+        var modalName = document.getElementById('modalVariantName');
+        var modalColorWrap = document.getElementById('modalVariantColor');
+        var modalColorSwatch = modalColorWrap && modalColorWrap.querySelector('span:first-child');
+        var modalColorText = modalColorWrap && modalColorWrap.querySelector('span:last-child');
+        var modalDim = document.getElementById('modalVariantDim');
+        var modalThumb = modal.querySelector('.modal-variant-thumb');
+        var modalGalleryWrap = modal.querySelector('.modal-variant-gallery-wrap');
+        var modalStock = document.getElementById('modalVariantStock');
+        var modalStockBadge = modalStock && modalStock.querySelector('.badge');
+        var modalSelectBtn = modal.querySelector('.modal-select-variant');
+
+        if (modalName) modalName.textContent = itemName;
+
+        if (modalColorSwatch && modalColorText) {
+            if (itemColor) {
+                modalColorSwatch.style.background = itemColor.toLowerCase();
+                modalColorText.textContent = itemColor;
+                modalColorWrap.classList.remove('d-none');
+            } else {
+                modalColorWrap.classList.add('d-none');
+            }
+        }
+
+        if (modalDim) {
+            modalDim.textContent = itemDim || '';
+            modalDim.classList.toggle('d-none', !itemDim);
+        }
+
+        if (modalThumb && itemThumb) {
+            modalThumb.src = itemThumb;
+            modalThumb.alt = itemName;
+            modalThumb.style.display = '';
+        } else if (modalThumb) {
+            modalThumb.style.display = 'none';
+        }
+
+        if (modalStockBadge) {
+            if (itemStock > 0) {
+                modalStockBadge.textContent = itemStock + ' In Stock';
+                modalStockBadge.className = 'badge bg-success fs-6 px-3 py-2';
+            } else {
+                modalStockBadge.textContent = 'Sold Out';
+                modalStockBadge.className = 'badge bg-danger fs-6 px-3 py-2';
+            }
+        }
+
+        if (modalGalleryWrap) {
+            modalGalleryWrap.innerHTML = '';
+            if (itemGallery) {
+                var images = itemGallery.split(',');
+                images.forEach(function(src) {
+                    var img = document.createElement('img');
+                    img.src = src;
+                    img.alt = '';
+                    img.className = 'rounded-2';
+                    img.style.cssText = 'width: 60px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s;';
+                    img.addEventListener('click', function() {
+                        if (modalThumb) modalThumb.src = src;
+                        modalGalleryWrap.querySelectorAll('img').forEach(function(i) {
+                            i.style.borderColor = 'transparent';
+                        });
+                        img.style.borderColor = '#000';
+                    });
+                    modalGalleryWrap.appendChild(img);
+                });
+                var firstGalleryImg = modalGalleryWrap.querySelector('img');
+                if (firstGalleryImg) firstGalleryImg.style.borderColor = '#000';
+            }
+        }
+
+        if (modalSelectBtn) {
+            modalSelectBtn.dataset.oldItemId = row.dataset.oldItemId;
+            modalSelectBtn.dataset.newItemId = row.dataset.newItemId;
+        }
+
+        var bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
     }
 
     function reloadPageSummary() {

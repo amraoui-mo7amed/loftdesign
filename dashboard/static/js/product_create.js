@@ -18,6 +18,10 @@
     ready: form.getAttribute("data-msg-ready") || "{name} ready to upload",
     preparing: form.getAttribute("data-msg-preparing") || "Preparing {name}...",
     confirmRemove: form.getAttribute("data-msg-confirm-remove") || "Remove this variant?",
+    newVariant: form.getAttribute("data-msg-new-variant") || "New Variant",
+    editVariant: form.getAttribute("data-msg-edit-variant") || "Edit Variant",
+    newVariantSub: form.getAttribute("data-msg-new-variant-sub") || "Configure a product variant with its own media, color, dimensions, and stock.",
+    editVariantSub: form.getAttribute("data-msg-edit-variant-sub") || "Update the variant name, media, dimensions, or stock.",
   };
 
   // ── Helpers ─────────────────────────────────────────────
@@ -210,6 +214,7 @@
     var mStock = document.getElementById("varStock");
     var mThumbInput = document.getElementById("varThumbInput");
     var mGalleryInput = document.getElementById("varGalleryInput");
+    var editingIndex = -1;
 
     // Modal preview elements
     var thumbPreview = document.getElementById("varThumbPreview");
@@ -232,6 +237,7 @@
       window.__savedVariants.forEach(function (v, i) {
         var card = document.createElement("div");
         card.className = "variant-summary-card bg-light rounded-3 p-3 mb-3";
+        card.style.cursor = "pointer";
         card.innerHTML =
           '<div class="d-flex align-items-center gap-3">' +
           (v.thumbnailUrl
@@ -248,6 +254,12 @@
           '<button type="button" class="btn btn-sm btn-outline-danger rounded-circle flex-shrink-0 variant-remove-summary" data-idx="' + i + '" style="width:28px;height:28px;padding:0;" title="' + escHtml(msgs.confirmRemove) + '"><i class="fas fa-times"></i></button>' +
           '</div>';
         container.appendChild(card);
+
+        // Click card body to edit
+        card.addEventListener("click", function (e) {
+          if (e.target.closest(".variant-remove-summary")) return;
+          populateModal(i);
+        });
       });
       // Attach remove handlers
       container.querySelectorAll(".variant-remove-summary").forEach(function (btn) {
@@ -349,6 +361,7 @@
 
     // Reset modal
     function resetModal() {
+      editingIndex = -1;
       mName.value = "";
       if (mColorPicker) mColorPicker.value = "#6C757D";
       if (mColorText) mColorText.value = "";
@@ -360,6 +373,55 @@
       if (thumbImg) { thumbImg.classList.add("d-none"); thumbImg.src = ""; }
       mGalleryInput.value = "";
       if (galleryPreview) galleryPreview.innerHTML = "";
+      var mh = modalEl.querySelector(".modal-header h5");
+      var mp = modalEl.querySelector(".modal-header p");
+      if (mh) mh.textContent = msgs.newVariant;
+      if (mp) mp.textContent = msgs.newVariantSub;
+    }
+
+    function populateModal(idx) {
+      var v = window.__savedVariants[idx];
+      if (!v) return;
+      editingIndex = idx;
+      mName.value = v.name;
+      if (mColorPicker) mColorPicker.value = v.color && /^#[0-9a-f]{6}$/i.test(v.color) ? v.color : "#6C757D";
+      if (mColorText) mColorText.value = v.color || "";
+      if (v.dimensions) {
+        var parts = v.dimensions.match(/([\d.]+)×([\d.]+)×([\d.]+)(\w+)/);
+        if (parts) {
+          mDimW.value = parts[1]; mDimD.value = parts[2]; mDimH.value = parts[3];
+          var unit = parts[4];
+          var unitRadio = qs("input[name='varDimUnit'][value='" + unit + "']");
+          if (unitRadio) unitRadio.checked = true;
+        }
+      }
+      mStock.value = v.stock;
+      if (v.thumbnailUrl && thumbImg && thumbPreview) {
+        thumbPreview.classList.add("d-none");
+        thumbImg.classList.remove("d-none");
+        thumbImg.src = v.thumbnailUrl;
+      }
+      if (v.galleryFiles && v.galleryFiles.length && galleryPreview) {
+        galleryPreview.innerHTML = "";
+        v.galleryFiles.forEach(function (file) {
+          if (!file.type || !file.type.startsWith("image/")) return;
+          var r = new FileReader();
+          r.onload = function (e) {
+            var wrap = document.createElement("div");
+            wrap.className = "position-relative";
+            wrap.style.cssText = "width:60px;height:60px;";
+            wrap.innerHTML = '<img src="' + e.target.result + '" class="rounded-3 w-100 h-100" style="object-fit:cover;">' +
+              '<button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 rounded-circle" style="width:18px;height:18px;font-size:8px;line-height:1;"><i class="fas fa-times"></i></button>';
+            galleryPreview.appendChild(wrap);
+          };
+          r.readAsDataURL(file);
+        });
+      }
+      var mh = modalEl.querySelector(".modal-header h5");
+      var mp = modalEl.querySelector(".modal-header p");
+      if (mh) mh.textContent = msgs.editVariant;
+      if (mp) mp.textContent = msgs.editVariantSub;
+      modal.show();
     }
 
     // Save variant from modal
@@ -374,7 +436,7 @@
       var thumbnailUrl = null;
       if (thumbImg && !thumbImg.classList.contains("d-none")) thumbnailUrl = thumbImg.src;
 
-      window.__savedVariants.push({
+      var variant = {
         name: name,
         color: color,
         dimensions: dimensions,
@@ -383,7 +445,13 @@
         galleryFiles: galleryFiles,
         thumbnailUrl: thumbnailUrl,
         galleryCount: galleryFiles.length,
-      });
+      };
+
+      if (editingIndex >= 0) {
+        window.__savedVariants[editingIndex] = variant;
+      } else {
+        window.__savedVariants.push(variant);
+      }
 
       renderVariants();
       modal.hide();

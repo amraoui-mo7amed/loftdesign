@@ -18,7 +18,11 @@
         data-msg-unsupported="{% trans '{ext} not supported (use GLB/GLTF)' %}"
         data-msg-ready="{% trans '{name} ready to upload' %}"
         data-msg-preparing="{% trans 'Preparing {name}...' %}"
-        data-msg-confirm-remove="{% trans 'Remove this variant?' %}">
+        data-msg-confirm-remove="{% trans 'Remove this variant?' %}"
+        data-msg-new-variant="{% trans 'New Variant' %}"
+        data-msg-edit-variant="{% trans 'Edit Variant' %}"
+        data-msg-new-variant-sub="{% trans 'Configure a product variant with its own media, color, dimensions, and stock.' %}"
+        data-msg-edit-variant-sub="{% trans 'Update the variant name, media, dimensions, or stock.' %}">
 
     {% csrf_token %}
 

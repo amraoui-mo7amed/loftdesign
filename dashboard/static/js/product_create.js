@@ -399,11 +399,12 @@
 
   // ── AJAX Form Submission ────────────────────────────────
   var submitting = false;
-  form.addEventListener("submit", function (e) {
+
+  function doSubmit() {
     if (submitting) return;
     submitting = true;
-    e.preventDefault();
-    var btn = form.querySelector("button[type=submit]");
+    var btn = form.querySelector("button#submitProductBtn");
+    if (!btn) return;
     btn.disabled = true;
     var originalHtml = btn.innerHTML;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Submitting...';
@@ -482,7 +483,10 @@
         btn.innerHTML = originalHtml;
         showToast("Network error. Please try again.", "danger");
       });
-  });
+  }
+
+  document.getElementById("submitProductBtn").addEventListener("click", doSubmit);
+  form.addEventListener("submit", function (e) { e.preventDefault(); doSubmit(); });
 
   // ── Toast notification ──────────────────────────────────
   function showToast(msg, type) {

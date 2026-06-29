@@ -318,7 +318,7 @@
               {% endif %}
             </p>
             <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-dark btn-lg rounded-pill fw-bold shadow-sm">
+              <button type="button" id="submitProductBtn" class="btn btn-dark btn-lg rounded-pill fw-bold shadow-sm">
                 {% if is_provider %}{% trans "Submit for Review" %}{% else %}{% trans "Add Product" %}{% endif %}
               </button>
               <a href="{% url 'dash:product_list' %}"

@@ -42,6 +42,7 @@ def _sync_product_stock(product):
         for item in product.items.filter(is_active=True)
     )
     Product.objects.filter(pk=product.pk).update(quantity=total)
+    product.quantity = total
 
 
 @login_required
@@ -77,6 +78,7 @@ def item_create(request, product_pk):
     return JsonResponse({
         "success": True,
         "message": _("Item added."),
+        "product_quantity": product.quantity,
         "item": {
             "id": item.id,
             "name": item.name,
@@ -127,6 +129,7 @@ def item_update(request, pk):
     return JsonResponse({
         "success": True,
         "message": _("Item updated."),
+        "product_quantity": product.quantity,
         "item": {
             "id": item.id,
             "name": item.name,
@@ -150,4 +153,4 @@ def item_delete(request, pk):
     item.is_active = False
     item.save()
     _sync_product_stock(product)
-    return JsonResponse({"success": True, "message": _("Item removed.")})
+    return JsonResponse({"success": True, "message": _("Item removed."), "product_quantity": product.quantity})

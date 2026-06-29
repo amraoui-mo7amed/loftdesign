@@ -712,6 +712,25 @@ def check_low_stock(product, threshold=5):
             )
 
 
+def check_low_stock_product_item(item, threshold=5):
+    """Check if product variant stock is below threshold and notify admin"""
+    from django.contrib.auth.models import User
+    if item.stock_quantity <= threshold:
+        admins = User.objects.filter(is_superuser=True)
+        for admin in admins:
+            notify_user(
+                admin,
+                _("Low Stock Alert — Variant"),
+                _('"%(product)s — %(variant)s" has only %(qty)s units left.') % {
+                    "product": item.product.title,
+                    "variant": item.name,
+                    "qty": item.stock_quantity,
+                },
+                notification_type="warning",
+                link=reverse("dash:product_list"),
+            )
+
+
 def log_price_change(product, user, field_name, old_value, new_value):
     """Record a price change in PriceHistory"""
     PriceHistory.objects.create(

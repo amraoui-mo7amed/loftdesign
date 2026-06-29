@@ -56,6 +56,11 @@ document.addEventListener("DOMContentLoaded", function () {
             var btn = e.target.closest(".cart-item-remove");
             removeCartItem(btn.dataset.itemId);
         }
+        // Variant switch on checkout
+        if (e.target.closest(".variant-switch-btn:not([disabled])")) {
+            var btn = e.target.closest(".variant-switch-btn:not([disabled])");
+            switchVariant(btn.dataset.oldItemId, btn.dataset.newItemId, btn);
+        }
     });
 
     // -------------------------------------------------------
@@ -230,6 +235,76 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (typeof reloadPageSummary === "function") reloadPageSummary();
                 }
             });
+    }
+
+    function switchVariant(oldItemId, newItemId, btn) {
+        var formData = new FormData();
+        formData.append("old_item_id", oldItemId);
+        formData.append("new_item_id", newItemId);
+
+        btn.disabled = true;
+        var originalHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+        fetch("/cart/switch-variant/", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRFToken": csrfToken,
+            },
+        })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    updateBadge(data.cart_total);
+                    showMiniNotif(data.message);
+                    var container = btn.closest(".variant-switch-btn");
+                    if (container) container.classList.remove("btn-dark");
+                    if (data.item) {
+                        var pageItem = document.querySelector('.cart-page-item[data-item-id="' + oldItemId + '"]');
+                        if (pageItem) {
+                            pageItem.dataset.itemId = newItemId;
+                            var titleEl = pageItem.querySelector(".text-truncate");
+                            if (titleEl) titleEl.textContent = data.item.title;
+                            var thumbEl = pageItem.querySelector("img");
+                            if (thumbEl) thumbEl.src = data.item.thumbnail;
+                        }
+                    }
+                    var allBtns = document.querySelectorAll('.variant-switch-btn[data-old-item-id="' + oldItemId + '"]');
+                    allBtns.forEach(function (b) {
+                        b.disabled = false;
+                        b.classList.remove("btn-dark");
+                        b.classList.add("btn-outline-secondary");
+                        b.innerHTML = b.dataset.originalHtml || b.innerHTML;
+                    });
+                    btn.classList.remove("btn-outline-secondary");
+                    btn.classList.add("btn-dark");
+                    btn.disabled = true;
+                    if (typeof reloadPageSummary === "function") reloadPageSummary();
+                } else {
+                    showMiniNotif(data.message || "Error");
+                }
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            })
+            .catch(function () {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+                showMiniNotif("An error occurred.");
+            });
+    }
+
+    function reloadPageSummary() {
+        var totalEl = document.getElementById("orderTotal");
+        if (!totalEl) return;
+        var subtotals = document.querySelectorAll(".cart-page-item .fw-bold.small");
+        var sum = 0;
+        subtotals.forEach(function (el) {
+            var val = parseFloat(el.textContent.replace(/[^0-9.]/g, ""));
+            if (!isNaN(val)) sum += val;
+        });
+        totalEl.textContent = sum.toLocaleString() + " DZD";
     }
 
     function updateBadge(count) {

@@ -23,6 +23,7 @@ urlpatterns = [
     path("cart/update/", cart.cart_update, name="cart_update"),
     path("cart/remove/", cart.cart_remove, name="cart_remove"),
     path("cart/load/", cart.cart_load, name="cart_load"),
+    path("cart/switch-variant/", cart.cart_switch_variant, name="cart_switch_variant"),
     # Affiliate
     path("signup/", auth_views.signup_view, name="affiliate_signup_page"),
     path("affiliate/signup/", main.affiliate_signup, name="affiliate_signup"),

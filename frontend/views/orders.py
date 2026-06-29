@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from dashboard.models import Product, ProductItem, Order, Notification, PartnerPrice
-from dashboard.utils import notify_user, resolve_price, check_low_stock
+from dashboard.utils import notify_user, resolve_price, check_low_stock, check_low_stock_product_item
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.db import transaction
@@ -70,6 +70,7 @@ def place_order(request):
 
         try:
             with transaction.atomic():
+                product = Product.objects.select_for_update().get(pk=product.pk)
                 order_item = {
                     "product_id": product.pk,
                     "title": product.title,
@@ -78,11 +79,13 @@ def place_order(request):
                     "thumbnail": product.thumbnail.url if product.thumbnail else "",
                 }
                 if item:
+                    item = ProductItem.objects.select_for_update().get(pk=item.pk)
                     order_item["item_id"] = item.pk
                     order_item["item_name"] = item.name
                     order_item["item_thumbnail"] = item.thumbnail.url if item.thumbnail else ""
                     item.stock_quantity -= quantity
                     item.save()
+                    check_low_stock_product_item(item)
                 else:
                     product.quantity -= quantity
                     product.save()

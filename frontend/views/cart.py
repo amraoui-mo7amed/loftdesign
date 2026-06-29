@@ -7,9 +7,9 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from decimal import Decimal
 
-from dashboard.models import Product, Order, PartnerPrice, Notification
+from dashboard.models import Product, ProductItem, Order, PartnerPrice, Notification
 from user_auth.models import UserProfile
-from dashboard.utils import get_algeria_locations, notify_user, resolve_price, check_low_stock
+from dashboard.utils import get_algeria_locations, notify_user, resolve_price, check_low_stock, check_low_stock_product_item
 
 
 CART_SESSION_KEY = "cart"
@@ -67,10 +67,22 @@ def _get_cart_items_data(request):
         subtotal = float(price) * item_data["quantity"]
         display_title = product.title
         display_thumbnail = product.thumbnail.url if product.thumbnail else ""
+        available_variants = []
         if item_data.get("item_id"):
             display_title += f" — {item_data.get('item_name', '')}"
             if item_data.get("item_thumbnail"):
                 display_thumbnail = item_data["item_thumbnail"]
+            variants = ProductItem.objects.filter(product=product, is_active=True)
+            for v in variants:
+                available_variants.append({
+                    "id": v.pk,
+                    "name": v.name,
+                    "color": v.color or "",
+                    "dimensions": v.dimensions or "",
+                    "stock_quantity": v.stock_quantity,
+                    "thumbnail_url": v.thumbnail.url if v.thumbnail else "",
+                    "is_selected": str(v.pk) == str(item_data["item_id"]),
+                })
         items.append({
             "id": item_data.get("item_id") or item_data["product_id"],
             "product_id": product.pk,
@@ -81,6 +93,7 @@ def _get_cart_items_data(request):
             "subtotal": subtotal,
             "subtotal_str": f"{subtotal:.0f}",
             "thumbnail": display_thumbnail,
+            "available_variants": available_variants,
         })
     return items
 
@@ -145,6 +158,53 @@ def cart_add(request):
 
 
 @require_POST
+def cart_switch_variant(request):
+    old_item_id = request.POST.get("old_item_id")
+    new_item_id = request.POST.get("new_item_id")
+
+    if not old_item_id or not new_item_id:
+        return JsonResponse({"success": False, "message": _("Missing variant IDs.")})
+
+    cart = _get_cart(request)
+    old_key = str(old_item_id)
+
+    if old_key not in cart:
+        return JsonResponse({"success": False, "message": _("Item not found in cart.")})
+
+    new_variant = get_object_or_404(ProductItem, pk=new_item_id, is_active=True)
+    if new_variant.stock_quantity < 1:
+        return JsonResponse({"success": False, "message": _("This variant is out of stock.")})
+
+    entry = cart[old_key]
+    new_key = str(new_item_id)
+    entry["item_id"] = new_variant.pk
+    entry["item_name"] = new_variant.name
+    entry["item_thumbnail"] = new_variant.thumbnail.url if new_variant.thumbnail else ""
+
+    if old_key != new_key:
+        cart[new_key] = entry
+        del cart[old_key]
+
+    _save_cart(request, cart)
+
+    new_quantity = entry["quantity"]
+    unit_price = Decimal(str(entry.get("resolved_price", 0))) or Decimal("0")
+    item_subtotal = unit_price * new_quantity
+
+    items_data = _get_cart_items_data(request)
+    updated_item = next((i for i in items_data if str(i["id"]) == str(new_item_id)), None)
+
+    return JsonResponse({
+        "success": True,
+        "message": _("Variant changed to %(name)s.") % {"name": new_variant.name},
+        "item": updated_item,
+        "cart_total": _cart_total_items(cart),
+        "cart_total_price": str(_cart_total_price(cart)),
+        "item_subtotal": str(item_subtotal),
+    })
+
+
+@require_POST
 def cart_update(request):
     item_id = request.POST.get("item_id")
     quantity = int(request.POST.get("quantity", 1))
@@ -165,6 +225,18 @@ def cart_update(request):
             "cart_total_price": str(_cart_total_price(cart)),
             "removed": True,
         })
+
+    # Re-check stock when increasing quantity for variant items
+    entry = cart[key]
+    if entry.get("item_id") and quantity > entry["quantity"]:
+        variant = ProductItem.objects.filter(pk=entry["item_id"]).first()
+        if variant and variant.stock_quantity < quantity:
+            return JsonResponse({
+                "success": False,
+                "message": _(
+                    "Only %(stock)s available for this variant."
+                ) % {"stock": variant.stock_quantity}
+            })
 
     cart[key]["quantity"] = quantity
     _save_cart(request, cart)
@@ -261,7 +333,9 @@ def cart_checkout(request):
             product_titles = []
 
             for item_data in list(cart.values()):
-                product = Product.objects.filter(pk=item_data["product_id"]).first()
+                product = Product.objects.select_for_update().filter(
+                    pk=item_data["product_id"]
+                ).first()
                 if not product:
                     continue
 
@@ -276,12 +350,14 @@ def cart_checkout(request):
                 if item_data.get("item_id"):
                     item_entry["item_id"] = item_data["item_id"]
                     item_entry["item_name"] = item_data.get("item_name", "")
-                    from dashboard.models import ProductItem
-                    variant = ProductItem.objects.filter(pk=item_data["item_id"]).first()
+                    variant = ProductItem.objects.select_for_update().filter(
+                        pk=item_data["item_id"]
+                    ).first()
                     if variant:
                         item_entry["item_thumbnail"] = variant.thumbnail.url if variant.thumbnail else ""
                         variant.stock_quantity -= item_data["quantity"]
                         variant.save()
+                        check_low_stock_product_item(variant)
                 order_items.append(item_entry)
                 product_titles.append(product.title)
 

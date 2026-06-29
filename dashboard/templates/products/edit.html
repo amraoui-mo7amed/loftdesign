@@ -5,275 +5,432 @@
 {% block dashTitle %}{% trans "Edit Product" %}{% endblock dashTitle %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
-    <style>
-        .file-drop-zone:hover { border-color: #0d6efd !important; background: #f0f7ff; }
-        .file-drop-zone.dragover { border-color: #0d6efd !important; background: #e8f4ff; }
-        input[type="color"].form-control-color { padding: 2px; }
-        #variantPicker .variant-btn.active { border-color: #000 !important; background: #f8f9fa; }
-        .tracking-wider { letter-spacing: 0.05em; }
-        .btn-group input[type="radio"]:checked + label { background: #000; color: #fff; border-color: #000; }
-        .item-card { transition: box-shadow 0.25s, transform 0.25s; cursor: default; }
-        .item-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important; transform: translateY(-3px); }
-        .item-card:hover .item-card-actions { opacity: 1 !important; }
-        .item-card-actions .btn { opacity: 0.9; }
-        .item-card-actions .btn:hover { opacity: 1; transform: scale(1.15); }
-        .items-section-header .btn-outline-primary { border-color: #dee2e6; }
-        .items-section-header .btn-outline-primary:hover { border-color: #0d6efd; }
-    </style>
+  <link rel="stylesheet" href="{% static 'css/products.css' %}?v={% now 'U' %}">
+  <link rel="stylesheet" href="{% static 'css/product_create.css' %}?v={% now 'U' %}">
 {% endblock extra_css %}
 
 {% block dashContent %}
 <div class="container-fluid py-4">
-    <div class="mb-5" data-aos="fade-down">
-        <a href="{% url 'dash:product_list' %}" class="btn btn-link text-muted p-0 text-decoration-none mb-2">
+
+  {% include "partials/errorList.html" with form_id="portfolioForm" %}
+
+  <form method="POST" enctype="multipart/form-data" class="form" id="portfolioForm"
+        data-product-id="{{ product.pk }}"
+        data-msg-unsupported="{% trans '{ext} not supported (use GLB/GLTF)' %}"
+        data-msg-ready="{% trans '{name} ready to upload' %}"
+        data-msg-preparing="{% trans 'Preparing {name}...' %}"
+        data-msg-confirm-remove="{% trans 'Remove this variant?' %}">
+
+    {% csrf_token %}
+
+    {# ── Header ──────────────────────────────────────────── #}
+    <div class="create-header mb-4" data-aos="fade-down">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 position-relative" style="z-index:1;">
+        <div>
+          <a href="{% url 'dash:product_list' %}"
+             class="text-white-50 text-decoration-none small fw-bold mb-2 d-inline-block"
+             style="opacity:0.7;transition:opacity 0.2s;"
+             onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
             <i class="fas fa-arrow-left me-1"></i> {% trans "Back to Inventory" %}
-        </a>
-        <h1 class="fw-black display-4 mb-0">{% trans "Edit Product" %}</h1>
+          </a>
+          <h1 class="fw-black mb-0" style="font-size:1.75rem;">
+            <i class="fas fa-pen me-2 opacity-75"></i>{% trans "Edit Product" %}
+          </h1>
+          <p class="mb-0 text-white-50 small mt-1">{% trans "Update your product details, pricing, and media." %}</p>
+        </div>
+        <div class="d-none d-md-flex align-items-center gap-3">
+          <div class="d-flex align-items-center gap-2 rounded-3 px-3 py-2" style="background:rgba(255,255,255,0.06);">
+            <i class="fas fa-boxes text-primary opacity-75"></i>
+            <span class="small fw-bold">{{ request.user.profile.get_role_display|default:_("User") }}</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    {% include "partials/errorList.html" with form_id="portfolioForm" %}
-
-    <form method="POST" enctype="multipart/form-data" class="form" id="portfolioForm" data-product-id="{{ product.pk }}">
-        {% csrf_token %}
-        <div class="row g-4">
-            <div class="col-lg-8" data-aos="fade-right">
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Product Details" %}</h5>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">{% trans "Product Name" %}</label>
-                        <input type="text" name="title" class="form-control form-control-lg" value="{{ product.title }}" >
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">{% trans "Category" %}</label>
-                        {% include "components/custom_select.html" with name="category" options=categories value=product.category.id select_title=product.category.name|default:_("Select Category") %}
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">{% trans "Full Description" %}</label>
-                        <textarea name="description" class="form-control" rows="8" >{{ product.description }}</textarea>
-                    </div>
-                    {% if is_admin and product.user and product.user != request.user %}
-                    <div class="alert alert-info rounded-3 py-2 px-3 mb-3">
-                        <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                            <i class="fas fa-user"></i>
-                            <span class="fw-bold">{{ product.user.get_full_name|default:product.user.username }}</span>
-                            <span class="text-muted mx-1">|</span>
-                            <span class="fw-bold">{% trans "Purchase" %}:</span>
-                            <span class="fw-bold text-primary">DZD{{ product.loft_purchase_price|floatformat:0 }}</span>
-                        </div>
-                        {% if product.loft_wholesale_price or product.loft_retail_price %}
-                        <div class="small d-flex gap-3 flex-wrap text-muted">
-                            {% if product.loft_wholesale_price %}
-                            <span>{% trans "Suggested Wholesale" %}: <strong class="text-dark">DZD{{ product.loft_wholesale_price|floatformat:0 }}</strong></span>
-                            {% endif %}
-                            {% if product.loft_retail_price %}
-                            <span>{% trans "Suggested Retail" %}: <strong class="text-dark">DZD{{ product.loft_retail_price|floatformat:0 }}</strong></span>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                    <div class="row g-3 mb-0">
-                        {% if is_admin %}
-                        <div class="col-md-6 col-lg-4">
-                            <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
-                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control form-control-lg" value="{{ product.loft_purchase_price|stringformat:'.2f' }}" lang="en">
-                            <div class="form-text small">{% trans "What Loft pays the supplier." %}</div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <label class="form-label fw-bold">{% trans "Wholesale (DZD)" %}</label>
-                            <input type="number" name="loft_wholesale_price" step="0.01" class="form-control form-control-lg" value="{{ product.loft_wholesale_price|default:''|stringformat:'.2f' }}" lang="en">
-                            <div class="form-text small">{% trans "Price for affiliates." %}</div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <label class="form-label fw-bold">{% trans "Retail (DZD)" %}</label>
-                            <input type="number" name="loft_retail_price" step="0.01" class="form-control form-control-lg" value="{{ product.loft_retail_price|default:''|stringformat:'.2f' }}" lang="en">
-                            <div class="form-text small">{% trans "Price for end clients." %}</div>
-                        </div>
-                        {% else %}
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
-                            <input type="number" name="loft_purchase_price" step="0.01" class="form-control form-control-lg" value="{{ product.loft_purchase_price|stringformat:'.2f' }}" lang="en">
-                            <div class="form-text small">{% trans "The price Loft Design will pay you per unit." %}</div>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="row g-3 mt-3">
-                        <div class="col-md-6 col-lg-4">
-                            <label class="form-label fw-bold">{% trans "Available Quantity" %}</label>
-                            <input type="number" name="quantity" class="form-control form-control-lg" value="{{ product.quantity }}" min="0" required>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <label class="form-label fw-bold">{% trans "Tags" %}</label>
-                            <input type="text" name="tags" class="form-control form-control-lg" value="{{ product.tags }}">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Sales Settings" %}</h5>
-                    <div class="mb-0">
-                        <label class="form-label fw-bold">{% trans "External Affiliate/Buy Link" %}</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-link text-primary"></i></span>
-                            <input type="url" name="external_link" class="form-control" value="{{ product.external_link|default:'' }}">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gallery Section -->
-                <div class="card border-0 shadow-sm rounded-4 p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                        <h5 class="fw-bold mb-0">{% trans "Product Gallery" %}</h5>
-                        <span class="badge bg-light text-primary">{% trans "Multiple Images" %}</span>
-                    </div>
-
-                    {% if product.gallery_images.all %}
-                    <div class="d-flex flex-wrap gap-2 mb-3" id="existingGallery">
-                        {% for img in product.gallery_images.all %}
-                        <div class="position-relative" style="width: 80px; height: 80px;" data-gallery-id="{{ img.id }}">
-                            <img src="{{ img.image.url }}" class="w-100 h-100 rounded-3" style="object-fit: cover;">
-                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 rounded-circle" style="width: 20px; height: 20px; font-size: 10px; line-height: 1;" data-remove-gallery="{{ img.id }}">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <input type="hidden" name="remove_gallery_ids" id="removeGalleryIds" value="">
-                    {% endif %}
-
-                    <div class="file-drop-zone mb-3" id="galleryDropZone">
-                        <i class="fas fa-images fa-3x"></i>
-                        <h6 class="fw-bold">{% trans "Drop your gallery images here" %}</h6>
-                        <p class="text-muted small">{% trans "Or click to browse your files" %}</p>
-                        <input type="file" name="gallery_images" multiple class="d-none" accept="image/*">
-                    </div>
-
-                    <div id="galleryPreviewContainer" class="preview-grid">
-                    </div>
-                </div>
-
-                <!-- Product Items / Variants Section (Full Width) -->
-                {% include "products/items/section.html" %}
-            </div>
-
-            <div class="col-lg-4" data-aos="fade-left">
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Product Image" %}</h5>
-                    <div class="file-drop-zone p-2">
-                        <div id="thumbPreviewContainer">
-                            <div class="preview-item w-100 mb-0" style="aspect-ratio: 16/9;">
-                                <img src="{{ product.thumbnail.url }}" alt="Thumbnail">
-                            </div>
-                        </div>
-                        <input type="file" name="thumbnail" class="d-none" accept="image/*">
-                    </div>
-                    <div class="form-text mt-2 small text-center">{% trans "Click to change image" %}</div>
-                </div>
-
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "3D Model" %}</h5>
-                    <div class="file-drop-zone p-2">
-                        <div id="modelPreviewContainer">
-                            {% if product.model_3d %}
-                            <i class="fas fa-cube fa-2x mb-2 text-primary"></i>
-                            <p class="small mb-1 fw-bold text-truncate">{{ product.model_3d.name }}</p>
-                            <p class="text-muted small mb-0">{% trans "Click to replace" %}</p>
-                            {% else %}
-                            <i class="fas fa-cube fa-2x mb-2"></i>
-                            <p class="text-muted small mb-0">{% trans "Upload GLB or GLTF 3D Model" %}</p>
-                            {% endif %}
-                        </div>
-                        <input type="file" name="model_3d" class="d-none" accept=".glb,.gltf,model/gltf-binary,model/gltf+json">
-                    </div>
-                    <div class="form-text mt-2 small">{% trans "Optional. Supported formats: GLB, GLTF" %}</div>
-                    <div id="modelStatus" class="mt-2 d-none">
-                        <div class="d-flex justify-content-between small mb-1">
-                            <span id="modelStatusText" class="fw-semibold"></span>
-                            <span id="modelStatusSize" class="text-muted"></span>
-                        </div>
-                        <div class="progress" style="height:4px;">
-                            <div id="modelStatusBar" class="progress-bar" role="progressbar" style="width:0%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Visibility" %}</h5>
-                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center mb-3">
-                        <label class="form-check-label fw-bold">{% trans "Active in Store" %}</label>
-                        <input class="form-check-input ms-0 mt-0" type="checkbox" name="is_active" {% if product.is_active %}checked{% endif %} style="width: 50px; height: 24px;">
-                    </div>
-                    <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
-                        <label class="form-check-label fw-bold">{% trans "Is Featured" %}</label>
-                        <input class="form-check-input ms-0 mt-0" type="checkbox" name="is_featured" {% if product.is_featured %}checked{% endif %} style="width: 50px; height: 24px;">
-                    </div>
-                </div>
-
-                <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
-                    <h5 class="fw-bold mb-4 border-bottom pb-2">{% trans "Actions" %}</h5>
-                    {% if is_admin and product.status == "pending" %}
-                    <div class="alert alert-warning rounded-3 small mb-3 py-2 px-3">
-                        <i class="fas fa-clock me-1"></i>
-                        {% trans "Set wholesale & retail prices and click Save to approve this product." %}
-                    </div>
-                    {% endif %}
-                    <div class="d-flex flex-column gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-lg py-3">
-                            <i class="fas fa-save me-2"></i> {% trans "Save" %}
-                        </button>
-                        {% if is_admin %}
-                        <a href="{% url 'dash:partner_price_list' product.pk %}" class="btn btn-outline-primary btn-lg rounded-pill fw-bold py-3">
-                            <i class="fas fa-tags me-2"></i> {% trans "Affiliate Pricing" %}
-                        </a>
-                        {% endif %}
-
-                        {% if price_history %}
-                        <button type="button" class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" data-bs-toggle="collapse" data-bs-target="#priceHistoryPanel">
-                            <i class="fas fa-history me-2"></i> {% trans "Price History" %}
-                        </button>
-                        {% endif %}
-                        <a href="{% url 'dash:product_list' %}" class="btn btn-light btn-lg rounded-pill fw-bold border py-3">
-                            {% trans "Cancel" %}
-                        </a>
-                    </div>
-                </div>
-
-                {% if price_history %}
-                <div class="collapse mt-3" id="priceHistoryPanel">
-                    <div class="card border-0 shadow-sm rounded-4 p-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">
-                            <i class="fas fa-history me-2"></i>{% trans "Price History" %}
-                        </h5>
-                        <ul class="list-unstyled mb-0" style="max-height: 400px; overflow-y: auto;">
-                            {% for h in price_history %}
-                            <li class="py-2 {% if not forloop.last %}border-bottom{% endif %}">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-light text-dark fw-bold px-2 py-1">{{ h.field_name }}</span>
-                                    <small class="text-muted">{{ h.created_at|date:"d M, H:i" }}</small>
-                                </div>
-                                <div class="small mt-1">
-                                    {% if h.user %}<span class="text-muted">{{ h.user.get_full_name|default:h.user.username }}</span> &rarr;{% endif %}
-                                    {% if h.old_value is not None %}<span class="text-decoration-line-through text-danger">{{ h.old_value|floatformat:2 }}</span>{% else %}<span class="text-muted">—</span>{% endif %}
-                                    <i class="fas fa-arrow-right mx-1 small"></i>
-                                    <span class="fw-bold text-success">{{ h.new_value|floatformat:2 }} DZD</span>
-                                </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
+    {# ── Stepper ─────────────────────────────────────────── #}
+    <div id="stepperWrap" class="create-stepper-wrap mb-4" data-aos="fade-up">
+      <div class="create-stepper" id="formStepper">
+        <div class="step done" data-section="details">
+          <span class="step-number">1</span>
+          <span class="step-label">{% trans "Details" %}</span>
         </div>
-    </form>
+        <div class="step-connector"></div>
+        <div class="step done" data-section="pricing">
+          <span class="step-number">2</span>
+          <span class="step-label">{% trans "Pricing" %}</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step done" data-section="sales">
+          <span class="step-number">3</span>
+          <span class="step-label">{% trans "Sales" %}</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step done" data-section="variants">
+          <span class="step-number">4</span>
+          <span class="step-label">{% trans "Variants" %}</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step done" data-section="gallery">
+          <span class="step-number">5</span>
+          <span class="step-label">{% trans "Media" %}</span>
+        </div>
+      </div>
+    </div>
 
-    {% include "products/items/form_modal.html" %}
+    {# ── Main Row ────────────────────────────────────────── #}
+    <div class="row g-4">
+
+      {# ── LEFT COLUMN ──────────────────────────────────── #}
+      <div class="col-lg-8">
+
+        {# ── 1. Product Details (with thumbnail) ───────── #}
+        <div class="create-section mb-4" id="section-details" data-aos="fade-up">
+          <div class="card-body">
+            <div class="create-section-header">
+              <div class="icon-box" style="background:rgba(13,110,253,0.15);color:#0d6efd;">
+                <i class="fas fa-info-circle"></i>
+              </div>
+              <h5>{% trans "Product Details" %}</h5>
+            </div>
+
+            {% if is_admin and product.user and product.user != request.user %}
+            <div class="alert alert-info rounded-3 py-2 px-3 mb-4 d-flex align-items-center gap-2 flex-wrap">
+              <i class="fas fa-user"></i>
+              <span class="fw-bold">{{ product.user.get_full_name|default:product.user.username }}</span>
+              <span class="text-muted mx-1">|</span>
+              <span class="fw-bold">{% trans "Purchase" %}:</span>
+              <span class="fw-bold text-primary">DZD{{ product.loft_purchase_price|floatformat:0 }}</span>
+              {% if product.loft_wholesale_price or product.loft_retail_price %}
+              <span class="text-muted mx-1">|</span>
+              {% if product.loft_wholesale_price %}
+              <span class="small">{% trans "Suggested Wholesale" %}: <strong>DZD{{ product.loft_wholesale_price|floatformat:0 }}</strong></span>
+              {% endif %}
+              {% if product.loft_retail_price %}
+              <span class="small">{% trans "Retail" %}: <strong>DZD{{ product.loft_retail_price|floatformat:0 }}</strong></span>
+              {% endif %}
+              {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="row g-4 align-items-stretch">
+              <div class="col-md-5">
+                <label class="form-label fw-bold small text-uppercase text-muted">{% trans "Thumbnail" %}</label>
+                <div class="upload-widget h-100 d-flex flex-column justify-content-center has-file" id="thumbWidget"
+                     style="max-height:200px;border-radius:16px;border:2px dashed #dee2e6;">
+                  <div class="upload-placeholder text-center py-5">
+                    <i class="fas fa-cloud-upload-alt d-block mb-3" style="font-size:2.5rem;opacity:0.4;"></i>
+                    <span class="d-block fw-bold small">{% trans "Drop thumbnail here" %}</span>
+                    <span class="d-block text-muted" style="font-size:0.75rem;">{% trans "or click to browse" %}</span>
+                  </div>
+                  <img class="upload-preview" id="thumbImg" alt="" src="{{ product.thumbnail.url }}" style="display:block;">
+                  <span class="upload-badge">{% trans "THUMBNAIL" %}</span>
+                  <button type="button" class="upload-remove" id="thumbRemove">&times;</button>
+                  <input type="file" name="thumbnail" id="thumbInput" accept="image/*">
+                </div>
+                <div class="form-text-hint mt-2">{% trans "Recommended: 1200×1200px. Max 5MB." %}</div>
+              </div>
+              <div class="col-md-7 d-flex flex-column gap-3">
+                <div>
+                  <label class="form-label fw-bold">{% trans "Product Name" %}</label>
+                  <input type="text" name="title" class="form-control form-control-lg rounded-3"
+                         value="{{ product.title }}" placeholder="{% trans 'e.g. Modern Sofa, Velvet Chair' %}" required>
+                </div>
+                <div>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label fw-bold mb-0">{% trans "Category" %}</label>
+                    {% if request.user.is_superuser %}
+                    <a href="{% url 'dash:category_list' %}" class="text-primary fw-bold text-decoration-none" style="font-size:0.72rem;">
+                      <i class="fas fa-cog me-1"></i> {% trans "Manage" %}
+                    </a>
+                    {% endif %}
+                  </div>
+                  {% include "components/custom_select.html" with name="category" options=categories value=product.category.id select_title=product.category.name|default:_("Select Category") %}
+                </div>
+                <div class="flex-grow-1 d-flex flex-column">
+                  <label class="form-label fw-bold">{% trans "Description" %}</label>
+                  <textarea name="description" class="form-control flex-grow-1 rounded-3"
+                            placeholder="{% trans 'Describe your product — dimensions, materials, colors, care instructions...' %}"
+                            maxlength="2000" required style="min-height:100px;">{{ product.description }}</textarea>
+                  <div class="char-counter" id="descCounter">{{ product.description|length }} / 2000</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {# ── 2. Pricing ────────────────────────────────── #}
+        <div class="create-section mb-4" id="section-pricing" data-aos="fade-up">
+          <div class="card-body">
+            <div class="create-section-header">
+              <div class="icon-box" style="background:rgba(25,135,84,0.15);color:#198754;">
+                <i class="fas fa-tags"></i>
+              </div>
+              <h5>{% trans "Pricing" %}</h5>
+            </div>
+            <div class="row g-4">
+              <div class="col-md-4">
+                <label class="form-label">
+                  {% if is_provider %}<i class="fas fa-hand-holding-usd me-1 text-primary"></i>{% endif %}
+                  {% trans "Purchase Price" %}
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-0 fw-bold small">DZD</span>
+                  <input type="number" name="loft_purchase_price" step="0.01"
+                         class="form-control form-control-lg" placeholder="0" lang="en"
+                         value="{{ product.loft_purchase_price|stringformat:'.2f' }}"
+                         {% if is_provider %}required{% endif %}>
+                </div>
+                <div class="form-text-hint">
+                  {% if is_provider %}{% trans "Your cost from supplier." %}
+                  {% else %}{% trans "What Loft pays the supplier." %}{% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-store me-1 text-primary"></i> {% trans "Wholesale" %}</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-0 fw-bold small">DZD</span>
+                  <input type="number" name="loft_wholesale_price" step="0.01"
+                         class="form-control form-control-lg" placeholder="0" lang="en"
+                         value="{{ product.loft_wholesale_price|default:''|stringformat:'.2f' }}">
+                </div>
+                <div class="form-text-hint">{% trans "Price for affiliates & partners." %}</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-shopping-cart me-1 text-primary"></i> {% trans "Retail" %}</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-0 fw-bold small">DZD</span>
+                  <input type="number" name="loft_retail_price" step="0.01"
+                         class="form-control form-control-lg" placeholder="0" lang="en"
+                         value="{{ product.loft_retail_price|default:''|stringformat:'.2f' }}">
+                </div>
+                <div class="form-text-hint">{% trans "Price for end customers." %}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {# ── 3. Sales Settings ─────────────────────────── #}
+        <div class="create-section mb-4" id="section-sales" data-aos="fade-up">
+          <div class="card-body">
+            <div class="create-section-header">
+              <div class="icon-box" style="background:rgba(13,202,240,0.15);color:#0dcaf0;">
+                <i class="fas fa-link"></i>
+              </div>
+              <h5>{% trans "Sales Settings" %}</h5>
+            </div>
+            <div class="row g-4">
+              <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-box me-1 text-primary"></i> {% trans "Total Stock" %}</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-0"><i class="fas fa-cubes text-muted"></i></span>
+                  <input type="number" name="quantity" id="totalStockInput"
+                         class="form-control form-control-lg" placeholder="0"
+                         value="{{ product.quantity }}" min="0" readonly
+                         style="background:#f8f9fa;cursor:default;">
+                </div>
+                <div class="form-text-hint" id="stockHint">
+                  {% trans "Auto-calculated from variant stock." %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-tag me-1 text-primary"></i> {% trans "Tags" %}</label>
+                <input type="text" name="tags" class="form-control form-control-lg"
+                       placeholder="{% trans 'Furniture, Modern, Wood' %}" value="{{ product.tags }}">
+                <div class="form-text-hint">{% trans "Comma-separated keywords." %}</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-external-link-alt me-1 text-primary"></i> {% trans "External Link" %}</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-0"><i class="fas fa-link text-primary"></i></span>
+                  <input type="url" name="external_link" class="form-control form-control-lg"
+                         placeholder="https://example.com/product"
+                         value="{{ product.external_link|default:'' }}">
+                </div>
+                <div class="form-text-hint">{% trans "Optional affiliate / external URL." %}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {# ── 4. Variants ──────────────────────────────── #}
+        <div class="create-section mb-4" id="section-variants" data-aos="fade-up">
+          <div class="card-body">
+            <div class="create-section-header">
+              <div class="icon-box" style="background:rgba(111,66,193,0.15);color:#6f42c1;">
+                <i class="fas fa-layer-group"></i>
+              </div>
+              <h5>{% trans "Variants" %}</h5>
+            </div>
+            {% include "products/items/section.html" %}
+          </div>
+        </div>
+
+      </div>
+
+      {# ── RIGHT COLUMN ────────────────────────────────── #}
+      <div class="col-lg-4">
+        <div class="create-sidebar-inner">
+
+          {# ── Gallery ────────────────────────────────── #}
+          <div class="create-sidebar-card" data-aos="fade-up">
+            <div class="card-label"><i class="fas fa-images text-warning"></i> {% trans "Gallery Images" %}</div>
+
+            {% if product.gallery_images.all %}
+            <div class="d-flex flex-wrap gap-2 mb-3" id="existingGallery">
+              {% for img in product.gallery_images.all %}
+              <div class="position-relative" style="width:80px;height:80px;" data-gallery-id="{{ img.id }}">
+                <img src="{{ img.image.url }}" class="w-100 h-100 rounded-3" style="object-fit:cover;">
+                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 rounded-circle"
+                        style="width:20px;height:20px;font-size:10px;line-height:1;"
+                        data-remove-gallery="{{ img.id }}">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              {% endfor %}
+            </div>
+            <input type="hidden" name="remove_gallery_ids" id="removeGalleryIds" value="">
+            {% endif %}
+
+            <div class="upload-widget" id="galleryWidget">
+              <div class="upload-placeholder">
+                <i class="fas fa-images"></i>
+                <span>{% trans "Drop images here or click to select multiple" %}</span>
+              </div>
+              <input type="file" name="gallery_images" id="galleryInput" class="d-none" multiple accept="image/*">
+            </div>
+            <div class="preview-grid" id="galleryPreview"></div>
+          </div>
+
+          {# ── Visibility & Status ────────────────────── #}
+          <div class="create-sidebar-card" data-aos="fade-up">
+            <div class="card-label"><i class="fas fa-eye"></i> {% trans "Visibility & Status" %}</div>
+
+            {% if is_admin and product.status == "pending" %}
+            <div class="alert alert-warning rounded-3 small mb-3 py-2 px-3">
+              <i class="fas fa-clock me-1"></i>
+              {% trans "Set wholesale & retail prices and click Save to approve this product." %}
+            </div>
+            {% endif %}
+
+            <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3 mb-2">
+              <span class="fw-semibold small">{% trans "Active in Store" %}</span>
+              <input class="form-check-input" type="checkbox" name="is_active" {% if product.is_active %}checked{% endif %}
+                     role="switch" style="width:44px;height:24px;cursor:pointer;">
+            </div>
+            <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3">
+              <span class="fw-semibold small">{% trans "Featured Product" %}</span>
+              <input class="form-check-input" type="checkbox" name="is_featured" {% if product.is_featured %}checked{% endif %}
+                     role="switch" style="width:44px;height:24px;cursor:pointer;">
+            </div>
+            <hr class="my-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="small text-muted fw-bold">{% trans "Status" %}</span>
+              <span class="badge {% if product.status == 'approved' %}bg-success{% elif product.status == 'pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill px-3 py-1">
+                {{ product.get_status_display }}
+              </span>
+            </div>
+          </div>
+
+          {# ── 3D Model ──────────────────────────────── #}
+          <div class="create-sidebar-card" data-aos="fade-up">
+            <div class="card-label"><i class="fas fa-cube"></i> {% trans "3D Model" %}</div>
+            <div class="upload-widget" id="modelWidget">
+              <div class="upload-placeholder">
+                {% if product.model_3d %}
+                <i class="fas fa-cube fa-2x mb-2 text-primary d-block"></i>
+                <span class="fw-bold small">{{ product.model_3d.name|truncatechars:30 }}</span>
+                <span class="d-block text-muted" style="font-size:0.75rem;">{% trans "Click to replace" %}</span>
+                {% else %}
+                <i class="fas fa-cube"></i>
+                <span>{% trans "Upload GLB or GLTF" %}</span>
+                {% endif %}
+              </div>
+              <input type="file" name="model_3d" id="modelInput" class="d-none"
+                     accept=".glb,.gltf,model/gltf-binary,model/gltf+json">
+            </div>
+            <div id="modelStatus" class="d-none mt-2">
+              <div class="d-flex justify-content-between small mb-1">
+                <span id="modelStatusText" class="fw-semibold"></span>
+                <span id="modelStatusSize" class="text-muted"></span>
+              </div>
+              <div class="progress" style="height:4px;">
+                <div id="modelStatusBar" class="progress-bar" role="progressbar" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="form-text-hint mt-2">{% trans "Supported: GLB, GLTF. Max 50MB." %}</div>
+          </div>
+
+          {# ── Actions ───────────────────────────────── #}
+          <div class="create-sidebar-card" data-aos="fade-up">
+            <div class="card-label"><i class="fas fa-check-circle text-success"></i> {% trans "Actions" %}</div>
+
+            {% if is_admin and product.status == "pending" %}
+            <div class="alert alert-warning rounded-3 small mb-3 py-2 px-3">
+              <i class="fas fa-clock me-1"></i>
+              {% trans "Set wholesale & retail prices and click Save to approve." %}
+            </div>
+            {% endif %}
+
+            <div class="d-flex flex-column gap-2">
+              <button type="submit" class="btn btn-dark btn-lg rounded-pill fw-bold shadow-sm">
+                <i class="fas fa-save me-1"></i> {% trans "Save" %}
+              </button>
+              {% if is_admin %}
+              <a href="{% url 'dash:partner_price_list' product.pk %}"
+                 class="btn btn-outline-primary btn-lg rounded-pill fw-bold">
+                <i class="fas fa-tags me-1"></i> {% trans "Affiliate Pricing" %}
+              </a>
+              {% endif %}
+              {% if price_history %}
+              <button type="button" class="btn btn-outline-secondary btn-lg rounded-pill fw-bold"
+                      data-bs-toggle="collapse" data-bs-target="#priceHistoryPanel">
+                <i class="fas fa-history me-1"></i> {% trans "Price History" %}
+              </button>
+              {% endif %}
+              <a href="{% url 'dash:product_list' %}"
+                 class="btn btn-light btn-lg rounded-pill fw-bold border">
+                {% trans "Cancel" %}
+              </a>
+            </div>
+          </div>
+
+          {% if price_history %}
+          <div class="collapse" id="priceHistoryPanel">
+            <div class="create-sidebar-card" data-aos="fade-up">
+              <div class="card-label"><i class="fas fa-history text-muted"></i> {% trans "Price History" %}</div>
+              <ul class="list-unstyled mb-0" style="max-height:400px;overflow-y:auto;">
+                {% for h in price_history %}
+                <li class="py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-light text-dark fw-bold px-2 py-1 small">{{ h.field_name }}</span>
+                    <small class="text-muted">{{ h.created_at|date:"d M, H:i" }}</small>
+                  </div>
+                  <div class="small mt-1">
+                    {% if h.user %}<span class="text-muted small">{{ h.user.get_full_name|default:h.user.username }}</span> &rarr;{% endif %}
+                    {% if h.old_value is not None %}<span class="text-decoration-line-through text-danger small">{{ h.old_value|floatformat:2 }}</span>{% else %}<span class="text-muted small">&mdash;</span>{% endif %}
+                    <i class="fas fa-arrow-right mx-1 small"></i>
+                    <span class="fw-bold text-success small">{{ h.new_value|floatformat:2 }} DZD</span>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+
+  {% include "products/items/form_modal.html" %}
+
 </div>
 {% endblock dashContent %}
 
 {% block extra_js %}
-    <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
-    <script src="{% static 'js/products.js' %}?v={% now 'U' %}"></script>
-    <script src="{% static 'js/product_items.js' %}?v={% now 'U' %}"></script>
+  <script src="{% static 'js/products.js' %}?v={% now 'U' %}"></script>
+  <script src="{% static 'js/product_items.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

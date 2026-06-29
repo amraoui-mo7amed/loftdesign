@@ -297,14 +297,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function reloadPageSummary() {
         var totalEl = document.getElementById("orderTotal");
-        if (!totalEl) return;
-        var subtotals = document.querySelectorAll(".cart-page-item .fw-bold.small");
+        var cartTotalEl = document.getElementById("summaryTotal");
+        var subtotals = document.querySelectorAll(".cart-page-item-subtotal");
         var sum = 0;
         subtotals.forEach(function (el) {
             var val = parseFloat(el.textContent.replace(/[^0-9.]/g, ""));
             if (!isNaN(val)) sum += val;
         });
-        totalEl.textContent = sum.toLocaleString() + " DZD";
+        if (totalEl) totalEl.textContent = sum.toLocaleString() + " DZD";
+        if (cartTotalEl) cartTotalEl.textContent = sum.toLocaleString() + " DZD";
     }
 
     function updateBadge(count) {

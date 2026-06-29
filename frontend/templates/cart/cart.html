@@ -64,6 +64,49 @@
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
+                            {% if item.available_variants|length > 1 %}
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-secondary rounded-pill toggle-variant-picker"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#cartVariantPicker-{{ item.id }}"
+                                        aria-expanded="false">
+                                    <i class="fas fa-exchange-alt me-1"></i>{% trans "Change Variant" %}
+                                </button>
+                                <div class="collapse mt-2" id="cartVariantPicker-{{ item.id }}">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for v in item.available_variants %}
+                                        <button type="button"
+                                                class="variant-switch-btn btn btn-sm {% if v.is_selected %}btn-dark{% else %}btn-outline-secondary{% endif %} rounded-3 text-start p-2"
+                                                style="min-width:80px;"
+                                                data-old-item-id="{{ item.id }}"
+                                                data-new-item-id="{{ v.id }}"
+                                                {% if v.is_selected or v.stock_quantity < 1 %}disabled{% endif %}>
+                                            {% if v.thumbnail_url %}
+                                            <img src="{{ v.thumbnail_url }}" alt="{{ v.name }}"
+                                                 class="d-block mx-auto rounded mb-1"
+                                                 style="width:48px;height:48px;object-fit:cover;"
+                                                 onerror="this.style.display='none'">
+                                            {% endif %}
+                                            <span class="d-block text-center small">{{ v.name|truncatechars:12 }}</span>
+                                            {% if v.dimensions %}
+                                            <span class="d-block text-center text-muted" style="font-size:10px;">{{ v.dimensions }}</span>
+                                            {% endif %}
+                                            <span class="d-block text-center" style="font-size:10px;">
+                                                {% if v.stock_quantity < 1 %}
+                                                    <span class="text-danger">{% trans "Out of stock" %}</span>
+                                                {% elif v.stock_quantity < 5 %}
+                                                    <span class="text-warning">{{ v.stock_quantity }} {% trans "left" %}</span>
+                                                {% else %}
+                                                    <span class="text-success">{% trans "In stock" %}</span>
+                                                {% endif %}
+                                            </span>
+                                        </button>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="cart-page-item-total">
                             <span class="cart-page-item-subtotal" id="subtotal-{{ item.id }}">{{ item.subtotal|floatformat:0 }}</span>

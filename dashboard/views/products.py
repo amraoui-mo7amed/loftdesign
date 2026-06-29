@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.utils.translation import gettext as _
 from django.db import transaction
 from django.urls import reverse
-from ..models import Product, Category, ProductImage, PartnerPrice, Notification, SupplierPrice, LoftPrice
+from ..models import Product, Category, ProductImage, ProductItem, ProductItemImage, PartnerPrice, Notification, SupplierPrice, LoftPrice
 from dashboard.decorator import role_required
 from dashboard.utils import notify_user
 from user_auth.models import UserProfile
@@ -206,6 +206,30 @@ def product_create(request):
                         "loft_purchase_price": purchase_price or 0,
                     }
                 )
+
+            # Create variants (items) if submitted
+            i = 0
+            while request.POST.get(f"items[{i}][name]"):
+                name = request.POST.get(f"items[{i}][name]")
+                if name.strip():
+                    color = request.POST.get(f"items[{i}][color]", "")
+                    dimensions = request.POST.get(f"items[{i}][dimensions]", "")
+                    stock = request.POST.get(f"items[{i}][stock_quantity]", 0)
+                    thumb = request.FILES.get(f"items[{i}][thumbnail]")
+
+                    item = ProductItem.objects.create(
+                        product=product,
+                        name=name.strip(),
+                        color=color,
+                        dimensions=dimensions,
+                        stock_quantity=stock or 0,
+                        thumbnail=thumb,
+                        order=i,
+                    )
+
+                    for j, img in enumerate(request.FILES.getlist(f"items[{i}][gallery]")):
+                        ProductItemImage.objects.create(item=item, image=img, order=j)
+                i += 1
 
             # Notify admin
             if is_provider:

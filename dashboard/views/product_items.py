@@ -36,6 +36,14 @@ def item_list(request, product_pk):
     return JsonResponse({"success": True, "items": data})
 
 
+def _sync_product_stock(product):
+    total = sum(
+        item.stock_quantity
+        for item in product.items.filter(is_active=True)
+    )
+    Product.objects.filter(pk=product.pk).update(quantity=total)
+
+
 @login_required
 @role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER])
 def item_create(request, product_pk):
@@ -63,6 +71,8 @@ def item_create(request, product_pk):
 
     for i, img in enumerate(request.FILES.getlist("gallery_images")):
         ProductItemImage.objects.create(item=item, image=img, order=i)
+
+    _sync_product_stock(product)
 
     return JsonResponse({
         "success": True,
@@ -112,6 +122,8 @@ def item_update(request, pk):
     for i, img in enumerate(request.FILES.getlist("gallery_images")):
         ProductItemImage.objects.create(item=item, image=img, order=next_order + i)
 
+    _sync_product_stock(product)
+
     return JsonResponse({
         "success": True,
         "message": _("Item updated."),
@@ -137,4 +149,5 @@ def item_delete(request, pk):
         return JsonResponse({"success": False, "error": _("Permission denied.")}, status=403)
     item.is_active = False
     item.save()
+    _sync_product_stock(product)
     return JsonResponse({"success": True, "message": _("Item removed.")})

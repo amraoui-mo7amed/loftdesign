@@ -283,7 +283,11 @@ def product_update(request, pk):
         product.title = request.POST.get("title")
         category_id = request.POST.get("category")
         product.description = request.POST.get("description")
-        product.quantity = request.POST.get("quantity", 1)
+        items_qs = product.items.filter(is_active=True)
+        if items_qs.exists():
+            product.quantity = sum(item.stock_quantity for item in items_qs)
+        else:
+            product.quantity = request.POST.get("quantity", 1)
         product.external_link = request.POST.get("external_link")
         product.tags = request.POST.get("tags")
         product.is_featured = request.POST.get("is_featured") == "on"

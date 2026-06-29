@@ -282,6 +282,7 @@
       var input = document.getElementById("totalStockInput");
       var hint = document.getElementById("stockHint");
       var active = qs('input[name="is_active"]');
+      var countEl = document.getElementById("variantCount");
       var total = window.__savedVariants.reduce(function (sum, v) { return sum + (parseInt(v.stock, 10) || 0); }, 0);
       if (input) { input.value = total; }
       if (hint) {
@@ -291,6 +292,7 @@
           hint.textContent = "Add variants with stock to calculate total.";
         }
       }
+      if (countEl) { countEl.textContent = window.__savedVariants.length + " items"; }
       if (active) { active.checked = total > 0; }
     }
 

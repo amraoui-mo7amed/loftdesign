@@ -178,38 +178,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 '<i class="fas fa-box-open fa-3x text-muted opacity-25 mb-3"></i>' +
                 '<p class="text-muted mb-0">' + (container.dataset.emptyText || "No items yet.") + '</p>' +
                 "</div>";
+            document.getElementById("itemsCount").textContent = "0 items";
             return;
         }
-        var html =
-            '<div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">';
+        var html = '<div class="d-flex flex-column gap-1">';
         items.forEach(function (item) {
             var thumbHtml = item.thumbnail
-                ? '<img src="' + item.thumbnail + '" alt="' + item.name + '" class="rounded-top-2 w-100" style="height:110px;object-fit:cover;">'
-                : '<div class="bg-light rounded-top-2 d-flex align-items-center justify-content-center" style="height:110px;"><i class="fas fa-box fa-2x text-muted opacity-25"></i></div>';
+                ? '<img src="' + item.thumbnail + '" alt="' + item.name + '" class="w-100 h-100" style="object-fit:cover;">'
+                : '<div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light"><i class="fas fa-cube text-muted opacity-25" style="font-size:0.9rem;"></i></div>';
             var colorHtml = item.color
-                ? '<span class="d-inline-block rounded-circle flex-shrink-0" style="width:10px;height:10px;background:' + item.color.toLowerCase() + ';"></span>' +
-                  '<span class="small text-muted text-truncate d-inline-block" style="max-width:80px;"> ' + item.color + '</span>'
-                : '<span class="small text-muted">&mdash;</span>';
+                ? '<span class="d-inline-flex align-items-center gap-1"><span class="d-inline-block rounded-circle flex-shrink-0" style="width:7px;height:7px;background:' + item.color.toLowerCase() + ';border:1px solid rgba(0,0,0,0.05);"></span> ' + item.color + '</span>'
+                : '';
+            var dimHtml = item.dimensions ? '<span>' + item.dimensions + '</span>' : '';
             var stockBadge = item.stock_quantity > 0
-                ? '<span class="badge bg-success-subtle text-success rounded-pill px-2">' + item.stock_quantity + "</span>"
-                : '<span class="badge bg-danger-subtle text-danger rounded-pill px-2">' + item.stock_quantity + "</span>";
+                ? '<span class="badge bg-success-subtle text-success flex-shrink-0" style="border-radius:0;">' + item.stock_quantity + '</span>'
+                : '<span class="badge bg-danger-subtle text-danger flex-shrink-0" style="border-radius:0;">' + item.stock_quantity + '</span>';
             html +=
-                '<div class="col">' +
-                '<div class="item-card card border-0 shadow-sm rounded-top-3 h-100" data-item-id="' + item.id + '">' +
-                '<div class="position-relative">' + thumbHtml +
-                '<div class="item-card-actions position-absolute top-0 end-0 d-flex gap-1 p-2 opacity-0" style="transition:opacity 0.2s;">' +
-                '<button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm edit-item-btn" data-item-id="' + item.id + '" title="Edit" style="width:28px;height:28px;font-size:12px;line-height:1;"><i class="fas fa-pen"></i></button>' +
-                '<button type="button" class="btn btn-light btn-sm rounded-circle p-0 shadow-sm delete-item-btn" data-item-id="' + item.id + '" data-item-name="' + item.name + '" title="Delete" style="width:28px;height:28px;font-size:12px;line-height:1;"><i class="fas fa-trash-alt"></i></button>' +
-                "</div></div>" +
-                '<div class="p-2 border-top-0 bg-white rounded-bottom-3">' +
-                '<span class="fw-bold small d-block text-truncate" title="' + item.name + '">' + item.name + '</span>' +
-                '<div class="d-flex align-items-center gap-1 mt-1" style="min-height:1.2em;">' + colorHtml + "</div>" +
-                (item.dimensions ? '<span class="small text-muted d-block text-truncate">' + item.dimensions + '</span>' : '<span class="small text-muted d-block" style="min-height:1.2em;"></span>') +
-                '<div class="mt-1">' + stockBadge + "</div>" +
-                "</div></div></div>";
+                '<div class="d-flex align-items-center gap-3 px-3 py-2 rounded-3 border" data-item-id="' + item.id + '" style="transition:background 0.15s;" onmouseover="this.style.background=\'#f8f9fa\'" onmouseout="this.style.background=\'\'">' +
+                '<div class="flex-shrink-0 rounded-2 overflow-hidden" style="width:40px;height:40px;">' + thumbHtml + '</div>' +
+                '<div class="flex-grow-1 min-w-0">' +
+                '<div class="fw-semibold small text-truncate">' + item.name + '</div>' +
+                (colorHtml || dimHtml ? '<div class="d-flex align-items-center gap-2 small text-muted">' + colorHtml + (colorHtml && dimHtml ? ' ' : '') + dimHtml + '</div>' : '') +
+                '</div>' +
+                stockBadge +
+                '<div class="d-flex gap-1 flex-shrink-0">' +
+                '<button type="button" class="btn btn-light btn-sm p-0 edit-item-btn" data-item-id="' + item.id + '" title="Edit" style="width:26px;height:26px;font-size:10px;line-height:1;border:1px solid #dee2e6;"><i class="fas fa-pen"></i></button>' +
+                '<button type="button" class="btn btn-light btn-sm p-0 delete-item-btn" data-item-id="' + item.id + '" data-item-name="' + item.name + '" title="Delete" style="width:26px;height:26px;font-size:10px;line-height:1;border:1px solid #dee2e6;"><i class="fas fa-trash-alt"></i></button>' +
+                '</div></div>';
         });
         html += "</div>";
         container.innerHTML = html;
+        document.getElementById("itemsCount").textContent = items.length + " items";
         attachItemEvents();
     }
 

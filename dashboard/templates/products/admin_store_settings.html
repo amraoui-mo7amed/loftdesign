@@ -4,6 +4,12 @@
 
 {% block dashTitle %}{% trans "My Store" %}{% endblock dashTitle %}
 
+{% if store.slug %}
+{% url 'frontend:admin_store_slugged' slug=store.slug as store_url %}
+{% else %}
+{% url 'frontend:admin_store' as store_url %}
+{% endif %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/admin_store_settings.css' %}?v={% now 'U' %}">
@@ -25,10 +31,11 @@
         </div>
         <div class="d-flex gap-2">
             {% if store.slug %}
-            <button type="button" class="btn-icon copy-store-link" title="{% trans 'Copy Link' %}">
+            <button type="button" class="btn-icon copy-store-link" title="{% trans 'Copy Link' %}"
+                    data-url="{{ request.scheme }}://{{ request.get_host }}{{ store_url }}">
                 <i class="fas fa-link"></i>
             </button>
-            <a href="{% url 'frontend:admin_store_slugged' slug=store.slug %}" target="_blank"
+            <a href="{{ store_url }}" target="_blank"
                class="btn-icon" title="{% trans 'Preview Store' %}">
                 <i class="fas fa-external-link-alt"></i>
             </a>
@@ -36,7 +43,7 @@
             <button type="button" class="btn-icon copy-store-link" title="{% trans 'Copy Link' %}" style="opacity:0.4;pointer-events:none;">
                 <i class="fas fa-link"></i>
             </button>
-            <a href="{% url 'frontend:admin_store' %}" target="_blank"
+            <a href="{{ store_url }}" target="_blank"
                class="btn-icon" title="{% trans 'Preview Store' %}">
                 <i class="fas fa-external-link-alt"></i>
             </a>
@@ -47,6 +54,10 @@
         </div>
     </div>
 
+    <form class="form" id="storeSettingsForm" method="post" enctype="multipart/form-data"
+          action="{% url 'dash:admin_store_settings' %}">
+        {% csrf_token %}
+        {% include "partials/errorList.html" with form_id="storeSettingsForm" %}
     <div class="row g-4">
 
         {# ── LEFT COLUMN: Form ── #}
@@ -57,10 +68,6 @@
                     <h5>{% trans "Store Settings" %}</h5>
                 </div>
                 <div class="settings-card-body">
-                    {% include "partials/errorList.html" with form_id="storeSettingsForm" %}
-                    <form class="form" id="storeSettingsForm" method="post" enctype="multipart/form-data"
-                          action="{% url 'dash:admin_store_settings' %}">
-                        {% csrf_token %}
                         <div class="row g-4">
                             {# Store Name #}
                             <div class="col-12">
@@ -142,7 +149,6 @@
                                 <i class="fas fa-save me-2"></i> {% trans "Save Changes" %}
                             </button>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -160,9 +166,8 @@
                     <div class="store-url-display mb-3">
                         <i class="fas fa-globe"></i>
                         {% if store.slug %}
-                        <a href="{% url 'frontend:admin_store_slugged' slug=store.slug %}" target="_blank"
-                           id="storeFullUrl">
-                            {{ request.get_host }}{% url 'frontend:admin_store_slugged' slug=store.slug %}
+                        <a href="{{ store_url }}" target="_blank" id="storeFullUrl">
+                            {{ request.scheme }}://{{ request.get_host }}{{ store_url }}
                         </a>
                         {% else %}
                         <span id="slugPreviewUrl" style="color:#adb5bd;">{% trans "Set a custom URL below" %}</span>
@@ -206,6 +211,7 @@
 
                     {# Copy Link #}
                     <button type="button" class="btn btn-outline-secondary rounded-pill w-100 fw-bold copy-store-link mb-2"
+                            {% if store.slug %}data-url="{{ request.scheme }}://{{ request.get_host }}{{ store_url }}"{% endif %}
                             {% if not store.slug %}disabled style="opacity:0.5;"{% endif %}
                             data-copied-text="{% trans 'Copied!' %}">
                         <i class="fas fa-copy me-2"></i> {% trans "Copy Link" %}
@@ -221,6 +227,7 @@
         </div>
 
     </div>
+    </form>
 </div>
 {% endblock dashContent %}
 

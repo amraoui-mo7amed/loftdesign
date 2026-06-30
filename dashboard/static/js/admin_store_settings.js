@@ -66,19 +66,22 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* ── Copy store link ── */
-  var copyBtn = document.querySelector(".copy-store-link");
-  if (copyBtn) {
-    copyBtn.addEventListener("click", function () {
-      var urlEl = document.getElementById("storeFullUrl");
-      var url = urlEl ? urlEl.textContent.trim() : window.location.origin + "/admin-store/";
+  document.querySelectorAll(".copy-store-link").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var url = this.getAttribute("data-url") || window.location.origin + "/admin-store/";
       navigator.clipboard.writeText(url).then(function () {
-        var icon = copyBtn.querySelector("i");
+        var icon = btn.querySelector("i");
         var origClass = icon.className;
         icon.className = "fas fa-check";
         setTimeout(function () { icon.className = origClass; }, 2000);
+      }).catch(function () {
+        var icon = btn.querySelector("i");
+        var origClass = icon.className;
+        icon.className = "fas fa-exclamation-triangle";
+        setTimeout(function () { icon.className = origClass; }, 2000);
       });
     });
-  }
+  });
 
   /* ── AJAX submit ── */
   var submitBtn = form.querySelector("button[type='submit']");

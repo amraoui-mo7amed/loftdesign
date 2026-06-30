@@ -2,7 +2,6 @@ from django.db import models
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
-from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -382,38 +381,6 @@ def admin_store_settings(request):
         store.store_name = request.POST.get("store_name", store.store_name)
         store.store_description = request.POST.get("store_description", "")
         store.header_bg_color = request.POST.get("header_bg_color", "#1a1a2e")
-
-        # Slug: one-time set only
-        raw_slug = request.POST.get("slug", "").strip()
-        if raw_slug:
-            if store.slug_changed:
-                return JsonResponse({
-                    "success": False,
-                    "message": _("Store URL can only be set once and cannot be changed."),
-                })
-            new_slug = slugify(raw_slug)
-            if not new_slug:
-                return JsonResponse({
-                    "success": False,
-                    "message": _("Invalid slug. Use letters, numbers, hyphens."),
-                })
-            reserved = {
-                "admin-store", "products", "portfolio", "cart", "signup",
-                "affiliate", "contact-submit", "place-order", "a", "s",
-                "store", "go", "home", "admin", "shop",
-            }
-            if new_slug in reserved:
-                return JsonResponse({
-                    "success": False,
-                    "message": _("This URL is reserved. Please choose another one."),
-                })
-            if AdminStore.objects.filter(slug=new_slug).exclude(pk=store.pk).exists():
-                return JsonResponse({
-                    "success": False,
-                    "message": _("This URL is already taken. Please choose another one."),
-                })
-            store.slug = new_slug
-            store.slug_changed = True
 
         if request.FILES.get("store_logo"):
             store.store_logo = request.FILES["store_logo"]

@@ -546,11 +546,6 @@ class AdminStore(models.Model):
     header_bg_color = models.CharField(
         _("Header Background Color"), max_length=7, default="#1a1a2e"
     )
-    slug = models.SlugField(
-        _("Store URL Slug"), max_length=100, unique=True, blank=True, null=True,
-        help_text=_("Custom URL for your store (e.g. 'loft-collection'). Can only be set once.")
-    )
-    slug_changed = models.BooleanField(_("Slug Set"), default=False)
     is_active = models.BooleanField(_("Active"), default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

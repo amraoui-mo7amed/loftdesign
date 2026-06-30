@@ -36,6 +36,5 @@ urlpatterns = [
     path("go/<slug:code>/<int:pk>/", store.affiliate_redirect, name="affiliate_redirect"),
     # Admin storefront
     path("admin-store/", store.admin_store, name="admin_store"),
-    # Must be last — catch-all slug at root level
-    path("<slug:slug>/", store.admin_store, name="admin_store_slugged"),
+    path("loftdesign/", store.admin_store, name="admin_store_slugged"),
 ]

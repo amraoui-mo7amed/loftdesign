@@ -4,12 +4,6 @@
 
 {% block dashTitle %}{% trans "My Store" %}{% endblock dashTitle %}
 
-{% if store.slug %}
-{% url 'frontend:admin_store_slugged' slug=store.slug as store_url %}
-{% else %}
-{% url 'frontend:admin_store' as store_url %}
-{% endif %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/admin_store_settings.css' %}?v={% now 'U' %}">
@@ -30,24 +24,14 @@
             </div>
         </div>
         <div class="d-flex gap-2">
-            {% if store.slug %}
             <button type="button" class="btn-icon copy-store-link" title="{% trans 'Copy Link' %}"
-                    data-url="{{ request.scheme }}://{{ request.get_host }}{{ store_url }}">
+                    data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'frontend:admin_store' %}">
                 <i class="fas fa-link"></i>
             </button>
-            <a href="{{ store_url }}" target="_blank"
+            <a href="{% url 'frontend:admin_store' %}" target="_blank"
                class="btn-icon" title="{% trans 'Preview Store' %}">
                 <i class="fas fa-external-link-alt"></i>
             </a>
-            {% else %}
-            <button type="button" class="btn-icon copy-store-link" title="{% trans 'Copy Link' %}" style="opacity:0.4;pointer-events:none;">
-                <i class="fas fa-link"></i>
-            </button>
-            <a href="{{ store_url }}" target="_blank"
-               class="btn-icon" title="{% trans 'Preview Store' %}">
-                <i class="fas fa-external-link-alt"></i>
-            </a>
-            {% endif %}
             <a href="{% url 'dash:admin_store_catalog' %}" class="btn-icon" title="{% trans 'Manage Products' %}">
                 <i class="fas fa-boxes"></i>
             </a>
@@ -165,54 +149,14 @@
                     <label class="form-label fw-bold small text-uppercase text-secondary mb-2">{% trans "Store URL" %}</label>
                     <div class="store-url-display mb-3">
                         <i class="fas fa-globe"></i>
-                        {% if store.slug %}
-                        <a href="{{ store_url }}" target="_blank" id="storeFullUrl">
-                            {{ request.scheme }}://{{ request.get_host }}{{ store_url }}
+                        <a href="{% url 'frontend:admin_store' %}" target="_blank" id="storeFullUrl">
+                            {{ request.scheme }}://{{ request.get_host }}{% url 'frontend:admin_store' %}
                         </a>
-                        {% else %}
-                        <span id="slugPreviewUrl" style="color:#adb5bd;">{% trans "Set a custom URL below" %}</span>
-                        {% endif %}
                     </div>
-
-                    {# Slug input (one-time) #}
-                    {% if store.slug_changed and store.slug %}
-                    <div class="slug-locked mb-3">
-                        <i class="fas fa-lock"></i>
-                        <span>
-                            {% trans "Your store URL is permanently set to" %}
-                            <strong class="slug-value">{{ store.slug }}</strong>.
-                            {% trans "This cannot be changed." %}
-                        </span>
-                    </div>
-                    {% else %}
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-uppercase text-secondary mb-2">
-                            {% trans "Custom URL" %}
-                        </label>
-                        <div class="slug-input-group">
-                            <input type="text" name="slug" class="form-control form-control-lg"
-                                   value="{{ store.slug|default:'' }}"
-                                   placeholder="{% trans 'your-store-name' %}"
-                                   maxlength="100"
-                                   pattern="[a-zA-Z0-9-]+"
-                                   title="{% trans 'Letters, numbers, and hyphens only' %}">
-                        </div>
-                        <div class="slug-prefix">{{ request.get_host }}/</div>
-                        <div class="slug-hint">
-                            <i class="fas fa-info-circle"></i>
-                            <span>{% trans "Can only be set once. Make it memorable!" %}</span>
-                        </div>
-                        <div class="slug-hint">
-                            <i class="fas fa-exclamation-triangle text-warning"></i>
-                            <span class="text-warning-emphasis">{% trans "This action is irreversible. Choose carefully." %}</span>
-                        </div>
-                    </div>
-                    {% endif %}
 
                     {# Copy Link #}
                     <button type="button" class="btn btn-outline-secondary rounded-pill w-100 fw-bold copy-store-link mb-2"
-                            {% if store.slug %}data-url="{{ request.scheme }}://{{ request.get_host }}{{ store_url }}"{% endif %}
-                            {% if not store.slug %}disabled style="opacity:0.5;"{% endif %}
+                            data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'frontend:admin_store' %}"
                             data-copied-text="{% trans 'Copied!' %}">
                         <i class="fas fa-copy me-2"></i> {% trans "Copy Link" %}
                     </button>

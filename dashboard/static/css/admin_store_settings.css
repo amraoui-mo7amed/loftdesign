@@ -157,54 +157,6 @@
   text-decoration: underline;
 }
 
-/* ── Slug input ── */
-.slug-input-group input:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
-}
-
-.slug-prefix {
-  font-size: 0.8rem;
-  color: #6c757d;
-  font-weight: 600;
-  padding: 0.25rem 0 0;
-  line-height: 1.3;
-}
-[dir="rtl"] .slug-prefix { text-align: right; direction: ltr; }
-
-.slug-hint {
-  font-size: 0.78rem;
-  color: #6c757d;
-  margin-top: 0.35rem;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.slug-hint i {
-  font-size: 0.7rem;
-}
-
-.slug-locked {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: #6c757d;
-}
-.slug-locked i {
-  color: #dc3545;
-}
-
-.slug-locked .slug-value {
-  font-weight: 700;
-  color: #212529;
-}
-
 /* ── Save button ── */
 .btn-save-store {
   background: #1a1a2e;

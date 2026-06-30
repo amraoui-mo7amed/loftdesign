@@ -54,17 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  /* ── Slug live preview ── */
-  var slugInput = form.querySelector("input[name='slug']");
-  var slugPreview = document.getElementById("slugPreviewUrl");
-  if (slugInput && slugPreview) {
-    slugInput.addEventListener("input", function () {
-      var val = this.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
-      var host = window.location.origin;
-      slugPreview.textContent = val ? host + "/" + val + "/" : host + "/admin-store/";
-    });
-  }
-
   /* ── Copy store link ── */
   document.querySelectorAll(".copy-store-link").forEach(function (btn) {
     btn.addEventListener("click", function () {

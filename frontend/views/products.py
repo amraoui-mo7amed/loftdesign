@@ -140,4 +140,10 @@ def product_viewer_3d(request, pk):
     product = get_object_or_404(Product, pk=pk, is_active=True)
     if not product.model_3d:
         raise Http404(_("No 3D model available for this product"))
-    return render(request, "products/product_viewer_3d.html", {"product": product})
+    back = request.GET.get("back")
+    code = request.GET.get("code")
+    return render(request, "products/product_viewer_3d.html", {
+        "product": product,
+        "back": back,
+        "code": code,
+    })

@@ -99,7 +99,7 @@
                         {% endwith %}
 
                         {% if product.model_3d or product.external_link %}
-                        <a href="{% if product.model_3d %}{% url 'frontend:product_viewer_3d' product.pk %}{% else %}{{ product.external_link }}{% endif %}" {% if not product.model_3d %}target="_blank"{% endif %} class="luxury-visualize-btn" style="--btn-hover-bg:{{ store.header_bg_color }};">
+                        <a href="{% if product.model_3d %}{% url 'frontend:product_viewer_3d' product.pk %}?back=affiliate&code={{ profile.affiliate_code }}{% else %}{{ product.external_link }}{% endif %}" {% if not product.model_3d %}target="_blank"{% endif %} class="luxury-visualize-btn" style="--btn-hover-bg:{{ store.header_bg_color }};">
                             <i class="fas fa-vr-cardboard"></i> {% trans "Show in your workspace" %}
                         </a>
                         {% endif %}

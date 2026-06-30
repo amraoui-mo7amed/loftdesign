@@ -185,7 +185,6 @@
                             {% trans "Custom URL" %}
                         </label>
                         <div class="slug-input-group">
-                            <span class="slug-prefix">{{ request.get_host }}/shop/</span>
                             <input type="text" name="slug" class="form-control form-control-lg"
                                    value="{{ store.slug|default:'' }}"
                                    placeholder="{% trans 'your-store-name' %}"
@@ -193,6 +192,7 @@
                                    pattern="[a-zA-Z0-9-]+"
                                    title="{% trans 'Letters, numbers, and hyphens only' %}">
                         </div>
+                        <div class="slug-prefix">{{ request.get_host }}/shop/</div>
                         <div class="slug-hint">
                             <i class="fas fa-info-circle"></i>
                             <span>{% trans "Can only be set once. Make it memorable!" %}</span>

@@ -158,28 +158,19 @@
 }
 
 /* ── Slug input ── */
-.slug-input-group {
-  position: relative;
-}
-.slug-input-group .slug-prefix {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.8rem;
-  color: #6c757d;
-  font-weight: 600;
-  pointer-events: none;
-  z-index: 5;
-}
-[dir="ltr"] .slug-input-group .slug-prefix { left: 14px; }
-[dir="rtl"] .slug-input-group .slug-prefix { right: 14px; }
-[dir="ltr"] .slug-input-group input { padding-left: 100px; }
-[dir="rtl"] .slug-input-group input { padding-right: 100px; }
-
 .slug-input-group input:focus {
   border-color: #0d6efd;
   box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
 }
+
+.slug-prefix {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 600;
+  padding: 0.25rem 0 0;
+  line-height: 1.3;
+}
+[dir="rtl"] .slug-prefix { text-align: right; direction: ltr; }
 
 .slug-hint {
   font-size: 0.78rem;

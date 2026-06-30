@@ -111,14 +111,16 @@ def legacy_store_redirect(request, code):
 
 
 def admin_store(request, slug=None):
-    """Public storefront for admin (/admin-store/ or /store/<slug>/)"""
+    """Public storefront for admin (/admin-store/ or /<slug>/)"""
     if slug:
         store = get_object_or_404(AdminStore, slug=slug, is_active=True)
-    elif not request.user.is_authenticated or not request.user.is_superuser:
-        store = AdminStore.objects.filter(is_active=True).first()
-        if not store:
-            raise Http404
     else:
+        store = AdminStore.objects.filter(is_active=True).first()
+        if store and store.slug:
+            return redirect("frontend:admin_store_slugged", slug=store.slug)
+        if not store or not request.user.is_authenticated:
+            raise Http404
+        # fallback: admin viewing own un-slugged store
         store, _created = AdminStore.objects.get_or_create(
             user=request.user,
             defaults={"store_name": "LOFT Design"}

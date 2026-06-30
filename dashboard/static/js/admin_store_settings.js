@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     slugInput.addEventListener("input", function () {
       var val = this.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
       var host = window.location.origin;
-      slugPreview.textContent = val ? host + "/shop/" + val + "/" : host + "/admin-store/";
+      slugPreview.textContent = val ? host + "/" + val + "/" : host + "/admin-store/";
     });
   }
 

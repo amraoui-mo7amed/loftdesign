@@ -397,6 +397,16 @@ def admin_store_settings(request):
                     "success": False,
                     "message": _("Invalid slug. Use letters, numbers, hyphens."),
                 })
+            reserved = {
+                "admin-store", "products", "portfolio", "cart", "signup",
+                "affiliate", "contact-submit", "place-order", "a", "s",
+                "store", "go", "home", "admin", "shop",
+            }
+            if new_slug in reserved:
+                return JsonResponse({
+                    "success": False,
+                    "message": _("This URL is reserved. Please choose another one."),
+                })
             if AdminStore.objects.filter(slug=new_slug).exclude(pk=store.pk).exists():
                 return JsonResponse({
                     "success": False,

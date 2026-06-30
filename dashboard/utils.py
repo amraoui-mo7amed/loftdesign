@@ -557,12 +557,8 @@ def credit_wallets_for_order(order):
                     _("Supplier payment for order %(num)s") % {"num": order_label},
                 ))
 
-    # 2. Loft (admin) — includes supplier share when admin acts as own supplier
+    # 2. Loft (admin)
     loft_amount = order.loft_share
-    if order.supplier_share > 0:
-        has_admin_supplier = any(u and u.is_superuser for u in supplier_users)
-        if has_admin_supplier:
-            loft_amount += order.supplier_share
 
     if loft_amount > 0:
         for admin in User.objects.filter(is_superuser=True):

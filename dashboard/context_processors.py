@@ -33,6 +33,11 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
     # Admin only links
     if is_admin:
         menu.append({
+            "title": _("My Store"),
+            "icon": "fas fa-store-alt",
+            "url_name": "dash:admin_store_settings",
+        })
+        menu.append({
             "title": _("Withdrawals"),
             "icon": "fas fa-hand-holding-usd",
             "url_name": "dash:withdrawal_request_list",

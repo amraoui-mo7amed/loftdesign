@@ -3,7 +3,7 @@ from django.http import Http404
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from user_auth.models import UserProfile
-from dashboard.models import PartnerPrice, AffiliateStore, StoreVisit, Product
+from dashboard.models import PartnerPrice, AffiliateStore, AdminStore, StoreVisit, Product
 
 
 def affiliate_redirect(request, code, pk):
@@ -108,3 +108,36 @@ def semi_affiliate_store(request, code):
 def legacy_store_redirect(request, code):
     """Redirect from /store/CODE/ to /a/CODE/"""
     return redirect("frontend:affiliate_store", code=code)
+
+
+def admin_store(request):
+    """Public storefront for admin (/admin-store/)"""
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        store = AdminStore.objects.filter(is_active=True).first()
+        if not store:
+            raise Http404
+    else:
+        store, _created = AdminStore.objects.get_or_create(
+            user=request.user,
+            defaults={"store_name": "LOFT Design"}
+        )
+
+    products_qs = Product.objects.filter(
+        show_in_admin_store=True,
+        is_active=True,
+        status=Product.ProductStatus.APPROVED,
+    ).select_related("category").prefetch_related("gallery_images")
+
+    catalog = []
+    for product in products_qs:
+        catalog.append({
+            "product": product,
+            "retail_price": product.loft_retail_price,
+            "primary_image": product.gallery_images.first(),
+        })
+
+    return render(request, "admin_store.html", {
+        "store": store,
+        "catalog": catalog,
+        "title": store.store_name,
+    })

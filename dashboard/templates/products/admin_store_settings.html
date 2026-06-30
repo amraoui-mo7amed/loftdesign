@@ -22,22 +22,29 @@
             <div>
                 <span class="badge bg-white bg-opacity-10 text-white border-0 rounded-pill px-3 py-1 mb-1"
                       style="font-size:0.65rem;letter-spacing:1px;">
-                    <i class="fas fa-store-alt me-1"></i> {% trans "Affiliate Store" %}
+                    <i class="fas fa-store-alt me-1"></i> {% trans "Admin Store" %}
                 </span>
                 <h1 class="fw-black mb-0" style="font-size:1.65rem;">{% trans "My Store" %}</h1>
             </div>
         </div>
-        <a href="{% url 'frontend:affiliate_store' profile.affiliate_code %}" target="_blank"
-           class="btn btn-light bg-white bg-opacity-10 text-white border-0 rounded-pill px-4 py-2 fw-bold"
-           style="backdrop-filter:blur(4px);">
-            <i class="fas fa-external-link-alt me-2"></i> {% trans "Preview Store" %}
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{% url 'frontend:admin_store' %}" target="_blank"
+               class="btn btn-light bg-white bg-opacity-10 text-white border-0 rounded-pill px-4 py-2 fw-bold"
+               style="backdrop-filter:blur(4px);">
+                <i class="fas fa-external-link-alt me-2"></i> {% trans "Preview Store" %}
+            </a>
+            <a href="{% url 'dash:admin_store_catalog' %}"
+               class="btn btn-light bg-white bg-opacity-10 text-white border-0 rounded-pill px-4 py-2 fw-bold"
+               style="backdrop-filter:blur(4px);">
+                <i class="fas fa-boxes me-2"></i> {% trans "Manage Products" %}
+            </a>
+        </div>
     </div>
 
     <div class="row g-4">
 
         <!-- ── Settings Form ── -->
-        <div class="col-lg-12">
+        <div class="col-lg-8">
             <div class="settings-section">
                 <div class="card-header d-flex align-items-center gap-2">
                     <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10"
@@ -49,7 +56,7 @@
                 <div class="card-body">
                     {% include "partials/errorList.html" with form_id="storeSettingsForm" %}
                     <form class="form" id="storeSettingsForm" method="post" enctype="multipart/form-data"
-                          action="{% url 'dash:store_settings' %}">
+                          action="{% url 'dash:admin_store_settings' %}">
                         {% csrf_token %}
                         <div class="row g-4">
                             <!-- Store Name -->
@@ -66,7 +73,7 @@
                                 <textarea name="store_description" class="form-control" rows="4"
                                           placeholder="{% trans 'Describe your store...' %}">{{ store.store_description|default:'' }}</textarea>
                             </div>
-                            <!-- Header Color + Affiliate Code -->
+                            <!-- Header Color -->
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">{% trans "HEADER COLOR" %}</label>
                                 <div class="input-group">
@@ -78,23 +85,18 @@
                                            value="{{ store.header_bg_color|default:'#1a1a2e' }}" maxlength="7">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">{% trans "AFFILIATE CODE" %}</label>
-                                <input type="text" class="form-control form-control-lg bg-light"
-                                       value="{{ profile.affiliate_code }}" readonly>
-                            </div>
-                            <!-- Store URL + Share -->
+                            <!-- Share URL -->
                             <div class="col-12">
                                 <div class="store-url-badge d-flex align-items-center gap-3 flex-wrap">
                                     <div class="d-flex align-items-center gap-2">
                                         <i class="fas fa-link text-primary"></i>
                                         <span>{% trans "Your store:" %}</span>
-                                        <a href="{% url 'frontend:affiliate_store' profile.affiliate_code %}" target="_blank">
-                                            {{ request.get_host }}{% url 'frontend:affiliate_store' profile.affiliate_code %}
+                                        <a href="{% url 'frontend:admin_store' %}" target="_blank" id="adminStoreUrl">
+                                            {{ request.get_host }}{% url 'frontend:admin_store' %}
                                         </a>
                                     </div>
                                     <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold copy-store-link"
-                                            data-url="{% url 'frontend:affiliate_store' profile.affiliate_code %}"
+                                            data-url="{% url 'frontend:admin_store' %}"
                                             data-copied-text="{% trans 'Copied!' %}">
                                         <i class="fas fa-copy me-1"></i> {% trans "Copy Link" %}
                                     </button>
@@ -169,15 +171,14 @@
 <script src="{% static 'js/store_settings.js' %}?v={% now 'U' %}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var copyBtns = document.querySelectorAll('.copy-store-link');
-    copyBtns.forEach(function(copyBtn) {
-        copyBtn.addEventListener('click', function() {
-            var url = window.location.origin + this.dataset.url;
-            navigator.clipboard.writeText(url).then(function() {
-                var orig = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<i class="fas fa-check me-1"></i> ' + copyBtn.dataset.copiedText;
-                setTimeout(function() { copyBtn.innerHTML = orig; }, 2000);
-            });
+    var copyBtn = document.querySelector('.copy-store-link');
+    if (!copyBtn) return;
+    copyBtn.addEventListener('click', function() {
+        var url = window.location.origin + this.dataset.url;
+        navigator.clipboard.writeText(url).then(function() {
+            var orig = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check me-1"></i> ' + copyBtn.dataset.copiedText;
+            setTimeout(function() { copyBtn.innerHTML = orig; }, 2000);
         });
     });
 });

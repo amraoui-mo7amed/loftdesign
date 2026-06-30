@@ -36,6 +36,10 @@ urlpatterns = [
     path("affiliate/catalog/<int:product_pk>/remove/", partner_prices.affiliate_catalog_remove, name="affiliate_catalog_remove"),
     path("affiliate/catalog/<int:product_pk>/pricing/", partner_prices.catalog_update_pricing, name="catalog_update_pricing"),
     path("affiliate/store/", partner_prices.store_settings, name="store_settings"),
+    # Admin Store
+    path("store/admin/", partner_prices.admin_store_settings, name="admin_store_settings"),
+    path("store/admin/catalog/", partner_prices.admin_store_catalog, name="admin_store_catalog"),
+    path("store/admin/catalog/<int:product_pk>/toggle/", partner_prices.admin_store_catalog_toggle, name="admin_store_catalog_toggle"),
     # Categories
     path("categories/", products.category_list, name="category_list"),
     path("categories/create/", products.category_create, name="category_create"),

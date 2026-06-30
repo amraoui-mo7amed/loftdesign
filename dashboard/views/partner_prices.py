@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.template.loader import render_to_string
 from ..decorator import role_required
-from ..models import Product, PartnerPrice, LoftPrice, AffiliateStore
+from ..models import Product, PartnerPrice, LoftPrice, AffiliateStore, AdminStore
 from ..utils import notify_user
 from user_auth.models import UserProfile
 
@@ -366,6 +366,71 @@ def store_settings(request):
         "store": store,
         "profile": profile,
         "title": _("My Store"),
+    })
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+def admin_store_settings(request):
+    """Admin store settings page (GET) + AJAX update (POST)"""
+    store, created = AdminStore.objects.get_or_create(
+        user=request.user,
+        defaults={"store_name": request.user.get_full_name() or request.user.username}
+    )
+
+    if request.method == "POST":
+        store.store_name = request.POST.get("store_name", store.store_name)
+        store.store_description = request.POST.get("store_description", "")
+        store.header_bg_color = request.POST.get("header_bg_color", "#1a1a2e")
+
+        if request.FILES.get("store_logo"):
+            store.store_logo = request.FILES["store_logo"]
+        elif request.POST.get("remove_logo") == "1":
+            store.store_logo.delete(save=False)
+            store.store_logo = None
+
+        if request.FILES.get("store_banner"):
+            store.store_banner = request.FILES["store_banner"]
+        elif request.POST.get("remove_banner") == "1":
+            store.store_banner.delete(save=False)
+            store.store_banner = None
+
+        store.save()
+        return JsonResponse({
+            "success": True,
+            "message": _("Store settings saved."),
+        })
+
+    return render(request, "products/admin_store_settings.html", {
+        "store": store,
+        "title": _("My Store"),
+    })
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+def admin_store_catalog(request):
+    """Product picker for admin store — toggle which products appear"""
+    products = Product.objects.filter(status=Product.ProductStatus.APPROVED).order_by("-created_at")
+
+    return render(request, "products/admin_store_catalog.html", {
+        "products": products,
+        "title": _("Store Products"),
+    })
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+def admin_store_catalog_toggle(request, product_pk):
+    """AJAX toggle show_in_admin_store for a product"""
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": _("Invalid request.")})
+
+    product = get_object_or_404(Product, pk=product_pk)
+    product.show_in_admin_store = not product.show_in_admin_store
+    product.save(update_fields=["show_in_admin_store"])
+
+    return JsonResponse({
+        "success": True,
+        "show_in_admin_store": product.show_in_admin_store,
+        "message": _("Product updated."),
     })
 
 

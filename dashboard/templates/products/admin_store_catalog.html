@@ -1,0 +1,163 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}{% trans "Store Products" %}{% endblock dashTitle %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}?v={% now 'U' %}">
+<style>
+.product-toggle-row {
+    transition: background 0.15s;
+}
+.product-toggle-row:hover {
+    background: #f8f9fa;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #dee2e6;
+    border-radius: 24px;
+    transition: 0.2s;
+}
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+.toggle-switch input:checked + .toggle-slider {
+    background: #198754;
+}
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+}
+.toggle-switch input:disabled + .toggle-slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+</style>
+{% endblock extra_css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+
+    <div class="page-header mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{% url 'dash:admin_store_settings' %}"
+               class="btn btn-light bg-white bg-opacity-10 text-white border-0 rounded-3 px-3 py-2 fw-bold"
+               style="backdrop-filter:blur(4px);">
+                <i class="fas fa-arrow-left me-2"></i> {% trans "Store Settings" %}
+            </a>
+            <div>
+                <span class="badge bg-white bg-opacity-10 text-white border-0 rounded-pill px-3 py-1 mb-1"
+                      style="font-size:0.65rem;letter-spacing:1px;">
+                    <i class="fas fa-boxes me-1"></i> {% trans "Admin Store" %}
+                </span>
+                <h1 class="fw-black mb-0" style="font-size:1.65rem;">{% trans "Store Products" %}</h1>
+                <p class="text-white-50 small mb-0">{% trans "Toggle products to show in your storefront" %}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="settings-section">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10"
+                         style="width:36px;height:36px;flex-shrink:0;">
+                        <i class="fas fa-box-open text-primary" style="font-size:0.9rem;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 text-dark">{% trans "Products" %}</h5>
+                    <span class="badge bg-dark rounded-pill ms-auto" id="storeProductCount">{{ products|length }}</span>
+                </div>
+                <div class="card-body p-0">
+                    {% if products %}
+                    <div class="d-flex flex-column">
+                        {% for product in products %}
+                        <div class="d-flex align-items-center gap-3 px-4 py-3 border-bottom product-toggle-row"
+                             data-product-id="{{ product.pk }}">
+                            <div class="flex-shrink-0 rounded-2 overflow-hidden" style="width: 48px; height: 48px;">
+                                {% if product.thumbnail %}
+                                <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}"
+                                     class="w-100 h-100" style="object-fit: cover;">
+                                {% else %}
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                                    <i class="fas fa-image text-muted opacity-25"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="fw-semibold text-truncate">{{ product.title }}</div>
+                                <div class="small text-muted">
+                                    {% if product.loft_retail_price %}{{ product.loft_retail_price|floatformat:0 }} DZD{% endif %}
+                                    {% if product.category %} &middot; {{ product.category.name }}{% endif %}
+                                </div>
+                            </div>
+                            <label class="toggle-switch" title="{% trans 'Show in store' %}">
+                                <input type="checkbox" class="store-toggle"
+                                       {% if product.show_in_admin_store %}checked{% endif %}
+                                       data-product-pk="{{ product.pk }}"
+                                       data-url="{% url 'dash:admin_store_catalog_toggle' product.pk %}">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open fa-3x text-muted opacity-25 mb-3"></i>
+                        <p class="text-muted">{% trans "No products available." %}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.store-toggle').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            var url = this.dataset.url;
+            var csrf = document.querySelector('[name=csrfmiddlewaretoken]');
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrf ? csrf.value : ''
+                }
+            }).then(function(r) { return r.json(); }).then(function(data) {
+                if (!data.success) {
+                    cb.checked = !cb.checked;
+                }
+            }).catch(function() {
+                cb.checked = !cb.checked;
+            });
+        });
+    });
+});
+</script>
+{% endblock extra_js %}

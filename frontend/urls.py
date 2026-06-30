@@ -36,4 +36,5 @@ urlpatterns = [
     path("go/<slug:code>/<int:pk>/", store.affiliate_redirect, name="affiliate_redirect"),
     # Admin storefront
     path("admin-store/", store.admin_store, name="admin_store"),
+    path("shop/<slug:slug>/", store.admin_store, name="admin_store_slugged"),
 ]

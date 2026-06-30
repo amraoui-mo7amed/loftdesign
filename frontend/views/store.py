@@ -110,9 +110,11 @@ def legacy_store_redirect(request, code):
     return redirect("frontend:affiliate_store", code=code)
 
 
-def admin_store(request):
-    """Public storefront for admin (/admin-store/)"""
-    if not request.user.is_authenticated or not request.user.is_superuser:
+def admin_store(request, slug=None):
+    """Public storefront for admin (/admin-store/ or /store/<slug>/)"""
+    if slug:
+        store = get_object_or_404(AdminStore, slug=slug, is_active=True)
+    elif not request.user.is_authenticated or not request.user.is_superuser:
         store = AdminStore.objects.filter(is_active=True).first()
         if not store:
             raise Http404

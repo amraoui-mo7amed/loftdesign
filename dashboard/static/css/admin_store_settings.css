@@ -1,0 +1,252 @@
+/* ── Admin Store Settings ── */
+
+[dir="ltr"] .admin-store-settings { direction: ltr; }
+[dir="rtl"] .admin-store-settings { direction: rtl; }
+
+.admin-store-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 16px;
+  padding: 1.25rem 1.75rem;
+}
+
+.admin-store-header .btn-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.2s;
+  padding: 0;
+  backdrop-filter: blur(4px);
+}
+.admin-store-header .btn-icon:hover {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.25);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.admin-store-header .badge-store {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.admin-store-header h1 {
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.4rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* ── Settings cards ── */
+.settings-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+.settings-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f3f5;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.settings-card-header .icon-box {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(13,110,253,0.08);
+  flex-shrink: 0;
+}
+.settings-card-header .icon-box i {
+  font-size: 0.85rem;
+  color: #0d6efd;
+}
+.settings-card-header h5 {
+  font-weight: 700;
+  margin: 0;
+  font-size: 0.95rem;
+  color: #212529;
+}
+
+.settings-card-body {
+  padding: 1.5rem;
+}
+
+/* ── Share / URL card ── */
+.share-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+  position: sticky;
+  top: 90px;
+}
+
+.share-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f3f5;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.share-card-header .icon-box {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(25,135,84,0.08);
+  flex-shrink: 0;
+}
+.share-card-header .icon-box i {
+  font-size: 0.85rem;
+  color: #198754;
+}
+.share-card-header h5 {
+  font-weight: 700;
+  margin: 0;
+  font-size: 0.95rem;
+  color: #212529;
+}
+
+.share-card-body {
+  padding: 1.5rem;
+}
+
+.store-url-display {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  word-break: break-all;
+  font-size: 0.85rem;
+  color: #495057;
+}
+.store-url-display i {
+  color: #6c757d;
+  flex-shrink: 0;
+}
+.store-url-display a {
+  color: #0d6efd;
+  font-weight: 600;
+  text-decoration: none;
+}
+.store-url-display a:hover {
+  text-decoration: underline;
+}
+
+/* ── Slug input ── */
+.slug-input-group {
+  position: relative;
+}
+.slug-input-group .slug-prefix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 5;
+}
+[dir="ltr"] .slug-input-group .slug-prefix { left: 14px; }
+[dir="rtl"] .slug-input-group .slug-prefix { right: 14px; }
+[dir="ltr"] .slug-input-group input { padding-left: 100px; }
+[dir="rtl"] .slug-input-group input { padding-right: 100px; }
+
+.slug-input-group input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
+}
+
+.slug-hint {
+  font-size: 0.78rem;
+  color: #6c757d;
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.slug-hint i {
+  font-size: 0.7rem;
+}
+
+.slug-locked {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+.slug-locked i {
+  color: #dc3545;
+}
+
+.slug-locked .slug-value {
+  font-weight: 700;
+  color: #212529;
+}
+
+/* ── Save button ── */
+.btn-save-store {
+  background: #1a1a2e;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.65rem 2rem;
+  font-weight: 700;
+  border: none;
+  transition: all 0.2s;
+}
+.btn-save-store:hover {
+  background: #0f3460;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.btn-save-store:disabled {
+  opacity: 0.6;
+  transform: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 991.98px) {
+  .share-card {
+    position: static;
+  }
+  .admin-store-header {
+    padding: 1rem;
+  }
+  .admin-store-header h1 {
+    font-size: 1.15rem;
+  }
+  .settings-card-body {
+    padding: 1.25rem;
+  }
+}

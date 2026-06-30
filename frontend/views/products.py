@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
-from dashboard.models import Product, Category, PartnerPrice, AffiliateStore
+from dashboard.models import Product, Category, PartnerPrice, AffiliateStore, AdminStore
 from user_auth.models import UserProfile
 from django.db.models import Q
 from django.utils.translation import gettext as _
@@ -76,6 +76,7 @@ from dashboard.utils import get_algeria_locations
 def product_detail(request, pk):
     # Check query param first (for shared links), fall back to session
     affiliate_code = request.GET.get("affiliate")
+    admin_store_param = request.GET.get("admin_store")
     if affiliate_code:
         product = get_object_or_404(Product, pk=pk)
     else:
@@ -87,6 +88,10 @@ def product_detail(request, pk):
     else:
         request.session.pop("affiliate_code", None)
         request.session.modified = True
+
+    admin_store_obj = None
+    if admin_store_param and product.show_in_admin_store:
+        admin_store_obj = AdminStore.objects.filter(is_active=True).first()
 
     if affiliate_code:
         try:
@@ -110,6 +115,9 @@ def product_detail(request, pk):
         else:
             profile = store = partner_price = None
             template = "products/product_detail.html"
+    elif admin_store_obj:
+        profile = store = partner_price = None
+        template = "products/admin_product_detail.html"
     else:
         profile = store = partner_price = None
         template = "products/product_detail.html"
@@ -124,6 +132,7 @@ def product_detail(request, pk):
         "store": store,
         "partner_price": partner_price,
         "items": items,
+        "admin_store": admin_store_obj,
     })
 
 

@@ -58,7 +58,7 @@
             {% for item in catalog %}
             <div class="col-lg-3 col-md-6">
                 <div class="soft-glass-card h-100 shadow-sm border-0 rounded-4 overflow-hidden bg-white transition-all hover-lift d-flex flex-column">
-                    <a href="{% url 'frontend:product_detail' item.product.pk %}" class="text-decoration-none text-dark">
+                    <a href="{% url 'frontend:product_detail' item.product.pk %}?admin_store=1" class="text-decoration-none text-dark">
                         <div class="position-relative overflow-hidden" style="aspect-ratio: 1/1;">
                             {% if item.primary_image %}
                             <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;" loading="lazy">
@@ -80,7 +80,7 @@
                         <h5 class="fw-black mb-2">{{ item.product.title }}</h5>
                         <p class="text-muted small mb-3 line-height-relaxed flex-grow-1">{{ item.product.description|truncatewords:10 }}</p>
                         <div class="d-flex gap-2 mt-auto">
-                            <a href="{% url 'frontend:product_detail' item.product.pk %}" class="btn btn-outline-dark rounded-pill fw-bold flex-shrink-0 px-3">
+                            <a href="{% url 'frontend:product_detail' item.product.pk %}?admin_store=1" class="btn btn-outline-dark rounded-pill fw-bold flex-shrink-0 px-3">
                                 <i class="fas fa-eye me-1"></i> {% trans "View" %}
                             </a>
                             {% if item.product.available_stock > 0 %}

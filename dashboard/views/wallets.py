@@ -34,7 +34,9 @@ def wallet_list(request):
         return redirect("dash:wallet_detail")
 
     if is_admin:
-        wallets = Wallet.objects.select_related("user__profile").exclude(user=request.user)
+        wallets = Wallet.objects.filter(
+            user__profile__role=AFFILIATE
+        ).select_related("user__profile").exclude(user=request.user)
     elif role == AFFILIATE:
         semi_ids = UserProfile.objects.filter(
             parent_affiliate=profile, role=SEMI
@@ -51,13 +53,6 @@ def wallet_list(request):
             models.Q(user__username__icontains=q) | models.Q(user__email__icontains=q)
         )
 
-    role_filter = request.GET.get("role", "").strip()
-    selected_role_label = None
-    if is_admin and role_filter:
-        wallets = wallets.filter(user__profile__role=role_filter)
-        role_labels = dict(UserProfile.roleChoices.choices)
-        selected_role_label = role_labels.get(role_filter)
-
     order = request.GET.get("order", "-balance")
     if order.lstrip("-") in ("balance", "pending_balance", "user__username"):
         wallets = wallets.order_by(order)
@@ -66,19 +61,9 @@ def wallet_list(request):
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
 
-    role_choices = [
-        {"value": "admin", "label": _("Admin")},
-        {"value": "affiliate", "label": _("Affiliate")},
-        {"value": "semi_affiliate", "label": _("Semi-Affiliate")},
-        {"value": "provider", "label": _("Provider")},
-    ]
-
     return render(request, "wallets/wallet_list.html", {
         "page_obj": page_obj,
         "q": q,
-        "role_filter": role_filter,
-        "role_choices": role_choices if is_admin else [],
-        "selected_role_label": selected_role_label,
         "is_admin": is_admin,
         "title": _("Wallets"),
     })
@@ -153,6 +138,24 @@ def wallet_detail(request, user_id=None):
                 logger.exception("Chain breakdown failed for order %s: %s", tx.order.id, e)
                 tx.chain_details_json = "null"
 
+    # When admin views an affiliate's wallet, fetch their semi-affiliates
+    semi_affiliates = []
+    if role == ADMIN and target_user != request.user:
+        target_profile = getattr(target_user, "profile", None)
+        if target_profile and target_profile.role == AFFILIATE:
+            semi_profiles = UserProfile.objects.filter(
+                parent_affiliate=target_profile, role=SEMI, is_approved=True
+            ).select_related("user")
+            for sp in semi_profiles:
+                sw, _created = Wallet.objects.get_or_create(user=sp.user)
+                semi_affiliates.append({
+                    "id": sp.user.id,
+                    "name": sp.user.get_full_name() or sp.user.username,
+                    "email": sp.user.email,
+                    "balance": sw.balance,
+                    "pending_balance": sw.pending_balance,
+                })
+
     is_own = target_user == request.user
 
     type_choices = [
@@ -179,6 +182,7 @@ def wallet_detail(request, user_id=None):
         "status_filter": status_filter,
         "status_choices": status_choices,
         "target_user": target_user,
+        "semi_affiliates": semi_affiliates,
         "is_own": is_own,
         "is_admin": role == ADMIN,
         "title": _("Wallet"),
@@ -410,4 +414,52 @@ def clear_wallet(request, user_id):
     return JsonResponse({
         "success": True,
         "message": _("Wallet cleared."),
+    })
+
+
+@role_required(allowed_roles=[ADMIN])
+def admin_withdraw_from_user(request, user_id):
+    """Admin can withdraw from any user's wallet on their behalf."""
+    if request.method != "POST":
+        return JsonResponse({"success": False}, status=400)
+
+    try:
+        amount = Decimal(str(request.POST.get("amount", 0)))
+    except (ValueError, TypeError, Decimal.InvalidOperation):
+        return JsonResponse({"success": False, "errors": {"amount": [_("Invalid amount.")]}})
+
+    if amount <= 0:
+        return JsonResponse({"success": False, "errors": {"amount": [_("Amount must be positive.")]}})
+
+    target_user = get_object_or_404(User, pk=user_id)
+    wallet, _created = Wallet.objects.get_or_create(user=target_user)
+
+    if amount > wallet.balance:
+        return JsonResponse({"success": False, "errors": {"amount": [_("Insufficient balance.")]}})
+
+    wallet.balance -= amount
+    wallet.save(update_fields=["balance"])
+
+    Transaction.objects.create(
+        wallet=wallet,
+        transaction_type=Transaction.TransactionType.WITHDRAWAL,
+        amount=amount,
+        description=_("Admin withdrawal — %(amount)s DZD") % {"amount": f"{amount:,.0f}"},
+        status=Transaction.TransactionStatus.COMPLETED,
+    )
+
+    notify_user(
+        target_user,
+        _("Withdrawal Processed"),
+        _("An admin withdrew %(amount)s DZD from your wallet.") % {"amount": f"{amount:,.0f}"},
+        notification_type="info",
+        link=reverse("dash:wallet_detail"),
+    )
+
+    return JsonResponse({
+        "success": True,
+        "message": _("%(amount)s DZD withdrawn from %(name)s's wallet.") % {
+            "amount": f"{amount:,.0f}",
+            "name": target_user.get_full_name() or target_user.username,
+        },
     })

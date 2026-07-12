@@ -30,10 +30,23 @@
             <a href="{% url 'dash:wallet_list' %}" class="filter-btn fw-bold text-decoration-none">
                 <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Wallets" %}
             </a>
+            {% if semi_affiliates %}
+            <button type="button" class="filter-btn fw-bold position-relative"
+                    data-bs-toggle="modal" data-bs-target="#semiAffiliatesModal">
+                <i class="fas fa-users me-2"></i>{% trans "Semi-Affiliates" %}
+                <span class="badge bg-warning text-dark ms-1">{{ semi_affiliates|length }}</span>
+            </button>
             {% endif %}
-            {% if wallet.balance > 0 %}
+            {% endif %}
+            {% if is_own and wallet.balance > 0 %}
             <button class="filter-btn fw-bold" data-bs-toggle="modal" data-bs-target="#withdrawModal">
                 <i class="fas fa-hand-holding-usd me-2"></i>{% trans "Withdraw" %}
+            </button>
+            {% endif %}
+            {% if is_admin and not is_own and wallet.balance > 0 %}
+            <button class="filter-btn fw-bold" data-bs-toggle="modal" data-bs-target="#adminWithdrawModal"
+                    data-url="{% url 'dash:admin_withdraw' target_user.id %}">
+                <i class="fas fa-user-cog me-2"></i>{% trans "Withdraw for User" %}
             </button>
             {% endif %}
         </div>
@@ -201,6 +214,13 @@
                     <i class="fas fa-times-circle text-danger me-1"></i>{% trans "Failed" %}
                     {% endif %}
                 </small>
+                {% if is_admin and tx.order %}
+                <span class="text-muted mx-2">|</span>
+                <span class="fw-bold small">
+                    <span class="text-muted fw-bold">{% trans "Order Total" %}:</span>
+                    {{ tx.order.total_price|floatformat:0 }} DZD
+                </span>
+                {% endif %}
                 {% if tx.order %}
                 <a href="{% url 'dash:order_detail' tx.order.pk %}" class="small text-decoration-none fw-bold">
                     <i class="fas fa-external-link-alt me-1"></i>{% trans "Order" %} #{{ tx.order.id }}
@@ -255,6 +275,42 @@
 </div>
 {% endif %}
 
+<!-- Admin Withdraw for User Modal -->
+{% if is_admin and not is_own and wallet.balance > 0 %}
+<div class="modal fade" id="adminWithdrawModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+            <div class="modal-header border-0 pb-0 p-4">
+                <h5 class="modal-title fw-bold text-dark">
+                    <i class="fas fa-user-cog me-2"></i>
+                    {% blocktrans with name=target_user.get_full_name|default:target_user.username %}Withdraw for {{ name }}{% endblocktrans %}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="adminWithdrawForm" data-url="{% url 'dash:admin_withdraw' target_user.id %}">
+                {% csrf_token %}
+                <div class="modal-body p-4">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Available Balance" %}</label>
+                        <div class="fs-3 fw-black">{{ wallet.balance|floatformat:0 }} DZD</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">{% trans "Amount (DZD)" %}</label>
+                        <input type="number" name="amount" class="form-control form-control-lg rounded-3" min="1" max="{{ wallet.balance|floatformat:0 }}" step="1" required placeholder="{% trans 'Enter amount...' %}">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0 gap-2">
+                    <button type="button" class="btn btn-light rounded-3 px-4 fw-bold text-muted border-0 bg-light" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm">
+                        <i class="fas fa-paper-plane me-2"></i>{% trans "Confirm Withdrawal" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Chain Detail Modal -->
 <div class="modal fade" id="chainDetailModal" tabindex="-1" aria-hidden="true"
      data-i18n='{"No chain data available.":"{% trans "No chain data available."|escapejs %}","Provider":"{% trans "Provider"|escapejs %}","Loft Design":"{% trans "Loft Design"|escapejs %}","Loft":"{% trans "Loft"|escapejs %}","Affiliate":"{% trans "Affiliate"|escapejs %}","Semi-Affiliate":"{% trans "Semi-Affiliate"|escapejs %}","Semi":"{% trans "Semi"|escapejs %}","Purchased":"{% trans "Purchased"|escapejs %}","Sold":"{% trans "Sold"|escapejs %}","Item Profit":"{% trans "Item Profit"|escapejs %}","Order Total":"{% trans "Order Total"|escapejs %}}'>
@@ -272,6 +328,53 @@
         </div>
     </div>
 </div>
+
+<!-- Semi-Affiliates Modal -->
+{% if semi_affiliates %}
+<div class="modal fade" id="semiAffiliatesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+            <div class="modal-header border-0 pb-0 p-4">
+                <h5 class="modal-title fw-bold">
+                    <i class="fas fa-users text-warning me-2"></i>
+                    {% blocktrans with name=target_user.get_full_name|default:target_user.username %}{{ name }}'s Semi-Affiliates{% endblocktrans %}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                {% if semi_affiliates %}
+                <div class="list-group list-group-flush">
+                    {% for sa in semi_affiliates %}
+                    <a href="{% url 'dash:wallet_user_detail' sa.id %}"
+                       class="list-group-item list-group-item-action d-flex align-items-center gap-3 px-3 py-3 border-0 rounded-3 mb-2"
+                       style="background:#f8f9fa;">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-10 flex-shrink-0"
+                             style="width:44px;height:44px;">
+                            <i class="fas fa-user text-warning"></i>
+                        </div>
+                        <div class="flex-grow-1 min-width-0">
+                            <div class="fw-bold text-dark">{{ sa.name }}</div>
+                            <div class="small text-muted text-truncate">{{ sa.email }}</div>
+                        </div>
+                        <div class="text-end flex-shrink-0">
+                            <div class="fw-bold text-success">{{ sa.balance|floatformat:0 }} DZD</div>
+                            <div class="small text-muted">{% trans "Pending" %}: {{ sa.pending_balance|floatformat:0 }} DZD</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-muted ms-2"></i>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-users fa-3x opacity-25 mb-3"></i>
+                    <p>{% trans "No semi-affiliates found." %}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 </div>
 {% endblock dashContent %}

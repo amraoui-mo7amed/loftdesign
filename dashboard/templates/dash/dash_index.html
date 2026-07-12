@@ -68,7 +68,7 @@
                         {% if role == "semi_affiliate" and request.user.profile.parent_affiliate %}
                             <a href="{% url 'frontend:affiliate_store' request.user.profile.parent_affiliate.affiliate_code %}" target="_blank"
                         {% else %}
-                            <a href="{% url 'frontend:product_list' %}" target="_blank"
+                            <a href="{% url 'frontend:admin_store_slugged' %}" target="_blank"
                         {% endif %}
                            class="btn btn-outline-light w-100 mb-2 d-flex align-items-center justify-content-center gap-2 py-2 rounded-3 text-white border-white-10"
                            style="background: rgba(255, 255, 255, 0.05); font-weight: 700; font-size: 0.9rem; transition: all 0.2s ease;">

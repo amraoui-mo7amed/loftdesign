@@ -549,160 +549,161 @@ def order_update_status(request, pk):
         old_display = order.get_status_display()
         order.status = new_status
 
-        # If order is marked DELIVERED, compute profit and credit wallets
-        if new_status == Order.OrderStatus.DELIVERED:
-            from dashboard.utils import compute_order_profit, credit_wallets_for_order
-            compute_order_profit(order)
-            credit_wallets_for_order(order)
+        with transaction.atomic():
+            # If order is marked DELIVERED, compute profit and credit wallets
+            if new_status == Order.OrderStatus.DELIVERED:
+                from dashboard.utils import compute_order_profit, credit_wallets_for_order
+                compute_order_profit(order)
+                credit_wallets_for_order(order)
 
-        order.save()
+            order.save()
 
-        # ── Find all relevant parties for notifications ─────────
-        admins = User.objects.filter(is_superuser=True)
+            # ── Find all relevant parties for notifications ─────────
+            admins = User.objects.filter(is_superuser=True)
 
-        provider_ids = set()
-        for item in order.items:
-            pid = item.get("product_id")
-            if pid:
-                try:
-                    p = Product.objects.get(pk=pid)
-                    if p.user:
-                        provider_ids.add(p.user)
-                except Product.DoesNotExist:
-                    pass
+            provider_ids = set()
+            for item in order.items:
+                pid = item.get("product_id")
+                if pid:
+                    try:
+                        p = Product.objects.get(pk=pid)
+                        if p.user:
+                            provider_ids.add(p.user)
+                    except Product.DoesNotExist:
+                        pass
 
-        referred_user = None
-        if order.referred_by:
-            ref_profile = UserProfile.objects.filter(
-                affiliate_code=order.referred_by, is_approved=True
-            ).first()
-            if ref_profile:
-                referred_user = ref_profile.user
+            referred_user = None
+            if order.referred_by:
+                ref_profile = UserProfile.objects.filter(
+                    affiliate_code=order.referred_by, is_approved=True
+                ).first()
+                if ref_profile:
+                    referred_user = ref_profile.user
 
-        order_label = order.order_number or f"#{order.id}"
-        actor_name = request.user.get_full_name() or request.user.username
+            order_label = order.order_number or f"#{order.id}"
+            actor_name = request.user.get_full_name() or request.user.username
 
-        # ── Status-specific notifications ───────────────────────
-        if new_status == Order.OrderStatus.STORE_VALIDATED:
-            for admin in admins:
-                notify_user(
-                    admin,
-                    _("Order #%(num)s Validated") % {"num": order_label},
-                    _('%(name)s validated order #%(num)s.') % {"name": actor_name, "num": order_label},
-                    notification_type="info",
-                    link="/dashboard/orders/",
-                )
-
-        elif new_status == Order.OrderStatus.ADMIN_VALIDATED:
-            for provider in provider_ids:
-                if provider and provider != request.user:
-                    notify_user(
-                        provider,
-                        _("Order Ready for Fulfillment"),
-                        _('Order #%(num)s has been validated and is ready for your fulfillment.')
-                        % {"num": order_label},
-                        notification_type="info",
-                        link="/dashboard/orders/",
-                    )
-            if referred_user and referred_user != request.user and not referred_user.is_superuser:
-                notify_user(
-                    referred_user,
-                    _("Order #%(num)s Validated") % {"num": order_label},
-                    _('Loft Design validated order #%(num)s.') % {"num": order_label},
-                    notification_type="info",
-                    link="/dashboard/orders/",
-                )
-
-        elif new_status == Order.OrderStatus.SUPPLIER_FULFILLING:
-            if not is_admin:
+            # ── Status-specific notifications ───────────────────────
+            if new_status == Order.OrderStatus.STORE_VALIDATED:
                 for admin in admins:
                     notify_user(
                         admin,
-                        _("Order Ready for Delivery"),
-                        _('Provider marked order #%(num)s as fulfilled — ready for delivery.')
+                        _("Order #%(num)s Validated") % {"num": order_label},
+                        _('%(name)s validated order #%(num)s.') % {"name": actor_name, "num": order_label},
+                        notification_type="info",
+                        link="/dashboard/orders/",
+                    )
+
+            elif new_status == Order.OrderStatus.ADMIN_VALIDATED:
+                for provider in provider_ids:
+                    if provider and provider != request.user:
+                        notify_user(
+                            provider,
+                            _("Order Ready for Fulfillment"),
+                            _('Order #%(num)s has been validated and is ready for your fulfillment.')
+                            % {"num": order_label},
+                            notification_type="info",
+                            link="/dashboard/orders/",
+                        )
+                if referred_user and referred_user != request.user and not referred_user.is_superuser:
+                    notify_user(
+                        referred_user,
+                        _("Order #%(num)s Validated") % {"num": order_label},
+                        _('Loft Design validated order #%(num)s.') % {"num": order_label},
+                        notification_type="info",
+                        link="/dashboard/orders/",
+                    )
+
+            elif new_status == Order.OrderStatus.SUPPLIER_FULFILLING:
+                if not is_admin:
+                    for admin in admins:
+                        notify_user(
+                            admin,
+                            _("Order Ready for Delivery"),
+                            _('Provider marked order #%(num)s as fulfilled — ready for delivery.')
+                            % {"num": order_label},
+                            notification_type="info",
+                            link="/dashboard/orders/",
+                        )
+                if referred_user and referred_user != request.user and not referred_user.is_superuser:
+                    notify_user(
+                        referred_user,
+                        _("Order #%(num)s Being Fulfilled") % {"num": order_label},
+                        _('Order #%(num)s is now being fulfilled by the supplier.')
                         % {"num": order_label},
                         notification_type="info",
                         link="/dashboard/orders/",
                     )
-            if referred_user and referred_user != request.user and not referred_user.is_superuser:
-                notify_user(
-                    referred_user,
-                    _("Order #%(num)s Being Fulfilled") % {"num": order_label},
-                    _('Order #%(num)s is now being fulfilled by the supplier.')
-                    % {"num": order_label},
-                    notification_type="info",
-                    link="/dashboard/orders/",
-                )
 
-        elif new_status == Order.OrderStatus.SHIPPED:
-            for provider in provider_ids:
-                if provider and provider != request.user:
+            elif new_status == Order.OrderStatus.SHIPPED:
+                for provider in provider_ids:
+                    if provider and provider != request.user:
+                        notify_user(
+                            provider,
+                            _("Order #%(num)s Shipped") % {"num": order_label},
+                            _('Order #%(num)s has been shipped.') % {"num": order_label},
+                            notification_type="info",
+                            link="/dashboard/orders/",
+                        )
+                if referred_user and referred_user != request.user and not referred_user.is_superuser:
                     notify_user(
-                        provider,
+                        referred_user,
                         _("Order #%(num)s Shipped") % {"num": order_label},
                         _('Order #%(num)s has been shipped.') % {"num": order_label},
                         notification_type="info",
                         link="/dashboard/orders/",
                     )
-            if referred_user and referred_user != request.user and not referred_user.is_superuser:
-                notify_user(
-                    referred_user,
-                    _("Order #%(num)s Shipped") % {"num": order_label},
-                    _('Order #%(num)s has been shipped.') % {"num": order_label},
-                    notification_type="info",
-                    link="/dashboard/orders/",
-                )
 
-        elif new_status == Order.OrderStatus.DELIVERED:
-            for provider in provider_ids:
-                if provider and provider != request.user:
+            elif new_status == Order.OrderStatus.DELIVERED:
+                for provider in provider_ids:
+                    if provider and provider != request.user:
+                        notify_user(
+                            provider,
+                            _("Order #%(num)s Delivered") % {"num": order_label},
+                            _('Order #%(num)s has been delivered.') % {"num": order_label},
+                            notification_type="success",
+                            link="/dashboard/orders/",
+                        )
+                if referred_user and referred_user != request.user and not referred_user.is_superuser:
                     notify_user(
-                        provider,
-                        _("Order #%(num)s Delivered") % {"num": order_label},
-                        _('Order #%(num)s has been delivered.') % {"num": order_label},
+                        referred_user,
+                        _("Order #%(num)s Delivered — Commission Earned") % {"num": order_label},
+                        _('Order #%(num)s has been delivered. Your commission has been credited to your wallet.')
+                        % {"num": order_label},
                         notification_type="success",
-                        link="/dashboard/orders/",
+                        link="/dashboard/wallet/",
                     )
-            if referred_user and referred_user != request.user and not referred_user.is_superuser:
-                notify_user(
-                    referred_user,
-                    _("Order #%(num)s Delivered — Commission Earned") % {"num": order_label},
-                    _('Order #%(num)s has been delivered. Your commission has been credited to your wallet.')
-                    % {"num": order_label},
-                    notification_type="success",
-                    link="/dashboard/wallet/",
-                )
 
-        elif new_status == Order.OrderStatus.CANCELLED:
-            for provider in provider_ids:
-                if provider and provider != request.user:
+            elif new_status == Order.OrderStatus.CANCELLED:
+                for provider in provider_ids:
+                    if provider and provider != request.user:
+                        notify_user(
+                            provider,
+                            _("Order #%(num)s Cancelled") % {"num": order_label},
+                            _('Order #%(num)s has been cancelled by %(name)s.')
+                            % {"num": order_label, "name": actor_name},
+                            notification_type="warning",
+                            link="/dashboard/orders/",
+                        )
+                if referred_user and referred_user != request.user and not referred_user.is_superuser:
                     notify_user(
-                        provider,
+                        referred_user,
                         _("Order #%(num)s Cancelled") % {"num": order_label},
                         _('Order #%(num)s has been cancelled by %(name)s.')
                         % {"num": order_label, "name": actor_name},
                         notification_type="warning",
                         link="/dashboard/orders/",
                     )
-            if referred_user and referred_user != request.user and not referred_user.is_superuser:
-                notify_user(
-                    referred_user,
-                    _("Order #%(num)s Cancelled") % {"num": order_label},
-                    _('Order #%(num)s has been cancelled by %(name)s.')
-                    % {"num": order_label, "name": actor_name},
-                    notification_type="warning",
-                    link="/dashboard/orders/",
-                )
-            for admin in admins:
-                if admin != request.user:
-                    notify_user(
-                        admin,
-                        _("Order #%(num)s Cancelled") % {"num": order_label},
-                        _('Order #%(num)s has been cancelled by %(name)s.')
-                        % {"num": order_label, "name": actor_name},
-                        notification_type="warning",
-                        link="/dashboard/orders/",
-                    )
+                for admin in admins:
+                    if admin != request.user:
+                        notify_user(
+                            admin,
+                            _("Order #%(num)s Cancelled") % {"num": order_label},
+                            _('Order #%(num)s has been cancelled by %(name)s.')
+                            % {"num": order_label, "name": actor_name},
+                            notification_type="warning",
+                            link="/dashboard/orders/",
+                        )
 
         return JsonResponse({"success": True, "message": _("Order status updated")})
 

@@ -82,6 +82,7 @@ urlpatterns = [
     path("wallet/withdrawals/<int:user_id>/", wallets.user_withdrawals, name="user_withdrawals"),
     path("wallet/withdrawals/<int:pk>/handle/", wallets.handle_withdrawal, name="handle_withdrawal"),
     path("wallet/<int:user_id>/clear/", wallets.clear_wallet, name="wallet_clear"),
+    path("wallet/<int:user_id>/admin-withdraw/", wallets.admin_withdraw_from_user, name="admin_withdraw"),
     # Notifications
     path("notifications/stream/",notifications.notifications_stream,name="notifications_stream"),
     path("notifications/unread-count/",notifications.get_unread_count,name="notifications_unread_count",),

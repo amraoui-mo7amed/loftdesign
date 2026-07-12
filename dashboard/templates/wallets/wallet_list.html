@@ -32,22 +32,9 @@
 
     <div class="d-flex justify-content-between align-items-center gap-3 mb-4" data-aos="fade-up">
         <form method="get" class="d-flex gap-2 flex-grow-1" style="max-width: 400px;">
-            <input type="text" name="q" value="{{ q }}" class="form-control rounded-3" placeholder="{% trans 'Search by name or email...' %}">
+            <input type="text" name="q" value="{{ q }}" class="form-control rounded-3" placeholder="{% trans 'Search affiliates by name or email...' %}">
             <button type="submit" class="btn btn-dark rounded-3 px-4 fw-bold"><i class="fas fa-search"></i></button>
         </form>
-        {% if is_admin and role_choices %}
-        <div class="dropdown">
-            <button class="filter-btn fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-filter me-2"></i>{% if selected_role_label %}{{ selected_role_label }}{% else %}{% trans "All Roles" %}{% endif %}
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end rounded-3 shadow-sm border-0">
-                <li><a class="dropdown-item {% if not role_filter %}active fw-bold{% endif %}" href="?{% if q %}q={{ q }}&{% endif %}">{% trans "All Roles" %}</a></li>
-                {% for choice in role_choices %}
-                <li><a class="dropdown-item {% if role_filter == choice.value %}active fw-bold{% endif %}" href="?role={{ choice.value }}{% if q %}&q={{ q }}{% endif %}">{{ choice.label }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
     </div>
 
     <div class="card border-0 shadow-sm rounded-4" data-aos="fade-up">

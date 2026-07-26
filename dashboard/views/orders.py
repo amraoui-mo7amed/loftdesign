@@ -17,6 +17,7 @@ from user_auth.models import UserProfile
 
 _RC = UserProfile.roleChoices
 _AFFILIATE_ROLES = [_RC.AFFILIATE, _RC.SEMI_AFFILIATE]
+_VIEWER_ROLES = [*_AFFILIATE_ROLES, _RC.FINAL_CLIENT]
 
 
 def _admin_transitions_for_order(order):
@@ -105,7 +106,7 @@ ORDER_TRANSITIONS = {
 }
 
 
-@role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER] + _AFFILIATE_ROLES)
+@role_required(allowed_roles=[_RC.ADMIN, _RC.PROVIDER] + _VIEWER_ROLES)
 def order_list(request):
     """List orders — admins see all, providers see their products, affiliates see their catalog products"""
     user_profile = getattr(request.user, "profile", None)
@@ -119,8 +120,13 @@ def order_list(request):
     is_admin = role == _RC.ADMIN or request.user.is_superuser
     is_provider = (not request.user.is_superuser) and role == _RC.PROVIDER
     is_affiliate_or_semi = role in _AFFILIATE_ROLES
+    is_end_client = role == _RC.FINAL_CLIENT
 
-    if is_provider:
+    if is_end_client:
+        orders = Order.objects.filter(buyer=request.user).order_by("-created_at")
+        if status_filter:
+            orders = orders.filter(status=status_filter)
+    elif is_provider:
         user_product_ids = set(
             Product.objects.filter(user=request.user).values_list("id", flat=True)
         )
@@ -163,6 +169,8 @@ def order_list(request):
         # Per-order allowed transitions for the current user
         if is_admin:
             transitions = _admin_transitions_for_order(order)
+        elif is_end_client:
+            transitions = {}
         else:
             transitions = ORDER_TRANSITIONS.get(role, {})
         allowed_statuses = transitions.get(order.status, [])
@@ -233,6 +241,7 @@ def order_list(request):
         "is_provider": is_provider,
         "is_trusted": is_trusted,
         "is_affiliate_or_semi": is_affiliate_or_semi,
+        "is_end_client": is_end_client,
     }
     return render(request, "orders/list.html", context)
 

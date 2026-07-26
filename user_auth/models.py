@@ -48,6 +48,11 @@ class UserProfile(models.Model):
         related_name="semi_affiliates", verbose_name=_("Parent Affiliate"),
         help_text=_("The affiliate who created this semi-affiliate account")
     )
+    created_by = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="end_clients", verbose_name=_("Created By"),
+        help_text=_("The semi-affiliate who created this end client account")
+    )
     approved_at = models.DateTimeField(_("Approved At"), null=True, blank=True)
 
     # System Fields

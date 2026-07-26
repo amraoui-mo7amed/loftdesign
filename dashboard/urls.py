@@ -73,6 +73,10 @@ urlpatterns = [
     path("semi-affiliates/", users.semi_affiliate_list, name="semi_affiliate_list"),
     path("semi-affiliates/create/", users.semi_affiliate_create, name="semi_affiliate_create"),
     path("semi-affiliates/<int:pk>/delete/", users.semi_affiliate_delete, name="semi_affiliate_delete"),
+    # End Clients
+    path("end-clients/", users.end_client_list, name="end_client_list"),
+    path("end-clients/create/", users.end_client_create, name="end_client_create"),
+    path("end-clients/<int:pk>/delete/", users.end_client_delete, name="end_client_delete"),
     # Wallet
     path("wallet/", wallets.wallet_list, name="wallet_list"),
     path("wallet/self/", wallets.wallet_detail, name="wallet_detail"),

@@ -335,7 +335,7 @@ def user_approve(request, pk):
     return redirect("dash:user_details", pk=pk)
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER, UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.SEMI_AFFILIATE, UserProfile.roleChoices.ADMIN])
+@role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER, UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.SEMI_AFFILIATE, UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.FINAL_CLIENT])
 def profile_update(request):
     """AJAX view for providers/affiliates/admins to update their own profile"""
     profile, created = UserProfile.objects.get_or_create(user=request.user)
@@ -697,3 +697,169 @@ def semi_affiliate_list(request):
         "selected_parent": parent_filter,
         "query": q,
     })
+
+
+from user_auth.utils import generate_affiliate_code
+
+
+_RC = UserProfile.roleChoices
+
+
+@role_required(allowed_roles=[_RC.ADMIN, _RC.AFFILIATE, _RC.SEMI_AFFILIATE])
+def end_client_list(request):
+    """List end clients — semi sees own, affiliate sees chain, admin sees all"""
+    profile = get_object_or_404(UserProfile, user=request.user)
+    q = request.GET.get("q", "")
+
+    if request.user.is_superuser:
+        qs = UserProfile.objects.filter(
+            role=_RC.FINAL_CLIENT
+        ).select_related("user", "created_by__user")
+        if q:
+            qs = qs.filter(
+                Q(user__first_name__icontains=q)
+                | Q(user__last_name__icontains=q)
+                | Q(user__email__icontains=q)
+            )
+    elif profile.role == _RC.AFFILIATE:
+        semi_ids = UserProfile.objects.filter(
+            parent_affiliate=profile, role=_RC.SEMI_AFFILIATE
+        ).values_list("id", flat=True)
+        qs = UserProfile.objects.filter(
+            role=_RC.FINAL_CLIENT, created_by_id__in=semi_ids
+        ).select_related("user", "created_by__user")
+        if q:
+            qs = qs.filter(
+                Q(user__first_name__icontains=q)
+                | Q(user__last_name__icontains=q)
+                | Q(user__email__icontains=q)
+            )
+    else:
+        qs = UserProfile.objects.filter(
+            role=_RC.FINAL_CLIENT, created_by=profile
+        ).select_related("user")
+        if q:
+            qs = qs.filter(
+                Q(user__first_name__icontains=q)
+                | Q(user__last_name__icontains=q)
+                | Q(user__email__icontains=q)
+            )
+
+    paginator = Paginator(qs, 20)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    is_semi = profile.role == _RC.SEMI_AFFILIATE
+    return render(request, "users/end_client_list.html", {
+        "page_obj": page_obj,
+        "query": q,
+        "is_semi": is_semi,
+        "title": _("End Clients"),
+    })
+
+
+@role_required(allowed_roles=[_RC.SEMI_AFFILIATE])
+def end_client_create(request):
+    """AJAX: semi-affiliate creates an end client and sends invitation email"""
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone", "")
+
+        errors = {}
+        if not first_name:
+            errors["first_name"] = [_("First name is required")]
+        if not email:
+            errors["email"] = [_("Email is required")]
+        if User.objects.filter(email=email).exists():
+            errors["email"] = [_("This email is already registered")]
+
+        if errors:
+            return JsonResponse({"success": False, "errors": errors})
+
+        try:
+            username = email.split("@")[0]
+            if User.objects.filter(username=username).exists():
+                username = f"{username}_{secrets.token_hex(2)}"
+
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=username, email=email,
+                    first_name=first_name, last_name=last_name, is_active=True
+                )
+                user.set_unusable_password()
+                user.save()
+
+                UserProfile.objects.create(
+                    user=user,
+                    role=_RC.FINAL_CLIENT,
+                    created_by=profile,
+                    phone_number=phone,
+                    is_approved=True,
+                )
+
+                token_generator = PasswordResetTokenGenerator()
+                token = token_generator.make_token(user)
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                set_password_url = request.build_absolute_uri(
+                    reverse('user_auth:set_password', kwargs={'uidb64': uidb64, 'token': token})
+                )
+
+                creator_name = request.user.get_full_name() or request.user.username
+                email_html = render_to_string('emails/end_client_set_password.html', {
+                    'first_name': first_name,
+                    'username': username,
+                    'email': email,
+                    'creator_name': creator_name,
+                    'set_password_url': set_password_url,
+                })
+
+                email_msg = EmailMessage(
+                    subject="LOFT Design - Your Client Account / حساب العميل الخاص بك",
+                    body=email_html,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[email],
+                )
+                email_msg.content_subtype = "html"
+
+                try:
+                    email_sent = email_msg.send(fail_silently=False)
+                    if not email_sent:
+                        raise Exception(_("Failed to send email. Account creation rolled back."))
+                except Exception as mail_err:
+                    transaction.set_rollback(True)
+                    return JsonResponse({
+                        "success": False,
+                        "errors": {
+                            "email": [_("Account could not be created because the invitation email failed to send.")]
+                        }
+                    })
+
+            return JsonResponse({
+                "success": True,
+                "message": _("End client '%(name)s' created. Invitation sent to %(email)s.")
+                % {"name": f"{first_name} {last_name}", "email": email},
+            })
+        except Exception as e:
+            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+
+    return JsonResponse({"success": False}, status=400)
+
+
+@role_required(allowed_roles=[_RC.SEMI_AFFILIATE, _RC.ADMIN])
+def end_client_delete(request, pk):
+    """AJAX: delete an end client account"""
+    if request.method == "POST":
+        profile = get_object_or_404(UserProfile, pk=pk, role=_RC.FINAL_CLIENT)
+        if not request.user.is_superuser and profile.created_by.user != request.user:
+            return JsonResponse({"success": False, "message": _("Permission denied.")}, status=403)
+        full_name = profile.user.get_full_name() or profile.user.username
+        profile.user.delete()
+        return JsonResponse({
+            "success": True,
+            "message": _("End client %(name)s deleted successfully.") % {"name": full_name},
+        })
+    return JsonResponse({"success": False}, status=400)

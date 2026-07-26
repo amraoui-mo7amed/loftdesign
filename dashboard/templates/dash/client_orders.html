@@ -1,0 +1,85 @@
+{% extends "dash/dash_index.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block dashTitle %}{{ title }}{% endblock dashTitle %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/client.css' %}?v={% now 'U' %}">
+{% endblock extra_css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4" data-page="client-orders">
+    {% csrf_token %}
+
+    <div class="mb-4" data-aos="fade-down">
+        <h6 class="text-primary fw-bold text-uppercase tracking-widest mb-2" style="letter-spacing:1px;">
+            {% trans "Orders" %}
+        </h6>
+        <h1 class="fw-black display-4 mb-0">{% trans "My Orders" %}</h1>
+        <p class="text-muted mt-2">{% trans "Track and review all your orders." %}</p>
+    </div>
+
+    <div class="row g-3">
+        {% for order in orders %}
+        <div class="col-12" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
+            <div class="order-card card">
+                <div class="order-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="order-number-badge">#{{ order.id }}</span>
+                        <span class="badge {% if order.status == 'delivered' %}bg-success{% elif order.status == 'cancelled' %}bg-danger{% elif order.status == 'shipped' %}bg-info text-white{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-2">
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+                    <span class="small text-muted">{{ order.created_at|date:"d M, Y H:i" }}</span>
+                </div>
+                <div class="order-body">
+                    {% for item in order.items %}
+                    <div class="order-item-row">
+                        {% if item.thumbnail %}
+                        <img src="{{ item.thumbnail }}" alt="{{ item.title }}" class="order-item-img">
+                        {% else %}
+                        <div class="order-item-img bg-light d-flex align-items-center justify-content-center text-muted">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        {% endif %}
+                        <div class="order-item-details">
+                            <h6>{{ item.title }}</h6>
+                            <small>
+                                {% trans "Qty" %}: {{ item.quantity }} &middot;
+                                {{ item.price }} {% trans "DZD" %}
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold">{% widthratio item.quantity 1 item.price %} {% trans "DZD" %}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if order.customer_address %}
+                    <div class="mt-3 pt-2 border-top small text-muted">
+                        <i class="fas fa-map-marker-alt me-1"></i>
+                        {{ order.customer_address }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="empty-state">
+                <i class="fas fa-shopping-cart"></i>
+                <h5 class="fw-bold text-muted">{% trans "No orders yet" %}</h5>
+                <p class="text-muted">{% trans "Browse the catalog and place your first order." %}</p>
+                <a href="{% url 'frontend:client_catalog' %}" class="btn btn-primary rounded-pill px-4 fw-bold mt-2">
+                    <i class="fas fa-box-open me-2"></i> {% trans "Browse Products" %}
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+    <script src="{% static 'js/client.js' %}?v={% now 'U' %}"></script>
+{% endblock extra_js %}

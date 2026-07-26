@@ -18,8 +18,9 @@ ADMIN = UserProfile.roleChoices.ADMIN
 AFFILIATE = UserProfile.roleChoices.AFFILIATE
 SEMI = UserProfile.roleChoices.SEMI_AFFILIATE
 PROVIDER = UserProfile.roleChoices.PROVIDER
+FINAL_CLIENT = UserProfile.roleChoices.FINAL_CLIENT
 
-BUSINESS_ROLES = [ADMIN, AFFILIATE, SEMI, PROVIDER]
+BUSINESS_ROLES = [ADMIN, AFFILIATE, SEMI, PROVIDER, FINAL_CLIENT]
 
 
 @role_required(allowed_roles=BUSINESS_ROLES)
@@ -29,8 +30,8 @@ def wallet_list(request):
     role = profile.role
     is_admin = role == ADMIN or request.user.is_superuser
 
-    # Semi-affiliates go directly to their own wallet
-    if role == SEMI:
+    # Semi-affiliates and end clients go directly to their own wallet
+    if role in (SEMI, FINAL_CLIENT):
         return redirect("dash:wallet_detail")
 
     if is_admin:
@@ -81,8 +82,28 @@ def wallet_detail(request, user_id=None):
     elif role == ADMIN:
         target_user = get_object_or_404(User, pk=user_id)
     elif role == AFFILIATE:
-        semi = get_object_or_404(UserProfile, user_id=user_id, role=SEMI, parent_affiliate=profile)
-        target_user = semi.user
+        # Can view wallets of semis (existing) and end clients under their semi chain
+        target_user = get_object_or_404(User, pk=user_id)
+        target_profile = getattr(target_user, "profile", None)
+        if target_profile and target_profile.role == SEMI:
+            if target_profile.parent_affiliate != profile:
+                return redirect("dash:wallet_list")
+        elif target_profile and target_profile.role == FINAL_CLIENT:
+            semi_profiles = UserProfile.objects.filter(
+                parent_affiliate=profile, role=SEMI
+            ).values_list("id", flat=True)
+            if target_profile.created_by_id not in semi_profiles:
+                return redirect("dash:wallet_list")
+        else:
+            return redirect("dash:wallet_list")
+    elif role == SEMI:
+        # Can view own end clients' wallets
+        target_user = get_object_or_404(User, pk=user_id)
+        target_profile = getattr(target_user, "profile", None)
+        if not target_profile or target_profile.role != FINAL_CLIENT or target_profile.created_by != profile:
+            return redirect("dash:wallet_list")
+    elif role == FINAL_CLIENT:
+        return redirect("dash:wallet_list")
     else:
         return redirect("dash:wallet_list")
 
@@ -138,23 +159,57 @@ def wallet_detail(request, user_id=None):
                 logger.exception("Chain breakdown failed for order %s: %s", tx.order.id, e)
                 tx.chain_details_json = "null"
 
-    # When admin views an affiliate's wallet, fetch their semi-affiliates
+    # When admin/affiliate views an affiliate's wallet, fetch their semi-affiliates + end clients
     semi_affiliates = []
-    if role == ADMIN and target_user != request.user:
+    end_clients = []
+    viewing_affiliate_wallet = False
+
+    if target_user != request.user:
         target_profile = getattr(target_user, "profile", None)
-        if target_profile and target_profile.role == AFFILIATE:
-            semi_profiles = UserProfile.objects.filter(
-                parent_affiliate=target_profile, role=SEMI, is_approved=True
-            ).select_related("user")
-            for sp in semi_profiles:
-                sw, _created = Wallet.objects.get_or_create(user=sp.user)
-                semi_affiliates.append({
-                    "id": sp.user.id,
-                    "name": sp.user.get_full_name() or sp.user.username,
-                    "email": sp.user.email,
-                    "balance": sw.balance,
-                    "pending_balance": sw.pending_balance,
-                })
+        viewing_affiliate_wallet = target_profile and target_profile.role == AFFILIATE
+
+        if viewing_affiliate_wallet:
+            if role == ADMIN or (role == AFFILIATE and target_user != request.user):
+                semi_profiles = UserProfile.objects.filter(
+                    parent_affiliate=target_profile, role=SEMI, is_approved=True
+                ).select_related("user")
+                for sp in semi_profiles:
+                    sw, _created = Wallet.objects.get_or_create(user=sp.user)
+                    semi_affiliates.append({
+                        "id": sp.user.id,
+                        "name": sp.user.get_full_name() or sp.user.username,
+                        "email": sp.user.email,
+                        "balance": sw.balance,
+                        "pending_balance": sw.pending_balance,
+                    })
+                    # End clients under this semi
+                    ec_profiles = UserProfile.objects.filter(
+                        created_by=sp, role=FINAL_CLIENT
+                    ).select_related("user")
+                    for ec in ec_profiles:
+                        ew, _created = Wallet.objects.get_or_create(user=ec.user)
+                        end_clients.append({
+                            "id": ec.user.id,
+                            "name": ec.user.get_full_name() or ec.user.username,
+                            "semi_name": sp.user.get_full_name() or sp.user.username,
+                            "balance": ew.balance,
+                            "pending_balance": ew.pending_balance,
+                        })
+
+    # When semi views their own wallet, show their end clients
+    if role == SEMI and target_user == request.user:
+        ec_profiles = UserProfile.objects.filter(
+            created_by=profile, role=FINAL_CLIENT
+        ).select_related("user")
+        for ec in ec_profiles:
+            ew, _created = Wallet.objects.get_or_create(user=ec.user)
+            end_clients.append({
+                "id": ec.user.id,
+                "name": ec.user.get_full_name() or ec.user.username,
+                "semi_name": None,
+                "balance": ew.balance,
+                "pending_balance": ew.pending_balance,
+            })
 
     is_own = target_user == request.user
 
@@ -183,6 +238,7 @@ def wallet_detail(request, user_id=None):
         "status_choices": status_choices,
         "target_user": target_user,
         "semi_affiliates": semi_affiliates,
+        "end_clients": end_clients,
         "is_own": is_own,
         "is_admin": role == ADMIN,
         "title": _("Wallet"),
@@ -244,6 +300,7 @@ def withdrawal_request_list(request):
         {"value": "affiliate", "label": _("Affiliate")},
         {"value": "semi_affiliate", "label": _("Semi-Affiliate")},
         {"value": "provider", "label": _("Provider")},
+        {"value": "final_client", "label": _("End Client")},
     ]
 
     return render(request, "wallets/withdrawal_list.html", {

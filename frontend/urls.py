@@ -1,6 +1,6 @@
 from django.urls import path
 from user_auth import views as auth_views
-from .views import main, portfolio, products, orders, cart, store
+from .views import main, portfolio, products, orders, cart, store, client
 
 app_name = "frontend"
 
@@ -37,4 +37,9 @@ urlpatterns = [
     # Admin storefront
     path("admin-store/", store.admin_store, name="admin_store"),
     path("loftdesign/", store.admin_store, name="admin_store_slugged"),
+    # End Client
+    path("client/", client.client_home, name="client_home"),
+    path("client/catalog/", client.client_catalog, name="client_catalog"),
+    path("client/order/", client.client_order_create, name="client_order_create"),
+    path("client/orders/", client.client_orders, name="client_orders"),
 ]

@@ -78,7 +78,7 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "url_name": "dash:semi_affiliate_list",
         })
         menu.append({
-            "title": _("End Clients"),
+            "title": _("Clients"),
             "icon": "fas fa-users",
             "url_name": "dash:end_client_list",
         })
@@ -140,7 +140,7 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "url_name": "dash:my_catalog",
         })
         menu.append({
-            "title": _("End Clients"),
+            "title": _("Clients"),
             "icon": "fas fa-users",
             "url_name": "dash:end_client_list",
         })
@@ -152,7 +152,7 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "url_name": "dash:semi_affiliate_list",
         })
         menu.append({
-            "title": _("End Clients"),
+            "title": _("Clients"),
             "icon": "fas fa-users",
             "url_name": "dash:end_client_list",
         })

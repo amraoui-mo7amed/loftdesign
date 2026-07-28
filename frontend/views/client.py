@@ -23,16 +23,16 @@ def client_home(request):
     delivered = Order.objects.filter(buyer=request.user, status=Order.OrderStatus.DELIVERED).count()
     pending_count = Order.objects.filter(buyer=request.user, status=Order.OrderStatus.PENDING).count()
 
-    semi_name = ""
+    creator_name = ""
     if profile.created_by:
-        semi_name = profile.created_by.user.get_full_name() or profile.created_by.user.username
+        creator_name = profile.created_by.user.get_full_name() or profile.created_by.user.username
 
     return render(request, "dash/client_home.html", {
         "orders": orders,
         "total_orders": total_orders,
         "delivered": delivered,
         "pending_count": pending_count,
-        "semi_name": semi_name,
+        "semi_name": creator_name,
         "title": _("My Dashboard"),
     })
 
@@ -45,29 +45,64 @@ def client_catalog(request):
     if not profile.created_by:
         return redirect("frontend:home")
 
-    semi_profile = profile.created_by
-    prices = PartnerPrice.objects.filter(
-        buyer=semi_profile.user, is_active=True,
-    ).select_related("product", "product__loft_price").prefetch_related("product__gallery_images")
-
+    creator = profile.created_by
+    creator_name = creator.user.get_full_name() or creator.user.username
     catalog = []
-    for pp in prices:
-        product = pp.product
-        if not product.is_active or product.status != Product.ProductStatus.APPROVED:
-            continue
-        wholesale = pp.wholesale_price or pp.purchase_price
-        if wholesale is None:
-            continue
-        catalog.append({
-            "product": product,
-            "wholesale_price": float(wholesale),
-            "primary_image": product.gallery_images.first(),
-            "available_qty": product.quantity,
-        })
+
+    if creator.role == UserProfile.roleChoices.ADMIN:
+        products = Product.objects.filter(
+            show_in_admin_store=True, is_active=True,
+            status=Product.ProductStatus.APPROVED,
+        ).select_related("loft_price").prefetch_related("gallery_images")
+        for product in products:
+            loft_price = getattr(product, "loft_price", None)
+            price = loft_price.loft_retail_price if loft_price else None
+            if price is None:
+                continue
+            catalog.append({
+                "product": product,
+                "wholesale_price": float(price),
+                "primary_image": product.gallery_images.first(),
+                "available_qty": product.quantity,
+            })
+    elif creator.role == UserProfile.roleChoices.AFFILIATE:
+        prices = PartnerPrice.objects.filter(
+            buyer=creator.user, is_active=True,
+        ).select_related("product", "product__loft_price").prefetch_related("product__gallery_images")
+        for pp in prices:
+            product = pp.product
+            if not product.is_active or product.status != Product.ProductStatus.APPROVED:
+                continue
+            wholesale = pp.wholesale_price or pp.purchase_price
+            if wholesale is None:
+                continue
+            catalog.append({
+                "product": product,
+                "wholesale_price": float(wholesale),
+                "primary_image": product.gallery_images.first(),
+                "available_qty": product.quantity,
+            })
+    else:
+        prices = PartnerPrice.objects.filter(
+            buyer=creator.user, is_active=True,
+        ).select_related("product", "product__loft_price").prefetch_related("product__gallery_images")
+        for pp in prices:
+            product = pp.product
+            if not product.is_active or product.status != Product.ProductStatus.APPROVED:
+                continue
+            wholesale = pp.wholesale_price or pp.purchase_price
+            if wholesale is None:
+                continue
+            catalog.append({
+                "product": product,
+                "wholesale_price": float(wholesale),
+                "primary_image": product.gallery_images.first(),
+                "available_qty": product.quantity,
+            })
 
     return render(request, "dash/client_catalog.html", {
         "catalog": catalog,
-        "semi_name": semi_profile.user.get_full_name() or semi_profile.user.username,
+        "semi_name": creator_name,
         "title": _("Products"),
     })
 
@@ -78,7 +113,7 @@ def client_order_create(request):
     if not profile or profile.role != UserProfile.roleChoices.FINAL_CLIENT:
         return JsonResponse({"success": False, "errors": [_("Permission denied.")]}, status=403)
     if not profile.created_by:
-        return JsonResponse({"success": False, "errors": [_("No associated semi-affiliate.")]}, status=400)
+        return JsonResponse({"success": False, "errors": [_("No associated partner.")]}, status=400)
 
     if request.method != "POST":
         return JsonResponse({"success": False}, status=400)
@@ -109,8 +144,8 @@ def client_order_create(request):
     if errors:
         return JsonResponse({"success": False, "errors": errors})
 
-    semi_profile = profile.created_by
-    semi_codes = [semi_profile.affiliate_code] if semi_profile.affiliate_code else []
+    creator = profile.created_by
+    creator_name = creator.user.get_full_name() or creator.user.username
 
     try:
         with transaction.atomic():
@@ -120,26 +155,46 @@ def client_order_create(request):
             if not product:
                 return JsonResponse({"success": False, "errors": {"product_id": [_("Product not found.")]}})
 
-            pp = PartnerPrice.objects.filter(
-                product=product, buyer=semi_profile.user, is_active=True
-            ).first()
-            if not pp:
-                return JsonResponse({"success": False, "errors": {"product_id": [_("Product not available.")]}})
-
-            wholesale = pp.wholesale_price or pp.purchase_price
-            if wholesale is None:
-                return JsonResponse({"success": False, "errors": {"product_id": [_("Price not configured.")]}})
-
             if product.quantity < quantity:
                 return JsonResponse({
                     "success": False,
                     "errors": {"quantity": [_("Only %(qty)s available.") % {"qty": product.quantity}]}
                 })
 
+            # Resolve price and referred_by based on creator role
+            if creator.role == UserProfile.roleChoices.ADMIN:
+                if not product.show_in_admin_store:
+                    return JsonResponse({"success": False, "errors": {"product_id": [_("Product not available.")]}})
+                loft_price = getattr(product, "loft_price", None)
+                if not loft_price or not loft_price.loft_retail_price:
+                    return JsonResponse({"success": False, "errors": {"product_id": [_("Price not configured.")]}})
+                unit_price = loft_price.loft_retail_price
+                referred_by = ""
+            elif creator.role == UserProfile.roleChoices.AFFILIATE:
+                pp = PartnerPrice.objects.filter(
+                    product=product, buyer=creator.user, is_active=True
+                ).first()
+                if not pp:
+                    return JsonResponse({"success": False, "errors": {"product_id": [_("Product not available.")]}})
+                unit_price = pp.wholesale_price or pp.purchase_price
+                if unit_price is None:
+                    return JsonResponse({"success": False, "errors": {"product_id": [_("Price not configured.")]}})
+                referred_by = creator.affiliate_code or ""
+            else:
+                pp = PartnerPrice.objects.filter(
+                    product=product, buyer=creator.user, is_active=True
+                ).first()
+                if not pp:
+                    return JsonResponse({"success": False, "errors": {"product_id": [_("Product not available.")]}})
+                unit_price = pp.wholesale_price or pp.purchase_price
+                if unit_price is None:
+                    return JsonResponse({"success": False, "errors": {"product_id": [_("Price not configured.")]}})
+                referred_by = creator.affiliate_code or ""
+
             order_item = {
                 "product_id": product.pk,
                 "title": product.title,
-                "price": str(wholesale),
+                "price": str(unit_price),
                 "quantity": quantity,
                 "thumbnail": product.thumbnail.url if product.thumbnail else "",
             }
@@ -155,7 +210,7 @@ def client_order_create(request):
                 customer_phone=phone,
                 customer_address=address or "",
                 status=Order.OrderStatus.PENDING,
-                referred_by=semi_profile.affiliate_code or "",
+                referred_by=referred_by,
             )
 
             admins = User.objects.filter(is_superuser=True)
@@ -163,20 +218,20 @@ def client_order_create(request):
                 notify_user(
                     admin,
                     _("New Order from End Client"),
-                    _("%(name)s ordered %(product)s x%(qty)s through %(semi)s.")
+                    _("%(name)s ordered %(product)s x%(qty)s through %(creator)s.")
                     % {
                         "name": full_name,
                         "product": product.title,
                         "qty": quantity,
-                        "semi": semi_profile.user.get_full_name() or semi_profile.user.username,
+                        "creator": creator_name,
                     },
                     notification_type=Notification.NotificationType.SUCCESS,
                     link="/dashboard/orders/",
                 )
 
-            if semi_profile.user and not semi_profile.user.is_superuser:
+            if creator.user and not creator.user.is_superuser:
                 notify_user(
-                    semi_profile.user,
+                    creator.user,
                     _("New Order from Your Client"),
                     _("%(client)s ordered %(product)s x%(qty)s.")
                     % {"client": full_name, "product": product.title, "qty": quantity},

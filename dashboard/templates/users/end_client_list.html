@@ -18,11 +18,9 @@
             <h1 class="fw-black display-4 mb-0">{{ title }}</h1>
             <p class="text-muted mt-2">{% trans "Manage your end clients and their orders." %}</p>
         </div>
-        {% if not request.user.is_superuser %}
         <button type="button" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-lg" data-bs-toggle="modal" data-bs-target="#createEndClientModal">
             <i class="fas fa-user-plus me-2 text-primary"></i> {% trans "Add Client" %}
         </button>
-        {% endif %}
     </div>
 
     {% if query %}
@@ -79,7 +77,6 @@
                         <a href="{% url 'dash:wallet_user_detail' ec.user.id %}" class="semi-action-btn btn btn-outline-dark">
                             <i class="fas fa-wallet"></i> {% trans "Wallet" %}
                         </a>
-                        {% if not request.user.is_superuser or request.user.is_superuser %}
                         <button type="button"
                                 class="semi-action-btn btn btn-outline-danger"
                                 data-delete-url="{% url 'dash:end_client_delete' ec.pk %}"
@@ -92,7 +89,6 @@
                                 data-swal-error-title="{% trans 'Error' %}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -105,11 +101,9 @@
                 </div>
                 <h3 class="fw-bold text-muted">{% trans "No clients yet" %}</h3>
                 <p class="text-muted">{% trans "Add your first client to get started." %}</p>
-                {% if not request.user.is_superuser %}
                 <button type="button" class="btn btn-dark rounded-pill px-5 py-3 fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#createEndClientModal">
                     <i class="fas fa-user-plus me-2 text-primary"></i> {% trans "Add Client" %}
                 </button>
-                {% endif %}
             </div>
         </div>
         {% endfor %}

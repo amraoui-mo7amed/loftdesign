@@ -726,7 +726,9 @@ def end_client_list(request):
             parent_affiliate=profile, role=_RC.SEMI_AFFILIATE
         ).values_list("id", flat=True)
         qs = UserProfile.objects.filter(
-            role=_RC.FINAL_CLIENT, created_by_id__in=semi_ids
+            role=_RC.FINAL_CLIENT
+        ).filter(
+            Q(created_by_id__in=list(semi_ids)) | Q(created_by=profile)
         ).select_related("user", "created_by__user")
         if q:
             qs = qs.filter(
@@ -758,9 +760,9 @@ def end_client_list(request):
     })
 
 
-@role_required(allowed_roles=[_RC.SEMI_AFFILIATE])
+@role_required(allowed_roles=[_RC.ADMIN, _RC.AFFILIATE, _RC.SEMI_AFFILIATE])
 def end_client_create(request):
-    """AJAX: semi-affiliate creates an end client and sends invitation email"""
+    """AJAX: admin/affiliate/semi-affiliate creates an end client and sends invitation email"""
     profile = get_object_or_404(UserProfile, user=request.user)
 
     if request.method == "POST":
@@ -849,7 +851,7 @@ def end_client_create(request):
     return JsonResponse({"success": False}, status=400)
 
 
-@role_required(allowed_roles=[_RC.SEMI_AFFILIATE, _RC.ADMIN])
+@role_required(allowed_roles=[_RC.ADMIN, _RC.AFFILIATE, _RC.SEMI_AFFILIATE])
 def end_client_delete(request, pk):
     """AJAX: delete an end client account"""
     if request.method == "POST":

@@ -52,7 +52,7 @@
                         </small>
                     </div>
                     <div class="fw-bold text-end" style="font-size:0.9rem;">
-                        {% widthratio item.quantity 1 item.price %} {% trans "DZD" %}
+                        {{ item.quantity }} × {{ item.price }} {% trans "DZD" %}
                     </div>
                 </div>
                 {% endfor %}

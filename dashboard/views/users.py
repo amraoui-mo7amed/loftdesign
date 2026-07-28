@@ -844,6 +844,7 @@ def end_client_create(request):
                 "success": True,
                 "message": _("End client '%(name)s' created. Invitation sent to %(email)s.")
                 % {"name": f"{first_name} {last_name}", "email": email},
+                "redirect_url": reverse("dash:end_client_list"),
             })
         except Exception as e:
             return JsonResponse({"success": False, "errors": {"system": [str(e)]}})

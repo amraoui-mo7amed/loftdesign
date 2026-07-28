@@ -121,8 +121,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body px-4 pb-4">
-                <div id="successMessage" class="alert alert-success d-none rounded-3"></div>
-                {% include "partials/errorList.html" with form_id="endClientForm" %}
+                {% include "partials/errorList.html" with form_id="createEndClientForm" %}
                 <form id="createEndClientForm" class="form" method="POST" action="{% url 'dash:end_client_create' %}">
                     {% csrf_token %}
                     <div class="row g-3">

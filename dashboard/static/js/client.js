@@ -12,8 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var modalTitle = document.getElementById("buyModalLabel");
         var modalPrice = document.getElementById("modalPrice");
         var availableSpan = document.getElementById("modalAvailable");
-        var buySubmit = document.getElementById("buySubmit");
-        var errorContainer = document.getElementById("buyErrors");
+        var errorContainer = document.querySelector('#errorContainer[form_id="buyForm"]');
         var maxQty = 1;
 
         function updateQty() {
@@ -54,63 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
-        // Submit buy order via AJAX
-        if (buySubmit) {
-            buySubmit.addEventListener("click", function () {
-                var submitBtn = this;
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> ' + submitBtn.dataset.loading || "Placing...";
-
-                if (errorContainer) { errorContainer.classList.add("d-none"); }
-
-                var formData = new FormData();
-                formData.append("product_id", productIdInput.value);
-                formData.append("quantity", qtyInput.value);
-                formData.append("csrfmiddlewaretoken", document.querySelector("[name=csrfmiddlewaretoken]").value);
-
-                fetch(submitBtn.dataset.url, {
-                    method: "POST",
-                    body: formData,
-                    headers: { "X-Requested-With": "XMLHttpRequest" },
-                })
-                .then(function (r) { return r.json(); })
-                .then(function (data) {
-                    if (data.success) {
-                        modal.hide();
-                        Swal.fire({
-                            icon: "success",
-                            title: data.message,
-                            showConfirmButton: true,
-                        }).then(function () {
-                            if (data.redirect_url) { window.location.href = data.redirect_url; }
-                        });
-                    } else {
-                        if (errorContainer) {
-                            var list = errorContainer.querySelector("ul");
-                            if (list) {
-                                list.innerHTML = "";
-                                for (var field in data.errors) {
-                                    if (data.errors.hasOwnProperty(field)) {
-                                        data.errors[field].forEach(function (msg) {
-                                            var li = document.createElement("li");
-                                            li.textContent = msg;
-                                            list.appendChild(li);
-                                        });
-                                    }
-                                }
-                                errorContainer.classList.remove("d-none");
-                            }
-                        }
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> ' + submitBtn.dataset.label || "Place Order";
-                    }
-                })
-                .catch(function () {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> ' + submitBtn.dataset.label || "Place Order";
-                });
-            });
-        }
     }
 
     /* ── End Client List: delete with SweetAlert ── */

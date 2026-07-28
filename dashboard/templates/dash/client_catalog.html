@@ -24,51 +24,55 @@
         {% endif %}
     </div>
 
-    <div class="row g-4">
+    {% if catalog %}
+    <div class="catalog-grid">
         {% for item in catalog %}
-        <div class="col-lg-3 col-md-4 col-sm-6"
+        <div class="catalog-card position-relative"
              data-product-id="{{ item.product.id }}"
              data-product-title="{{ item.product.title }}"
              data-product-price="{{ item.wholesale_price }}"
              data-available-qty="{{ item.available_qty }}"
              data-aos="fade-up"
              data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
-            <div class="product-card card">
-                {% if item.primary_image %}
-                <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" class="product-card-img">
-                {% elif item.product.thumbnail %}
-                <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" class="product-card-img">
-                {% else %}
-                <div class="product-card-img bg-light d-flex align-items-center justify-content-center text-muted" style="font-size:3rem;">
-                    <i class="fas fa-box-open"></i>
-                </div>
-                {% endif %}
-                <div class="product-card-body d-flex flex-column">
-                    <h6 class="product-card-title">{{ item.product.title }}</h6>
-                    <div class="product-card-price">
-                        {{ item.wholesale_price|floatformat:0 }} <span class="currency">{% trans "DZD" %}</span>
-                    </div>
-                    <p class="small text-muted mb-2">
-                        <i class="fas fa-box me-1"></i> {% trans "Stock" %}: {{ item.available_qty }}
-                    </p>
-                    <button type="button"
-                            class="buy-btn mt-auto open-buy-modal"
-                            data-bs-target="#buyModal">
-                        <i class="fas fa-shopping-cart me-2"></i> {% trans "Buy Now" %}
-                    </button>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="empty-state">
+            {% if item.primary_image %}
+            <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" class="catalog-card-img">
+            {% elif item.product.thumbnail %}
+            <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" class="catalog-card-img">
+            {% else %}
+            <div class="catalog-card-img-placeholder">
                 <i class="fas fa-box-open"></i>
-                <h5 class="fw-bold text-muted">{% trans "No products available" %}</h5>
-                <p class="text-muted">{% trans "Check back later for new products." %}</p>
+            </div>
+            {% endif %}
+
+            <div class="catalog-card-body">
+                <h6 class="catalog-card-title">{{ item.product.title }}</h6>
+                <div class="catalog-card-pricing">
+                    <div>
+                        <span class="catalog-card-price">{{ item.wholesale_price|floatformat:0 }}</span>
+                        <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "DZD" %}</small>
+                    </div>
+                    <div class="ms-auto">
+                        <small class="d-block" style="font-size:0.65rem;color:#adb5bd;">
+                            <i class="fas fa-box me-1"></i> {% trans "Stock" %}: {{ item.available_qty }}
+                        </small>
+                    </div>
+                </div>
+                <button type="button"
+                        class="btn w-100 rounded-pill fw-bold py-2 open-buy-modal border-0"
+                        style="background:var(--client-gradient);color:#fff;">
+                    <i class="fas fa-shopping-cart me-2"></i> {% trans "Buy Now" %}
+                </button>
             </div>
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div class="text-center py-5" data-aos="fade-up">
+        <i class="fas fa-box-open fa-4x text-muted opacity-25 mb-3"></i>
+        <h4 class="fw-bold text-muted">{% trans "No products available" %}</h4>
+        <p class="text-muted">{% trans "Check back later for new products." %}</p>
+    </div>
+    {% endif %}
 </div>
 
 <!-- Buy Modal -->
@@ -80,32 +84,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body px-4 pb-4 text-center">
-                <div id="buyErrors" class="alert alert-danger d-none rounded-3">
-                    <ul class="mb-0"></ul>
-                </div>
+                {% include "partials/errorList.html" with form_id="buyForm" %}
 
-                <div class="mb-3">
-                    <h6 class="fw-bold mb-1" id="modalTitle"></h6>
-                    <span class="fw-black fs-4 text-primary" id="modalPrice"></span>
-                </div>
+                <form id="buyForm" class="form" method="POST" action="{% url 'frontend:client_order_create' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <h6 class="fw-bold mb-1" id="modalTitle"></h6>
+                        <span class="fw-black fs-4 text-primary" id="modalPrice"></span>
+                    </div>
 
-                <div class="quantity-input-group">
-                    <button type="button" class="quantity-btn" id="qtyMinus">−</button>
-                    <input type="text" class="quantity-input" id="modalQty" value="1" inputmode="numeric">
-                    <button type="button" class="quantity-btn" id="qtyPlus">+</button>
-                </div>
+                    <div class="quantity-input-group">
+                        <button type="button" class="quantity-btn" id="qtyMinus">−</button>
+                        <input type="text" name="quantity" class="quantity-input" id="modalQty" value="1" inputmode="numeric">
+                        <button type="button" class="quantity-btn" id="qtyPlus">+</button>
+                    </div>
 
-                <p class="small text-muted mb-3">
-                    <i class="fas fa-box me-1"></i> {% trans "Available" %}: <span id="modalAvailable">0</span>
-                </p>
+                    <p class="small text-muted mb-3">
+                        <i class="fas fa-box me-1"></i> {% trans "Available" %}: <span id="modalAvailable">0</span>
+                    </p>
 
-                <input type="hidden" id="modalProductId">
-                <button type="button"
-                        class="btn btn-primary w-100 rounded-pill fw-bold py-3 shadow"
-                        id="buySubmit"
-                        data-url="{% url 'frontend:client_order_create' %}">
-                    <i class="fas fa-check me-2"></i> {% trans "Place Order" %}
-                </button>
+                    <input type="hidden" name="product_id" id="modalProductId">
+                    <button type="submit"
+                            class="btn btn-primary w-100 rounded-pill fw-bold py-3 shadow">
+                        <i class="fas fa-check me-2"></i> {% trans "Place Order" %}
+                    </button>
+                </form>
             </div>
         </div>
     </div>

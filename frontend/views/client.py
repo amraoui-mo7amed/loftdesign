@@ -138,8 +138,6 @@ def client_order_create(request):
     address = profile.address
     if not full_name:
         errors["profile"] = [_("Please update your profile with your full name first.")]
-    if not phone:
-        errors["profile"] = [_("Please update your profile with your phone number first.")]
 
     if errors:
         return JsonResponse({"success": False, "errors": errors})

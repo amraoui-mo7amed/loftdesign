@@ -88,11 +88,6 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "url_name": "dash:user_list",
         })
         menu.append({
-            "title": _("Portfolio"),
-            "icon": "fas fa-briefcase",
-            "url_name": "dash:portfolio_list",
-        })
-        menu.append({
             "title": _("Categories"),
             "icon": "fas fa-tags",
             "url_name": "dash:category_list",

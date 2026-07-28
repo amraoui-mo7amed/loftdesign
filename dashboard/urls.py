@@ -1,15 +1,10 @@
 from django.urls import path
-from dashboard.views import dashboard, users, notifications, portfolio, products, orders, settings, partner_prices, wallets, product_items
+from dashboard.views import dashboard, users, notifications, products, orders, settings, partner_prices, wallets, product_items
 
 app_name = "dash"
 
 urlpatterns = [
     path("home/", dashboard.dash_home, name="dash_home"),
-    # Portfolio
-    path("portfolio/", portfolio.portfolio_list, name="portfolio_list"),
-    path("portfolio/create/", portfolio.portfolio_create, name="portfolio_create"),
-    path("portfolio/<int:pk>/update/", portfolio.portfolio_update, name="portfolio_update"),
-    path("portfolio/<int:pk>/delete/", portfolio.portfolio_delete, name="portfolio_delete"),
     # Products
     path("products/", products.product_list, name="product_list"),
     path("products/create/", products.product_create, name="product_create"),

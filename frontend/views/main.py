@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from dashboard.models import Portfolio, Product, SiteSettings, ContactRequest
+from dashboard.models import Product, SiteSettings, ContactRequest
 from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -12,10 +12,6 @@ def home_view(request):
     if request.session.get("affiliate_code"):
         del request.session["affiliate_code"]
         request.session.modified = True
-
-    latest_portfolios = Portfolio.objects.filter(is_featured=True)[:6]
-    if not latest_portfolios.exists():
-        latest_portfolios = Portfolio.objects.all()[:6]
 
     latest_products = Product.objects.filter(is_active=True, is_featured=True, show_in_global_store=True)[:4]
     if not latest_products.exists():
@@ -41,7 +37,6 @@ def home_view(request):
         ]
 
     context = {
-        "latest_portfolios": latest_portfolios,
         "latest_products": latest_products,
         "slider_images": slider_images,
     }

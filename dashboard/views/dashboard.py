@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext as _
 from user_auth.models import UserProfile
-from dashboard.models import Portfolio, Product, Order, PartnerPrice
+from dashboard.models import Product, Order, PartnerPrice
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count
 import json
@@ -89,7 +89,7 @@ def dash_home(request):
                 "icon": "fa-clock",
                 "color": "warning",
             },
-            "chart_title": _("Portfolio Distribution"),
+            "chart_title": _("User Distribution"),
             "user_dist_labels": json.dumps(
                 [str(_("Providers")), str(_("Affiliates")), str(_("Semi-Affiliates"))]
             ),

@@ -42,9 +42,6 @@
                         <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#about">{% trans "About" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-bold" href="{% url 'frontend:portfolio_list' %}">{% trans "Portfolio" %}</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link fw-bold" href="{% url 'frontend:product_list' %}">{% trans "Shop" %}</a>
                     </li>
                     <li class="nav-item">
@@ -240,38 +237,6 @@
             </div>
         </div>
     </section>
-    <!-- 3. Portfolio Section -->
-    <section id="portfolio" class="py-10 bg-light">
-        <div class="container text-center">
-            <div class="d-flex justify-content-between align-items-end mb-5 reveal reveal-up">
-                <div class="d-flex flex-column align-items-start">
-                    <h2 class="display-4 fw-black mb-2">{% trans "Our Works" %}</h2>
-                    <p class="text-muted">{% trans "Check out our latest interior design projects." %}</p>
-                </div>
-
-            </div>
-            <div class="row g-4">
-                {% for portfolio in latest_portfolios %}
-                    <div class="col-md-6">
-                        <div class="category-card position-relative overflow-hidden rounded-4 shadow-lg group reveal reveal-zoom">
-                            <img src="{{ portfolio.thumbnail.url }}?auto=format&fit=crop&w=800&q=80"
-                                 alt="Residential"
-                                 class="img-fluid transition-all group-hover-scale">
-                            <div class="category-overlay d-flex flex-column justify-content-end p-5 text-white">
-                                <a href="{% url 'frontend:portfolio_detail' portfolio.pk %}"
-                                   target="_blank"
-                                   class="btn btn-primary rounded-pill mt-3 w-fit mx-auto">{% trans "View Projects" %}</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <a href="{% url 'frontend:portfolio_list' %}"
-                   target="_blank"
-                   class="btn btn-outline-dark rounded-pill px-4 mt-5 reveal reveal-up">{% trans "View All Projects" %}</a>
-        </div>
-    </section>
-    <!-- 5. Featured Products Section -->
     <section id="products" class="py-10 bg-white">
         <div class="container text-center">
             <div class="d-flex justify-content-between align-items-end mb-5 reveal reveal-up">

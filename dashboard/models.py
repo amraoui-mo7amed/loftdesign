@@ -98,46 +98,6 @@ class Notification(models.Model):
         return f"{self.title} - {self.user.username}"
 
 
-class Portfolio(models.Model):
-    """Portfolio model for interior design projects"""
-
-    title = models.CharField(max_length=255, verbose_name=_("Title"))
-    thumbnail = models.ImageField(upload_to="portfolio/thumbnails/", verbose_name=_("Thumbnail"))
-    description = models.TextField(verbose_name=_("Description"))
-    tags = models.CharField(max_length=10000, verbose_name=_("Tags"), help_text=_("Comma separated tags"))
-    external_link = models.URLField(verbose_name=_("External Link"), blank=True, null=True)
-    is_featured = models.BooleanField(default=False, verbose_name=_("Is Featured"))
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"), null=True, blank=True)
-    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated At"), null=True, blank=True)
-
-    class Meta:
-        verbose_name = _("Portfolio")
-        verbose_name_plural = _("Portfolios")
-        ordering = ["-created_at"]
-
-    def __str__(self):
-        return self.title
-
-
-class PortfolioGallery(models.Model):
-    """Gallery images for a portfolio project"""
-
-    portfolio = models.ForeignKey(
-        Portfolio, 
-        on_delete=models.CASCADE, 
-        related_name="gallery_images",
-        verbose_name=_("Portfolio")
-    )
-    image = models.ImageField(upload_to="portfolio/gallery/", verbose_name=_("Image"))
-
-    class Meta:
-        verbose_name = _("Portfolio Image")
-        verbose_name_plural = _("Portfolio Images")
-
-    def __str__(self):
-        return f"Image for {self.portfolio.title}"
-
-
 class Category(models.Model):
     """Category model for products"""
     name = models.CharField(max_length=255, verbose_name=_("Category Name"))

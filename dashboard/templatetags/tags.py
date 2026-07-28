@@ -1,7 +1,7 @@
 from django import template
 from django.utils.translation import gettext as _
 from user_auth.models import UserProfile
-from dashboard.models import Portfolio, Product, Order
+from dashboard.models import Product, Order
 
 register = template.Library()
 
@@ -54,7 +54,6 @@ def dashboard_stats(context):
         )
         stats = [
             {"title": _("My Products"), "value": user_products.count(), "icon": "fa-box-open", "color": "success"},
-            {"title": _("Portfolios"), "value": Portfolio.objects.count(), "icon": "fa-briefcase", "color": "warning"},
             {"title": _("My Orders"), "value": my_order_count, "icon": "fa-shopping-cart", "color": "primary"},
             {"title": _("Commission"), "value": f"{profile.commission}%", "icon": "fa-percentage", "color": "info"},
         ]

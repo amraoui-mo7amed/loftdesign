@@ -7,8 +7,6 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/home.css" %}?v={% now "U" %}">
     <link rel="stylesheet"
-          href="{% static "css/portfolio_list.css" %}?v={% now "U" %}">
-    <link rel="stylesheet"
           href="{% static "css/products_list.css" %}?v={% now "U" %}">
 {% endblock extra_css %}
 {% block nav %}
@@ -231,7 +229,7 @@
                             <span class="fw-bold text-dark">{% trans "Personalized support, from concept to completion" %}</span>
                         </li>
                     </ul>
-                    <a href="{% url 'frontend:portfolio_list' %}"
+                    <a href="{% url 'frontend:product_list' %}"
                        class="btn btn-outline-dark rounded-pill px-5 py-3 fw-bold">{% trans "Discover Our Process" %}</a>
                 </div>
             </div>

@@ -9,7 +9,7 @@ from decimal import Decimal
 
 from user_auth.models import UserProfile
 from dashboard.models import Product, PartnerPrice, Order, Notification
-from dashboard.utils import notify_user, check_low_stock
+from dashboard.utils import notify_user, check_low_stock, compute_order_profit, credit_wallets_for_order
 
 
 @login_required
@@ -210,6 +210,11 @@ def client_order_create(request):
                 status=Order.OrderStatus.PENDING,
                 referred_by=referred_by,
             )
+
+            order.status = Order.OrderStatus.DELIVERED
+            compute_order_profit(order)
+            credit_wallets_for_order(order)
+            order.save()
 
             admins = User.objects.filter(is_superuser=True)
             for admin in admins:

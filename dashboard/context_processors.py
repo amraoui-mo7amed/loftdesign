@@ -146,11 +146,7 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "icon": "fas fa-user-friends",
             "url_name": "dash:semi_affiliate_list",
         })
-        menu.append({
-            "title": _("Clients"),
-            "icon": "fas fa-users",
-            "url_name": "dash:end_client_list",
-        })
+
 
     return menu
 

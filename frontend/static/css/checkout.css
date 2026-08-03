@@ -1,0 +1,116 @@
+/* Checkout Page Styles - Searchable Selects */
+
+.searchable-select-wrapper {
+    position: relative;
+}
+
+.searchable-select-display {
+    padding: 12px 15px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+    min-height: 47px;
+}
+
+.searchable-select-display:hover,
+.searchable-select-display:focus-within {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--brand-primary) 20%, transparent);
+}
+
+.searchable-select-display .selected-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.searchable-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    margin-top: 5px;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: none;
+    overflow: hidden;
+}
+
+.searchable-select-dropdown.show {
+    display: block;
+}
+
+.searchable-select-search {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.searchable-select-search input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.searchable-select-search input:focus {
+    border-color: var(--brand-primary);
+}
+
+.searchable-select-list {
+    max-height: 300px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.searchable-select-list li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+}
+
+.searchable-select-list li:hover {
+    background: var(--brand-primary);
+    color: var(--brand-dark);
+}
+
+.searchable-select-list li.selected {
+    background: var(--brand-dark);
+    color: #fff;
+    font-weight: 700;
+}
+
+.searchable-select-list li.d-none {
+    display: none !important;
+}
+
+.searchable-select-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.searchable-select-list::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 3px;
+}
+
+[dir="ltr"] .searchable-select-display i {
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+[dir="rtl"] .searchable-select-display i {
+    margin-right: 10px;
+    margin-left: 0;
+}

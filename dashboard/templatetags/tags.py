@@ -62,6 +62,18 @@ def dashboard_stats(context):
 
 
 @register.filter
+def is_provider_created(product):
+    """
+    Returns True if the product was created by a provider (non-superuser),
+    as opposed to being created directly by an admin.
+    """
+    user = getattr(product, "user", None)
+    if not user or not getattr(user, "is_authenticated", True):
+        return False
+    return not user.is_superuser
+
+
+@register.filter
 def humanize_number(value):
     """
     Converts a large number into a human-readable format with k, M, B, etc.

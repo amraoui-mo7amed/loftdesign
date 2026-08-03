@@ -200,19 +200,6 @@
             </div>
             <div class="row g-4">
               <div class="col-md-4">
-                <label class="form-label"><i class="fas fa-box me-1 text-primary"></i> {% trans "Total Stock" %}</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-light border-0"><i class="fas fa-cubes text-muted"></i></span>
-                  <input type="number" name="quantity" id="totalStockInput"
-                         class="form-control form-control-lg" placeholder="0"
-                         value="0" min="0" readonly
-                         style="background:#f8f9fa;cursor:default;">
-                </div>
-                <div class="form-text-hint" id="stockHint">
-                  {% trans "Auto-calculated from variant stock." %}
-                </div>
-              </div>
-              <div class="col-md-4">
                 <label class="form-label"><i class="fas fa-tag me-1 text-primary"></i> {% trans "Tags" %}</label>
                 <input type="text" name="tags" class="form-control form-control-lg"
                        placeholder="{% trans 'Furniture, Modern, Wood' %}">

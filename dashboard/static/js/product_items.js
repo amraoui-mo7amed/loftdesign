@@ -322,12 +322,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (ec) ec.classList.add("d-none");
     }
 
-    function updateProductStock(qty) {
-        var el = document.getElementById("totalStockInput");
-        if (el) el.value = qty;
-    }
-
-    // ── Confirm Delete ──────────────────────────────────────────────
     function confirmDeleteItem(itemId, itemName) {
         var swalTitle = document.querySelector("[data-swal-title]");
         var swalText = document.querySelector("[data-swal-text]");
@@ -351,7 +345,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(function (data) {
                     if (data.success) {
                         Swal.fire({ icon: "success", title: "Removed!", timer: 1500, showConfirmButton: false });
-                        updateProductStock(data.product_quantity);
                         loadItems();
                     }
                 });
@@ -401,7 +394,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 var modal = bootstrap.Modal.getInstance(document.getElementById("itemFormModal"));
                 if (modal) modal.hide();
                 Swal.fire({ icon: "success", title: data.message || "Saved!", timer: 1500, showConfirmButton: false });
-                updateProductStock(data.product_quantity);
                 loadItems();
                 resetModal();
             } else {

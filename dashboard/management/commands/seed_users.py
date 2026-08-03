@@ -73,7 +73,7 @@ class Command(BaseCommand):
                     last_name=last,
                 )
 
-                sex = random.choice(UserProfile.sexChoices.values)
+                role = random.choice(UserProfile.roleChoices.values)
                 approved = random.choice([True, False])
                 phone = f"+123{random.randint(10000000, 99999999)}"
 
@@ -86,7 +86,7 @@ class Command(BaseCommand):
                 UserProfile.objects.create(
                     user=user,
                     phone_number=phone,
-                    sex=sex,
+                    role=role,
                     bio=random.choice(bios),
                     birth_date=birth_date,
                     address=random.choice(addresses),

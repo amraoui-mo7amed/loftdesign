@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             var providerInfo = document.getElementById("approveProviderInfo");
             var providerName = document.getElementById("approveProviderName");
+            var providerPriceWrap = document.getElementById("approveProviderPurchaseWrap");
             var providerPrice = document.getElementById("approveProviderPrice");
             var providerWholesale = document.getElementById("approveProviderWholesale");
             var providerRetail = document.getElementById("approveProviderRetail");
@@ -21,9 +22,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 var pn = this.dataset.providerName;
                 var pw = this.dataset.providerWholesale;
                 var pr = this.dataset.providerRetail;
-                if (pp && pn) {
+                if (pn) {
                     providerName.textContent = pn;
-                    providerPrice.textContent = pp + " DZD";
+                    if (pp) {
+                        providerPrice.textContent = pp + " DZD";
+                        if (providerPriceWrap) providerPriceWrap.classList.remove("d-none");
+                    } else {
+                        providerPrice.textContent = "";
+                        if (providerPriceWrap) providerPriceWrap.classList.add("d-none");
+                    }
                     providerWholesale.textContent = (pw ? pw + " DZD" : "—");
                     providerRetail.textContent = (pr ? pr + " DZD" : "—");
                     providerInfo.classList.remove("d-none");

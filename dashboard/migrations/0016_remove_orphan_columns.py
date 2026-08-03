@@ -11,19 +11,19 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             sql=(
                 "ALTER TABLE dashboard_order "
-                "DROP COLUMN commission_amount, "
-                "DROP COLUMN commission_status, "
-                "DROP COLUMN parent_commission_amount, "
-                "DROP COLUMN affiliate_id, "
-                "DROP COLUMN parent_affiliate_id"
+                "DROP COLUMN IF EXISTS commission_amount, "
+                "DROP COLUMN IF EXISTS commission_status, "
+                "DROP COLUMN IF EXISTS parent_commission_amount, "
+                "DROP COLUMN IF EXISTS affiliate_id, "
+                "DROP COLUMN IF EXISTS parent_affiliate_id"
             ),
             reverse_sql=(
                 "ALTER TABLE dashboard_order "
-                "ADD COLUMN commission_amount numeric(12,2) NOT NULL DEFAULT 0, "
-                "ADD COLUMN commission_status varchar(20) NOT NULL DEFAULT '', "
-                "ADD COLUMN parent_commission_amount numeric(12,2) NOT NULL DEFAULT 0, "
-                "ADD COLUMN affiliate_id integer, "
-                "ADD COLUMN parent_affiliate_id integer"
+                "ADD COLUMN IF NOT EXISTS commission_amount numeric(12,2) NOT NULL DEFAULT 0, "
+                "ADD COLUMN IF NOT EXISTS commission_status varchar(20) NOT NULL DEFAULT '', "
+                "ADD COLUMN IF NOT EXISTS parent_commission_amount numeric(12,2) NOT NULL DEFAULT 0, "
+                "ADD COLUMN IF NOT EXISTS affiliate_id integer, "
+                "ADD COLUMN IF NOT EXISTS parent_affiliate_id integer"
             ),
         ),
     ]

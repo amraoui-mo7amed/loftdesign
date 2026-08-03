@@ -22,7 +22,11 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-md-8">
                     <div class="card auth-card border-0 shadow-lg">
-                        <div class="p-4 p-lg-5 auth-form-section">
+                        <div class="p-4 p-lg-5 auth-form-section position-relative">
+                            <a href="{% url 'frontend:home' %}" class="auth-back-btn" aria-label="{% trans 'Back to Home' %}">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>{% trans "Back to Home" %}</span>
+                            </a>
                             <div class="language-switcher-top">
                                 {% include "partials/language_switcher.html" %}
                             </div>

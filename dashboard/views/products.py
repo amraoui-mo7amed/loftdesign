@@ -231,6 +231,11 @@ def product_create(request):
                         ProductItemImage.objects.create(item=item, image=img, order=j)
                 i += 1
 
+            items_qs = product.items.filter(is_active=True)
+            if items_qs.exists():
+                product.quantity = sum(item.stock_quantity for item in items_qs)
+                product.save(update_fields=["quantity"])
+
             # Notify admin
             if is_provider:
                 admins = User.objects.filter(is_superuser=True)
@@ -287,13 +292,14 @@ def product_update(request, pk):
         if items_qs.exists():
             product.quantity = sum(item.stock_quantity for item in items_qs)
         else:
-            product.quantity = request.POST.get("quantity", 1)
+            product.quantity = request.POST.get("quantity") or product.quantity
         product.external_link = request.POST.get("external_link")
         product.tags = request.POST.get("tags")
         product.is_featured = request.POST.get("is_featured") == "on"
 
         if is_admin:
-            product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)
+            if not (product.user_id and not product.user.is_superuser):
+                product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)
             product.loft_wholesale_price = request.POST.get("loft_wholesale_price") or None
             product.loft_retail_price = request.POST.get("loft_retail_price") or None
             product.is_active = request.POST.get("is_active") == "on"
@@ -329,8 +335,27 @@ def product_update(request, pk):
                         link=reverse("dash:product_list")
                     )
         else:
-            # Provider can only update their purchase price
+            # Provider has full control over their product pricing
             product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)
+            product.loft_wholesale_price = request.POST.get("loft_wholesale_price") or None
+            product.loft_retail_price = request.POST.get("loft_retail_price") or None
+            LoftPrice.objects.update_or_create(
+                product=product,
+                defaults={
+                    "loft_purchase_price": product.loft_purchase_price or 0,
+                    "loft_default_wholesale_price": product.loft_wholesale_price or 0,
+                    "loft_retail_price": product.loft_retail_price or 0,
+                    "is_active": True,
+                }
+            )
+            if product.user:
+                SupplierPrice.objects.update_or_create(
+                    product=product,
+                    defaults={
+                        "supplier": product.user,
+                        "loft_purchase_price": product.loft_purchase_price or 0,
+                    }
+                )
 
         if category_id:
             product.category = Category.objects.get(id=category_id)
@@ -364,6 +389,10 @@ def product_update(request, pk):
         else:
             if product.loft_purchase_price != old_purchase:
                 log_price_change(product, request.user, "loft_purchase_price", old_purchase, product.loft_purchase_price)
+            if product.loft_wholesale_price != old_wholesale:
+                log_price_change(product, request.user, "loft_wholesale", old_wholesale, product.loft_wholesale_price)
+            if product.loft_retail_price != old_retail:
+                log_price_change(product, request.user, "loft_retail", old_retail, product.loft_retail_price)
 
         try:
             product.save()

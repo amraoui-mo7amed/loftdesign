@@ -17,7 +17,7 @@
 {% block sidebar %}{% endblock sidebar %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/product_detail.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/checkout.css" %}?v={% now "U" %}">
     {% if affiliate_code %}
     <link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={% now "U" %}">
     {% endif %}
@@ -130,4 +130,5 @@
 {% endblock content %}
 
 {% block extra_js %}
+    <script src="{% static "js/checkout.js" %}?v={% now "U" %}"></script>
 {% endblock extra_js %}

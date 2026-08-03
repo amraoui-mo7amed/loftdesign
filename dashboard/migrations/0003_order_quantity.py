@@ -18,6 +18,11 @@ class Migration(migrations.Migration):
                     field=models.PositiveIntegerField(default=1, verbose_name="Quantity"),
                 ),
             ],
-            database_operations=[],
+            database_operations=[
+                migrations.RunSQL(
+                    sql="ALTER TABLE dashboard_order ADD COLUMN quantity integer NOT NULL DEFAULT 1",
+                    reverse_sql="ALTER TABLE dashboard_order DROP COLUMN quantity",
+                ),
+            ],
         ),
     ]

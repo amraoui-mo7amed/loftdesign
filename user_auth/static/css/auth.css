@@ -200,6 +200,51 @@ Starter Kit Authentication Pages - Common Styles
     color: rgba(255, 255, 255, 0.75);
 }
 
+/* Back to Home Button */
+.auth-back-btn {
+    position: absolute;
+    top: 15px;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--brand-secondary);
+    background: var(--white-accent);
+    border: 2px solid var(--brand-secondary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.auth-back-btn:hover {
+    color: var(--white-accent);
+    background-color: var(--brand-secondary);
+    border-color: var(--brand-secondary);
+    transform: translateY(-2px);
+}
+
+.auth-back-btn i {
+    font-size: 13px;
+}
+
+[dir="ltr"] .auth-back-btn {
+    left: 15px;
+    right: auto;
+}
+
+[dir="rtl"] .auth-back-btn {
+    right: 15px;
+    left: auto;
+}
+
+[dir="rtl"] .auth-back-btn i {
+    transform: scaleX(-1);
+}
+
 /* Animations */
 @keyframes float {
     0%, 100% {

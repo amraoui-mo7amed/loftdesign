@@ -279,19 +279,9 @@
     }
 
     function updateTotalStock() {
-      var input = document.getElementById("totalStockInput");
-      var hint = document.getElementById("stockHint");
       var active = qs('input[name="is_active"]');
       var countEl = document.getElementById("variantCount");
       var total = window.__savedVariants.reduce(function (sum, v) { return sum + (parseInt(v.stock, 10) || 0); }, 0);
-      if (input) { input.value = total; }
-      if (hint) {
-        if (window.__savedVariants.length) {
-          hint.textContent = "Auto-calculated from " + window.__savedVariants.length + " variant(s).";
-        } else {
-          hint.textContent = "Add variants with stock to calculate total.";
-        }
-      }
       if (countEl) { countEl.textContent = window.__savedVariants.length + " items"; }
       if (active) { active.checked = total > 0; }
     }
@@ -483,7 +473,7 @@
 
     // Collect standard form fields
     var standardFields = [
-      "title", "category", "description", "quantity", "tags", "external_link",
+      "title", "category", "description", "tags", "external_link",
       "loft_purchase_price", "loft_wholesale_price", "loft_retail_price",
       "is_active", "is_featured",
     ];

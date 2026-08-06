@@ -210,6 +210,16 @@
                 </div>
                 <div class="form-text-hint">{% trans "Price for end customers." %}</div>
               </div>
+              <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-user-friends me-1 text-primary"></i> {% trans "Affiliate Wholesale" %}</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-0 fw-bold small">DZD</span>
+                  <input type="number" name="affiliate_wholesale_price" step="0.01"
+                         class="form-control form-control-lg" placeholder="0" lang="en"
+                         value="{{ product.supplier_price.affiliate_wholesale_price|default:''|stringformat:'.2f' }}">
+                </div>
+                <div class="form-text-hint">{% trans "Price your own affiliates pay when reselling this product." %}</div>
+              </div>
             </div>
           </div>
         </div>

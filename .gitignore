@@ -5,3 +5,4 @@
 *.pyc
 staticfiles/*
 media/*
+.DS_Store

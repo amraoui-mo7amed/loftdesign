@@ -225,6 +225,11 @@ class SupplierPrice(models.Model):
         _("Loft Purchase Price (DZD)"), max_digits=10, decimal_places=2,
         help_text=_("Price Loft Design pays the supplier")
     )
+    affiliate_wholesale_price = models.DecimalField(
+        _("Affiliate Wholesale Price (DZD)"), max_digits=10, decimal_places=2,
+        blank=True, null=True,
+        help_text=_("Price the provider charges its own affiliates when reselling this product")
+    )
     suggested_retail_price = models.DecimalField(
         _("Suggested Retail Price (DZD)"), max_digits=10, decimal_places=2,
         blank=True, null=True,
@@ -395,6 +400,10 @@ class Order(models.Model):
     semi_share = models.DecimalField(
         _("Semi-Affiliate Share"), max_digits=12, decimal_places=2, default=0.00,
         help_text=_("Semi-affiliate's profit from this order")
+    )
+    provider_share = models.DecimalField(
+        _("Provider Share"), max_digits=12, decimal_places=2, default=0.00,
+        help_text=_("Provider's network profit (provider_wholesale - supplier_base) from this order")
     )
 
     status = models.CharField(

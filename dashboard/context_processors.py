@@ -117,6 +117,14 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "url_name": "dash:order_list",
         })
 
+    # Provider: create and manage its own affiliates
+    if (role == "provider" and is_trusted) or is_admin:
+        menu.append({
+            "title": _("My Affiliates"),
+            "icon": "fas fa-user-friends",
+            "url_name": "dash:affiliate_list",
+        })
+
     # Affiliate / Semi-Affiliate links
     if is_affiliate or is_semi_affiliate:
         menu.append({

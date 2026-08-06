@@ -23,6 +23,12 @@
                         <span class="badge bg-white text-primary rounded-pill ms-1" style="font-size: 0.7rem;">!</span>
                     {% endif %}
                 </button>
+
+                <button type="button" class="btn btn-dark rounded-3 px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2"
+                        data-bs-toggle="modal" data-bs-target="#createAffiliateModal" style="height: 45px;">
+                    <i class="fas fa-user-plus"></i>
+                    <span>{% trans "Create Affiliate" %}</span>
+                </button>
                 
                 {% if query or selected_status %}
                     <a href="{% url 'dash:affiliate_list' %}" class="btn btn-white rounded-3 text-muted px-3 border shadow-sm d-flex align-items-center justify-content-center" 
@@ -146,6 +152,15 @@
                                 <i class="fas fa-check"></i> {% trans "Approve" %}
                             </button>
                             {% endif %}
+                            <button type="button" class="aff-btn btn btn-outline-danger affiliate-delete-btn"
+                                    data-url="{% url 'dash:affiliate_delete' profile.pk %}"
+                                    data-name="{{ profile.user.get_full_name|default:profile.user.username }}"
+                                    data-swal-title="{% trans 'Delete Affiliate?' %}"
+                                    data-swal-text="{% trans 'Permanently delete' %} \"{{ profile.user.get_full_name|default:profile.user.username }}\"{% trans '? This cannot be undone.' %}"
+                                    data-swal-confirm="{% trans 'Yes, delete' %}"
+                                    data-swal-cancel="{% trans 'Cancel' %}">
+                                <i class="fas fa-trash-alt"></i> {% trans "Delete" %}
+                            </button>
                         </div>
                     </div>
 
@@ -175,9 +190,60 @@
             {% render_pagination page_obj %}
         </div>
     </div>
+
+    <!-- Create Affiliate Modal -->
+    <div class="modal fade" id="createAffiliateModal" tabindex="-1" aria-labelledby="createAffiliateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header border-0 pb-0 p-4">
+                    <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="createAffiliateModalLabel">
+                        <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        {% trans "Create Affiliate" %}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="affiliateCreateSuccess" class="alert alert-success d-none rounded-3"></div>
+                    {% include "partials/errorList.html" with form_id="affiliateCreateForm" %}
+                    <form id="affiliateCreateForm" class="form" method="POST" action="{% url 'dash:affiliate_create' %}">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{% trans "First Name" %}</label>
+                                <input type="text" name="first_name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{% trans "Last Name" %}</label>
+                                <input type="text" name="last_name" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{% trans "Email" %}</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{% trans "Phone (optional)" %}</label>
+                                <input type="text" name="phone" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <div class="alert alert-info rounded-3 mb-0 small">
+                                    <i class="fas fa-envelope me-1"></i> {% trans "An invitation email will be sent to this address with instructions to set their password." %}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-3 fw-bold py-3 mt-4 shadow">
+                            <i class="fas fa-user-plus me-2"></i> {% trans "Create Affiliate" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock dashContent %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static 'js/affiliates.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/affiliate_manage.js' %}?v={% now 'U' %}"></script>
 {% endblock extra_js %}

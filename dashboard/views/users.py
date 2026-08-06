@@ -427,7 +427,7 @@ def user_toggle_block(request, pk):
     return JsonResponse({"success": False}, status=400)
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def affiliate_list(request):
     query = request.GET.get("q", "")
     status = request.GET.get("status", "")
@@ -437,6 +437,11 @@ def affiliate_list(request):
         .filter(role=UserProfile.roleChoices.AFFILIATE)
         .order_by("-created_at")
     )
+
+    # Provider sees only the affiliates they created.
+    if not request.user.is_superuser:
+        profile = get_object_or_404(UserProfile, user=request.user)
+        profiles_list = profiles_list.filter(created_by=profile)
 
     if query:
         profiles_list = profiles_list.filter(
@@ -535,12 +540,128 @@ def send_affiliate_activation_email(request, profile):
     )
     email.attach_alternative(html_content, "text/html")
 
+    email.attach_alternative(html_content, "text/html")
+
     try:
         email.send()
         return True
     except Exception as e:
         print(f"Failed to send affiliate activation email: {e}")
         return False
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
+def affiliate_create(request):
+    """AJAX: a provider (or admin) creates an affiliate under them and sends an invitation email."""
+    profile = get_object_or_404(UserProfile, user=request.user)
+    is_admin = request.user.is_superuser
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone", "")
+
+        errors = {}
+        if not first_name:
+            errors["first_name"] = [_("First name is required")]
+        if not email:
+            errors["email"] = [_("Email is required")]
+        if User.objects.filter(email=email).exists():
+            errors["email"] = [_("This email is already registered")]
+
+        if errors:
+            return JsonResponse({"success": False, "errors": errors})
+
+        try:
+            affiliate_code = generate_affiliate_code()
+            username = email.split("@")[0]
+            if User.objects.filter(username=username).exists():
+                username = f"{username}_{secrets.token_hex(2)}"
+
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=username, email=email,
+                    first_name=first_name, last_name=last_name, is_active=True
+                )
+                user.set_unusable_password()
+                user.save()
+
+                UserProfile.objects.create(
+                    user=user,
+                    role=UserProfile.roleChoices.AFFILIATE,
+                    created_by=None if is_admin else profile,
+                    affiliate_code=affiliate_code,
+                    phone_number=phone,
+                    is_approved=True,
+                    approved_at=timezone.now(),
+                )
+
+                token_generator = PasswordResetTokenGenerator()
+                token = token_generator.make_token(user)
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                set_password_url = request.build_absolute_uri(
+                    reverse('user_auth:set_password', kwargs={'uidb64': uidb64, 'token': token})
+                )
+
+                creator_name = request.user.get_full_name() or request.user.username
+                email_html = render_to_string('emails/affiliate_set_password.html', {
+                    'first_name': first_name,
+                    'username': username,
+                    'email': email,
+                    'creator_name': creator_name,
+                    'set_password_url': set_password_url,
+                })
+
+                email_msg = EmailMessage(
+                    subject="LOFT Design - Your Affiliate Account / Votre compte affilié",
+                    body=email_html,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[email],
+                )
+                email_msg.content_subtype = "html"
+
+                try:
+                    email_sent = email_msg.send(fail_silently=False)
+                    if not email_sent:
+                        raise Exception(_("Failed to send email. Account creation rolled back."))
+                except Exception as mail_err:
+                    transaction.set_rollback(True)
+                    return JsonResponse({
+                        "success": False,
+                        "errors": {
+                            "email": [_("Account could not be created because the invitation email failed to send. Please check your SMTP settings.")]
+                        }
+                    })
+
+            return JsonResponse({
+                "success": True,
+                "message": _("Affiliate '%(name)s' created. Invitation sent to %(email)s.")
+                % {"name": f"{first_name} {last_name}", "email": email},
+            })
+        except Exception as e:
+            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+
+    return JsonResponse({"success": False}, status=400)
+
+
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
+def affiliate_delete(request, pk):
+    """AJAX: delete an affiliate account (provider may only delete their own)."""
+    if request.method == "POST":
+        profile = get_object_or_404(UserProfile, pk=pk, role=UserProfile.roleChoices.AFFILIATE)
+        if not request.user.is_superuser and profile.created_by_id != request.user.profile.id:
+            return JsonResponse({
+                "success": False,
+                "message": _("You can only delete affiliates you created."),
+            }, status=403)
+        full_name = profile.user.get_full_name() or profile.user.username
+        profile.user.delete()
+        return JsonResponse({
+            "success": True,
+            "message": _("Affiliate %(name)s deleted successfully.") % {"name": full_name},
+        })
+    return JsonResponse({"success": False}, status=400)
 
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.AFFILIATE])

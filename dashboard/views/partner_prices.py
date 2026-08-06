@@ -1,13 +1,13 @@
 from django.db import models
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.template.loader import render_to_string
 from ..decorator import role_required
-from ..models import Product, PartnerPrice, LoftPrice, AffiliateStore, AdminStore
+from ..models import Product, PartnerPrice, LoftPrice, AffiliateStore, AdminStore, SupplierPrice
 from ..utils import notify_user
 from user_auth.models import UserProfile
 
@@ -47,14 +47,25 @@ def catalog_details(request, product_pk):
     product = get_object_or_404(
         Product, pk=product_pk, status=Product.ProductStatus.APPROVED, is_active=True,
     )
+
+    profile = get_object_or_404(UserProfile, user=request.user)
+    is_semi = profile.role == _SEMI
+
+    # Provider-created affiliate may only view the creating provider's products.
+    if not is_semi and profile.created_by is not None:
+        creator = profile.created_by
+        if (
+            creator.role == UserProfile.roleChoices.PROVIDER
+            and product.user_id != creator.user_id
+        ):
+            return HttpResponseForbidden(_("This product is not available to you."))
+
     loft_price = getattr(product, "loft_price", None)
 
     pp = PartnerPrice.objects.filter(
         product=product, buyer=request.user, is_active=True,
     ).first()
 
-    profile = get_object_or_404(UserProfile, user=request.user)
-    is_semi = profile.role == _SEMI
     parent_pp = None
     if is_semi and profile.parent_affiliate:
         parent_pp = PartnerPrice.objects.filter(
@@ -89,7 +100,8 @@ def catalog_details(request, product_pk):
 @role_required(allowed_roles=[_AFF, _SEMI])
 def affiliate_catalog(request):
     """List approved products available to resell.
-    Affiliates see all approved products.
+    Affiliates see all approved products, unless they were created by a
+    provider — then they see only that provider's products.
     Semi-affiliates see only products in their parent affiliate's catalog.
     """
     profile = get_object_or_404(UserProfile, user=request.user)
@@ -100,7 +112,19 @@ def affiliate_catalog(request):
         is_active=True,
     ).select_related("user", "loft_price").prefetch_related("gallery_images")
 
-    if is_semi and profile.parent_affiliate:
+    # Provider-created affiliate: only the creating provider's products.
+    provider_scope = None
+    if not is_semi:
+        creator = profile.created_by
+        if (
+            creator is not None
+            and creator.role == UserProfile.roleChoices.PROVIDER
+        ):
+            provider_scope = creator.user
+
+    if provider_scope is not None:
+        products = base_qs.filter(user=provider_scope)
+    elif is_semi and profile.parent_affiliate:
         # Semi-affiliate: only products in the parent affiliate's catalog
         parent_product_ids = list(
             PartnerPrice.objects.filter(
@@ -199,6 +223,24 @@ def affiliate_catalog_add(request, product_pk):
     else:
         seller = product.user
         purchase_price = loft_price.loft_default_wholesale_price
+
+        # Provider network: affiliate created by the provider who owns the product
+        # buys at the provider-set wholesale price, so the provider earns the
+        # network margin in place of Loft's.
+        creator = profile.created_by
+        if (
+            creator is not None
+            and creator.role == UserProfile.roleChoices.PROVIDER
+            and product.user_id == creator.user_id
+        ):
+            sp = getattr(product, "supplier_price", None)
+            if sp and sp.affiliate_wholesale_price:
+                purchase_price = sp.affiliate_wholesale_price
+            else:
+                return JsonResponse({
+                    "success": False,
+                    "errors": {"system": [_("No wholesale price is set for your affiliates on this product.")]},
+                })
 
     pp, created = PartnerPrice.objects.update_or_create(
         product=product,

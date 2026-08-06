@@ -201,6 +201,7 @@ def order_list(request):
                             "price": float(price) * int(qty),
                             "supplier": float(profit["supplier_share"]),
                             "loft": float(profit["loft_share"]),
+                            "provider": float(profit["provider_share"]),
                             "affiliate": float(profit["affiliate_share"]),
                             "semi": float(profit["semi_share"]),
                         })

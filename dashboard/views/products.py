@@ -322,6 +322,7 @@ def product_update(request, pk):
                     defaults={
                         "supplier": product.user,
                         "loft_purchase_price": product.loft_purchase_price or 0,
+                        "affiliate_wholesale_price": request.POST.get("affiliate_wholesale_price") or None,
                     }
                 )
                 # Notify the provider
@@ -354,6 +355,7 @@ def product_update(request, pk):
                     defaults={
                         "supplier": product.user,
                         "loft_purchase_price": product.loft_purchase_price or 0,
+                        "affiliate_wholesale_price": request.POST.get("affiliate_wholesale_price") or None,
                     }
                 )
 

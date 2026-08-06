@@ -64,7 +64,9 @@ urlpatterns = [
     path("profile/edit/", users.profile_update, name="profile_update"),
     # Affiliates
     path("affiliates/", users.affiliate_list, name="affiliate_list"),
+    path("affiliates/create/", users.affiliate_create, name="affiliate_create"),
     path("affiliates/<int:pk>/approve/", users.affiliate_approve, name="affiliate_approve"),
+    path("affiliates/<int:pk>/delete/", users.affiliate_delete, name="affiliate_delete"),
     path("semi-affiliates/", users.semi_affiliate_list, name="semi_affiliate_list"),
     path("semi-affiliates/create/", users.semi_affiliate_create, name="semi_affiliate_create"),
     path("semi-affiliates/<int:pk>/delete/", users.semi_affiliate_delete, name="semi_affiliate_delete"),

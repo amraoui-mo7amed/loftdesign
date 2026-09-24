@@ -260,7 +260,6 @@
           </div>
 
           {# ── Visibility ────────────────────────────── #}
-          {% if not is_provider %}
           <div class="create-sidebar-card" data-aos="fade-up">
             <div class="card-label"><i class="fas fa-eye"></i> {% trans "Visibility" %}</div>
             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3 mb-2">
@@ -274,7 +273,6 @@
                      role="switch" style="width:44px;height:24px;cursor:pointer;">
             </div>
           </div>
-          {% endif %}
 
           {# ── 3D Model ──────────────────────────────── #}
           <div class="create-sidebar-card" data-aos="fade-up">
@@ -303,15 +301,11 @@
           <div class="create-sidebar-card" data-aos="fade-up">
             <div class="card-label"><i class="fas fa-check-circle text-success"></i> {% trans "Submit" %}</div>
             <p class="small text-muted mb-3">
-              {% if is_provider %}
-                {% trans "After submission, an admin will review your product before it goes live." %}
-              {% else %}
-                {% trans "Review all fields before submitting." %}
-              {% endif %}
+              {% trans "Review all fields before submitting." %}
             </p>
             <div class="d-grid gap-2">
               <button type="button" id="submitProductBtn" class="btn btn-dark btn-lg rounded-pill fw-bold shadow-sm">
-                {% if is_provider %}{% trans "Submit for Review" %}{% else %}{% trans "Add Product" %}{% endif %}
+                {% trans "Add Product" %}
               </button>
               <a href="{% url 'dash:product_list' %}"
                  class="btn btn-light btn-lg rounded-pill fw-bold border">

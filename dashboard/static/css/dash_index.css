@@ -44,7 +44,9 @@
     border-radius: 8px;
     transition: all 0.3s ease;
 }
-
+.sidebar nav.nav {
+    display: contents;
+}
 .sidebar .nav-link {
     color: rgba(255, 255, 255, 0.65);
     padding: 0.85rem 1.5rem;

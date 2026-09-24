@@ -207,7 +207,7 @@
                 <div class="modal-body p-4">
                     <div id="affiliateCreateSuccess" class="alert alert-success d-none rounded-3"></div>
                     {% include "partials/errorList.html" with form_id="affiliateCreateForm" %}
-                    <form id="affiliateCreateForm" class="form" method="POST" action="{% url 'dash:affiliate_create' %}">
+                    <form id="affiliateCreateForm" class="form" method="post" action="{% url 'dash:affiliate_create' %}">
                         {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-md-6">

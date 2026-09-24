@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.contrib.auth.models import User
 from user_auth.models import UserProfile
 from dashboard.models import PartnerPrice, AffiliateStore, AdminStore, StoreVisit, Product
 
@@ -141,3 +142,50 @@ def admin_store(request):
         "catalog": catalog,
         "title": store.store_name,
     })
+
+
+def provider_store(request, username):
+    """Public storefront for a provider (/p/USERNAME/) — shows the provider's own products."""
+    user = get_object_or_404(User, username=username, is_active=True)
+    profile = _provider_profile(user)
+    if profile is None:
+        raise Http404
+
+    store, _ = AffiliateStore.objects.get_or_create(
+        affiliate=profile,
+        defaults={"store_name": user.get_full_name() or user.username},
+    )
+
+    products_qs = Product.objects.filter(
+        user=user,
+        is_active=True,
+        status=Product.ProductStatus.APPROVED,
+    ).select_related("category").prefetch_related("gallery_images")
+
+    catalog = []
+    for product in products_qs:
+        catalog.append({
+            "product": product,
+            "retail_price": product.loft_retail_price,
+            "primary_image": product.gallery_images.first(),
+        })
+
+    return render(request, "provider_store.html", {
+        "store": store,
+        "profile": profile,
+        "catalog": catalog,
+        "products_count": products_qs.count(),
+        "title": store.store_name,
+    })
+
+
+def _provider_profile(user):
+    """Resolve a provider profile from a user."""
+    profile = getattr(user, "profile", None)
+    if (
+        profile is not None
+        and profile.is_approved
+        and profile.role == UserProfile.roleChoices.PROVIDER
+    ):
+        return profile
+    return None

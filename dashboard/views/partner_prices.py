@@ -411,6 +411,46 @@ def store_settings(request):
     })
 
 
+@role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER])
+def provider_store_settings(request):
+    """Provider store settings page (GET) + AJAX update (POST) — reuses AffiliateStore"""
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    store, created = AffiliateStore.objects.get_or_create(
+        affiliate=profile,
+        defaults={"store_name": request.user.get_full_name() or request.user.username}
+    )
+
+    if request.method == "POST":
+        store.store_name = request.POST.get("store_name", store.store_name)
+        store.store_description = request.POST.get("store_description", "")
+        store.header_bg_color = request.POST.get("header_bg_color", "#1a1a2e")
+
+        if request.FILES.get("store_logo"):
+            store.store_logo = request.FILES["store_logo"]
+        elif request.POST.get("remove_logo") == "1":
+            store.store_logo.delete(save=False)
+            store.store_logo = None
+
+        if request.FILES.get("store_banner"):
+            store.store_banner = request.FILES["store_banner"]
+        elif request.POST.get("remove_banner") == "1":
+            store.store_banner.delete(save=False)
+            store.store_banner = None
+
+        store.save()
+        return JsonResponse({
+            "success": True,
+            "message": _("Store settings saved."),
+        })
+
+    return render(request, "products/provider_store_settings.html", {
+        "store": store,
+        "profile": profile,
+        "title": _("My Store"),
+    })
+
+
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def admin_store_settings(request):
     """Admin store settings page (GET) + AJAX update (POST)"""

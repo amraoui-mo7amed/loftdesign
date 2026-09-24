@@ -69,6 +69,10 @@
                             <a href="{% url 'frontend:client_catalog' %}" target="_blank"
                         {% elif role == "semi_affiliate" and request.user.profile.parent_affiliate %}
                             <a href="{% url 'frontend:affiliate_store' request.user.profile.parent_affiliate.affiliate_code %}" target="_blank"
+                        {% elif role == "provider" %}
+                            <a href="{% url 'frontend:provider_store' request.user.username %}" target="_blank"
+                        {% elif role == "affiliate" %}
+                            <a href="{% url 'frontend:affiliate_store' code %}" target="_blank"
                         {% else %}
                             <a href="{% url 'frontend:admin_store_slugged' %}" target="_blank"
                         {% endif %}

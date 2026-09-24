@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from dashboard.models import Product, Category, PartnerPrice, AffiliateStore, AdminStore
 from user_auth.models import UserProfile
+from django.contrib.auth.models import User
 from django.db.models import Q
 from django.utils.translation import gettext as _
 
@@ -77,7 +78,8 @@ def product_detail(request, pk):
     # Check query param first (for shared links), fall back to session
     affiliate_code = request.GET.get("affiliate")
     admin_store_param = request.GET.get("admin_store")
-    if affiliate_code:
+    provider_username = request.GET.get("provider")
+    if affiliate_code or provider_username:
         product = get_object_or_404(Product, pk=pk)
     else:
         product = get_object_or_404(Product, pk=pk, is_active=True)
@@ -92,6 +94,26 @@ def product_detail(request, pk):
     admin_store_obj = None
     if admin_store_param and product.show_in_admin_store:
         admin_store_obj = AdminStore.objects.filter(is_active=True).first()
+
+    provider = None
+    provider_store_obj = None
+    if provider_username:
+        try:
+            user = User.objects.get(username=provider_username, is_active=True)
+            profile = getattr(user, "profile", None)
+            if (
+                profile is not None
+                and profile.is_approved
+                and profile.role == UserProfile.roleChoices.PROVIDER
+                and product.user_id == user.id
+            ):
+                provider = profile
+                provider_store_obj, _ = AffiliateStore.objects.get_or_create(
+                    affiliate=profile,
+                    defaults={"store_name": user.get_full_name() or user.username},
+                )
+        except User.DoesNotExist:
+            provider = provider_store_obj = None
 
     if affiliate_code:
         try:
@@ -115,6 +137,11 @@ def product_detail(request, pk):
         else:
             profile = store = partner_price = None
             template = "products/product_detail.html"
+    elif provider_store_obj:
+        store = provider_store_obj
+        profile = provider
+        partner_price = None
+        template = "products/provider_product_detail.html"
     elif admin_store_obj:
         profile = store = partner_price = None
         template = "products/admin_product_detail.html"

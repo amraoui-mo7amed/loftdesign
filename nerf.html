@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding NeRF: 3D Reconstruction from Photos</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+
+        /* Visualizer Box */
+        #interactive-demo {
+            text-align: center;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            margin: 1rem auto;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            margin-top: 1rem;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="range"] {
+            width: 80%;
+            max-width: 400px;
+        }
+
+        ol, ul {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #f43f5e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Neural Radiance Fields (NeRF)</h1>
+        <p class="subtitle">Generating Photorealistic 3D Views from 2D Photos & Videos</p>
+    </header>
+
+    <!-- Section 1: Introduction -->
+    <section>
+        <h2>1. What is NeRF?</h2>
+        <p><strong>NeRF</strong> stands for <em>Neural Radiance Field</em>. It is an AI technology introduced in 2020 that takes a collection of 2D images (or a video captured around an object) and constructs a fully navigable, continuous 3D digital scene.</p>
+        <p>Unlike traditional 3D graphics that rely on 3D meshes made of triangles (polygons), NeRF stores the entire scene inside a <strong>Neural Network</strong>.</p>
+    </section>
+
+    <!-- Section 2: Interactive Visualizer -->
+    <section id="interactive-demo">
+        <h2>2. Interactive Demo: Ray Marching Concept</h2>
+        <p>NeRF works by shooting rays from the camera into 3D space and querying the AI model along the ray to calculate color and density.</p>
+        
+        <div id="canvas-container">
+            <canvas id="nerfCanvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <label for="cameraAngle">Rotate Camera Angle:</label>
+            <input type="range" id="cameraAngle" min="0" max="360" value="45">
+        </div>
+    </section>
+
+    <!-- Section 3: Core Mechanics -->
+    <section>
+        <h2>3. How It Works (Step-by-Step)</h2>
+        <ol>
+            <li>
+                <strong>Capture Images:</strong> You take 50–200 photos or a short video from different angles around an object or scene.
+            </li>
+            <li>
+                <strong>Camera Position Estimation:</strong> Algorithms calculate the exact location <code>(x, y, z)</code> and orientation of the camera for each shot.
+            </li>
+            <li>
+                <strong>Ray Marching:</strong> For every pixel in an image, a virtual ray is cast through 3D space.
+            </li>
+            <li>
+                <strong>5D Input Vector:</strong> Points along the ray are passed to a neural network using 5 inputs:
+                <ul>
+                    <li>Position in space: <code>(x, y, z)</code></li>
+                    <li>Viewing direction: <code>(θ, φ)</code></li>
+                </ul>
+            </li>
+            <li>
+                <strong>Neural Network Output:</strong> The AI outputs 2 things for every point:
+                <ul>
+                    <li><strong>RGB Color:</strong> What color is at this point?</li>
+                    <li><strong>Volume Density (σ):</strong> Is this point solid, semi-transparent, or empty air?</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Volume Rendering:</strong> The colors and densities along the ray are accumulated to render the final 2D pixel color.
+            </li>
+        </ol>
+    </section>
+
+    <!-- Section 4: Key Differences -->
+    <section>
+        <h2>4. NeRF vs. Traditional 3D Modeling</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Traditional 3D (Photogrammetry)</h3>
+                <ul>
+                    <li>Uses explicit geometry (polygons, vertices, meshes).</li>
+                    <li>Struggles with reflection, transparent glass, and fine details like hair.</li>
+                    <li>Fast rendering on standard game engines.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>NeRF (Neural Fields)</h3>
+                <ul>
+                    <li>Stores geometry implicitly inside AI weight parameters.</li>
+                    <li>Captures photorealistic reflections, glass, and intricate lighting seamlessly.</li>
+                    <li>Historically required heavy GPU processing to render views.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Modern Evolution -->
+    <section>
+        <h2>5. The Evolution: Gaussian Splatting</h2>
+        <p>While original NeRFs offered unmatched visual realism, they were slow to train and render. In 2023, <strong>3D Gaussian Splatting (3DGS)</strong> emerged as the next evolution:</p>
+        <ul>
+            <li>Instead of querying a neural network for every point along a ray, it represents scenes as millions of tiny 3D "ellipsoids" (Gaussians).</li>
+            <li>Allows <strong>real-time rendering at 60+ FPS</strong> with zero quality loss.</li>
+        </ul>
+    </section>
+</div>
+
+<script>
+    // Canvas interactive demo script
+    const canvas = document.getElementById('nerfCanvas');
+    const ctx = canvas.getContext('2d');
+    const slider = document.getElementById('cameraAngle');
+
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawScene(angleDeg) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(canvas.width, canvas.height) * 0.35;
+        const angleRad = (angleDeg * Math.PI) / 180;
+
+        // Camera position
+        const camX = centerX + radius * Math.cos(angleRad);
+        const camY = centerY + radius * Math.sin(angleRad);
+
+        // Draw Object (Neural Volume)
+        ctx.beginPath();
+        const grad = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, 40);
+        grad.addColorStop(0, '#38bdf8');
+        grad.addColorStop(0.6, 'rgba(56, 189, 248, 0.4)');
+        grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+        ctx.fillStyle = grad;
+        ctx.arc(centerX, centerY, 45, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label Object
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('3D Object Density', centerX, centerY + 65);
+
+        // Draw Camera Rays
+        ctx.strokeStyle = 'rgba(244, 63, 94, 0.6)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+
+        for (let i = -15; i <= 15; i += 10) {
+            const spreadRad = angleRad + Math.PI + (i * Math.PI / 180);
+            const targetX = camX + Math.cos(spreadRad) * (radius * 2);
+            const targetY = camY + Math.sin(spreadRad) * (radius * 2);
+
+            ctx.beginPath();
+            ctx.moveTo(camX, camY);
+            ctx.lineTo(targetX, targetY);
+            ctx.stroke();
+        }
+        ctx.setLineDash([]); // Reset line dash
+
+        // Draw Camera Icon
+        ctx.beginPath();
+        ctx.fillStyle = '#f43f5e';
+        ctx.arc(camX, camY, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '11px sans-serif';
+        ctx.fillText('Camera', camX, camY - 12);
+    }
+
+    slider.addEventListener('input', (e) => {
+        drawScene(e.target.value);
+    });
+
+    // Initial render
+    drawScene(slider.value);
+</script>
+
+</body>
+</html>

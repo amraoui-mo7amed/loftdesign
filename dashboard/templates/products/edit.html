@@ -98,11 +98,9 @@
             <div class="alert alert-info rounded-3 py-2 px-3 mb-4 d-flex align-items-center gap-2 flex-wrap">
               <i class="fas fa-user"></i>
               <span class="fw-bold">{{ product.user.get_full_name|default:product.user.username }}</span>
-              {% if not product|is_provider_created %}
               <span class="text-muted mx-1">|</span>
               <span class="fw-bold">{% trans "Purchase" %}:</span>
               <span class="fw-bold text-primary">DZD{{ product.loft_purchase_price|floatformat:0 }}</span>
-              {% endif %}
               {% if product.loft_wholesale_price or product.loft_retail_price %}
               <span class="text-muted mx-1">|</span>
               {% if product.loft_wholesale_price %}
@@ -125,7 +123,7 @@
                     <span class="d-block fw-bold small">{% trans "Drop thumbnail here" %}</span>
                     <span class="d-block text-muted" style="font-size:0.75rem;">{% trans "or click to browse" %}</span>
                   </div>
-                  <img class="upload-preview" id="thumbImg" alt="" src="{{ product.thumbnail.url }}" style="display:block;">
+                  <img class="upload-preview" id="thumbImg" alt="" {% if product.thumbnail %}src="{{ product.thumbnail.url }}"{% endif %} style="display:block;">
                   <span class="upload-badge">{% trans "THUMBNAIL" %}</span>
                   <button type="button" class="upload-remove" id="thumbRemove">&times;</button>
                   <input type="file" name="thumbnail" id="thumbInput" accept="image/*">
@@ -171,7 +169,6 @@
               <h5>{% trans "Pricing" %}</h5>
             </div>
             <div class="row g-4">
-              {% if not is_admin or not product|is_provider_created %}
               <div class="col-md-4">
                 <label class="form-label">
                   {% if is_provider %}<i class="fas fa-hand-holding-usd me-1 text-primary"></i>{% endif %}
@@ -189,7 +186,6 @@
                   {% else %}{% trans "What Loft pays the supplier." %}{% endif %}
                 </div>
               </div>
-              {% endif %}
               <div class="col-md-4">
                 <label class="form-label"><i class="fas fa-store me-1 text-primary"></i> {% trans "Wholesale" %}</label>
                 <div class="input-group">
@@ -307,13 +303,6 @@
           <div class="create-sidebar-card" data-aos="fade-up">
             <div class="card-label"><i class="fas fa-eye"></i> {% trans "Visibility & Status" %}</div>
 
-            {% if is_admin and product.status == "pending" %}
-            <div class="alert alert-warning rounded-3 small mb-3 py-2 px-3">
-              <i class="fas fa-clock me-1"></i>
-              {% trans "Set wholesale & retail prices and click Save to approve this product." %}
-            </div>
-            {% endif %}
-
             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3 mb-2">
               <span class="fw-semibold small">{% trans "Active in Store" %}</span>
               <input class="form-check-input" type="checkbox" name="is_active" {% if product.is_active %}checked{% endif %}
@@ -365,13 +354,6 @@
           {# ── Actions ───────────────────────────────── #}
           <div class="create-sidebar-card" data-aos="fade-up">
             <div class="card-label"><i class="fas fa-check-circle text-success"></i> {% trans "Actions" %}</div>
-
-            {% if is_admin and product.status == "pending" %}
-            <div class="alert alert-warning rounded-3 small mb-3 py-2 px-3">
-              <i class="fas fa-clock me-1"></i>
-              {% trans "Set wholesale & retail prices and click Save to approve." %}
-            </div>
-            {% endif %}
 
             <div class="d-flex flex-column gap-2">
               <button type="submit" class="btn btn-dark btn-lg rounded-pill fw-bold shadow-sm">
@@ -427,7 +409,7 @@
 
   </form>
 
-  {% include "products/items/form_modal.html" %}
+{% include "products/items/form_modal.html" %}
 
 </div>
 {% endblock dashContent %}

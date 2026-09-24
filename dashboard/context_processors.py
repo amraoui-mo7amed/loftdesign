@@ -55,13 +55,24 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "url_name": "dash:wallet_list",
         })
 
-    # Admin only links
+    # User Store (admin, provider, affiliate, semi)
     if is_admin:
         menu.append({
             "title": _("My Store"),
             "icon": "fas fa-store-alt",
             "url_name": "dash:admin_store_settings",
         })
+
+    # Provider store — trusted providers manage their own storefront
+    if role == "provider" and is_trusted:
+        menu.append({
+            "title": _("My Store"),
+            "icon": "fas fa-store-alt",
+            "url_name": "dash:provider_store_settings",
+        })
+
+    # Admin only links
+    if is_admin:
         menu.append({
             "title": _("Withdrawals"),
             "icon": "fas fa-hand-holding-usd",

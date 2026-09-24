@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOFT Design — Platform Workflow & Features</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ═════════════════════════════════════════════════════════
+   LOFTX — Animated Workflow Documentation
+   Brand tokens from frontend/static/css/index.css
+   ═════════════════════════════════════════════════════════ */
+:root{
+  --brand-primary:#FFD65A;   /* primary   */
+  --brand-secondary:#212121; /* secondary */
+  --brand-accent:#FFFFFF;    /* accent    */
+  --brand-success:#28a745;
+  --brand-danger:#dc3545;
+  --brand-dark:#1a1a1a;
+  --brand-light:#f8f9fa;
+  --text-main:#1A1A1A;
+  --border-color:#e2e8f0;
+  --store-color:#1a1a2e;
+  --gold:#f0b429;
+  --ink:#10101a;
+  --brand:var(--brand-primary);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo',system-ui,-apple-system,sans-serif;color:var(--text-main);background:#0b0b13;line-height:1.8;
+  overflow-x:hidden;}
+[dir="rtl"] body{direction:rtl;text-align:right;}
+a{text-decoration:none;}
+
+/* ═─ Scroll progress bar ═ */
+#progress{position:fixed;top:0;left:0;height:4px;width:0;z-index:9999;
+  background:linear-gradient(90deg,var(--brand-primary),#fff0a0,var(--brand-primary));
+  box-shadow:0 0 12px var(--brand-primary);transition:.1s linear;border-radius:0 3px 3px 0;}
+[dir="rtl"] #progress{left:auto;right:0;border-radius:3px 0 0 3px;}
+
+/* ═─ Floating ambient blobs ═ */
+.blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:.38;z-index:0;pointer-events:none;animation:drift 22s ease-in-out infinite;}
+.blob.b1{width:420px;height:420px;background:#6b3ff0;top:-80px;left:-120px;}
+.blob.b2{width:380px;height:380px;background:var(--brand-primary);top:40%;right:-140px;animation-delay:-7s;opacity:.22;}
+.blob.b3{width:340px;height:340px;background:#e94560;bottom:-100px;left:25%;animation-delay:-14s;opacity:.18;}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-40px) scale(1.08);}66%{transform:translate(-30px,30px) scale(.96);}}
+
+/* ═─ Reveal-on-scroll ═ */
+.reveal{opacity:0;transform:translateY(46px);transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1);will-change:opacity,transform;}
+.reveal.in{opacity:1;transform:none;}
+.reveal[data-dir="left"]{transform:translateX(-60px);}
+.reveal[data-dir="left"].in{transform:none;}
+.reveal[data-dir="right"]{transform:translateX(60px);}
+.reveal[data-dir="right"].in{transform:none;}
+.reveal[data-dir="zoom"]{transform:scale(.86);}
+.reveal[data-dir="zoom"].in{transform:scale(1);}
+
+/* ═─ Hero ═ */
+.hero{position:relative;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(255,214,90,.12),transparent 45%),
+    radial-gradient(circle at 80% 70%,rgba(127,63,240,.25),transparent 45%),
+    linear-gradient(150deg,#0b0b13 0%,#1a1a2e 55%,#0f1330 100%);}
+.hero .grid-line{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:52px 52px;
+  mask-image:radial-gradient(circle at 50% 40%,#000 0%,transparent 78%);}
+.hero .spin-ring{position:absolute;width:640px;height:640px;border:1px dashed rgba(255,214,90,.25);border-radius:50%;
+  animation:spin 40s linear infinite;}
+.hero .spin-ring::after{content:"";position:absolute;top:-7px;left:50%;width:12px;height:12px;border-radius:50%;
+  background:var(--brand-primary);box-shadow:0 0 18px var(--brand-primary);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.hero .wrap{position:relative;z-index:2;text-align:center;padding:0 20px;}
+.type-wrap{font-size:.95rem;font-weight:700;letter-spacing:2px;color:var(--brand);text-transform:uppercase;min-height:1.5em;}
+.hero h1{font-weight:900;font-size:clamp(2.2rem,6vw,4.4rem);line-height:1.12;margin:18px 0 4px;}
+.hero h1 .grad{background:linear-gradient(100deg,#fff 0%,var(--brand-primary) 45%,#fff 90%);
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 6s linear infinite;}
+@keyframes shine{to{background-position:200% center;}}
+.hero .lead{color:rgba(255,255,255,.74);max-width:720px;margin:18px auto 34px;font-size:1.1rem;}
+.hero .cta{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+
+.btn-glow{position:relative;display:inline-flex;align-items:center;gap:10px;padding:14px 34px;border-radius:999px;
+  font-weight:800;color:var(--brand-dark);background:var(--brand-primary);border:none;overflow:hidden;
+  transition:.35s;box-shadow:0 8px 30px rgba(255,214,90,.35);}
+.btn-glow i{font-size:.95rem;}
+.btn-glow:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(255,214,90,.5);color:var(--brand-dark);}
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;padding:14px 30px;border-radius:999px;font-weight:800;
+  color:#fff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);transition:.35s;backdrop-filter:blur(4px);}
+.btn-ghost:hover{color:var(--brand-primary);border-color:var(--brand-primary);transform:translateY(-3px);}
+
+.scroll-hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;color:rgba(255,255,255,.5);
+  font-size:.78rem;letter-spacing:2px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.scroll-hint .mouse{width:26px;height:42px;border:2px solid rgba(255,255,255,.4);border-radius:14px;position:relative;}
+.scroll-hint .mouse::after{content:"";position:absolute;top:7px;left:50%;width:4px;height:8px;margin-left:-2px;border-radius:3px;
+  background:var(--brand-primary);animation:wheel 1.6s ease-in-out infinite;}
+@keyframes wheel{0%{opacity:1;transform:translateY(0);}70%{opacity:0;transform:translateY(12px);}100%{opacity:0;}}
+
+/* ═─ Generic sections ═ */
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+.section{padding:90px 0;position:relative;}
+.alt1{background:#10101c;}
+.alt2{background:linear-gradient(180deg,#0b0b13,#111122);}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  color:var(--brand-primary);font-size:.8rem;background:rgba(255,214,90,.08);border:1px solid rgba(255,214,90,.25);
+  padding:8px 18px;border-radius:999px;margin-bottom:22px;}
+.section-head h2{color:#fff;font-weight:900;font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:10px;}
+.section-head .sub{color:rgba(255,255,255,.6);max-width:640px;margin-bottom:44px;}
+
+/* ═─ Money chain — live flow ═ */
+.chain{display:flex;align-items:stretch;justify-content:center;gap:8px;flex-wrap:wrap;padding:18px 0 8px;}
+.node{position:relative;min-width:150px;flex:1;max-width:210px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px 16px;text-align:center;transition:.3s;
+  overflow:hidden;transform:translateY(0);}
+.node:hover{transform:translateY(-8px);border-color:var(--brand-primary);box-shadow:0 14px 40px rgba(255,214,90,.14);}
+.node .nicon{width:52px;height:52px;margin:0 auto 12px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;color:#fff;position:relative;z-index:1;}
+.node h4{color:#fff;font-weight:800;font-size:1rem;margin-bottom:4px;}
+.node p{color:rgba(255,255,255,.55);font-size:.8rem;margin:0;}
+.chain .arrow{display:flex;align-items:center;color:var(--brand-primary);font-size:1.3rem;animation:ping 1.6s ease-in-out infinite;}
+@keyframes ping{0%,100%{opacity:.35;transform:translateX(0);}50%{opacity:1;transform:translateX(6px);}}
+[dir="rtl"] .chain .arrow{transform:scaleX(-1);}
+.chain.flow .node{position:relative;}
+.chain.flow .node::after{content:"";position:absolute;inset:0;border-radius:16px;
+  background:linear-gradient(120deg,transparent,var(--brand-primary)),transparent;
+  background-size:200% 200%;opacity:0;transition:.5s;}
+/* pulsing current node */
+@keyframes nodePulse{0%,100%{box-shadow:0 0 0 0 rgba(255,214,90,0);}50%{box-shadow:0 0 26px 4px rgba(255,214,90,.3);}}
+.node.stage{animation:nodePulse 2.2s ease infinite;border-color:var(--brand-primary);}
+
+/* ═─ Feature cards ═ */
+.grid-feat{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.feat{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:26px;color:#fff;overflow:hidden;transition:.35s;
+  transform-style:preserve-3d;}
+.feat::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--brand-primary);
+  transform:scaleX(0);transform-origin:left;transition:.4s;}
+.feat:hover::before{transform:scaleX(1);}
+.feat:hover{transform:translateY(-6px);border-color:rgba(255,214,90,.45);background:linear-gradient(160deg,rgba(255,214,90,.08),rgba(255,255,255,.02));}
+.feat .fico{width:56px;height:56px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  background:linear-gradient(135deg,var(--brand-primary),#e8a020);color:var(--brand-dark);margin-bottom:18px;
+  box-shadow:0 10px 24px rgba(255,214,90,.25);transition:.4s;}
+.feat:hover .fico{transform:rotate(-8deg) scale(1.08);}
+.feat .tag{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--brand-primary);background:rgba(255,214,90,.12);border:1px solid rgba(255,214,90,.3);padding:2px 12px;border-radius:999px;margin-bottom:12px;}
+.feat h3{font-size:1.12rem;font-weight:800;margin-bottom:8px;}
+.feat p{color:rgba(255,255,255,.6);font-size:.92rem;margin:0;}
+.feat code{color:var(--brand-primary);background:rgba(255,214,90,.1);padding:1px 6px;border-radius:5px;font-size:.85em;}
+
+/* ═─ Steps ═ */
+.flow{position:relative;padding-left:40px;margin-bottom:8px;}
+[dir="rtl"] .flow{padding-left:0;padding-right:40px;}
+.flow::before{content:"";position:absolute;left:14px;top:18px;bottom:10px;width:2px;
+  background:linear-gradient(var(--brand-primary),rgba(255,214,90,.05));}
+[dir="rtl"] .flow::before{left:auto;right:14px;}
+.step{position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;
+  padding:22px 24px 22px 68px;margin-bottom:18px;transition:.3s;}
+[dir="rtl"] .step{padding:22px 68px 22px 24px;}
+.step:hover{border-color:var(--brand-primary);box-shadow:0 12px 34px rgba(0,0,0,.3);transform:translateX(6px);}
+[dir="rtl"] .step:hover{transform:translateX(-6px);}
+.step::before{content:attr(data-n);position:absolute;left:8px;top:20px;width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand-primary),#e8a020);color:var(--brand-dark);font-weight:900;font-size:.95rem;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px rgba(255,214,90,.12);}
+[dir="rtl"] .step::before{left:auto;right:18px;}
+.flow .step .who{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--brand-primary);background:rgba(255,214,90,.12);border:1px solid rgba(255,214,90,.3);padding:2px 12px;border-radius:999px;margin-bottom:8px;}
+.step h5{color:#fff;font-weight:800;font-size:1.05rem;margin-bottom:4px;}
+.step p{color:rgba(255,255,255,.62);font-size:.94rem;margin:0;}
+
+/* ═─ Tables ═ */
+table.dtable{width:100%;border-collapse:separate;border-spacing:0;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;font-size:.92rem;color:#fff;}
+table.dtable th{background:rgba(255,255,255,.06);color:var(--brand-primary);text-align:left;padding:14px;font-weight:800;
+  font-size:.86rem;letter-spacing:.5px;}
+table.dtable td{padding:13px 14px;border-top:1px solid rgba(255,255,255,.07);}
+[dir="rtl"] table.dtable th,[dir="rtl"] table.dtable td{text-align:right;}
+table.dtable tr{transition:.25s;}
+table.dtable tbody tr:hover{background:rgba(255,214,90,.05);}
+
+/* ═─ Money / pills / callouts ═ */
+.pos{color:#63e6a0;font-weight:800;}
+.hl{background:var(--brand-primary);color:var(--brand-dark);padding:1px 8px;border-radius:6px;font-weight:800;}
+.hl-w{color:var(--brand-primary);font-weight:800;}
+.pill{display:inline-block;padding:3px 12px;border-radius:999px;font-size:.75rem;font-weight:800;letter-spacing:.3px;}
+.pill-pending{background:rgba(255,193,7,.16);color:#ffc107;}
+.pill-admin{background:rgba(40,167,69,.16);color:#4dd67f;}
+.pill-supplier{background:rgba(124,77,255,.16);color:#b39bff;}
+.pill-ship{background:rgba(255,152,0,.16);color:#ffb733;}
+.pill-deliver{background:rgba(40,167,69,.16);color:#4dd67f;}
+.pill-cancel{background:rgba(220,53,69,.18);color:#ff7c87;}
+
+.callout{border-left:4px solid var(--brand-primary);background:rgba(255,255,255,.04);padding:20px 22px;
+  border-radius:0 14px 14px 0;margin-top:22px;color:#fff;}
+[dir="rtl"] .callout{border-left:0;border-right:4px solid var(--brand-primary);border-radius:14px 0 0 14px;}
+.callout h5{font-weight:800;margin-bottom:6px;color:var(--brand-primary);}
+.callout p{margin:0;font-size:.94rem;color:rgba(255,255,255,.68);}
+
+/* ═─ Pricing snapshot chips ═ */
+.pchip{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;padding:18px 20px;height:100%;}
+.pchip .money{font-weight:900;font-size:1.5rem;color:var(--brand-primary);}
+.pchip .money i{font-size:1.3rem;margin-right:8px;}
+[dir="rtl"] .pchip .money i{margin-right:0;margin-left:8px;}
+.pchip h4{color:#fff;font-weight:800;font-size:.98rem;margin:0;}
+.pchip h4 span{color:rgba(255,255,255,.5);font-weight:700;}
+.pchip>div>span{display:block;color:rgba(255,255,255,.6);font-size:.82rem;}
+
+/* ══ big number count ═══ */
+.big-count{display:flex;gap:30px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+.big-count .cell{text-align:center;}
+.big-count .n{font-weight:900;font-size:2.6rem;color:var(--brand-primary);line-height:1;}
+.big-count .l{color:rgba(255,255,255,.6);font-size:.85rem;margin-top:6px;}
+
+/* ══ footer ═══ */
+footer{background:#08080f;color:rgba(255,255,255,.6);padding:40px 0;text-align:center;border-top:1px solid rgba(255,255,255,.08);}
+footer .brand{color:var(--brand-primary);font-weight:900;font-size:1.15rem;}
+footer .divider{width:40px;height:3px;background:var(--brand-primary);margin:12px auto;border-radius:3px;}
+
+/* ══ back to top ═══ */
+#toTop{position:fixed;bottom:24px;right:24px;width:46px;height:46px;border-radius:50%;background:var(--brand-primary);
+  color:var(--brand-dark);border:none;font-size:1.1rem;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(255,214,90,.4);cursor:pointer;opacity:0;transform:translateY(20px);transition:.35s;z-index:999;}
+#toTop.show{opacity:1;transform:none;}
+#toTop:hover{transform:translateY(-4px);}
+[dir="rtl"] #toTop{right:auto;left:24px;}
+
+/* ══ responsive ═══ */
+@media(max-width:992px){.grid-feat{grid-template-columns:repeat(2,1fr);} .chain .arrow{display:none;}}
+@media(max-width:620px){.grid-feat{grid-template-columns:1fr;}.section{padding:64px 0;}.wrap{padding:0 18px;}
+  .big-count .n{font-size:2rem;}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<header class="hero">
+  <div class="grid-line"></div>
+  <div class="spin-ring"></div>
+  <div class="wrap">
+    <div class="type-wrap" id="typed"></div>
+    <h1 class="reveal" data-dir="zoom">LOFT <span class="grad">Design</span></h1>
+    <h1 class="reveal" data-dir="zoom" style="margin-top:-6px;">Features &amp; <span class="grad">Workflows</span></h1>
+    <p class="lead reveal" data-dir="up">
+      An AI-powered, multi-tier marketplace where providers manufacture, affiliates resell, and every
+      order splits its revenue across the whole chain — automatically. Explore the features, then
+      walk through the product &amp; order lifecycles with a live product.
+    </p>
+    <div class="cta reveal" data-dir="up">
+      <a href="#features" class="btn-glow"><i class="fas fa-th-large"></i> Explore Features</a>
+      <a href="#product" class="btn-ghost"><i class="fas fa-play-circle"></i> Watch the Workflow</a>
+    </div>
+
+    <div class="big-count mt-5">
+      <div class="cell reveal"><div class="n" data-count="5">0</div><div class="l">Roles in the chain</div></div>
+      <div class="cell reveal"><div class="n" data-count="9">0</div><div class="l">Feature areas</div></div>
+      <div class="cell reveal"><div class="n" data-count="3">0</div><div class="l">Pricing tiers / product</div></div>
+      <div class="cell reveal"><div class="n" data-count="6">0</div><div class="l">Order states</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="mouse"></div>scroll</div>
+</header>
+
+<!-- ══════════════════ 1. ROLES + CHAIN ══════════════════ -->
+<section class="section alt1">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-label">01 · The Network</span>
+      <h2>The Five Roles &amp; the Money Flow</h2>
+      <p class="sub">Each level buys, resells, and books its own margin. Follow the coin as it travels from the factory floor to the end customer.</p>
+    </div>
+
+    <div class="chain" id="chain">
+      <div class="node stage reveal" data-dir="up"><div class="nicon"><i class="fas fa-tshirt"></i></div><h4>Provider</h4><p>Makes the product, sets wholesale &amp; retail.</p></div>
+      <div class="arrow reveal" data-dir="up"><i class="fas fa-chevron-right"></i></div>
+      <div class="node reveal" data-dir="up"><div class="nicon" style="background:#0f3460;"><i class="fas fa-home"></i></div><h4>LOFT</h4><p>Curates, validates, books commission.</p></div>
+      <div class="arrow reveal" data-dir="up"><i class="fas fa-chevron-right"></i></div>
+      <div class="node reveal" data-dir="up"><div class="nicon" style="background:#7a5af8;"><i class="fas fa-user-tie"></i></div><h4>Affiliate</h4><p>Resells via own branded store.</p></div>
+      <div class="arrow reveal" data-dir="up"><i class="fas fa-chevron-right"></i></div>
+      <div class="node reveal" data-dir="up"><div class="nicon" style="background:#e94560;"><i class="fas fa-user-friends"></i></div><h4>Semi</h4><p>Sells into assigned client roster.</p></div>
+      <div class="arrow reveal" data-dir="up"><i class="fas fa-chevron-right"></i></div>
+      <div class="node reveal" data-dir="up"><div class="nicon" style="background:#198754;"><i class="fas fa-user-check"></i></div><h4>Client</h4><p>Receives &amp; pays retail.</p></div>
+    </div>
+
+    <div class="callout reveal" style="border-color:var(--brand-primary);">
+      <h5><i class="fas fa-coins me-2"></i>The money rule</h5>
+      <p>Every level buys at one price and resells at the next — its margin becomes its profit. When an order reaches <span class="hl">Delivered</span>, every level’s wallet is credited instantly in one automatic pass.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ 2. FEATURES ══════════════════ -->
+<section class="section alt2" id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-label">02 · Everything Built</span>
+      <h2>The Feature Atlas</h2>
+      <p class="sub">Nine thematic areas, every one live in the platform.</p>
+    </div>
+
+    <div class="grid-feat">
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-user-plus"></i></div><span class="tag">Auth</span><h3>Accounts &amp; Security</h3><p>Login with username/email, public affiliate signup, admin-created providers, signed password-set links, reset flow, account blocking and real-time notifications.</p></div>
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-box-open"></i></div><span class="tag">Catalog</span><h3>Products</h3><p>Admin &amp; provider management: title, category, thumbnail, 3D model, gallery, variants, stock, tags, featured + store flags, and live pricing.</p></div>
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-layer-group"></i></div><span class="tag">Pricing</span><h3>Multi-Tier Pricing</h3><p><code>SupplierPrice</code>, <code>LoftPrice</code> &amp; <code>PartnerPrice</code> — purchase, wholesale &amp; retail per level. Affiliates override their own retail/wholesale.</p></div>
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-store"></i></div><span class="tag">Stores</span><h3>Public Storefronts</h3><p>Global, <code>/a/CODE</code> affiliate, <code>/s/CODE</code> semi, <code>/p/username</code> provider, <code>/admin-store</code> admin — each themeable with its own logo, banner &amp; color.</p></div>
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-shopping-bag"></i></div><span class="tag">Orders</span><h3>Unified Orders</h3><p>Quick one-product inquires &amp; multi-item cart checkout; stock deduction, wilaya/commune locations and auto order numbering.</p></div>
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-route"></i></div><span class="tag">Fulfillment</span><h3>State Machine</h3><p>Pending → Validated → Supplier Fulfilling → Shipped → Delivered, plus full cancellation paths — with role-based allowed transitions guarding every move.</p></div>
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-chart-pie"></i></div><span class="tag">Wallets</span><h3>Profit Split</h3><p>Per-order shares for supplier, provider, loft, affiliate &amp; semi. Credited at delivery; balance + pending, withdrawals, transaction log.</p></div>
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-user-friends"></i></div><span class="tag">Network</span><h3>Downline Management</h3><p>Providers build affiliates, affiliates build semis, semis onboard clients. Every level sees only its own downline.</p></div>
+      <div class="feat reveal" data-dir="up"><div class="fico"><i class="fas fa-bell"></i></div><span class="tag">Extras</span><h3>Leads &amp; Alerts</h3><p>Contact form → admin leads; SSE notification stream, unread badges; low-stock alerts on products &amp; variants.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ 3. PRODUCT ══════════════════ -->
+<section class="section alt1" id="product">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-label">03 · The Product Lifecycle</span>
+      <h2>From Factory to Client</h2>
+      <p class="sub">Follow <strong class="hl-w">Oak Lounge Chair</strong> — three numbers drive the entire chain.</p>
+    </div>
+
+    <div class="reveal">
+      <div class="section-head" style="margin-bottom:18px;"><h3 style="color:#fff;">Pricing snapshot</h3></div>
+      <div class="row g-3">
+        <div class="col-md-4"><div class="pchip reveal" data-dir="up"><div class="money"><i class="fas fa-truck"></i>20,000 DZD</div><h4>Purchase <span>· loft_purchase_price</span></h4><p>Supplier's price / what Loft owes them per unit.</p></div></div>
+        <div class="col-md-4"><div class="pchip reveal" data-dir="up"><div class="money"><i class="fas fa-scale-balanced"></i>26,000 DZD</div><h4>Wholesale <span>· loft_wholesale_price</span></h4><p>Default wholesale for affiliates buying from Loft.</p></div></div>
+        <div class="col-md-4"><div class="pchip reveal" data-dir="up"><div class="money"><i class="fas fa-tag"></i>35,000 DZD</div><h4>Retail <span>· loft_retail_price</span></h4><p>Public price customers pay in the stores.</p></div></div>
+      </div>
+    </div>
+
+    <div class="flow mt-5">
+      <div class="step reveal" data-n="1"><span class="who">Provider</span><h5>Create the product</h5><p>Provider fills the form (thumbnail, category, description, gallery, variants) and the three price fields. As a supplier, <b class="hl-w">no admin approval</b> — it’s <span class="hl">Approved</span> &amp; <b class="hl-w">Active</b> immediately on save.</p></div>
+      <div class="step reveal" data-n="2"><span class="who">System</span><h5>Pricing rows are written</h5><p>Two records are created/updated: <b>SupplierPrice</b> (purchase 20,000 — what Loft owes the provider) and <b>LoftPrice</b> (wholesale 26,000 / retail 35,000 — the defaults applied store-side).</p></div>
+      <div class="step reveal" data-n="3"><span class="who">Provider</span><h5>Brand its store</h5><p>Opens <b>My Store</b>, sets name, logo, banner, description &amp; header color. The storefront goes public at <code>/p/&lt;username&gt;/</code> and lists only the provider’s own active products.</p></div>
+      <div class="step reveal" data-n="4"><span class="who">Affiliate</span><h5>Add it to the catalog</h5><p>An affiliate created by this provider opens <b>Available Products</b> and — because they belong to the provider — <b>only that provider’s products</b> are visible. The affiliate prices its own catalog: purchase = provider wholesale <span class="hl-w">26,000</span>, its retail = <span class="hl-w">35,000</span>.</p></div>
+      <div class="step reveal" data-n="5"><span class="who">Affiliate</span><h5>Resell via its store</h5><p>The affiliate’s storefront <code>/a/CODE/</code> now shows the chair. Anyone buying from that URL is tagged with the affiliate’s code on the order.</p></div>
+      <div class="step reveal" data-n="6"><span class="who">Provider</span><h5>Update anytime</h5><p>The provider edits the product &amp; prices freely; the system syncs SupplierPrice/LoftPrice and logs every price change — nothing drifts out of sync.</p></div>
+    </div>
+
+    <div class="callout reveal" style="border-color:var(--brand-success);">
+      <h5><i class="fas fa-check-circle me-2"></i>Key rules</h5>
+      <p><b>Provider products are instantly approved</b> and fully self-managed (no admin gate). Admin-created products can be featured in the admin store. Visibility requires: product active + stock &gt; 0 + the appropriate store flag.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ 4. ORDER ══════════════════ -->
+<section class="section alt2" id="order">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-label">04 · The Order Workflow</span>
+      <h2>From Checkout to Cash</h2>
+      <p class="sub">The chair is sold. Here is exactly how one order is validated, fulfilled, shipped and turned into money in every wallet.</p>
+    </div>
+
+    <div class="flow">
+      <div class="step reveal" data-n="1"><span class="who">Customer</span><h5>Place the order</h5><p>On the affiliate store the customer orders <b class="hl-w">Oak Lounge Chair × 1 @ 35,000 DZD</b>, checkout validates wilaya, commune, address &amp; phone. Stock (product or variant) is deducted and low-stock checked.</p></div>
+      <div class="step reveal" data-n="2"><span class="who">System</span><h5>Attach the referral</h5><p>The order stores <span class="hl">referred_by = affiliate code</span> — a single field that tells the system exactly who earns on each leg.</p></div>
+      <div class="step reveal" data-n="3"><span class="who">System</span><h5>Status begins <span class="pill pill-pending">Pending</span></h5><p>Admins and the referring affiliate are notified of the new order.</p></div>
+    </div>
+
+    <div class="reveal mt-4">
+      <h3 style="color:#fff;font-weight:800;">4.1 · The status machine (who can move it)</h3>
+      <table class="dtable">
+        <tbody>
+        <tr><th>Status</th><th>Who can do it</th><th>What it means</th></tr>
+        <tr><td><span class="pill pill-pending">Pending</span></td><td>—</td><td>New order from checkout or inquiry.</td></tr>
+        <tr><td><span class="pill pill-admin">Validated</span></td><td>Affiliate / Admin</td><td>Confirmed &amp; legitimate; sent to fulfillment.</td></tr>
+        <tr><td><span class="pill pill-supplier">Supplier Fulfilling</span></td><td>Provider (provider products)</td><td>Provider producing / packing.</td></tr>
+        <tr><td><span class="pill pill-ship">Shipped</span></td><td>Admin / Provider</td><td>Handed to the carrier.</td></tr>
+        <tr><td><span class="pill pill-deliver">Delivered</span></td><td>Admin / Provider</td><td>Turns wallets ON — profit is split &amp; credited below.</td></tr>
+        <tr><td><span class="pill pill-cancel">Cancelled</span></td><td>Admin</td><td>Order voided; everyone notified.</td></tr>
+        </tbody>
+      </table>
+      <p class="reveal" style="color:rgba(255,255,255,.5);font-size:.85rem;margin-top:10px;">Admin-created products skip “Supplier Fulfilling” (no provider) and can go straight to Shipped / Delivered.</p>
+    </div>
+
+    <div class="reveal mt-5">
+      <h3 style="color:#fff;font-weight:800;">4.2 · Revenue split at delivery</h3>
+      <p style="color:rgba(255,255,255,.6);margin-bottom:16px;">On <span class="hl">Delivered</span>, the chain is resolved and the 35,000 DZD is divided:</p>
+      <table class="dtable">
+        <tbody>
+        <tr><th>Level</th><th>Buys at</th><th>Sells at</th><th>Margin / unit</th></tr>
+        <tr><td>Provider (supplier)</td><td>—</td><td>20,000 → Loft</td><td class="pos">+20,000</td></tr>
+        <tr><td>Loft (Admin)</td><td>20,000</td><td>26,000 → affiliate</td><td class="pos">+6,000</td></tr>
+        <tr><td>Affiliate</td><td>26,000</td><td>35,000 retail</td><td class="pos">+9,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout reveal">
+      <h5><i class="fas fa-calculator me-2"></i>Per-sale settlement</h5>
+      <p>The exact split is computed per unit via <b>compute_item_profit</b> over the resolved chain (supplier → loft → affiliate → semi). On delivery, <b>credit_wallets_for_order</b> writes each share into each wallet, logs a Transaction, and notifies every earner. When a provider’s affiliate sells the provider’s own product, the provider earns the <span class="hl">network margin</span> (purchase↔wholesale difference) in place of Loft’s wholesale margin, while Loft keeps its fixed commission.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ footer ══════════════════ -->
+<footer>
+  <div class="wrap">
+    <div class="brand">LOFT Design</div>
+    <div class="divider"></div>
+    <p class="small">Platform Workflow &amp; Features — internal documentation (illustrative prices in DZD).</p>
+  </div>
+</footer>
+
+<button id="toTop" title="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+/* typing hero */
+(function(){
+  var words=["AI Marketplace Flows Cash • In Every Direction","5 Roles • 3 Prices • 1 Order","Provider → Loft → Affiliate → Semi → Client"];
+  var el=document.getElementById("typed"),wi=0,ci=0,del=false;
+  function tick(){
+    var w=words[wi];
+    if(!del){ci++;el.textContent=w.slice(0,ci);if(ci===w.length){del=true;setTimeout(tick,1700);return;}}
+    else{ci--;el.textContent=w.slice(0,ci);if(ci===0){del=false;wi=(wi+1)%words.length;}}
+    setTimeout(tick,del?28:55);
+  }
+  tick();
+})();
+
+/* reveal on scroll */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.14});
+document.querySelectorAll(".reveal").forEach(function(el){io.observe(el);});
+
+/* count-up */
+var cIO=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(e.isIntersecting){var t=+e.target.dataset.count;countUp(e.target,t);cIO.unobserve(e.target);}
+});},{threshold:.6});
+function countUp(el,target){var s=0,steps=40,inc=target/steps,iv=setInterval(function(){
+  s+=inc;if(s>=target){s=target;clearInterval(iv);}el.textContent=Math.round(s);},28);}
+document.querySelectorAll("[data-count]").forEach(function(el){cIO.observe(el);});
+
+/* chain stage pulse — light moves node to node */
+(function(){
+  var nodes=document.querySelectorAll("#chain .node");
+  var i=0;
+  if(nodes.length){nodes[0].classList.add("stage");}
+  setInterval(function(){nodes.forEach(function(n){n.classList.remove("stage");});
+    i=(i+1)%nodes.length;nodes[i].classList.add("stage");},1800);
+})();
+
+/* scroll progress + back to top */
+var prog=document.getElementById("progress"),top=document.getElementById("toTop");
+window.addEventListener("scroll",function(){
+  var h=document.documentElement.scrollHeight-window.innerHeight;
+  prog.style.width=(h>0?(window.scrollY/h)*100:0)+"%";
+  if(window.scrollY>500)top.classList.add("show");else top.classList.remove("show");
+});
+top.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+</script>
+</body>
+</html>

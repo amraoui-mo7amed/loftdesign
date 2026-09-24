@@ -5,7 +5,6 @@ from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.utils.translation import gettext as _
-from django.db import transaction
 from django.urls import reverse
 from ..models import Product, Category, ProductImage, ProductItem, ProductItemImage, PartnerPrice, Notification, SupplierPrice, LoftPrice
 from dashboard.decorator import role_required
@@ -83,12 +82,9 @@ def product_list(request):
             raise PermissionDenied(_("Only trusted providers can access this page."))
 
     query = request.GET.get("q", "")
-    status_filter = request.GET.get("status", "")
 
     if request.user.is_superuser:
         products = Product.objects.all()
-        if status_filter:
-            products = products.filter(status=status_filter)
     else:
         products = Product.objects.filter(user=request.user)
 
@@ -99,22 +95,9 @@ def product_list(request):
     page_obj = paginator.get_page(page_number)
     categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
 
-    pending_count = Product.objects.filter(status=Product.ProductStatus.PENDING).count() if request.user.is_superuser else 0
-
-    status_options = []
-    if request.user.is_superuser:
-        status_options = [
-            ("", _("All")),
-            ("pending", _("Pending")),
-            ("approved", _("Approved")),
-            ("rejected", _("Rejected")),
-        ]
-
     context = {
         "page_obj": page_obj, "query": query, "categories": categories,
         "title": _("Product Management"),
-        "status_filter": status_filter, "status_options": status_options,
-        "pending_count": pending_count,
     }
     return render(request, "products/list.html", context)
 
@@ -151,6 +134,17 @@ def product_create(request):
         wholesale = request.POST.get("loft_wholesale_price")
         retail = request.POST.get("loft_retail_price")
 
+        if is_provider and not wholesale:
+            errors["loft_wholesale_price"] = [_("Wholesale price is required")]
+        if is_provider and not retail:
+            errors["loft_retail_price"] = [_("Retail price is required")]
+        for field, value in (("loft_wholesale_price", wholesale), ("loft_retail_price", retail)):
+            try:
+                if value and float(value) <= 0:
+                    errors[field] = [_("Must be greater than zero")]
+            except ValueError:
+                errors[field] = [_("Invalid number")]
+
         if errors:
             return JsonResponse({"success": False, "errors": errors})
 
@@ -173,39 +167,33 @@ def product_create(request):
                 "is_featured": request.POST.get("is_featured") == "on",
             }
 
-            if is_provider:
-                product_kwargs["status"] = Product.ProductStatus.PENDING
-                product_kwargs["is_active"] = False
-                product_kwargs["loft_wholesale_price"] = wholesale or None
-                product_kwargs["loft_retail_price"] = retail or None
-            else:
-                product_kwargs["status"] = Product.ProductStatus.APPROVED
-                product_kwargs["is_active"] = request.POST.get("is_active") == "on"
-                product_kwargs["loft_wholesale_price"] = wholesale or None
-                product_kwargs["loft_retail_price"] = retail or None
+            product_kwargs["status"] = Product.ProductStatus.APPROVED
+            product_kwargs["is_active"] = request.POST.get("is_active") == "on"
+            product_kwargs["loft_wholesale_price"] = wholesale or None
+            product_kwargs["loft_retail_price"] = retail or None
 
             product = Product.objects.create(**product_kwargs)
 
             for i, img in enumerate(request.FILES.getlist("gallery_images")):
                 ProductImage.objects.create(product=product, image=img, order=i)
 
-            if not is_provider:
-                LoftPrice.objects.update_or_create(
-                    product=product,
-                    defaults={
-                        "loft_purchase_price": purchase_price or 0,
-                        "loft_default_wholesale_price": wholesale or 0,
-                        "loft_retail_price": retail or 0,
-                        "is_active": True,
-                    }
-                )
-                SupplierPrice.objects.update_or_create(
-                    product=product,
-                    defaults={
-                        "supplier": request.user,
-                        "loft_purchase_price": purchase_price or 0,
-                    }
-                )
+            LoftPrice.objects.update_or_create(
+                product=product,
+                defaults={
+                    "loft_purchase_price": purchase_price or 0,
+                    "loft_default_wholesale_price": wholesale or 0,
+                    "loft_retail_price": retail or 0,
+                    "is_active": True,
+                }
+            )
+            SupplierPrice.objects.update_or_create(
+                product=product,
+                defaults={
+                    "supplier": product.user or request.user,
+                    "loft_purchase_price": purchase_price or 0,
+                    "affiliate_wholesale_price": wholesale or None,
+                }
+            )
 
             # Create variants (items) if submitted
             i = 0
@@ -236,25 +224,8 @@ def product_create(request):
                 product.quantity = sum(item.stock_quantity for item in items_qs)
                 product.save(update_fields=["quantity"])
 
-            # Notify admin
-            if is_provider:
-                admins = User.objects.filter(is_superuser=True)
-                for admin in admins:
-                    notify_user(
-                        admin,
-                        _("New Product Requires Validation"),
-                        _("%(name)s added '%(product)s' — set wholesale/retail prices to activate.")
-                        % {"name": request.user.get_full_name() or request.user.username, "product": product.title},
-                        notification_type=Notification.NotificationType.INFO,
-                        link=reverse("dash:product_update", kwargs={"pk": product.pk})
-                    )
-
-            if is_provider:
-                msg = _("Product submitted for review.")
-            else:
-                msg = _("Product added successfully")
             return JsonResponse({
-                "success": True, "message": msg,
+                "success": True, "message": _("Product added successfully"),
                 "redirect_url": reverse("dash:product_list")
             })
         except Exception as e:
@@ -298,34 +269,17 @@ def product_update(request, pk):
         product.is_featured = request.POST.get("is_featured") == "on"
 
         if is_admin:
-            if not (product.user_id and not product.user.is_superuser):
-                product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)
+            product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)
             product.loft_wholesale_price = request.POST.get("loft_wholesale_price") or None
             product.loft_retail_price = request.POST.get("loft_retail_price") or None
+
             product.is_active = request.POST.get("is_active") == "on"
 
-            # Auto-approve if product is PENDING and admin sets wholesale + retail
-            if product.status == Product.ProductStatus.PENDING and product.loft_wholesale_price and product.loft_retail_price:
+            # Auto-approve if product is PENDING and wholesale + retail are set
+            if (product.status == Product.ProductStatus.PENDING
+                    and product.loft_wholesale_price and product.loft_retail_price):
                 product.status = Product.ProductStatus.APPROVED
                 product.is_active = True
-                LoftPrice.objects.update_or_create(
-                    product=product,
-                    defaults={
-                        "loft_purchase_price": product.loft_purchase_price or 0,
-                        "loft_default_wholesale_price": product.loft_wholesale_price,
-                        "loft_retail_price": product.loft_retail_price,
-                        "is_active": True,
-                    }
-                )
-                SupplierPrice.objects.update_or_create(
-                    product=product,
-                    defaults={
-                        "supplier": product.user,
-                        "loft_purchase_price": product.loft_purchase_price or 0,
-                        "affiliate_wholesale_price": request.POST.get("affiliate_wholesale_price") or None,
-                    }
-                )
-                # Notify the provider
                 if product.user:
                     notify_user(
                         product.user,
@@ -335,6 +289,25 @@ def product_update(request, pk):
                         notification_type=Notification.NotificationType.SUCCESS,
                         link=reverse("dash:product_list")
                     )
+
+            LoftPrice.objects.update_or_create(
+                product=product,
+                defaults={
+                    "loft_purchase_price": product.loft_purchase_price or 0,
+                    "loft_default_wholesale_price": product.loft_wholesale_price or 0,
+                    "loft_retail_price": product.loft_retail_price or 0,
+                    "is_active": True,
+                }
+            )
+            if product.user:
+                SupplierPrice.objects.update_or_create(
+                    product=product,
+                    defaults={
+                        "supplier": product.user,
+                        "loft_purchase_price": product.loft_purchase_price or 0,
+                        "affiliate_wholesale_price": request.POST.get("affiliate_wholesale_price") or None,
+                    }
+                )
         else:
             # Provider has full control over their product pricing
             product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)
@@ -428,126 +401,6 @@ def product_delete(request, pk):
             product = get_object_or_404(Product, pk=pk, user=request.user)
         product.delete()
         return JsonResponse({"success": True, "message": _("Product removed")})
-    return JsonResponse({"success": False}, status=400)
-
-
-# ─── Admin Validation Views ─────────────────────────────────────────
-
-@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
-def product_approve(request, pk):
-    """Approve a pending product — admin sets wholesale & retail prices"""
-    if request.method == "POST":
-        product = get_object_or_404(Product, pk=pk, status=Product.ProductStatus.PENDING)
-        wholesale = request.POST.get("loft_wholesale_price")
-        retail = request.POST.get("loft_retail_price")
-
-        errors = {}
-        if not wholesale:
-            errors["loft_wholesale_price"] = [_("Wholesale price is required")]
-        if not retail:
-            errors["loft_retail_price"] = [_("Retail price is required")]
-        try:
-            if wholesale and float(wholesale) <= 0:
-                errors["loft_wholesale_price"] = [_("Must be greater than zero")]
-        except ValueError:
-            errors["loft_wholesale_price"] = [_("Invalid number")]
-        try:
-            if retail and float(retail) <= 0:
-                errors["loft_retail_price"] = [_("Must be greater than zero")]
-        except ValueError:
-            errors["loft_retail_price"] = [_("Invalid number")]
-
-        if errors:
-            return JsonResponse({"success": False, "errors": errors})
-
-        try:
-            with transaction.atomic():
-                product.loft_wholesale_price = wholesale
-                product.loft_retail_price = retail
-                product.status = Product.ProductStatus.APPROVED
-                product.save()
-
-                # Create/update LoftPrice
-                LoftPrice.objects.update_or_create(
-                    product=product,
-                    defaults={
-                        "loft_purchase_price": product.loft_purchase_price or 0,
-                        "loft_default_wholesale_price": wholesale,
-                        "loft_retail_price": retail,
-                        "is_active": True,
-                    }
-                )
-
-                # Create/update SupplierPrice
-                if product.user:
-                    SupplierPrice.objects.update_or_create(
-                        product=product,
-                        defaults={
-                            "supplier": product.user,
-                            "loft_purchase_price": product.loft_purchase_price or 0,
-                        }
-                    )
-
-                # Log price changes
-                from dashboard.utils import log_price_change
-                log_price_change(product, request.user, "loft_wholesale", None, wholesale)
-                log_price_change(product, request.user, "loft_retail", None, retail)
-
-                # Notify the provider
-                if product.user:
-                    notify_user(
-                        product.user,
-                        _("Product Approved!"),
-                        _("Your product '%(product)s' has been approved and is now live.")
-                        % {"product": product.title},
-                        notification_type=Notification.NotificationType.SUCCESS,
-                        link=reverse("dash:product_list")
-                    )
-
-            return JsonResponse({
-                "success": True,
-                "message": _("Product approved successfully."),
-                "redirect_url": reverse("dash:product_list") + "?status=approved"
-            })
-        except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
-
-    return JsonResponse({"success": False}, status=400)
-
-
-@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
-def product_reject(request, pk):
-    """Reject a pending product with optional reason"""
-    if request.method == "POST":
-        product = get_object_or_404(Product, pk=pk, status=Product.ProductStatus.PENDING)
-        reason = request.POST.get("reason", "")
-
-        try:
-            with transaction.atomic():
-                product.status = Product.ProductStatus.REJECTED
-                product.rejection_reason = reason
-                product.is_active = False
-                product.save()
-
-                if product.user:
-                    notify_user(
-                        product.user,
-                        _("Product Rejected"),
-                        _("Your product '%(product)s' was not approved.%(reason)s")
-                        % {"product": product.title,
-                           "reason": (_(" Reason: %s") % reason) if reason else ""},
-                        notification_type=Notification.NotificationType.ERROR,
-                        link=reverse("dash:product_list")
-                    )
-
-            return JsonResponse({
-                "success": True,
-                "message": _("Product rejected."),
-                "redirect_url": reverse("dash:product_list") + "?status=rejected"
-            })
-        except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
-
     return JsonResponse({"success": False}, status=400)
 
 

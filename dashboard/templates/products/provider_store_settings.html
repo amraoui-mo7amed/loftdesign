@@ -1,0 +1,184 @@
+{% extends "dash/dash_index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block dashTitle %}{% trans "My Store" %}{% endblock dashTitle %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}?v={% now 'U' %}">
+{% endblock extra_css %}
+
+{% block dashContent %}
+<div class="container-fluid py-4">
+
+    <!-- ── Page Header ── -->
+    <div class="page-header mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{% url 'dash:dash_home' %}"
+               class="btn btn-light bg-white bg-opacity-10 text-white border-0 rounded-3 px-3 py-2 fw-bold"
+               style="backdrop-filter:blur(4px);">
+                <i class="fas fa-arrow-left me-2"></i> {% trans "Dashboard" %}
+            </a>
+            <div>
+                <span class="badge bg-white bg-opacity-10 text-white border-0 rounded-pill px-3 py-1 mb-1"
+                      style="font-size:0.65rem;letter-spacing:1px;">
+                    <i class="fas fa-store-alt me-1"></i> {% trans "Provider Store" %}
+                </span>
+                <h1 class="fw-black mb-0" style="font-size:1.65rem;">{% trans "My Store" %}</h1>
+            </div>
+        </div>
+        <a href="{% url 'frontend:provider_store' request.user.username %}" target="_blank"
+           class="btn btn-light bg-white bg-opacity-10 text-white border-0 rounded-pill px-4 py-2 fw-bold"
+           style="backdrop-filter:blur(4px);">
+            <i class="fas fa-external-link-alt me-2"></i> {% trans "Preview Store" %}
+        </a>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- ── Settings Form ── -->
+        <div class="col-lg-12">
+            <div class="settings-section">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10"
+                         style="width:36px;height:36px;flex-shrink:0;">
+                        <i class="fas fa-sliders-h text-primary" style="font-size:0.9rem;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 text-dark">{% trans "Store Settings" %}</h5>
+                </div>
+                <div class="card-body">
+                    {% include "partials/errorList.html" with form_id="storeSettingsForm" %}
+                    <form class="form" id="storeSettingsForm" method="post" enctype="multipart/form-data"
+                          action="{% url 'dash:provider_store_settings' %}">
+                        {% csrf_token %}
+                        <div class="row g-4">
+                            <!-- Store Name -->
+                            <div class="col-12">
+                                <label class="form-label fw-bold">{% trans "STORE NAME" %}</label>
+                                <input type="text" name="store_name"
+                                       class="form-control form-control-lg"
+                                       value="{{ store.store_name|default:'' }}"
+                                       placeholder="{% trans 'My Store' %}">
+                            </div>
+                            <!-- Description -->
+                            <div class="col-12">
+                                <label class="form-label fw-bold">{% trans "DESCRIPTION" %}</label>
+                                <textarea name="store_description" class="form-control" rows="4"
+                                          placeholder="{% trans 'Describe your store...' %}">{{ store.store_description|default:'' }}</textarea>
+                            </div>
+                            <!-- Header Color + Store URL -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{% trans "HEADER COLOR" %}</label>
+                                <div class="input-group">
+                                    <input type="color" name="header_bg_color"
+                                           class="form-control form-control-color"
+                                           value="{{ store.header_bg_color|default:'#1a1a2e' }}"
+                                           style="padding:0.35rem;max-width:52px;cursor:pointer;">
+                                    <input type="text" name="header_bg_color_text" class="form-control"
+                                           value="{{ store.header_bg_color|default:'#1a1a2e' }}" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{% trans "STORE URL" %}</label>
+                                <input type="text" class="form-control form-control-lg bg-light"
+                                       value="{{ request.scheme }}://{{ request.get_host }}{% url 'frontend:provider_store' request.user.username %}" readonly>
+                            </div>
+                            <!-- Store URL + Share -->
+                            <div class="col-12">
+                                <div class="store-url-badge d-flex align-items-center gap-3 flex-wrap">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-link text-primary"></i>
+                                        <span>{% trans "Your store:" %}</span>
+                                        <a href="{% url 'frontend:provider_store' request.user.username %}" target="_blank">
+                                            {{ request.scheme }}://{{ request.get_host }}{% url 'frontend:provider_store' request.user.username %}
+                                        </a>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold copy-store-link"
+                                            data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'frontend:provider_store' request.user.username %}"
+                                            data-copied-text="{% trans 'Copied!' %}">
+                                        <i class="fas fa-copy me-1"></i> {% trans "Copy Link" %}
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Logo -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{% trans "STORE LOGO" %}</label>
+                                <div class="upload-widget{% if store.store_logo %} has-file supports-remove{% endif %}"
+                                     id="logoWidget">
+                                    <input type="hidden" name="remove_logo" value="0">
+                                    {% if store.store_logo %}
+                                    <img src="{{ store.store_logo.url }}" alt=""
+                                         class="upload-preview">
+                                    {% else %}
+                                    <img src="" alt="" class="upload-preview" style="display:none;">
+                                    {% endif %}
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        {% trans "Click or drag to upload logo" %}
+                                    </div>
+                                    <span class="upload-badge">{% trans "NEW" %}</span>
+                                    <button type="button" class="upload-remove"
+                                            title="{% trans 'Remove' %}" data-remove-for="logoWidget">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <input type="file" name="store_logo" accept="image/*">
+                                </div>
+                                <div class="upload-hint">{% trans "Square image recommended. PNG or JPG." %}</div>
+                            </div>
+                            <!-- Banner -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{% trans "STORE BANNER" %}</label>
+                                <div class="upload-widget{% if store.store_banner %} has-file supports-remove{% endif %}"
+                                     id="bannerWidget">
+                                    <input type="hidden" name="remove_banner" value="0">
+                                    {% if store.store_banner %}
+                                    <img src="{{ store.store_banner.url }}" alt=""
+                                         class="upload-preview">
+                                    {% else %}
+                                    <img src="" alt="" class="upload-preview" style="display:none;">
+                                    {% endif %}
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        {% trans "Click or drag to upload banner" %}
+                                    </div>
+                                    <span class="upload-badge">{% trans "NEW" %}</span>
+                                    <button type="button" class="upload-remove"
+                                            title="{% trans 'Remove' %}" data-remove-for="bannerWidget">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <input type="file" name="store_banner" accept="image/*">
+                                </div>
+                                <div class="upload-hint">{% trans "Landscape image recommended. 1200×400px." %}</div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 mt-5 pt-4 border-top">
+                            <button type="submit" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-sm">
+                                <i class="fas fa-save me-2"></i> {% trans "Save Changes" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock dashContent %}
+
+{% block extra_js %}
+<script src="{% static 'js/store_settings.js' %}?v={% now 'U' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.copy-store-link').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var url = this.dataset.url;
+            navigator.clipboard.writeText(url).then(function() {
+                var orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-1"></i> ' + btn.dataset.copiedText;
+                setTimeout(function() { btn.innerHTML = orig; }, 2000);
+            });
+        });
+    });
+});
+</script>
+{% endblock extra_js %}

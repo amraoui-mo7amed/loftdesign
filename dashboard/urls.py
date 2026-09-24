@@ -10,9 +10,6 @@ urlpatterns = [
     path("products/create/", products.product_create, name="product_create"),
     path("products/<int:pk>/update/", products.product_update, name="product_update"),
     path("products/<int:pk>/delete/", products.product_delete, name="product_delete"),
-    # Product Validation
-    path("products/<int:pk>/approve/", products.product_approve, name="product_approve"),
-    path("products/<int:pk>/reject/", products.product_reject, name="product_reject"),
     path("products/<int:pk>/toggle-global/", products.product_toggle_global_store, name="product_toggle_global_store"),
     # Partner Pricing
     path("products/<int:product_pk>/prices/", products.partner_price_list, name="partner_price_list"),
@@ -31,6 +28,7 @@ urlpatterns = [
     path("affiliate/catalog/<int:product_pk>/remove/", partner_prices.affiliate_catalog_remove, name="affiliate_catalog_remove"),
     path("affiliate/catalog/<int:product_pk>/pricing/", partner_prices.catalog_update_pricing, name="catalog_update_pricing"),
     path("affiliate/store/", partner_prices.store_settings, name="store_settings"),
+    path("provider/store/", partner_prices.provider_store_settings, name="provider_store_settings"),
     # Admin Store
     path("store/admin/", partner_prices.admin_store_settings, name="admin_store_settings"),
     path("store/admin/catalog/", partner_prices.admin_store_catalog, name="admin_store_catalog"),

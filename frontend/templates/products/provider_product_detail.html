@@ -1,0 +1,366 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} | {{ product.title }}{% endblock title %}
+
+{% block body_class %}affiliate-store{% endblock body_class %}
+
+{% block nav %}
+<button type="button" class="affiliate-cart-float cart-trigger" title="{% trans 'Cart' %}">
+    <i class="fas fa-shopping-bag"></i>
+    <span class="badge bg-primary {% if cart_count == 0 %}d-none{% endif %}">{{ cart_count }}</span>
+</button>
+{% endblock nav %}
+
+{% block sidebar %}{% endblock sidebar %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --store-color: {{ store.header_bg_color|default:"#1a1a2e" }};
+    }
+</style>
+<link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={% now "U" %}">
+<link rel="stylesheet" href="{% static "css/product_detail.css" %}?v={% now "U" %}">
+{% if product.gallery_images.all %}
+<link rel="stylesheet" href="{% static "css/gallery.css" %}?v={% now "U" %}">
+{% endif %}
+{% endblock extra_css %}
+
+{% block extra_js %}
+<script src="{% static "js/products_list.js" %}?v={% now "U" %}"></script>
+<script src="{% static "js/product_detail.js" %}?v={% now "U" %}"></script>
+{% if product.gallery_images.all %}
+<script src="{% static "js/gallery.js" %}?v={% now "U" %}"></script>
+{% endif %}
+{% endblock extra_js %}
+
+{% block content %}
+
+{% if store %}
+<header class="store-hero mb-5" style="background:{{ store.header_bg_color }};">
+    {% if store.store_banner %}
+    <div class="store-hero-bg" style="background-image:url('{{ store.store_banner.url }}');"></div>
+    {% endif %}
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge px-3 py-2 rounded-pill mb-3 fw-bold text-uppercase tracking-wider" style="background:var(--store-color);color:#fff;">
+                    {% trans "Product Details" %}
+                </span>
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    {% if store.store_logo %}
+                    <img src="{{ store.store_logo.url }}" alt="" class="store-hero-logo">
+                    {% else %}
+                    <div class="store-hero-logo-pl">{{ store.store_name|first|upper }}</div>
+                    {% endif %}
+                    <div>
+                        <h1 class="display-3 fw-black text-white mb-0">{{ store.store_name }}</h1>
+                    </div>
+                </div>
+                {% if store.store_description %}
+                <p class="lead text-white-50 mb-0 mx-auto fs-5" style="max-width: 600px;">{{ store.store_description }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+{% endif %}
+
+<section class="products-section py-10">
+    <div class="container">
+        <div class="row g-5">
+
+            <!-- Gallery Column -->
+            <div class="col-lg-7">
+                <div class="product-sticky-gallery">
+                    <div class="viewer-container position-relative overflow-hidden">
+                        {% with all_images=product.gallery_images.all %}
+                        <div class="position-relative" id="productGallery" data-images="{{ product.thumbnail.url }}{% for img in all_images %},{{ img.image.url }}{% endfor %}">
+                            <img src="{{ product.thumbnail.url }}" class="img-fluid w-100 img-reveal gallery-main-img" style="max-height: 450px; height: auto; min-height: 300px; object-fit: cover;" alt="{{ product.title }}" id="galleryMainImg">
+                            {% if all_images %}
+                            <button class="gallery-arrow gallery-prev" type="button" aria-label="{% trans 'Previous' %}"><i class="fas fa-chevron-left"></i></button>
+                            <button class="gallery-arrow gallery-next" type="button" aria-label="{% trans 'Next' %}"><i class="fas fa-chevron-right"></i></button>
+                            {% endif %}
+                        </div>
+                        {% if all_images %}
+                        <div class="gallery-thumbs" id="galleryThumbs">
+                            <div class="gallery-thumb active" data-index="0">
+                                <img src="{{ product.thumbnail.url }}" alt="">
+                            </div>
+                            {% for img in all_images %}
+                            <div class="gallery-thumb" data-index="{{ forloop.counter }}">
+                                <img src="{{ img.image.url }}" alt="">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        {% if product.model_3d or product.external_link %}
+                        <a href="{% if product.model_3d %}{% url 'frontend:product_viewer_3d' product.pk %}?back=provider&code={{ profile.user.username }}{% else %}{{ product.external_link }}{% endif %}" {% if not product.model_3d %}target="_blank"{% endif %} class="luxury-visualize-btn" style="--btn-hover-bg:{{ store.header_bg_color }};">
+                            <i class="fas fa-vr-cardboard"></i> {% trans "Show in your workspace" %}
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Column -->
+            <div class="col-lg-5">
+                <div class="product-info-flow">
+
+                    <!-- Back to store button -->
+                    <a href="{% url 'frontend:provider_store' profile.user.username %}"
+                       class="btn rounded-pill fw-bold mb-4 px-4 shadow-sm"
+                       style="background:{{ store.header_bg_color }};border-color:{{ store.header_bg_color }};color:#fff;">
+                        <i class="fas fa-arrow-left me-2"></i> {% trans "Back to Store" %}
+                    </a>
+
+                    <!-- Product header: category, title, price, stock -->
+                    <div class="mb-4">
+                        {% if product.category %}
+                        <span class="fw-bold text-uppercase small tracking-widest d-block mb-2" style="color:{{ store.header_bg_color }};">
+                            {{ product.category.name }}
+                        </span>
+                        {% endif %}
+                        <h1 class="fw-black mb-2" style="font-size:2rem;line-height:1.1;">{{ product.title }}</h1>
+                        <div class="d-flex align-items-center gap-3 mt-3">
+                            <span class="h3 fw-black mb-0" style="color:{{ store.header_bg_color }};">
+                                {% if product.loft_retail_price %}
+                                    {{ product.loft_retail_price|floatformat:0 }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                                <small class="fs-6 fw-bold">DZD</small>
+                            </span>
+                            <span class="d-flex align-items-center gap-1 small fw-bold">
+                                <span class="dot-pulse" id="affStockDot" style="background:{% if product.available_stock > 0 %}#198754{% else %}#6c757d{% endif %};--pulse-color:{% if product.available_stock > 0 %}#198754{% else %}#6c757d{% endif %};"></span>
+                                <span id="affStockText">{% if product.available_stock > 0 %}{% trans "In Stock" %}{% else %}{% trans "Out of Stock" %}{% endif %}</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    {% if items %}
+                    <div class="mb-4">
+                        <h6 class="fw-bold small text-uppercase text-muted mb-3">{% trans "Select Variant" %}</h6>
+                        <div class="d-flex flex-column gap-1" id="variantPicker">
+                            {% for item in items %}
+                            <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-3 border variant-row {% if forloop.first %}active{% endif %}"
+                                 data-item-id="{{ item.id }}"
+                                 data-item-name="{{ item.name }}"
+                                 data-item-color="{{ item.color }}"
+                                 data-item-dimensions="{{ item.dimensions }}"
+                                 data-item-stock="{{ item.stock_quantity }}"
+                                 data-item-thumbnail="{% if item.thumbnail %}{{ item.thumbnail.url }}{% endif %}"
+                                 data-item-gallery="{% for img in item.gallery_images.all %}{{ img.image.url }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                                 style="cursor: pointer; transition: background 0.15s;">
+                                <div class="flex-shrink-0 rounded-2 overflow-hidden" style="width: 40px; height: 40px;">
+                                    {% if item.thumbnail %}
+                                    <img src="{{ item.thumbnail.url }}" alt="{{ item.name }}"
+                                         class="w-100 h-100" style="object-fit: cover;">
+                                    {% else %}
+                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                                        <i class="fas fa-cube text-muted opacity-25" style="font-size: 0.9rem;"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1 min-w-0">
+                                    <div class="fw-semibold small text-truncate">{{ item.name }}</div>
+                                    <div class="d-flex align-items-center gap-2 small text-muted">
+                                        {% if item.color %}
+                                        <span class="d-inline-flex align-items-center gap-1">
+                                            <span class="d-inline-block rounded-circle flex-shrink-0" style="width: 7px; height: 7px; background: {{ item.color|lower }}; border: 1px solid rgba(0,0,0,0.05);"></span>
+                                            {{ item.color }}
+                                        </span>
+                                        {% endif %}
+                                        {% if item.dimensions %}
+                                        <span>{{ item.dimensions }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <span class="badge {% if item.stock_quantity > 0 %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %} flex-shrink-0" style="border-radius: 0; font-size: 0.72rem; font-weight: 700; padding: 0.25em 0.5em; min-width: 28px; text-align: center;">
+                                    {{ item.stock_quantity }}
+                                </span>
+                                <button type="button" class="btn btn-light btn-sm p-0 view-variant-btn"
+                                        title="{% trans 'View Details' %}"
+                                        style="width: 26px; height: 26px; font-size: 10px; line-height: 1; border: 1px solid #dee2e6;">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Add to Cart -->
+                    <div class="mb-5" id="affAddToCartSection">
+                        <button type="button"
+                                class="btn btn-lg rounded-pill px-5 fw-bold shadow-sm btn-add-to-cart w-100"
+                                style="background:{{ store.header_bg_color }};border-color:{{ store.header_bg_color }};color:#fff;"
+                                data-product-id="{{ product.pk }}"
+                                data-store-provider="{{ profile.user.username }}"
+                                {% if items %}data-item-id="{{ items.0.id }}"{% endif %}>
+                            <i class="fas fa-cart-plus me-2"></i>{% trans "Add to Cart" %}
+                        </button>
+                    </div>
+
+                    <hr style="opacity:0.15;">
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <h4 class="fw-black text-uppercase small mb-3 tracking-widest" style="color:{{ store.header_bg_color }};">{% trans "Description" %}</h4>
+                        <div style="color:#495057;font-size:0.95rem;line-height:1.8;">
+                            {{ product.description|linebreaks }}
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    {% if product.tags %}
+                    <div class="mb-5">
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for tag in product.tags.split %}
+                            <span class="badge rounded-pill px-3 py-2 small fw-bold" style="background:{{ store.header_bg_color }}12;color:{{ store.header_bg_color }};border:1px solid {{ store.header_bg_color }}25;">{{ tag|cut:"," }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <hr style="opacity:0.15;">
+
+                    <!-- Inquiry form -->
+                    <div class="inquiry-form-wrap">
+                        <h4 class="fw-black mb-1">{% trans "Quick Order" %}</h4>
+                        <p class="small mb-3" style="color:#6c757d;">{% trans "Leave your details and we will confirm your order." %}</p>
+
+                        {% include "partials/errorList.html" with form_id="orderForm" %}
+
+                        <form method="POST" action="{% url 'frontend:place_order' %}" class="form" id="orderForm"
+                              data-select-wilaya-first="{% trans 'Please select a wilaya first' %}"
+                              data-select-commune="{% trans 'Select Commune' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="item_id" id="affOrderItemId" value="">
+                            <input type="hidden" name="provider" value="{{ profile.user.username }}">
+
+                            <div class="mb-2">
+                                <input type="text" name="name" class="form-control rounded-3" placeholder="{% trans 'Full Name' %}" required>
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-7">
+                                    <input type="tel" name="phone" class="form-control rounded-3" placeholder="{% trans 'Phone Number' %}" required>
+                                </div>
+                                <div class="col-5">
+                                    <input type="number" name="quantity" class="form-control rounded-3" value="1" min="1" max="{{ product.available_stock }}" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <div class="searchable-select-wrapper" id="wilaya-searchable">
+                                    <div class="searchable-select-display">
+                                        <span class="selected-text">{% trans "Wilaya" %}</span>
+                                        <i class="fas fa-chevron-down opacity-50"></i>
+                                    </div>
+                                    <div class="searchable-select-dropdown">
+                                        <div class="searchable-select-search">
+                                            <input type="text" class="search-input" placeholder="{% trans 'Search wilaya...' %}">
+                                        </div>
+                                        <ul class="searchable-select-list">
+                                            {% for opt in wilaya_options %}
+                                                <li data-value="{{ opt.value }}">{{ opt.label }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="wilaya" id="wilayaSelect_input" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <div class="searchable-select-wrapper" id="commune-searchable">
+                                    <div class="searchable-select-display">
+                                        <span class="selected-text">{% trans "Commune" %}</span>
+                                        <i class="fas fa-chevron-down opacity-50"></i>
+                                    </div>
+                                    <div class="searchable-select-dropdown">
+                                        <div class="searchable-select-search">
+                                            <input type="text" class="search-input" placeholder="{% trans 'Search commune...' %}">
+                                        </div>
+                                        <ul class="searchable-select-list">
+
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="commune" id="communeSelect_input" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <textarea name="address" class="form-control rounded-3" rows="1" placeholder="{% trans 'Address (optional)' %}"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn w-100 rounded-pill fw-bold shadow-sm py-2" style="background:{{ store.header_bg_color }};border-color:{{ store.header_bg_color }};color:#fff;">
+                                {% trans "Send Inquiry" %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if store %}
+<footer class="bg-dark py-5 mt-5">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h6 class="text-white fw-bold mb-1">{{ store.store_name }}</h6>
+            </div>
+            <small class="text-white-50">&copy; {% now "Y" %} {{ store.store_name }}. {% trans "Powered By" %} <a href="/" class="text-white fw-bold text-decoration-none">LOFT Design</a>.</small>
+        </div>
+    </div>
+</footer>
+{% endif %}
+
+{{ communes_data|json_script:"communes-data" }}
+
+<!-- Variant Detail Modal -->
+<div class="modal fade" id="variantDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 overflow-hidden">
+            <div class="modal-header border-0 p-4 pb-0">
+                <h5 class="modal-title fw-bold">{% trans "Variant Details" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-7">
+                        <div class="rounded-3 overflow-hidden mb-3 bg-light d-flex align-items-center justify-content-center" style="min-height: 250px;">
+                            <img src="" alt="" class="w-100 modal-variant-thumb" style="max-height: 350px; object-fit: cover; display: none;">
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap modal-variant-gallery-wrap">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <h4 class="fw-bold mb-2" id="modalVariantName"></h4>
+                        <div class="d-flex align-items-center gap-2 mb-2" id="modalVariantColor">
+                            <span class="d-inline-block rounded-circle flex-shrink-0" style="width: 12px; height: 12px; border: 1px solid rgba(0,0,0,0.1);"></span>
+                            <span class="text-muted small"></span>
+                        </div>
+                        <div class="mb-2 text-muted small" id="modalVariantDim"></div>
+                        <div class="mb-3" id="modalVariantStock">
+                            <span class="badge fs-6 px-3 py-2"></span>
+                        </div>
+                        <button type="button" class="btn btn-dark w-100 rounded-pill fw-bold modal-select-variant">
+                            <i class="fas fa-check me-2"></i>{% trans "Select This Variant" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}

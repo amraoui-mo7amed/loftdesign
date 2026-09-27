@@ -22,12 +22,22 @@ _AFF = UserProfile.roleChoices.AFFILIATE
 def my_catalog(request):
     """List only products the affiliate has added to their catalog"""
     profile = get_object_or_404(UserProfile, user=request.user)
+    is_semi = profile.role == _SEMI
     prices = PartnerPrice.objects.filter(
         buyer=request.user, is_active=True,
     ).select_related("product", "product__loft_price").prefetch_related("product__gallery_images")
-    if profile.role == _SEMI:
+    parent_prices = {}
+    if is_semi:
         if profile.parent_affiliate:
             prices = prices.filter(seller=profile.parent_affiliate.user)
+            parent_prices = {
+                parent_price.product_id: parent_price
+                for parent_price in PartnerPrice.objects.filter(
+                    buyer=profile.parent_affiliate.user,
+                    is_active=True,
+                    seller_id=models.F("product__user_id"),
+                )
+            }
         else:
             prices = prices.none()
 
@@ -35,16 +45,35 @@ def my_catalog(request):
     for pp in prices:
         product = pp.product
         loft_price = getattr(product, "loft_price", None)
+        parent_pp = parent_prices.get(product.pk) if is_semi else None
+        if is_semi:
+            wholesale_price = (
+                parent_pp.wholesale_price
+                if parent_pp and parent_pp.wholesale_price is not None
+                else (loft_price.loft_default_wholesale_price if loft_price else None)
+            )
+            retail_price = (
+                parent_pp.retail_price
+                if parent_pp and parent_pp.retail_price is not None
+                else (loft_price.loft_retail_price if loft_price else None)
+            )
+        else:
+            wholesale_price = pp.wholesale_price
+            retail_price = pp.retail_price or (loft_price.loft_retail_price if loft_price else None)
+
         catalog.append({
             "product": product,
             "partner_price": pp,
             "purchase_price": pp.purchase_price,
-            "wholesale_price": pp.wholesale_price,
-            "retail_price": pp.retail_price or (loft_price.loft_retail_price if loft_price else None),
+            "wholesale_price": wholesale_price,
+            "retail_price": retail_price,
             "primary_image": product.gallery_images.first(),
         })
 
-    return render(request, "products/my_catalog.html", {"catalog": catalog})
+    return render(request, "products/my_catalog.html", {
+        "catalog": catalog,
+        "is_semi": is_semi,
+    })
 
 
 @role_required(allowed_roles=[_AFF, _SEMI])
@@ -215,18 +244,14 @@ def affiliate_catalog(request):
 
         if is_semi:
             purchase_price = (
-                (parent_pp.wholesale_price or parent_pp.purchase_price)
-                if parent_pp
-                else None
+                parent_pp.wholesale_price
+                if parent_pp and parent_pp.wholesale_price is not None
+                else (loft_price.loft_default_wholesale_price if loft_price else None)
             )
             retail_price = (
-                (
-                    parent_pp.retail_price
-                    or parent_pp.wholesale_price
-                    or parent_pp.purchase_price
-                )
-                if parent_pp
-                else None
+                parent_pp.retail_price
+                if parent_pp and parent_pp.retail_price is not None
+                else (loft_price.loft_retail_price if loft_price else None)
             )
         else:
             purchase_price = (
@@ -253,6 +278,7 @@ def affiliate_catalog(request):
 
     return render(request, "products/affiliate_catalog.html", {
         "catalog": catalog,
+        "is_semi": is_semi,
     })
 
 

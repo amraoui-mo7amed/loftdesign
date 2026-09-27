@@ -40,6 +40,20 @@
                 {% endif %}
 
                 <div class="catalog-card-pricing">
+                    {% if is_semi %}
+                    {% if item.wholesale_price %}
+                    <div>
+                        <span class="catalog-price-your">DZD{{ item.wholesale_price|floatformat:0 }}</span>
+                        <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "WHOLESALE" %}</small>
+                    </div>
+                    {% endif %}
+                    {% if item.retail_price %}
+                    <div>
+                        <span class="fw-bold">DZD{{ item.retail_price|floatformat:0 }}</span>
+                        <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "RETAIL" %}</small>
+                    </div>
+                    {% endif %}
+                    {% else %}
                     <div>
                         <span class="catalog-price-your">DZD{{ item.purchase_price|floatformat:0 }}</span>
                         <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "YOUR COST" %}</small>
@@ -55,6 +69,7 @@
                         <span class="fw-bold">DZD{{ item.retail_price|floatformat:0 }}</span>
                         <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "RETAIL" %}</small>
                     </div>
+                    {% endif %}
                     {% endif %}
                 </div>
 

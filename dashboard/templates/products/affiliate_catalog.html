@@ -46,11 +46,13 @@
                 {% endif %}
 
                 <div class="catalog-card-pricing">
-                    {% if item.price_configured and item.purchase_price %}
+                    {% if item.purchase_price or item.retail_price %}
+                        {% if item.purchase_price %}
                         <div>
                             <span class="catalog-price-your">DZD{{ item.purchase_price|floatformat:0 }}</span>
-                            <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% trans "YOUR PRICE" %}</small>
+                            <small class="d-block text-muted" style="font-size:0.65rem;letter-spacing:0.3px;">{% if is_semi %}{% trans "WHOLESALE" %}{% else %}{% trans "YOUR PRICE" %}{% endif %}</small>
                         </div>
+                        {% endif %}
                         {% if item.retail_price %}
                         <div>
                             <span class="catalog-price-retail">DZD{{ item.retail_price|floatformat:0 }}</span>

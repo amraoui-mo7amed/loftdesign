@@ -21,9 +21,15 @@ _AFF = UserProfile.roleChoices.AFFILIATE
 @role_required(allowed_roles=[_AFF, _SEMI])
 def my_catalog(request):
     """List only products the affiliate has added to their catalog"""
+    profile = get_object_or_404(UserProfile, user=request.user)
     prices = PartnerPrice.objects.filter(
         buyer=request.user, is_active=True,
     ).select_related("product", "product__loft_price").prefetch_related("product__gallery_images")
+    if profile.role == _SEMI:
+        if profile.parent_affiliate:
+            prices = prices.filter(seller=profile.parent_affiliate.user)
+        else:
+            prices = prices.none()
 
     catalog = []
     for pp in prices:
@@ -62,21 +68,42 @@ def catalog_details(request, product_pk):
 
     loft_price = getattr(product, "loft_price", None)
 
-    pp = PartnerPrice.objects.filter(
-        product=product, buyer=request.user, is_active=True,
-    ).first()
-
     parent_pp = None
     if is_semi and profile.parent_affiliate:
         parent_pp = PartnerPrice.objects.filter(
-            product=product, buyer=profile.parent_affiliate.user, is_active=True,
+            product=product,
+            seller=product.user,
+            buyer=profile.parent_affiliate.user,
+            is_active=True,
         ).first()
+
+    pp_filter = {
+        "product": product,
+        "buyer": request.user,
+        "is_active": True,
+    }
+    if is_semi:
+        if profile.parent_affiliate:
+            pp_filter["seller"] = profile.parent_affiliate.user
+            pp = PartnerPrice.objects.filter(**pp_filter).first()
+        else:
+            pp = None
+    else:
+        pp = PartnerPrice.objects.filter(**pp_filter).first()
 
     available_qty = product.quantity
 
-    if is_semi and profile.parent_affiliate and parent_pp:
-        ref_purchase = parent_pp.wholesale_price or parent_pp.purchase_price
-        ref_retail = parent_pp.retail_price or parent_pp.wholesale_price or parent_pp.purchase_price
+    if is_semi:
+        if parent_pp:
+            ref_purchase = parent_pp.wholesale_price or parent_pp.purchase_price
+            ref_retail = (
+                parent_pp.retail_price
+                or parent_pp.wholesale_price
+                or parent_pp.purchase_price
+            )
+        else:
+            ref_purchase = None
+            ref_retail = None
     else:
         ref_purchase = loft_price.loft_default_wholesale_price if loft_price else None
         ref_retail = loft_price.loft_retail_price if loft_price else None
@@ -88,8 +115,16 @@ def catalog_details(request, product_pk):
         "parent_pp": parent_pp,
         "in_catalog": pp is not None,
         "available_qty": available_qty,
-        "purchase_price": pp.purchase_price if pp else ref_purchase,
-        "retail_price": pp.retail_price if pp and pp.retail_price else ref_retail,
+        "purchase_price": (
+            ref_purchase
+            if is_semi
+            else (pp.purchase_price if pp else ref_purchase)
+        ),
+        "retail_price": (
+            ref_retail
+            if is_semi
+            else (pp.retail_price if pp and pp.retail_price else ref_retail)
+        ),
         "is_semi": is_semi,
         "price_configured": loft_price is not None,
         "gallery": list(product.gallery_images.all()),
@@ -130,6 +165,7 @@ def affiliate_catalog(request):
             PartnerPrice.objects.filter(
                 buyer=profile.parent_affiliate.user,
                 is_active=True,
+                seller_id=models.F("product__user_id"),
             ).values_list("product_id", flat=True)
         )
         if parent_product_ids:
@@ -141,11 +177,21 @@ def affiliate_catalog(request):
     else:
         products = base_qs
 
+    existing_price_query = PartnerPrice.objects.filter(
+        buyer=request.user,
+        is_active=True,
+    )
+    if is_semi:
+        if profile.parent_affiliate:
+            existing_price_query = existing_price_query.filter(
+                seller=profile.parent_affiliate.user,
+            )
+        else:
+            existing_price_query = existing_price_query.none()
+
     existing_prices = {
         pp.product_id: pp
-        for pp in PartnerPrice.objects.filter(
-            buyer=request.user, is_active=True
-        ).select_related("product")
+        for pp in existing_price_query.select_related("product")
     }
 
     parent_prices = {}
@@ -153,7 +199,9 @@ def affiliate_catalog(request):
         parent_prices = {
             pp.product_id: pp
             for pp in PartnerPrice.objects.filter(
-                buyer=profile.parent_affiliate.user, is_active=True
+                buyer=profile.parent_affiliate.user,
+                is_active=True,
+                seller_id=models.F("product__user_id"),
             )
         }
 
@@ -162,27 +210,43 @@ def affiliate_catalog(request):
         pp = existing_prices.get(product.pk)
         loft_price = getattr(product, "loft_price", None)
 
-        if is_semi and profile.parent_affiliate:
-            parent_pp = parent_prices.get(product.pk)
-            available_qty = product.quantity
+        parent_pp = parent_prices.get(product.pk) if is_semi else None
+        available_qty = product.quantity
+
+        if is_semi:
+            purchase_price = (
+                (parent_pp.wholesale_price or parent_pp.purchase_price)
+                if parent_pp
+                else None
+            )
+            retail_price = (
+                (
+                    parent_pp.retail_price
+                    or parent_pp.wholesale_price
+                    or parent_pp.purchase_price
+                )
+                if parent_pp
+                else None
+            )
         else:
-            available_qty = product.quantity
+            purchase_price = (
+                pp.purchase_price
+                if pp
+                else (loft_price.loft_default_wholesale_price if loft_price else None)
+            )
+            retail_price = (
+                pp.retail_price
+                if pp and pp.retail_price
+                else (loft_price.loft_retail_price if loft_price else None)
+            )
 
         catalog.append({
             "product": product,
             "in_catalog": pp is not None,
             "partner_price": pp,
             "available_qty": available_qty,
-            "purchase_price": (
-                pp.purchase_price
-                if pp
-                else (loft_price.loft_default_wholesale_price if loft_price else None)
-            ),
-            "retail_price": (
-                pp.retail_price
-                if pp and pp.retail_price
-                else (loft_price.loft_retail_price if loft_price else None)
-            ),
+            "purchase_price": purchase_price,
+            "retail_price": retail_price,
             "price_configured": loft_price is not None,
             "primary_image": product.gallery_images.first(),
         })
@@ -211,14 +275,26 @@ def affiliate_catalog_add(request, product_pk):
 
     # Determine seller and purchase price
     profile = get_object_or_404(UserProfile, user=request.user)
-    if profile.role == _SEMI and profile.parent_affiliate:
+    if profile.role == _SEMI:
+        if not profile.parent_affiliate:
+            return JsonResponse({
+                "success": False,
+                "errors": {"system": [_("No parent affiliate is assigned to your account.")]},
+            })
+
         parent_pp = PartnerPrice.objects.filter(
-            product=product, buyer=profile.parent_affiliate.user, is_active=True
+            product=product,
+            seller=product.user,
+            buyer=profile.parent_affiliate.user,
+            is_active=True,
         ).first()
-        if parent_pp:
-            purchase_price = parent_pp.wholesale_price or parent_pp.purchase_price
-        else:
-            purchase_price = loft_price.loft_default_wholesale_price
+        if not parent_pp:
+            return JsonResponse({
+                "success": False,
+                "errors": {"system": [_("This product is not in your parent affiliate's catalog.")]},
+            })
+
+        purchase_price = parent_pp.wholesale_price or parent_pp.purchase_price
         seller = profile.parent_affiliate.user
     else:
         seller = product.user
@@ -288,9 +364,16 @@ def catalog_update_pricing(request, product_pk):
     if request.method != "POST":
         return JsonResponse({"success": False}, status=400)
 
-    pp = PartnerPrice.objects.filter(
+    profile = get_object_or_404(UserProfile, user=request.user)
+    pp_query = PartnerPrice.objects.filter(
         product_id=product_pk, buyer=request.user, is_active=True,
-    ).first()
+    )
+    if profile.role == _SEMI:
+        if profile.parent_affiliate:
+            pp_query = pp_query.filter(seller=profile.parent_affiliate.user)
+        else:
+            pp_query = pp_query.none()
+    pp = pp_query.first()
 
     if not pp:
         return JsonResponse({
@@ -355,9 +438,16 @@ def affiliate_catalog_remove(request, product_pk):
         return JsonResponse({"success": False}, status=400)
 
     product = get_object_or_404(Product, pk=product_pk)
-    pp = PartnerPrice.objects.filter(
+    profile = get_object_or_404(UserProfile, user=request.user)
+    pp_query = PartnerPrice.objects.filter(
         product=product, buyer=request.user, is_active=True
-    ).first()
+    )
+    if profile.role == _SEMI:
+        if profile.parent_affiliate:
+            pp_query = pp_query.filter(seller=profile.parent_affiliate.user)
+        else:
+            pp_query = pp_query.none()
+    pp = pp_query.first()
 
     if not pp:
         return JsonResponse({"success": False, "errors": {"system": [_("Product not in your catalog.")]}})

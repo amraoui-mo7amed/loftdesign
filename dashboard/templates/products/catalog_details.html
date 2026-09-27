@@ -141,7 +141,7 @@
 
                         <div class="mb-3">
                             <label class="fw-bold small mb-1 text-muted">{% if is_semi %}{% trans "Purchase Price (from your affiliate)" %}{% else %}{% trans "Purchase Price (set by Loft)" %}{% endif %}</label>
-                            <input type="number" class="pricing-input form-control w-100" value="{{ partner_price.purchase_price|floatformat:0 }}" readonly disabled>
+                            <input type="number" class="pricing-input form-control w-100" value="{{ purchase_price|floatformat:0 }}" readonly disabled>
                             <div class="form-text small mt-1">{% if is_semi %}{% trans "Your cost. Set by your parent affiliate." %}{% else %}{% trans "Your cost. Set by Loft Design." %}{% endif %}</div>
                         </div>
 

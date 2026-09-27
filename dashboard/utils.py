@@ -654,7 +654,8 @@ def credit_wallets_for_order(order):
 
     for user, amount, desc in credit_entries:
         wallet, _wcreated = Wallet.objects.get_or_create(user=user)
-        wallet.balance += amount
+        amount = Decimal(str(amount))
+        wallet.balance = Decimal(str(wallet.balance or "0.00")) + amount
         wallet.save(update_fields=["balance"])
         Transaction.objects.create(
             wallet=wallet,

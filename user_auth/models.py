@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -76,11 +78,17 @@ class Wallet(models.Model):
         verbose_name=_("User")
     )
     balance = models.DecimalField(
-        _("Balance (DZD)"), max_digits=12, decimal_places=2, default=0.00,
+        _("Balance (DZD)"),
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal("0.00"),
         help_text=_("Available balance that can be withdrawn")
     )
     pending_balance = models.DecimalField(
-        _("Pending Balance (DZD)"), max_digits=12, decimal_places=2, default=0.00,
+        _("Pending Balance (DZD)"),
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal("0.00"),
         help_text=_("Earnings from orders not yet delivered")
     )
     created_at = models.DateTimeField(auto_now_add=True)

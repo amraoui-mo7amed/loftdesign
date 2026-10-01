@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cartItemsList.classList.remove("d-none");
         if (cartFooter) cartFooter.classList.remove("d-none");
         if (drawerCount) drawerCount.textContent = data.total_items;
-        if (drawerTotal) drawerTotal.textContent = data.total_price + " DZD";
+        if (drawerTotal) drawerTotal.textContent = data.total_display || (data.total_price + " DZD");
 
         data.items.forEach(function (item) {
             var itemDiv = document.createElement("div");
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 <div class="cart-item-info">
                     <a href="${item.url}" class="cart-item-title">${item.title}</a>
-                    <div class="cart-item-price">${item.price} DZD</div>
+                    <div class="cart-item-price">${item.price_display || (item.price + " DZD")}</div>
                     <div class="cart-item-controls">
                         <div class="cart-qty-selector">
                             <button type="button" class="cart-qty-minus" data-item-id="${item.id}">−</button>
@@ -231,11 +231,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (item) item.remove();
                         loadCart();
                     } else {
-                        if (drawerTotal) drawerTotal.textContent = data.cart_total_price + " DZD";
+                        if (drawerTotal) drawerTotal.textContent = data.cart_total_display || (data.cart_total_price + " DZD");
                         var subEl = document.getElementById("subtotal-" + itemId);
-                        if (subEl) subEl.textContent = data.item_subtotal;
+                        if (subEl) subEl.textContent = data.item_subtotal_display || data.item_subtotal;
                     }
-                    if (typeof reloadPageSummary === "function") reloadPageSummary();
+                    if (typeof reloadPageSummary === "function") reloadPageSummary(data.cart_total_display);
                 }
             });
     }
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     loadCart();
                     var pageItem = document.querySelector('.cart-page-item[data-item-id="' + itemId + '"]');
                     if (pageItem) pageItem.remove();
-                    if (typeof reloadPageSummary === "function") reloadPageSummary();
+                    if (typeof reloadPageSummary === "function") reloadPageSummary(data.cart_total_display);
                 }
             });
     }
@@ -333,7 +333,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         element.classList.add("btn-dark");
                         element.disabled = true;
                     }
-                    if (typeof reloadPageSummary === "function") reloadPageSummary();
+                    if (typeof reloadPageSummary === "function") reloadPageSummary(data.cart_total_display);
                 } else {
                     showMiniNotif(data.message || "Error");
                 }
@@ -442,9 +442,14 @@ document.addEventListener("DOMContentLoaded", function () {
         bsModal.show();
     }
 
-    function reloadPageSummary() {
+    function reloadPageSummary(display) {
         var totalEl = document.getElementById("orderTotal");
         var cartTotalEl = document.getElementById("summaryTotal");
+        if (display) {
+            if (totalEl) totalEl.textContent = display;
+            if (cartTotalEl) cartTotalEl.textContent = display;
+            return;
+        }
         var subtotals = document.querySelectorAll(".cart-page-item-subtotal");
         var sum = 0;
         subtotals.forEach(function (el) {

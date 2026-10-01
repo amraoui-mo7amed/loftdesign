@@ -21,6 +21,9 @@ from dashboard.models import Notification, Product, PartnerPrice, AffiliateStore
 from user_auth.utils import generate_affiliate_code, user_profile_upload_path
 from decimal import Decimal
 import secrets
+import logging
+
+logger = logging.getLogger(__name__)
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def provider_create(request):
@@ -37,7 +40,16 @@ def provider_create(request):
         errors = {}
         if not first_name: errors["first_name"] = [_("First name is required")]
         if not email: errors["email"] = [_("Email is required")]
-        if not commission: errors["commission"] = [_("Commission is required")]
+        if not commission:
+            errors["commission"] = [_("Commission is required")]
+        else:
+            try:
+                from decimal import Decimal
+                commission = Decimal(commission.replace(",", "."))
+                if not commission.is_finite() or not (0 <= commission <= 100):
+                    raise ValueError
+            except Exception:
+                errors["commission"] = [_("Commission must be between 0 and 100 %")]
         if User.objects.filter(email=email).exists():
             errors["email"] = [_("This email is already in use")]
 
@@ -116,7 +128,8 @@ def provider_create(request):
                     "redirect_url": reverse("dash:user_list")
                 })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+            logger.exception("dashboard/views/users.py: request failed")
+            return JsonResponse({"success": False, "errors": {"system": [_("Something went wrong. Please try again.")]}})
 
     return JsonResponse({"success": False}, status=400)
 
@@ -324,11 +337,12 @@ def user_approve(request, pk):
                 }
                 return JsonResponse({"success": True, "message": success_msg})
         except Exception as e:
+            logger.exception("dashboard/views/users.py: request failed")
             return JsonResponse(
                 {
                     "success": False,
                     "message": _("An error occurred during approval: %(error)s")
-                    % {"error": str(e)},
+                    % {"error": _("Something went wrong. Please try again.")},
                 }
             )
 
@@ -380,9 +394,10 @@ def profile_update(request):
                 "redirect_url": reverse("dash:profile_update"),
             })
         except Exception as e:
+            logger.exception("dashboard/views/users.py: request failed")
             return JsonResponse({
                 "success": False,
-                "errors": {"system": [str(e)]},
+                "errors": {"system": [_("Something went wrong. Please try again.")]},
             })
 
     context = {
@@ -514,9 +529,10 @@ def affiliate_approve(request, pk):
                         "message": _("%(name)s has been disapproved.") % {"name": full_name},
                     })
         except Exception as e:
+            logger.exception("dashboard/views/users.py: request failed")
             return JsonResponse({
                 "success": False,
-                "message": _("An error occurred: %(error)s") % {"error": str(e)},
+                "message": _("An error occurred: %(error)s") % {"error": _("Something went wrong. Please try again.")},
             })
 
     return JsonResponse({"success": False}, status=400)
@@ -640,7 +656,8 @@ def affiliate_create(request):
                 % {"name": f"{first_name} {last_name}", "email": email},
             })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+            logger.exception("dashboard/views/users.py: request failed")
+            return JsonResponse({"success": False, "errors": {"system": [_("Something went wrong. Please try again.")]}})
 
     return JsonResponse({"success": False}, status=400)
 
@@ -752,17 +769,23 @@ def semi_affiliate_create(request):
                 % {"name": f"{first_name} {last_name}", "email": email},
             })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+            logger.exception("dashboard/views/users.py: request failed")
+            return JsonResponse({"success": False, "errors": {"system": [_("Something went wrong. Please try again.")]}})
 
     return JsonResponse({"success": False}, status=400)
 
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.AFFILIATE])
-@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.AFFILIATE])
 def semi_affiliate_delete(request, pk):
     """AJAX: delete a semi-affiliate account"""
     if request.method == "POST":
         profile = get_object_or_404(UserProfile, pk=pk, role=UserProfile.roleChoices.SEMI_AFFILIATE)
+        # An affiliate may only delete its own semi-affiliates.
+        if not request.user.is_superuser and (
+            profile.parent_affiliate_id is None
+            or profile.parent_affiliate.user_id != request.user.pk
+        ):
+            return JsonResponse({"success": False, "message": _("Permission denied.")}, status=403)
         full_name = profile.user.get_full_name() or profile.user.username
         profile.user.delete()
         return JsonResponse({
@@ -772,6 +795,7 @@ def semi_affiliate_delete(request, pk):
     return JsonResponse({"success": False}, status=400)
 
 
+@role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.AFFILIATE])
 def semi_affiliate_list(request):
     """List semi-affiliates under the current affiliate"""
     q = request.GET.get("q", "")
@@ -967,7 +991,8 @@ def end_client_create(request):
                 % {"name": f"{first_name} {last_name}", "email": email},
             })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+            logger.exception("dashboard/views/users.py: request failed")
+            return JsonResponse({"success": False, "errors": {"system": [_("Something went wrong. Please try again.")]}})
 
     return JsonResponse({"success": False}, status=400)
 

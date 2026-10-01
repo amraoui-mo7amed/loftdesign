@@ -7,7 +7,9 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db import models
 from django.urls import reverse
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
+
+from django.db import transaction as db_transaction
 
 from ..decorator import role_required
 from ..utils import notify_user, build_order_chain_breakdown
@@ -23,11 +25,30 @@ FINAL_CLIENT = UserProfile.roleChoices.FINAL_CLIENT
 BUSINESS_ROLES = [ADMIN, AFFILIATE, SEMI, PROVIDER, FINAL_CLIENT]
 
 
+def _parse_amount(raw):
+    """Positive amount with 2 decimals, or None."""
+    try:
+        amount = Decimal(str(raw or "").strip().replace(",", "."))
+    except (InvalidOperation, ValueError, TypeError):
+        return None
+    if not amount.is_finite() or amount <= 0:
+        return None
+    return amount.quantize(Decimal("0.01"))
+
+
+def _reserved(wallet):
+    """Money already requested for withdrawal and not yet processed."""
+    return wallet.transactions.filter(
+        transaction_type=Transaction.TransactionType.WITHDRAWAL,
+        status=Transaction.TransactionStatus.PENDING,
+    ).aggregate(s=models.Sum("amount"))["s"] or Decimal("0.00")
+
+
 @role_required(allowed_roles=BUSINESS_ROLES)
 def wallet_list(request):
     """Unified wallet list — admin sees all, affiliate sees own + semi, semi/provider see own."""
-    profile = request.user.profile
-    role = profile.role
+    profile = getattr(request.user, "profile", None)
+    role = ADMIN if request.user.is_superuser else (profile.role if profile else None)
     is_admin = role == ADMIN or request.user.is_superuser
 
     # Semi-affiliates and end clients go directly to their own wallet
@@ -74,8 +95,8 @@ def wallet_list(request):
 def wallet_detail(request, user_id=None):
     """Display a user's wallet with transaction history.
     Admin can view any. Affiliate can view own + semi. Semi/provider can view own only."""
-    profile = request.user.profile
-    role = profile.role
+    profile = getattr(request.user, "profile", None)
+    role = ADMIN if request.user.is_superuser else (profile.role if profile else None)
 
     if user_id is None or user_id == request.user.id:
         target_user = request.user
@@ -361,15 +382,31 @@ def handle_withdrawal(request, pk):
     if request.method != "POST":
         return JsonResponse({"success": False}, status=400)
 
-    withdrawal = get_object_or_404(Transaction, pk=pk, transaction_type=Transaction.TransactionType.WITHDRAWAL)
     action = request.POST.get("action")
-    wallet = withdrawal.wallet
+    if action not in ("approve", "reject"):
+        return JsonResponse({"success": False}, status=400)
+
+    with db_transaction.atomic():
+        withdrawal = get_object_or_404(
+            Transaction.objects.select_for_update(), pk=pk,
+            transaction_type=Transaction.TransactionType.WITHDRAWAL,
+        )
+        if withdrawal.status != Transaction.TransactionStatus.PENDING:
+            return JsonResponse({"success": False, "message": _("This request has already been processed.")})
+        wallet = Wallet.objects.select_for_update().get(pk=withdrawal.wallet_id)
+
+        if action == "approve":
+            if withdrawal.amount > wallet.balance:
+                return JsonResponse({"success": False, "message": _("Insufficient balance.")})
+            wallet.balance -= withdrawal.amount
+            wallet.save(update_fields=["balance"])
+            withdrawal.status = Transaction.TransactionStatus.COMPLETED
+            withdrawal.save(update_fields=["status"])
+        else:
+            withdrawal.status = Transaction.TransactionStatus.FAILED
+            withdrawal.save(update_fields=["status"])
 
     if action == "approve":
-        withdrawal.status = Transaction.TransactionStatus.COMPLETED
-        wallet.balance -= withdrawal.amount
-        wallet.save(update_fields=["balance"])
-        withdrawal.save(update_fields=["status"])
         notify_user(
             wallet.user,
             _("Withdrawal Approved"),
@@ -379,20 +416,15 @@ def handle_withdrawal(request, pk):
             link=reverse("dash:wallet_detail"),
         )
         return JsonResponse({"success": True, "message": _("Withdrawal approved.")})
-    elif action == "reject":
-        withdrawal.status = Transaction.TransactionStatus.FAILED
-        withdrawal.save(update_fields=["status"])
-        notify_user(
-            wallet.user,
-            _("Withdrawal Rejected"),
-            _('Your withdrawal of %(amount)s DZD has been rejected.')
-            % {"amount": f"{withdrawal.amount:,.2f}"},
-            notification_type="error",
-            link=reverse("dash:wallet_detail"),
-        )
-        return JsonResponse({"success": True, "message": _("Withdrawal rejected.")})
-
-    return JsonResponse({"success": False}, status=400)
+    notify_user(
+        wallet.user,
+        _("Withdrawal Rejected"),
+        _('Your withdrawal of %(amount)s DZD has been rejected.')
+        % {"amount": f"{withdrawal.amount:,.2f}"},
+        notification_type="error",
+        link=reverse("dash:wallet_detail"),
+    )
+    return JsonResponse({"success": True, "message": _("Withdrawal rejected.")})
 
 
 @role_required(allowed_roles=BUSINESS_ROLES)
@@ -402,43 +434,37 @@ def request_withdrawal(request):
     if request.method != "POST":
         return JsonResponse({"success": False}, status=400)
 
-    try:
-        amount = Decimal(str(request.POST.get("amount", 0)))
-    except (ValueError, TypeError, Decimal.InvalidOperation):
-        return JsonResponse({"success": False, "errors": {"amount": [_("Invalid amount.")]}})
+    amount = _parse_amount(request.POST.get("amount"))
+    if amount is None:
+        return JsonResponse({"success": False, "errors": {"amount": [_("Enter a positive amount.")]}})
 
-    if amount <= 0:
-        return JsonResponse({"success": False, "errors": {"amount": [_("Amount must be positive.")]}})
-
-    wallet, _wcreated = Wallet.objects.get_or_create(user=request.user)
-    if amount > wallet.balance:
-        return JsonResponse({"success": False, "errors": {"amount": [_("Insufficient balance.")]}})
-
-    is_admin = request.user.profile.role == ADMIN
-
-    if is_admin:
-        wallet.balance -= amount
-        wallet.save(update_fields=["balance"])
+    profile = getattr(request.user, "profile", None)
+    is_admin = request.user.is_superuser or (profile is not None and profile.role == ADMIN)
+    Wallet.objects.get_or_create(user=request.user)
+    with db_transaction.atomic():
+        wallet = Wallet.objects.select_for_update().get(user=request.user)
+        # Pending requests are reserved so the same balance cannot be requested twice.
+        if amount > wallet.balance - _reserved(wallet):
+            return JsonResponse({"success": False, "errors": {"amount": [_("Insufficient balance.")]}})
+        if is_admin:
+            wallet.balance -= amount
+            wallet.save(update_fields=["balance"])
         Transaction.objects.create(
             wallet=wallet,
             transaction_type=Transaction.TransactionType.WITHDRAWAL,
             amount=amount,
-            description=_("Admin withdrawal — %(amount)s DZD") % {"amount": amount},
-            status=Transaction.TransactionStatus.COMPLETED,
+            description=(_("Admin withdrawal — %(amount)s DZD") if is_admin
+                         else _("Withdrawal request for %(amount)s DZD")) % {"amount": amount},
+            status=(Transaction.TransactionStatus.COMPLETED if is_admin
+                    else Transaction.TransactionStatus.PENDING),
         )
+
+    if is_admin:
         return JsonResponse({
             "success": True,
             "message": _("Withdrawal completed."),
         })
     else:
-        Transaction.objects.create(
-            wallet=wallet,
-            transaction_type=Transaction.TransactionType.WITHDRAWAL,
-            amount=amount,
-            description=_("Withdrawal request for %(amount)s DZD") % {"amount": amount},
-            status=Transaction.TransactionStatus.PENDING,
-        )
-
         for admin in User.objects.filter(is_superuser=True):
             notify_user(
                 admin,
@@ -461,12 +487,25 @@ def clear_wallet(request, user_id):
     if request.method != "POST":
         return JsonResponse({"success": False}, status=400)
 
-    wallet = get_object_or_404(Wallet, user_id=user_id)
-    wallet.balance = Decimal("0.00")
-    wallet.pending_balance = Decimal("0.00")
-    wallet.save(update_fields=["balance", "pending_balance"])
-
-    wallet.transactions.all().delete()
+    with db_transaction.atomic():
+        wallet = get_object_or_404(Wallet.objects.select_for_update(), user_id=user_id)
+        previous = wallet.balance
+        wallet.balance = Decimal("0.00")
+        wallet.pending_balance = Decimal("0.00")
+        wallet.save(update_fields=["balance", "pending_balance"])
+        # The history is kept (accounting trail); the reset is recorded as an adjustment.
+        wallet.transactions.filter(
+            transaction_type=Transaction.TransactionType.WITHDRAWAL,
+            status=Transaction.TransactionStatus.PENDING,
+        ).update(status=Transaction.TransactionStatus.FAILED)
+        if previous:
+            Transaction.objects.create(
+                wallet=wallet,
+                transaction_type=Transaction.TransactionType.ADJUSTMENT,
+                amount=previous,
+                description=_("Balance reset to 0 by %(admin)s") % {"admin": request.user.get_username()},
+                status=Transaction.TransactionStatus.COMPLETED,
+            )
 
     return JsonResponse({
         "success": True,
@@ -480,30 +519,25 @@ def admin_withdraw_from_user(request, user_id):
     if request.method != "POST":
         return JsonResponse({"success": False}, status=400)
 
-    try:
-        amount = Decimal(str(request.POST.get("amount", 0)))
-    except (ValueError, TypeError, Decimal.InvalidOperation):
-        return JsonResponse({"success": False, "errors": {"amount": [_("Invalid amount.")]}})
-
-    if amount <= 0:
-        return JsonResponse({"success": False, "errors": {"amount": [_("Amount must be positive.")]}})
+    amount = _parse_amount(request.POST.get("amount"))
+    if amount is None:
+        return JsonResponse({"success": False, "errors": {"amount": [_("Enter a positive amount.")]}})
 
     target_user = get_object_or_404(User, pk=user_id)
-    wallet, _created = Wallet.objects.get_or_create(user=target_user)
-
-    if amount > wallet.balance:
-        return JsonResponse({"success": False, "errors": {"amount": [_("Insufficient balance.")]}})
-
-    wallet.balance -= amount
-    wallet.save(update_fields=["balance"])
-
-    Transaction.objects.create(
-        wallet=wallet,
-        transaction_type=Transaction.TransactionType.WITHDRAWAL,
-        amount=amount,
-        description=_("Admin withdrawal — %(amount)s DZD") % {"amount": f"{amount:,.0f}"},
-        status=Transaction.TransactionStatus.COMPLETED,
-    )
+    Wallet.objects.get_or_create(user=target_user)
+    with db_transaction.atomic():
+        wallet = Wallet.objects.select_for_update().get(user=target_user)
+        if amount > wallet.balance - _reserved(wallet):
+            return JsonResponse({"success": False, "errors": {"amount": [_("Insufficient balance.")]}})
+        wallet.balance -= amount
+        wallet.save(update_fields=["balance"])
+        Transaction.objects.create(
+            wallet=wallet,
+            transaction_type=Transaction.TransactionType.WITHDRAWAL,
+            amount=amount,
+            description=_("Admin withdrawal — %(amount)s DZD") % {"amount": f"{amount:,.0f}"},
+            status=Transaction.TransactionStatus.COMPLETED,
+        )
 
     notify_user(
         target_user,

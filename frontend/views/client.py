@@ -9,7 +9,10 @@ from decimal import Decimal
 
 from user_auth.models import UserProfile
 from dashboard.models import Product, PartnerPrice, Order, Notification
-from dashboard.utils import notify_user, check_low_stock, compute_order_profit, credit_wallets_for_order
+from dashboard.utils import notify_user, check_low_stock, snapshot_order, PricingError
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -46,6 +49,8 @@ def client_catalog(request):
         return redirect("frontend:home")
 
     creator = profile.created_by
+    if creator is None:
+        return JsonResponse({"success": False, "errors": {"system": [_("Your account is not linked to a store. Please contact us.")]}})
     creator_name = creator.user.get_full_name() or creator.user.username
     catalog = []
 
@@ -143,6 +148,8 @@ def client_order_create(request):
         return JsonResponse({"success": False, "errors": errors})
 
     creator = profile.created_by
+    if creator is None:
+        return JsonResponse({"success": False, "errors": {"system": [_("Your account is not linked to a store. Please contact us.")]}})
     creator_name = creator.user.get_full_name() or creator.user.username
 
     try:
@@ -211,10 +218,9 @@ def client_order_create(request):
                 referred_by=referred_by,
             )
 
-            order.status = Order.OrderStatus.DELIVERED
-            compute_order_profit(order)
-            credit_wallets_for_order(order)
-            order.save()
+            # The order follows the normal flow (validation, shipping, delivery);
+            # commissions are paid only once it is really delivered.
+            snapshot_order(order)
 
             admins = User.objects.filter(is_superuser=True)
             for admin in admins:
@@ -248,8 +254,11 @@ def client_order_create(request):
                 "redirect_url": reverse("frontend:client_orders"),
             })
 
-    except Exception as e:
-        return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+    except PricingError:
+        return JsonResponse({"success": False, "errors": {"system": [_("This product's price is not configured correctly. Please contact the store.")]}})
+    except Exception:
+        logger.exception("client order failed")
+        return JsonResponse({"success": False, "errors": {"system": [_("The order could not be placed. Please try again.")]}})
 
 
 @login_required

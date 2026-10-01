@@ -129,13 +129,10 @@
                         <div class="d-flex align-items-center gap-3 mt-3">
                             <span class="h3 fw-black mb-0" style="color:{{ store.header_bg_color }};">
                                 {% if partner_price and partner_price.retail_price %}
-                                    {{ partner_price.retail_price|floatformat:0 }}
-                                {% elif product.loft_retail_price %}
-                                    {{ product.loft_retail_price|floatformat:0 }}
+                                    {% shop_amount partner_price.retail_price product.price_eur %}
                                 {% else %}
-                                    0
+                                    {% shop_amount product.loft_retail_price product.price_eur %}
                                 {% endif %}
-                                <small class="fs-6 fw-bold">DZD</small>
                             </span>
                             <span class="d-flex align-items-center gap-1 small fw-bold">
                                 <span class="dot-pulse" id="affStockDot" style="background:{% if product.available_stock > 0 %}#198754{% else %}#6c757d{% endif %};--pulse-color:{% if product.available_stock > 0 %}#198754{% else %}#6c757d{% endif %};"></span>

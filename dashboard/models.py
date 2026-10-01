@@ -178,6 +178,16 @@ class Product(models.Model):
         help_text=_("Default retail price for end clients (set by admin)")
     )
     rejection_reason = models.TextField(_("Rejection Reason"), blank=True)
+    price_eur = models.DecimalField(
+        _("Price (EUR, outside Algeria)"), max_digits=10, decimal_places=2,
+        blank=True, null=True,
+        help_text=_("Shown to visitors outside Algeria. Leave empty to show the DZD price.")
+    )
+    pro_price = models.DecimalField(
+        _("Professional Price (DZD)"), max_digits=10, decimal_places=2,
+        blank=True, null=True,
+        help_text=_("Price for approved professional clients buying directly. Leave empty to use the retail price.")
+    )
 
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -406,6 +416,14 @@ class Order(models.Model):
         help_text=_("Provider's network profit (provider_wholesale - supplier_base) from this order")
     )
 
+    currency = models.CharField(
+        _("Currency"), max_length=3, default="DZD",
+        help_text=_("Currency shown to the customer (EUR for visitors outside Algeria)")
+    )
+    total_eur = models.DecimalField(
+        _("Total (EUR)"), max_digits=12, decimal_places=2, blank=True, null=True
+    )
+
     status = models.CharField(
         max_length=20, 
         choices=OrderStatus.choices, 
@@ -427,9 +445,10 @@ class Order(models.Model):
         return sum(item.get("quantity", 0) for item in self.items)
 
     def total_price(self):
+        from decimal import Decimal
         return sum(
-            (float(item.get("price", 0)) or 0) * int(item.get("quantity", 1))
-            for item in self.items
+            (Decimal(str(item.get("price", 0) or 0)) * int(item.get("quantity", 1)) for item in self.items),
+            Decimal("0.00"),
         )
 
     def save(self, *args, **kwargs):

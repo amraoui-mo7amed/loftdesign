@@ -131,8 +131,7 @@
                             {% endif %}
                         </div>
                         <div class="cart-page-item-total">
-                            <span class="cart-page-item-subtotal" id="subtotal-{{ item.id }}">{{ item.subtotal|floatformat:0 }}</span>
-                            <small>DZD</small>
+                            <span class="cart-page-item-subtotal" id="subtotal-{{ item.id }}">{{ item.subtotal_display }}</span>
                         </div>
                     </div>
                     {% endfor %}
@@ -147,7 +146,7 @@
                     </div>
                     <div class="cart-summary-row">
                         <span>{% trans "Subtotal" %}</span>
-                        <span class="fw-black" id="summaryTotal">{{ cart_total_price|floatformat:0 }} DZD</span>
+                        <span class="fw-black" id="summaryTotal">{{ cart_total_display }}</span>
                     </div>
                     <div class="cart-summary-divider"></div>
                     <a href="{% url 'frontend:checkout' %}" class="btn btn-dark w-100 rounded-pill py-3 fw-bold shadow">

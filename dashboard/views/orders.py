@@ -102,7 +102,13 @@ ORDER_TRANSITIONS = {
             Order.OrderStatus.SUPPLIER_FULFILLING,
         ],
     },
-    _RC.SEMI_AFFILIATE.value: {},
+    # Affiliates (and their semi-affiliates) confirm the orders they brought in.
+    _RC.AFFILIATE.value: {
+        Order.OrderStatus.PENDING: [Order.OrderStatus.STORE_VALIDATED],
+    },
+    _RC.SEMI_AFFILIATE.value: {
+        Order.OrderStatus.PENDING: [Order.OrderStatus.STORE_VALIDATED],
+    },
 }
 
 
@@ -304,39 +310,63 @@ def affiliate_cart_checkout(request):
         if not cart_items:
             return JsonResponse({"success": False, "errors": [_("Cart is empty.")]})
 
-        with transaction.atomic():
-            order_items = []
-            product_titles = []
-            for item_data in cart.values():
-                product = Product.objects.filter(pk=item_data.get("product_id")).first()
-                if not product:
-                    continue
-                price = Decimal(str(item_data.get("retail_price", 0)))
-                qty = int(item_data.get("quantity", 1))
-                order_items.append({
-                    "product_id": product.pk,
-                    "title": product.title,
-                    "price": str(price),
-                    "quantity": qty,
-                    "thumbnail": product.thumbnail.url if product.thumbnail else "",
-                })
-                product_titles.append(product.title)
-                product.quantity -= qty
-                product.save()
-                check_low_stock(product)
+        from dashboard.utils import snapshot_order, PricingError
+        product_titles = []
+        try:
+            with transaction.atomic():
+                order_items = []
+                for item_data in cart.values():
+                    product = Product.objects.select_for_update().filter(
+                        pk=item_data.get("product_id"), is_active=True,
+                        status=Product.ProductStatus.APPROVED,
+                    ).first()
+                    if not product:
+                        raise ValueError(_("A product in your cart is no longer available."))
+                    pp = PartnerPrice.objects.filter(
+                        product=product, buyer=request.user, is_active=True
+                    ).order_by("-updated_at").first()
+                    loft_price = getattr(product, "loft_price", None)
+                    # Price is read again from the catalog, never trusted from the session.
+                    price = (pp.retail_price if pp and pp.retail_price else None) or (
+                        loft_price.loft_retail_price if loft_price else None)
+                    if not price:
+                        raise ValueError(_("No price is set for %(title)s.") % {"title": product.title})
+                    try:
+                        qty = int(item_data.get("quantity", 1))
+                    except (TypeError, ValueError):
+                        qty = 0
+                    if qty < 1:
+                        raise ValueError(_("Invalid quantity."))
+                    if product.quantity < qty:
+                        raise ValueError(_("Only %(stock)s available for %(title)s.") % {"stock": product.quantity, "title": product.title})
+                    order_items.append({
+                        "product_id": product.pk,
+                        "title": product.title,
+                        "price": str(Decimal(str(price)).quantize(Decimal("0.01"))),
+                        "quantity": qty,
+                        "thumbnail": product.thumbnail.url if product.thumbnail else "",
+                    })
+                    product_titles.append(product.title)
+                    product.quantity -= qty
+                    product.save(update_fields=["quantity"])
+                    check_low_stock(product)
 
-            order = Order.objects.create(
-                buyer=request.user,
-                items=order_items,
-                customer_name=name,
-                customer_phone=phone,
-                customer_address=address,
-                wilaya=wilaya,
-                commune=commune,
-                referred_by=profile.affiliate_code,
-            )
- 
- 
+                order = Order.objects.create(
+                    buyer=request.user,
+                    items=order_items,
+                    customer_name=name,
+                    customer_phone=phone,
+                    customer_address=address or "",
+                    wilaya=wilaya or "",
+                    commune=commune or "",
+                    referred_by=profile.affiliate_code,
+                )
+                snapshot_order(order)
+        except PricingError:
+            return JsonResponse({"success": False, "errors": [_("Your selling price is below your purchase price for one of the products. Update your prices and try again.")]})
+        except ValueError as e:
+            return JsonResponse({"success": False, "errors": [str(e)]})
+
         request.session[DASHBOARD_CART_SESSION_KEY] = {}
         request.session.pop("affiliate_code", None)
         request.session.modified = True
@@ -556,17 +586,34 @@ def order_update_status(request, pk):
             if order.referred_by not in valid_codes:
                 return JsonResponse({"success": False, "message": _("Permission denied.")})
 
-        old_display = order.get_status_display()
-        order.status = new_status
+        old_status = order.status
 
         with transaction.atomic():
-            # If order is marked DELIVERED, compute profit and credit wallets
-            if new_status == Order.OrderStatus.DELIVERED:
-                from dashboard.utils import compute_order_profit, credit_wallets_for_order
-                compute_order_profit(order)
-                credit_wallets_for_order(order)
+            # Lock the row: two people clicking at the same time must not both
+            # move the order (and pay commissions or restock twice).
+            order = Order.objects.select_for_update().get(pk=order.pk)
+            if order.status != old_status:
+                return JsonResponse({
+                    "success": False,
+                    "message": _("This order was just updated by someone else. Please reload the page."),
+                })
+            order.status = new_status
+            order.save(update_fields=["status"])
 
-            order.save()
+            if new_status == Order.OrderStatus.DELIVERED:
+                from dashboard.utils import compute_order_profit, credit_wallets_for_order, PricingError
+                try:
+                    compute_order_profit(order)
+                    credit_wallets_for_order(order)
+                except PricingError:
+                    transaction.set_rollback(True)
+                    return JsonResponse({
+                        "success": False,
+                        "message": _("The prices of this order are inconsistent (a commission would be negative). Fix the product prices, then try again."),
+                    })
+            elif new_status == Order.OrderStatus.CANCELLED:
+                from dashboard.utils import restock_order
+                restock_order(order)
 
             # ── Find all relevant parties for notifications ─────────
             admins = User.objects.filter(is_superuser=True)

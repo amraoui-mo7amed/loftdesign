@@ -10,6 +10,8 @@ from decimal import Decimal
 from dashboard.models import Product, ProductItem, Order, PartnerPrice, Notification
 from user_auth.models import UserProfile
 from dashboard.utils import get_algeria_locations, notify_user, resolve_price, check_low_stock, check_low_stock_product_item
+from frontend.checkout import CheckoutError, create_customer_order, validate_customer
+from frontend.pricing import customer_price, visitor_currency
 
 
 CART_SESSION_KEY = "cart"
@@ -29,31 +31,36 @@ def _cart_total_items(cart):
 
 
 def _resolve_for_cart(request, product):
-    """Resolve price for the current request context — uses affiliate retail price if referred."""
-    affiliate_code = request.session.get("affiliate_code")
-    if affiliate_code:
-        try:
-            aff_profile = UserProfile.objects.get(affiliate_code=affiliate_code, is_approved=True)
-            pp = PartnerPrice.objects.filter(
-                product=product, buyer=aff_profile.user, is_active=True
-            ).first()
-            if pp and pp.retail_price is not None:
-                return pp.retail_price
-        except UserProfile.DoesNotExist:
-            pass
-    seller_user = product.user or User.objects.filter(is_superuser=True).first()
-    buyer_user = request.user if request.user.is_authenticated else None
-    return resolve_price(product, seller_user, buyer_user)
+    """Price for the current visitor (affiliate link, professional account, public)."""
+    return customer_price(request, product)["dzd"]
 
 
 def _cart_total_price(cart):
-    total = 0
+    total = Decimal("0")
     for item_data in cart.values():
-        product = Product.objects.filter(pk=item_data["product_id"]).first()
-        if product:
-            price = item_data.get("resolved_price") or product.loft_retail_price or 0
-            total += float(price) * item_data["quantity"]
+        total += Decimal(str(item_data.get("resolved_price") or 0)) * item_data["quantity"]
     return total
+
+
+def _cart_in_eur(request, cart):
+    """True when the visitor is abroad and every cart line has a euro price."""
+    return bool(cart) and visitor_currency(request) == "EUR" and all(i.get("price_eur") for i in cart.values())
+
+
+def _fmt(request, cart, dzd, eur):
+    if _cart_in_eur(request, cart) and eur is not None:
+        return f"{Decimal(eur):,.2f}".replace(",", "\u202f").replace(".", ",") + " €"
+    return f"{Decimal(dzd):,.0f}".replace(",", "\u202f") + " DZD"
+
+
+def _cart_totals(request, cart):
+    dzd = _cart_total_price(cart)
+    eur = sum((Decimal(i["price_eur"]) * i["quantity"] for i in cart.values() if i.get("price_eur")), Decimal("0"))
+    return {
+        "cart_total": _cart_total_items(cart),
+        "cart_total_price": str(dzd),
+        "cart_total_display": _fmt(request, cart, dzd, eur),
+    }
 
 
 def _get_cart_items_data(request):
@@ -64,7 +71,8 @@ def _get_cart_items_data(request):
         if not product:
             continue
         price = item_data.get("resolved_price") or product.loft_retail_price or "0"
-        subtotal = float(price) * item_data["quantity"]
+        subtotal = Decimal(str(price)) * item_data["quantity"]
+        eur = Decimal(item_data["price_eur"]) if item_data.get("price_eur") else None
         display_title = product.title
         display_thumbnail = product.thumbnail.url if product.thumbnail else ""
         available_variants = []
@@ -93,6 +101,8 @@ def _get_cart_items_data(request):
             "quantity": item_data["quantity"],
             "subtotal": subtotal,
             "subtotal_str": f"{subtotal:.0f}",
+            "price_display": _fmt(request, cart, price, eur),
+            "subtotal_display": _fmt(request, cart, subtotal, eur * item_data["quantity"] if eur is not None else None),
             "thumbnail": display_thumbnail,
             "available_variants": available_variants,
         })
@@ -103,9 +113,12 @@ def _get_cart_items_data(request):
 def cart_add(request):
     product_id = request.POST.get("product_id")
     item_id = request.POST.get("item_id")
-    quantity = int(request.POST.get("quantity", 1))
+    try:
+        quantity = int(request.POST.get("quantity", 1))
+    except (TypeError, ValueError):
+        return JsonResponse({"success": False, "message": _("Invalid quantity.")})
 
-    product = get_object_or_404(Product, pk=product_id, is_active=True)
+    product = get_object_or_404(Product, pk=product_id, is_active=True, status=Product.ProductStatus.APPROVED)
     if quantity < 1:
         return JsonResponse({"success": False, "message": _("Invalid quantity.")})
 
@@ -118,6 +131,14 @@ def cart_add(request):
             return JsonResponse({
                 "success": False,
                 "message": _("Requested quantity exceeds available stock for this variant.")
+            })
+
+    else:
+        in_cart = _get_cart(request).get(str(product_id), {}).get("quantity", 0)
+        if product.quantity < quantity + in_cart:
+            return JsonResponse({
+                "success": False,
+                "message": _("Only %(stock)s available for this product.") % {"stock": product.quantity}
             })
 
     # Resolve price before adding
@@ -133,6 +154,7 @@ def cart_add(request):
 
     if key in cart:
         cart[key]["quantity"] += quantity
+        cart[key]["resolved_price"] = str(resolved)
         session_code = request.session.get("affiliate_code", "")
         if session_code:
             cart[key]["affiliate_code"] = session_code
@@ -147,14 +169,14 @@ def cart_add(request):
             cart[key]["item_id"] = item.pk
             cart[key]["item_name"] = item.name
             cart[key]["item_thumbnail"] = item.thumbnail.url if item.thumbnail else ""
+    cart[key]["price_eur"] = str(product.price_eur) if product.price_eur else ""
 
     _save_cart(request, cart)
 
     return JsonResponse({
         "success": True,
         "message": _("%(title)s added to cart.") % {"title": product.title},
-        "cart_total": _cart_total_items(cart),
-        "cart_total_price": str(_cart_total_price(cart)),
+        **_cart_totals(request, cart),
     })
 
 
@@ -172,11 +194,11 @@ def cart_switch_variant(request):
     if old_key not in cart:
         return JsonResponse({"success": False, "message": _("Item not found in cart.")})
 
-    new_variant = get_object_or_404(ProductItem, pk=new_item_id, is_active=True)
+    entry = cart[old_key]
+    new_variant = get_object_or_404(ProductItem, pk=new_item_id, product_id=entry["product_id"], is_active=True)
     if new_variant.stock_quantity < 1:
         return JsonResponse({"success": False, "message": _("This variant is out of stock.")})
 
-    entry = cart[old_key]
     new_key = str(new_item_id)
     entry["item_id"] = new_variant.pk
     entry["item_name"] = new_variant.name
@@ -194,21 +216,26 @@ def cart_switch_variant(request):
 
     items_data = _get_cart_items_data(request)
     updated_item = next((i for i in items_data if str(i["id"]) == str(new_item_id)), None)
+    if updated_item:
+        updated_item = {k: (str(v) if isinstance(v, Decimal) else v) for k, v in updated_item.items() if k != "product"}
 
     return JsonResponse({
         "success": True,
         "message": _("Variant changed to %(name)s.") % {"name": new_variant.name},
         "item": updated_item,
-        "cart_total": _cart_total_items(cart),
-        "cart_total_price": str(_cart_total_price(cart)),
+        **_cart_totals(request, cart),
         "item_subtotal": str(item_subtotal),
+        "item_subtotal_display": updated_item["subtotal_display"] if updated_item else "",
     })
 
 
 @require_POST
 def cart_update(request):
     item_id = request.POST.get("item_id")
-    quantity = int(request.POST.get("quantity", 1))
+    try:
+        quantity = int(request.POST.get("quantity", 1))
+    except (TypeError, ValueError):
+        return JsonResponse({"success": False, "message": _("Invalid quantity.")})
 
     cart = _get_cart(request)
     key = str(item_id)
@@ -222,8 +249,7 @@ def cart_update(request):
         return JsonResponse({
             "success": True,
             "message": _("Item removed."),
-            "cart_total": _cart_total_items(cart),
-            "cart_total_price": str(_cart_total_price(cart)),
+            **_cart_totals(request, cart),
             "removed": True,
         })
 
@@ -238,6 +264,13 @@ def cart_update(request):
                     "Only %(stock)s available for this variant."
                 ) % {"stock": variant.stock_quantity}
             })
+    elif quantity > entry["quantity"]:
+        product = Product.objects.filter(pk=entry["product_id"]).first()
+        if product and product.quantity < quantity:
+            return JsonResponse({
+                "success": False,
+                "message": _("Only %(stock)s available for this product.") % {"stock": product.quantity}
+            })
 
     cart[key]["quantity"] = quantity
     _save_cart(request, cart)
@@ -246,12 +279,13 @@ def cart_update(request):
     unit_price = Decimal(str(cart_item.get("resolved_price", 0))) or Decimal("0")
     item_subtotal = unit_price * quantity
 
+    eur = Decimal(cart_item["price_eur"]) * quantity if cart_item.get("price_eur") else None
     return JsonResponse({
         "success": True,
         "message": _("Cart updated."),
-        "cart_total": _cart_total_items(cart),
-        "cart_total_price": str(_cart_total_price(cart)),
+        **_cart_totals(request, cart),
         "item_subtotal": str(item_subtotal),
+        "item_subtotal_display": _fmt(request, cart, item_subtotal, eur),
     })
 
 
@@ -268,8 +302,7 @@ def cart_remove(request):
     return JsonResponse({
         "success": True,
         "message": _("Item removed from cart."),
-        "cart_total": _cart_total_items(cart),
-        "cart_total_price": str(_cart_total_price(cart)),
+        **_cart_totals(request, cart),
     })
 
 
@@ -281,7 +314,8 @@ def cart_load(request):
         if not product:
             continue
         price = item_data.get("resolved_price") or product.loft_retail_price or "0"
-        subtotal = float(price) * item_data["quantity"]
+        subtotal = Decimal(str(price)) * item_data["quantity"]
+        eur = Decimal(item_data["price_eur"]) if item_data.get("price_eur") else None
         display_title = product.title
         display_thumbnail = product.thumbnail.url if product.thumbnail else ""
         if item_data.get("item_id"):
@@ -295,6 +329,7 @@ def cart_load(request):
             "price": str(price),
             "quantity": item_data["quantity"],
             "subtotal": str(subtotal),
+            "price_display": _fmt(request, cart, price, eur),
             "thumbnail": display_thumbnail,
             "url": product.get_absolute_url() if hasattr(product, "get_absolute_url") else "#",
         })
@@ -304,6 +339,7 @@ def cart_load(request):
         "items": items,
         "total_items": _cart_total_items(cart),
         "total_price": str(_cart_total_price(cart)),
+        "total_display": _cart_totals(request, cart)["cart_total_display"],
     })
 
 
@@ -314,6 +350,7 @@ def cart_view(request):
         "items": items_data,
         "cart_total_items": _cart_total_items(cart),
         "cart_total_price": _cart_total_price(cart),
+        "cart_total_display": _cart_totals(request, cart)["cart_total_display"],
     })
 
 
@@ -322,104 +359,61 @@ def cart_checkout(request):
     if not cart:
         return redirect("frontend:cart")
 
+    foreign = visitor_currency(request) == "EUR"
     if request.method == "POST":
-        name = request.POST.get("name")
-        phone = request.POST.get("phone")
-        wilaya = request.POST.get("wilaya")
-        commune = request.POST.get("commune")
-        address = request.POST.get("address")
-
-        with transaction.atomic():
-            order_items = []
-            product_titles = []
-
-            for item_data in list(cart.values()):
-                product = Product.objects.select_for_update().filter(
-                    pk=item_data["product_id"]
-                ).first()
-                if not product:
-                    continue
-
-                price = item_data.get("resolved_price") or str(product.loft_retail_price or "")
-                item_entry = {
-                    "product_id": product.pk,
-                    "title": product.title,
-                    "price": price,
-                    "quantity": item_data["quantity"],
-                    "thumbnail": product.thumbnail.url if product.thumbnail else "",
-                }
-                if item_data.get("item_id"):
-                    item_entry["item_id"] = item_data["item_id"]
-                    item_entry["item_name"] = item_data.get("item_name", "")
-                    variant = ProductItem.objects.select_for_update().filter(
-                        pk=item_data["item_id"]
-                    ).first()
-                    if variant:
-                        item_entry["item_thumbnail"] = variant.thumbnail.url if variant.thumbnail else ""
-                        variant.stock_quantity -= item_data["quantity"]
-                        variant.save()
-                        check_low_stock_product_item(variant)
-                order_items.append(item_entry)
-                product_titles.append(product.title)
-
-                if not item_data.get("item_id"):
-                    product.quantity -= item_data["quantity"]
-                    product.save()
-                    check_low_stock(product)
-
-            if not order_items:
-                return JsonResponse({"success": False, "errors": [_("No valid items in cart.")]})
-
-            referred_by = request.session.get("affiliate_code", "")
-
-            order = Order.objects.create(
-                items=order_items,
-                customer_name=name,
-                customer_phone=phone,
-                customer_address=address,
-                wilaya=wilaya,
-                commune=commune,
-                referred_by=referred_by,
+        customer = {k: (request.POST.get(k) or "").strip() for k in ("name", "phone", "address", "wilaya", "commune")}
+        errors = validate_customer(customer, foreign)
+        if errors:
+            for field_errors in errors.values():
+                messages.error(request, field_errors[0])
+            return redirect("frontend:checkout")
+        lines = [(i["product_id"], i.get("item_id"), i["quantity"]) for i in cart.values()]
+        try:
+            order = create_customer_order(request, lines, customer)
+        except CheckoutError as e:
+            messages.error(request, str(e))
+            return redirect("frontend:cart")
+        name = customer["name"]
+        product_titles = [i["title"] for i in order.items]
+        referred_by = order.referred_by
+        admins = User.objects.filter(is_superuser=True)
+        for admin in admins:
+            notify_user(
+                admin,
+                _("New Order!"),
+                _("New order for %(products)s by %(name)s") % {
+                    "products": ", ".join(product_titles),
+                    "name": name
+                },
+                link="/dashboard/orders/"
             )
- 
-            admins = User.objects.filter(is_superuser=True)
-            for admin in admins:
-                notify_user(
-                    admin,
-                    _("New Order!"),
-                    _("New order for %(products)s by %(name)s") % {
-                        "products": ", ".join(product_titles),
-                        "name": name
-                    },
-                    link="/dashboard/orders/"
-                )
 
-            if referred_by:
-                try:
-                    aff_profile = UserProfile.objects.get(affiliate_code=referred_by, is_approved=True)
+        if referred_by:
+            try:
+                aff_profile = UserProfile.objects.get(affiliate_code=referred_by, is_approved=True)
+                notify_user(
+                    user=aff_profile.user,
+                    title=_("New Order via Your Store"),
+                    message=_("%(name)s placed an order for %(products)s through your store.")
+                    % {"name": name, "products": ", ".join(product_titles)},
+                    notification_type=Notification.NotificationType.INFO,
+                    link="/dashboard/orders/",
+                )
+                if aff_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE and aff_profile.parent_affiliate:
                     notify_user(
-                        user=aff_profile.user,
-                        title=_("New Order via Your Store"),
-                        message=_("%(name)s placed an order for %(products)s through your store.")
-                        % {"name": name, "products": ", ".join(product_titles)},
+                        user=aff_profile.parent_affiliate.user,
+                        title=_("New Order via Semi-Affiliate"),
+                        message=_("%(name)s placed an order for %(products)s through %(semi)s's store.")
+                        % {"name": name, "products": ", ".join(product_titles), "semi": aff_profile.user.get_full_name() or aff_profile.user.username},
                         notification_type=Notification.NotificationType.INFO,
                         link="/dashboard/orders/",
                     )
-                    if aff_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE and aff_profile.parent_affiliate:
-                        notify_user(
-                            user=aff_profile.parent_affiliate.user,
-                            title=_("New Order via Semi-Affiliate"),
-                            message=_("%(name)s placed an order for %(products)s through %(semi)s's store.")
-                            % {"name": name, "products": ", ".join(product_titles), "semi": aff_profile.user.get_full_name() or aff_profile.user.username},
-                            notification_type=Notification.NotificationType.INFO,
-                            link="/dashboard/orders/",
-                        )
-                except UserProfile.DoesNotExist:
-                    pass
+            except UserProfile.DoesNotExist:
+                pass
 
-            request.session[CART_SESSION_KEY] = {}
-            request.session.pop("affiliate_code", None)
-            request.session.modified = True
+        request.session[CART_SESSION_KEY] = {}
+        request.session.pop("affiliate_code", None)
+        request.session.modified = True
 
         messages.success(request, _("Order placed successfully!"))
         return redirect("frontend:home")
@@ -429,6 +423,8 @@ def cart_checkout(request):
     return render(request, "cart/checkout.html", {
         "cart_items": items_data,
         "cart_total_price": _cart_total_price(cart),
+        "cart_total_display": _cart_totals(request, cart)["cart_total_display"],
+        "foreign": foreign,
         "wilaya_options": wilaya_options,
         "communes_data": communes_data,
     })

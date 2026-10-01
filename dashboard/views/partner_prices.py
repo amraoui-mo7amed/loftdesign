@@ -407,22 +407,34 @@ def catalog_update_pricing(request, product_pk):
             "errors": {"system": [_("Product not in your catalog.")]},
         })
 
-    wholesale = request.POST.get("wholesale_price")
-    retail = request.POST.get("retail_price")
+    from dashboard.views.products import _dec
+    errors = {}
+    wholesale = _dec(request.POST.get("wholesale_price"), "wholesale_price", errors)
+    retail = _dec(request.POST.get("retail_price"), "retail_price", errors)
+    # Never sell below what you pay: a wholesale or retail price under the
+    # purchase price would make the affiliate's (and the semi's) commission
+    # negative and break the order breakdown.
+    floor = pp.purchase_price or 0
+    new_w = wholesale if wholesale is not None else pp.wholesale_price
+    new_r = retail if retail is not None else pp.retail_price
+    if new_w is not None and new_w < floor:
+        errors.setdefault("wholesale_price", [_("Wholesale price must be at least your purchase price (%(p)s DZD).") % {"p": floor}])
+    if new_r is not None and new_r < floor:
+        errors.setdefault("retail_price", [_("Retail price must be at least your purchase price (%(p)s DZD).") % {"p": floor}])
+    if new_w is not None and new_r is not None and new_r < new_w:
+        errors.setdefault("retail_price", [_("Retail price must be at least the wholesale price")])
+    if errors:
+        return JsonResponse({"success": False, "errors": errors})
 
     changes = []
     old_wholesale = pp.wholesale_price
     old_retail = pp.retail_price
-    if wholesale is not None and wholesale != "":
-        wholesale = float(wholesale) if wholesale else None
-        if wholesale != pp.wholesale_price:
-            pp.wholesale_price = wholesale
-            changes.append("wholesale")
-    if retail is not None and retail != "":
-        retail = float(retail) if retail else None
-        if retail != pp.retail_price:
-            pp.retail_price = retail
-            changes.append("retail")
+    if wholesale is not None and wholesale != pp.wholesale_price:
+        pp.wholesale_price = wholesale
+        changes.append("wholesale")
+    if retail is not None and retail != pp.retail_price:
+        pp.retail_price = retail
+        changes.append("retail")
     if changes:
         from dashboard.utils import log_price_change
         if "wholesale" in changes:

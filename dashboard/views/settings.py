@@ -6,6 +6,9 @@ from django.urls import reverse
 from dashboard.models import SiteSettings, SiteSettingsSliderImage, ContactRequest
 from dashboard.decorator import role_required
 from user_auth.models import UserProfile
+import logging
+
+logger = logging.getLogger(__name__)
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def settings_update(request):
@@ -34,7 +37,8 @@ def settings_update(request):
                 "redirect_url": reverse("dash:settings_update")
             })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+            logger.exception("dashboard/views/settings.py: request failed")
+            return JsonResponse({"success": False, "errors": {"system": [_("Something went wrong. Please try again.")]}})
 
     context = {
         "settings": settings_obj,

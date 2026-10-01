@@ -264,7 +264,7 @@
                                 </button>
                             </div>
                             <div class="p-4">
-                                        {% if product.loft_retail_price %}<small class="fw-bold">{{ product.loft_retail_price|floatformat:0 }} DZD</small>{% endif %}
+                                        <small class="fw-bold">{% shop_price product %}</small>
 
                                 <h5 class="fw-black mb-2">{{ product.title }}</h5>
                                 <p class="text-muted small mb-4 line-height-relaxed">{{ product.description|truncatewords:10 }}</p>

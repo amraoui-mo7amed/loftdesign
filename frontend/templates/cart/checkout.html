@@ -45,6 +45,16 @@
                                 <label class="form-label fw-bold small">{% trans "Phone Number" %}</label>
                                 <input type="tel" name="phone" class="form-control rounded-3" required>
                             </div>
+                            {% if foreign %}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">{% trans "Country" %}</label>
+                                <input type="text" name="wilaya" class="form-control rounded-3" autocomplete="country-name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">{% trans "City" %}</label>
+                                <input type="text" name="commune" class="form-control rounded-3" autocomplete="address-level2" required>
+                            </div>
+                            {% else %}
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">{% trans "Wilaya" %}</label>
                                 <div class="searchable-select-wrapper" id="wilaya-searchable">
@@ -83,6 +93,7 @@
                                     <input type="hidden" name="commune" id="communeSelect_input" required>
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="col-12">
                                 <label class="form-label fw-bold small">{% trans "Address" %}</label>
                                 <textarea name="address" class="form-control rounded-3" rows="2" required></textarea>
@@ -107,7 +118,7 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-1">
                                         <span class="text-muted small">{% trans "Qty" %}: {{ item.quantity }}</span>
-                                        <span class="fw-bold small">{{ item.subtotal_str }} DZD</span>
+                                        <span class="fw-bold small">{{ item.subtotal_display }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +126,7 @@
                         {% endfor %}
                         <div class="border-top mt-3 pt-3 d-flex justify-content-between">
                             <span class="fw-bold">{% trans "Total" %}</span>
-                            <span class="fw-black h5" id="orderTotal">{{ cart_total_price|floatformat:0 }} DZD</span>
+                            <span class="fw-black h5" id="orderTotal">{{ cart_total_display }}</span>
                         </div>
                         <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 mt-4 fw-bold shadow">
                             <i class="fas fa-lock me-2"></i>{% trans "Confirm Order (COD)" %}

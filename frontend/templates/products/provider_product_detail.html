@@ -128,12 +128,7 @@
                         <h1 class="fw-black mb-2" style="font-size:2rem;line-height:1.1;">{{ product.title }}</h1>
                         <div class="d-flex align-items-center gap-3 mt-3">
                             <span class="h3 fw-black mb-0" style="color:{{ store.header_bg_color }};">
-                                {% if product.loft_retail_price %}
-                                    {{ product.loft_retail_price|floatformat:0 }}
-                                {% else %}
-                                    0
-                                {% endif %}
-                                <small class="fs-6 fw-bold">DZD</small>
+                                {% shop_amount product.loft_retail_price product.price_eur %}
                             </span>
                             <span class="d-flex align-items-center gap-1 small fw-bold">
                                 <span class="dot-pulse" id="affStockDot" style="background:{% if product.available_stock > 0 %}#198754{% else %}#6c757d{% endif %};--pulse-color:{% if product.available_stock > 0 %}#198754{% else %}#6c757d{% endif %};"></span>

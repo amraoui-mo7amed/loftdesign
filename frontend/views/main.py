@@ -7,6 +7,9 @@ from dashboard.utils import notify_user
 from dashboard.models import Notification
 from django.contrib.auth.models import User
 from user_auth.utils import create_affiliate_account
+import logging
+
+logger = logging.getLogger(__name__)
 
 def home_view(request):
     if request.session.get("affiliate_code"):
@@ -82,7 +85,8 @@ def contact_request_submit(request):
                 "message": _("Your contact request has been sent successfully. We will get back to you shortly.")
             })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+            logger.exception("frontend/views/main.py: request failed")
+            return JsonResponse({"success": False, "errors": {"system": [_("Something went wrong. Please try again.")]}})
 
     return JsonResponse({"success": False}, status=400)
 
@@ -154,9 +158,10 @@ def affiliate_signup(request):
                 ),
             })
         except Exception as e:
+            logger.exception("frontend/views/main.py: request failed")
             return JsonResponse({
                 "success": False,
-                "errors": {"system": [str(e)]},
+                "errors": {"system": [_("Something went wrong. Please try again.")]},
             })
 
     return JsonResponse({"success": False}, status=400)

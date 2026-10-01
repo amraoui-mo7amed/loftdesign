@@ -11,6 +11,9 @@ from dashboard.decorator import role_required
 from dashboard.utils import notify_user
 from user_auth.models import UserProfile
 from django.contrib.auth.models import User
+import logging
+
+logger = logging.getLogger(__name__)
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def category_list(request):
@@ -38,7 +41,8 @@ def category_update(request, pk):
                 "redirect_url": reverse("dash:category_list")
             })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": [str(e)]})
+            logger.exception("dashboard/views/products.py: request failed")
+            return JsonResponse({"success": False, "errors": [_("Something went wrong. Please try again.")]})
     return JsonResponse({"success": False}, status=400)
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
@@ -70,7 +74,8 @@ def category_create(request):
                 "redirect_url": reverse("dash:category_list")
             })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": [str(e)]})
+            logger.exception("dashboard/views/products.py: request failed")
+            return JsonResponse({"success": False, "errors": [_("Something went wrong. Please try again.")]})
     return JsonResponse({"success": False}, status=400)
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
@@ -101,6 +106,58 @@ def product_list(request):
     }
     return render(request, "products/list.html", context)
 
+def _dec(value, field, errors, required=False, allow_zero=False):
+    """Parse a money field from POST into a Decimal (or None when empty)."""
+    from decimal import Decimal, InvalidOperation
+    value = (value or "").strip().replace(",", ".")
+    if not value:
+        if required:
+            errors[field] = [_("This field is required")]
+        return None
+    try:
+        d = Decimal(value).quantize(Decimal("0.01"))
+    except InvalidOperation:
+        errors[field] = [_("Invalid number")]
+        return None
+    if d < 0 or (d == 0 and not allow_zero):
+        errors[field] = [_("Must be greater than zero")]
+        return None
+    return d
+
+
+def _parse_pricing(post, is_provider):
+    """Read and validate the pricing block of the product form.
+
+    Rules: purchase <= wholesale <= retail, the supplier's affiliate price sits
+    between purchase and retail, and the professional price between wholesale
+    and retail, otherwise commissions computed later would be negative.
+    """
+    errors = {}
+    p = {
+        "purchase": _dec(post.get("loft_purchase_price"), "loft_purchase_price", errors,
+                         required=is_provider, allow_zero=not is_provider),
+        "wholesale": _dec(post.get("loft_wholesale_price"), "loft_wholesale_price", errors, required=is_provider),
+        "retail": _dec(post.get("loft_retail_price"), "loft_retail_price", errors, required=is_provider),
+        "affiliate": _dec(post.get("affiliate_wholesale_price"), "affiliate_wholesale_price", errors),
+        "pro": _dec(post.get("pro_price"), "pro_price", errors),
+        "eur": _dec(post.get("price_eur"), "price_eur", errors),
+    }
+    purchase = p["purchase"] or 0
+    w, r = p["wholesale"], p["retail"]
+    if w is not None and w < purchase:
+        errors.setdefault("loft_wholesale_price", [_("Wholesale price must be at least the purchase price")])
+    if w is not None and r is not None and r < w:
+        errors.setdefault("loft_retail_price", [_("Retail price must be at least the wholesale price")])
+    a = p["affiliate"]
+    if a is not None and (a < purchase or (r is not None and a > r)):
+        errors.setdefault("affiliate_wholesale_price", [_("Affiliate price must be between the purchase and retail prices")])
+    pro = p["pro"]
+    if pro is not None and ((w is not None and pro < w) or (r is not None and pro > r)):
+        errors.setdefault("pro_price", [_("Professional price must be between the wholesale and retail prices")])
+    if p["purchase"] is None:
+        p["purchase"] = 0
+    return p, errors
+
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_create(request):
     """View to create a new product with pricing workflow"""
@@ -127,24 +184,9 @@ def product_create(request):
         if not thumbnail:
             errors["thumbnail"] = [_("Thumbnail is required")]
 
-        purchase_price = request.POST.get("loft_purchase_price", "0")
-        if is_provider and not purchase_price:
-            errors["loft_purchase_price"] = [_("Purchase price is required")]
-
-        wholesale = request.POST.get("loft_wholesale_price")
-        retail = request.POST.get("loft_retail_price")
-
-        if is_provider and not wholesale:
-            errors["loft_wholesale_price"] = [_("Wholesale price is required")]
-        if is_provider and not retail:
-            errors["loft_retail_price"] = [_("Retail price is required")]
-        for field, value in (("loft_wholesale_price", wholesale), ("loft_retail_price", retail)):
-            try:
-                if value and float(value) <= 0:
-                    errors[field] = [_("Must be greater than zero")]
-            except ValueError:
-                errors[field] = [_("Invalid number")]
-
+        pricing, price_errors = _parse_pricing(request.POST, is_provider)
+        errors.update(price_errors)
+        purchase_price, wholesale, retail = pricing["purchase"], pricing["wholesale"], pricing["retail"]
         if errors:
             return JsonResponse({"success": False, "errors": errors})
 
@@ -159,6 +201,8 @@ def product_create(request):
                 "category": category,
                 "description": description,
                 "loft_purchase_price": purchase_price or 0,
+                "price_eur": pricing["eur"],
+                "pro_price": pricing["pro"],
                 "quantity": quantity,
                 "external_link": external_link,
                 "tags": tags,
@@ -191,7 +235,7 @@ def product_create(request):
                 defaults={
                     "supplier": product.user or request.user,
                     "loft_purchase_price": purchase_price or 0,
-                    "affiliate_wholesale_price": wholesale or None,
+                    "affiliate_wholesale_price": pricing["affiliate"] or wholesale or None,
                 }
             )
 
@@ -228,8 +272,9 @@ def product_create(request):
                 "success": True, "message": _("Product added successfully"),
                 "redirect_url": reverse("dash:product_list")
             })
-        except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+        except Exception:
+            logger.exception("product_create failed")
+            return JsonResponse({"success": False, "errors": {"system": [_("The product could not be saved. Please try again.")]}})
 
     categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
     return render(request, "products/create.html", {
@@ -268,10 +313,16 @@ def product_update(request, pk):
         product.tags = request.POST.get("tags")
         product.is_featured = request.POST.get("is_featured") == "on"
 
+        pricing, price_errors = _parse_pricing(request.POST, not is_admin)
+        if price_errors:
+            return JsonResponse({"success": False, "errors": price_errors})
+        product.loft_purchase_price = pricing["purchase"]
+        product.loft_wholesale_price = pricing["wholesale"]
+        product.loft_retail_price = pricing["retail"]
+        product.price_eur = pricing["eur"]
+        product.pro_price = pricing["pro"]
+
         if is_admin:
-            product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)
-            product.loft_wholesale_price = request.POST.get("loft_wholesale_price") or None
-            product.loft_retail_price = request.POST.get("loft_retail_price") or None
 
             product.is_active = request.POST.get("is_active") == "on"
 
@@ -305,14 +356,11 @@ def product_update(request, pk):
                     defaults={
                         "supplier": product.user,
                         "loft_purchase_price": product.loft_purchase_price or 0,
-                        "affiliate_wholesale_price": request.POST.get("affiliate_wholesale_price") or None,
+                        "affiliate_wholesale_price": pricing["affiliate"],
                     }
                 )
         else:
-            # Provider has full control over their product pricing
-            product.loft_purchase_price = request.POST.get("loft_purchase_price", 0)
-            product.loft_wholesale_price = request.POST.get("loft_wholesale_price") or None
-            product.loft_retail_price = request.POST.get("loft_retail_price") or None
+            # Trusted providers set their own prices; _parse_pricing keeps them coherent.
             LoftPrice.objects.update_or_create(
                 product=product,
                 defaults={
@@ -328,7 +376,7 @@ def product_update(request, pk):
                     defaults={
                         "supplier": product.user,
                         "loft_purchase_price": product.loft_purchase_price or 0,
-                        "affiliate_wholesale_price": request.POST.get("affiliate_wholesale_price") or None,
+                        "affiliate_wholesale_price": pricing["affiliate"],
                     }
                 )
 
@@ -375,8 +423,9 @@ def product_update(request, pk):
                 "success": True, "message": _("Product updated successfully"),
                 "redirect_url": reverse("dash:product_list")
             })
-        except Exception as e:
-            return JsonResponse({"success": False, "errors": {"system": [str(e)]}})
+        except Exception:
+            logger.exception("product_update failed")
+            return JsonResponse({"success": False, "errors": {"system": [_("The product could not be saved. Please try again.")]}})
 
     categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
     price_history = product.price_history.select_related("user").order_by("-created_at")[:20]

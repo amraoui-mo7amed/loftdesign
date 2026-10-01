@@ -195,245 +195,264 @@ from decimal import Decimal
 from .models import PartnerPrice, LoftPrice, SupplierPrice, PriceHistory
 
 
+CENT = Decimal("0.01")
+
+
+class PricingError(ValueError):
+    """The price chain of a product is inconsistent (a level would earn a
+    negative amount or the shares would not add up to the price paid)."""
+
+
+def money(value):
+    """Decimal rounded to the cent (ROUND_HALF_UP)."""
+    from decimal import ROUND_HALF_UP
+    return Decimal(str(value or 0)).quantize(CENT, rounding=ROUND_HALF_UP)
+
+
+def _active_referrer(code):
+    if not code:
+        return None
+    return (
+        UserProfile.objects.select_related("user", "parent_affiliate__user", "created_by")
+        .filter(affiliate_code=code, is_approved=True, is_blocked=False)
+        .first()
+    )
+
+
+def _partner_price(product, buyer_user):
+    return (
+        PartnerPrice.objects.filter(product=product, buyer=buyer_user, is_active=True)
+        .order_by("-updated_at", "-pk")
+        .first()
+    )
+
+
 def resolve_chain(product, referred_by_code):
     """
-    Trace the PartnerPrice chain for a product given a referral code.
-    Returns a dict with supplier, loft, affiliate, semi pricing levels.
+    Trace who sells to whom for one product and a referral code.
 
-    The chain flows: Supplier -> Loft -> Affiliate -> Semi -> Customer
-    Each level earns: (price_they_charge - price_they_pay) per unit sold.
+    The chain flows: Supplier -> Loft -> (provider network) -> Affiliate -> Semi -> Customer.
+    Each level earns what it charges minus what it pays, so the shares always
+    add up to the price paid by the customer.
     """
     levels = {
-        "supplier_wholesale": None,
-        "supplier_commission": None,
+        "supplier_wholesale": None,      # SupplierPrice.loft_purchase_price
+        "supplier_commission": None,     # provider commission %, None for admin products
+        "supplier_user_id": None,
+        "admin_supplier": False,
         "loft_wholesale": Decimal("0.00"),
-        "provider_wholesale": None,
-        "affiliate_wholesale": None,
-        "semi_wholesale": None,
+        "provider_wholesale": None,      # provider network: price the provider's affiliate pays
+        "affiliate_purchase": None,      # what the affiliate pays upstream
+        "affiliate_wholesale": None,     # what the affiliate charges its semis
+        "semi_purchase": None,           # what the semi pays the affiliate
+        "semi_wholesale": None,          # kept for display (legacy key)
+        "affiliate_user_id": None,
+        "semi_user_id": None,
         "retail_price_charged": Decimal("0.00"),
     }
 
-    # 1. Supplier level
-    supplier_price = SupplierPrice.objects.filter(product=product).first()
+    supplier_price = SupplierPrice.objects.select_related("supplier").filter(product=product).first()
     if supplier_price:
+        levels["supplier_wholesale"] = supplier_price.loft_purchase_price
+        levels["supplier_user_id"] = supplier_price.supplier_id
         if supplier_price.supplier and not supplier_price.supplier.is_superuser:
-            # Provider product — commission deducted from their wholesale
             profile = getattr(supplier_price.supplier, "profile", None)
-            commission = Decimal(str(profile.commission)) if profile and profile.commission else Decimal("0.00")
-            levels["supplier_wholesale"] = supplier_price.loft_purchase_price
-            levels["supplier_commission"] = commission
+            commission = Decimal(str(profile.commission or 0)) if profile else Decimal("0")
+            levels["supplier_commission"] = min(max(commission, Decimal("0")), Decimal("100"))
         else:
-            # Admin as supplier — use stored purchase price
-            levels["supplier_wholesale"] = supplier_price.loft_purchase_price
+            levels["admin_supplier"] = True
 
-    # 2. Loft level
     loft_price = LoftPrice.objects.filter(product=product, is_active=True).first()
     if loft_price:
         levels["loft_wholesale"] = loft_price.loft_default_wholesale_price
 
-    # 3. Referral chain (if any)
-    if referred_by_code:
-        referred_profile = UserProfile.objects.filter(
-            affiliate_code=referred_by_code, is_approved=True
-        ).first()
-        if referred_profile:
-            from user_auth.models import UserProfile as UP
+    referred = _active_referrer(referred_by_code)
+    if referred is None:
+        return levels
 
-            if referred_profile.role == UP.roleChoices.SEMI_AFFILIATE:
-                # Semi-affiliate referred the order — find the semi's PartnerPrice
-                # Semi buys from affiliate at affiliate's wholesale
-                semi_pp = PartnerPrice.objects.filter(
-                    product=product, buyer=referred_profile.user, is_active=True
-                ).first()
-                if semi_pp:
-                    levels["retail_price_charged"] = semi_pp.retail_price or semi_pp.purchase_price
-                    levels["semi_wholesale"] = semi_pp.purchase_price or semi_pp.wholesale_price
-                    # Find affiliate's PartnerPrice via parent_affiliate relationship
-                    parent_affiliate = referred_profile.parent_affiliate
-                    if parent_affiliate:
-                        aff_pp = PartnerPrice.objects.filter(
-                            product=product, buyer=parent_affiliate.user, is_active=True
-                        ).first()
-                        if aff_pp:
-                            levels["affiliate_wholesale"] = aff_pp.wholesale_price or aff_pp.purchase_price
-                        else:
-                            # Upstream affiliate PartnerPrice missing — degrade chain
-                            levels["semi_wholesale"] = None
-                            levels["affiliate_wholesale"] = None
-            else:
-                # Affiliate referred the order directly
-                aff_pp = PartnerPrice.objects.filter(
-                    product=product, buyer=referred_profile.user, is_active=True
-                ).first()
-                if aff_pp:
-                    levels["retail_price_charged"] = aff_pp.retail_price or aff_pp.purchase_price
-                    levels["affiliate_wholesale"] = aff_pp.wholesale_price or aff_pp.purchase_price
+    if referred.role == UserProfile.roleChoices.SEMI_AFFILIATE:
+        parent = referred.parent_affiliate
+        semi_pp = _partner_price(product, referred.user)
+        aff_pp = _partner_price(product, parent.user) if parent and not parent.is_blocked else None
+        if semi_pp and aff_pp:
+            levels["retail_price_charged"] = semi_pp.retail_price or semi_pp.purchase_price
+            levels["semi_purchase"] = semi_pp.purchase_price
+            levels["semi_wholesale"] = semi_pp.purchase_price
+            levels["semi_user_id"] = referred.user_id
+            levels["affiliate_purchase"] = aff_pp.purchase_price
+            levels["affiliate_wholesale"] = aff_pp.wholesale_price or aff_pp.purchase_price
+            levels["affiliate_user_id"] = parent.user_id
+        node = parent
+    elif referred.role == UserProfile.roleChoices.AFFILIATE:
+        aff_pp = _partner_price(product, referred.user)
+        if aff_pp:
+            levels["retail_price_charged"] = aff_pp.retail_price or aff_pp.purchase_price
+            levels["affiliate_purchase"] = aff_pp.purchase_price
+            levels["affiliate_wholesale"] = aff_pp.wholesale_price or aff_pp.purchase_price
+            levels["affiliate_user_id"] = referred.user_id
+        node = referred
+    else:
+        node = None
 
-    # 4. Provider network — affiliate (or its semi) created by a provider sells
-    #    the provider's own product at the provider-set wholesale price.
-    #    The provider earns the network margin (provider_wholesale - supplier_base)
-    #    in place of Loft's margin, while Loft keeps its commission.
-    if referred_by_code and referred_profile:
-        from user_auth.models import UserProfile as UP
-
-        node_profile = referred_profile
-        if node_profile.role == UP.roleChoices.SEMI_AFFILIATE and node_profile.parent_affiliate:
-            node_profile = node_profile.parent_affiliate
-        creator = node_profile.created_by
-        sp = SupplierPrice.objects.filter(product=product).first()
-        if (
-            creator is not None
-            and creator.role == UP.roleChoices.PROVIDER
-            and sp is not None
-            and sp.supplier_id == creator.user_id
-            and sp.affiliate_wholesale_price is not None
-        ):
-            levels["provider_wholesale"] = Decimal(str(sp.affiliate_wholesale_price))
+    # Provider network: the affiliate was created by the provider who owns the
+    # product and buys at the provider's affiliate wholesale price.
+    creator = node.created_by if node else None
+    if (
+        levels["affiliate_user_id"]
+        and creator is not None
+        and creator.role == UserProfile.roleChoices.PROVIDER
+        and supplier_price is not None
+        and supplier_price.supplier_id == creator.user_id
+        and supplier_price.affiliate_wholesale_price is not None
+    ):
+        levels["provider_wholesale"] = Decimal(str(supplier_price.affiliate_wholesale_price))
 
     return levels
 
 
-def compute_item_profit(product, price_paid, quantity, referred_by_code):
+def split_from_chain(chain, price_paid, quantity):
     """
-    Compute profit distribution for a single order item.
-    All levels in the chain earn at delivery per the per-sale model.
+    Share of each level for one order line, from a resolved chain.
 
-    For provider products (commission-based):
-      supplier_wholesale = price × (1 − commission/100)
-      Provider:          supplier_wholesale × qty
-      Loft:              (loft_wholesale − supplier_wholesale) × qty
-
-    For admin-created products (margin-based):
-      Provider:          supplier_wholesale × qty
-      Loft:              (loft_wholesale − supplier_wholesale) × qty
-
-    Affiliate:    (aff_wholesale − loft_wholesale) × qty  (if in chain)
-    Semi:         (price − aff_wholesale) × qty            (if in chain)
+    supplier  = supplier price x (1 - commission)      (provider products)
+    provider  = provider wholesale - supplier price      (provider network only)
+    loft      = what the first reseller pays - supplier net  (or price - supplier net)
+    affiliate = what it charges - what it pays
+    semi      = price paid - what it pays
+    The shares always add up to price x quantity; a negative share raises
+    PricingError instead of being silently clamped.
     """
-    chain = resolve_chain(product, referred_by_code)
-
-    price = Decimal(str(price_paid))
+    price = money(price_paid)
     qty = int(quantity)
 
-    supplier_base = chain["supplier_wholesale"]
-    supplier_commission = chain["supplier_commission"]
-    loft_base = chain["loft_wholesale"]
-    provider_pw = chain["provider_wholesale"]
-    aff_base = chain["affiliate_wholesale"]
-    semi_base = chain["semi_wholesale"]
+    sb = chain["supplier_wholesale"]
+    c = chain["supplier_commission"]
+    sn = Decimal("0") if sb is None else (sb * (Decimal("1") - (c or Decimal("0")) / Decimal("100")))
+    sn = money(sn)
+    aff_buy = chain["affiliate_purchase"]
+    semi_buy = chain["semi_purchase"]
+    pw = chain["provider_wholesale"]
 
-    # Commission deducted from provider's stated wholesale
-    if supplier_commission is not None:
-        actual_supplier_base = supplier_base * (Decimal("1.00") - supplier_commission / Decimal("100.00"))
+    shares = dict(supplier=sn, provider=Decimal("0"), loft=Decimal("0"), affiliate=Decimal("0"), semi=Decimal("0"))
+    if aff_buy is None:
+        shares["loft"] = price - sn
     else:
-        actual_supplier_base = supplier_base
-
-    has_supplier = actual_supplier_base is not None
-    is_provider_network = provider_pw is not None and supplier_base is not None
-
-    if is_provider_network:
-        # Provider network leg: the provider-created affiliate buys at the
-        # provider's wholesale price. Provider earns the network margin
-        # (provider_wholesale - supplier_base) in total; Loft keeps its commission.
-        provider_share = (provider_pw - supplier_base) * qty
-        loft_share = (supplier_base - actual_supplier_base) * qty
-        supplier_share = Decimal("0.00")
-        if semi_base is not None and aff_base is not None:
-            affiliate_share = (aff_base - provider_pw) * qty
-            semi_share = (price - aff_base) * qty
-        elif aff_base is not None:
-            affiliate_share = (aff_base - provider_pw) * qty
-            semi_share = Decimal("0.00")
+        if pw is not None and sb is not None:
+            first_buy = money(pw)
+            shares["provider"] = first_buy - money(sb)
+            shares["loft"] = money(sb) - sn
         else:
-            affiliate_share = Decimal("0.00")
-            semi_share = Decimal("0.00")
-    elif has_supplier:
-        supplier_share = actual_supplier_base * qty
-        provider_share = Decimal("0.00")
-        if semi_base is not None and aff_base is not None:
-            loft_share = (loft_base - actual_supplier_base) * qty
-            affiliate_share = (aff_base - loft_base) * qty
-            semi_share = (price - aff_base) * qty
-        elif aff_base is not None:
-            loft_share = (loft_base - actual_supplier_base) * qty
-            affiliate_share = (aff_base - loft_base) * qty
-            semi_share = Decimal("0.00")
+            first_buy = money(aff_buy)
+            shares["loft"] = first_buy - sn
+        if semi_buy is not None:
+            shares["affiliate"] = money(semi_buy) - first_buy
+            shares["semi"] = price - money(semi_buy)
         else:
-            loft_share = (price - actual_supplier_base) * qty
-            affiliate_share = Decimal("0.00")
-            semi_share = Decimal("0.00")
-    else:
-        supplier_share = Decimal("0.00")
-        provider_share = Decimal("0.00")
-        total_available = price * qty
-        if semi_base is not None and aff_base is not None:
-            affiliate_share = max((aff_base - loft_base) * qty, Decimal("0.00"))
-            semi_share = max((price - aff_base) * qty, Decimal("0.00"))
-            loft_share = max(total_available - affiliate_share - semi_share, Decimal("0.00"))
-        elif aff_base is not None:
-            affiliate_share = max((aff_base - loft_base) * qty, Decimal("0.00"))
-            semi_share = Decimal("0.00")
-            loft_share = max(total_available - affiliate_share, Decimal("0.00"))
-        else:
-            affiliate_share = Decimal("0.00")
-            semi_share = Decimal("0.00")
-            loft_share = total_available
+            shares["affiliate"] = price - first_buy
 
+    shares = {k: money(v * qty) for k, v in shares.items()}
+    negative = [k for k, v in shares.items() if v < 0]
+    if negative or sum(shares.values()) != money(price * qty):
+        raise PricingError(", ".join(negative) or "total")
+    return shares
+
+
+def compute_item_profit(product, price_paid, quantity, referred_by_code):
+    """Shares of one order line (keys kept for the existing templates)."""
+    s = split_from_chain(resolve_chain(product, referred_by_code), price_paid, quantity)
     return {
-        "supplier_share": max(supplier_share, Decimal("0.00")),
-        "loft_share": max(loft_share, Decimal("0.00")),
-        "provider_share": max(provider_share, Decimal("0.00")),
-        "affiliate_share": max(affiliate_share, Decimal("0.00")),
-        "semi_share": max(semi_share, Decimal("0.00")),
+        "supplier_share": s["supplier"],
+        "loft_share": s["loft"],
+        "provider_share": s["provider"],
+        "affiliate_share": s["affiliate"],
+        "semi_share": s["semi"],
     }
+
+
+def settlement_for_item(product, price_paid, quantity, referred_by_code):
+    """Payees and amounts for one line, frozen at order time."""
+    chain = resolve_chain(product, referred_by_code)
+    s = split_from_chain(chain, price_paid, quantity)
+    supplier_id = chain["supplier_user_id"]
+    if chain["admin_supplier"] or supplier_id is None:
+        # Loft's own stock: the supplier part stays with the platform.
+        s["loft"] += s["supplier"]
+        s["supplier"] = Decimal("0.00")
+        supplier_id = None
+    return {
+        "supplier": str(s["supplier"]), "supplier_user": supplier_id,
+        "provider": str(s["provider"]),
+        "loft": str(s["loft"]),
+        "affiliate": str(s["affiliate"]), "affiliate_user": chain["affiliate_user_id"],
+        "semi": str(s["semi"]), "semi_user": chain["semi_user_id"],
+        "commission": str(chain["supplier_commission"]) if chain["supplier_commission"] is not None else None,
+    }
+
+
+def snapshot_order(order):
+    """Freeze the price chain of every line on the order (call at creation).
+    Raises PricingError when a product's prices are inconsistent."""
+    from .models import Product
+
+    items = []
+    for item in order.items:
+        item = dict(item)
+        pid = item.get("product_id")
+        product = Product.objects.filter(pk=pid).first() if pid else None
+        if product is not None:
+            ref_price = item.get("price_dzd", item.get("price", 0))
+            item["settlement"] = settlement_for_item(product, ref_price, item.get("quantity", 1), order.referred_by)
+        items.append(item)
+    order.items = items
+    order.save(update_fields=["items"])
+    return order
+
+
+def order_settlements(order):
+    """Settlement of every line: the snapshot taken at order time, or the
+    current prices for orders created before snapshots existed."""
+    from .models import Product
+
+    lines = []
+    for item in order.items:
+        settlement = item.get("settlement")
+        if settlement is None:
+            pid = item.get("product_id")
+            product = Product.objects.filter(pk=pid).first() if pid else None
+            if product is None:
+                continue
+            ref_price = item.get("price_dzd", item.get("price", 0))
+            settlement = settlement_for_item(product, ref_price, item.get("quantity", 1), order.referred_by)
+        lines.append((item, settlement))
+    return lines
 
 
 def compute_order_profit(order):
-    """
-    Compute total profit distribution for an entire order.
-    Stores the result in the order's profit fields and saves.
-    """
-    referred_code = order.referred_by or ""
+    """Store the total share of each level on the order and return them."""
+    totals = {k: Decimal("0.00") for k in ("supplier", "loft", "affiliate", "semi", "provider")}
+    for _item, st in order_settlements(order):
+        for k in totals:
+            totals[k] += Decimal(st[k])
 
-    total_supplier = Decimal("0.00")
-    total_loft = Decimal("0.00")
-    total_affiliate = Decimal("0.00")
-    total_semi = Decimal("0.00")
-    total_provider = Decimal("0.00")
-
-    for item in order.items:
-        product_id = item.get("product_id")
-        price = item.get("price", 0)
-        quantity = item.get("quantity", 1)
-        if product_id:
-            try:
-                from .models import Product
-                product = Product.objects.get(pk=product_id)
-                profit = compute_item_profit(product, price, quantity, referred_code)
-                total_supplier += profit["supplier_share"]
-                total_loft += profit["loft_share"]
-                total_affiliate += profit["affiliate_share"]
-                total_semi += profit["semi_share"]
-                total_provider += profit["provider_share"]
-            except Product.DoesNotExist:
-                pass
-
-    order.supplier_share = total_supplier
-    order.loft_share = total_loft
-    order.affiliate_share = total_affiliate
-    order.semi_share = total_semi
-    order.provider_share = total_provider
+    order.supplier_share = totals["supplier"]
+    order.loft_share = totals["loft"]
+    order.affiliate_share = totals["affiliate"]
+    order.semi_share = totals["semi"]
+    order.provider_share = totals["provider"]
     order.save(update_fields=[
         "supplier_share", "loft_share", "affiliate_share", "semi_share", "provider_share"
     ])
+    return {f"{k}_share": v for k, v in totals.items()}
 
-    return {
-        "supplier_share": total_supplier,
-        "loft_share": total_loft,
-        "affiliate_share": total_affiliate,
-        "semi_share": total_semi,
-        "provider_share": total_provider,
-    }
+
+def platform_wallet_user():
+    """The single account that receives Loft Design's share."""
+    from django.conf import settings
+    from django.contrib.auth.models import User
+
+    uid = getattr(settings, "PLATFORM_WALLET_USER_ID", None)
+    qs = User.objects.filter(is_superuser=True, is_active=True)
+    return (qs.filter(pk=uid).first() if uid else None) or qs.order_by("pk").first()
 
 
 def build_order_chain_breakdown(order):
@@ -461,7 +480,15 @@ def build_order_chain_breakdown(order):
             continue
 
         chain = resolve_chain(product, referred_code)
-        profit = compute_item_profit(product, price, qty, referred_code)
+        pricing_error = False
+        st = item.get("settlement")
+        if st is None:
+            try:
+                st = settlement_for_item(product, item.get("price_dzd", price), qty, referred_code)
+            except PricingError:
+                pricing_error = True
+                st = {k: "0" for k in ("supplier", "loft", "provider", "affiliate", "semi")}
+        profit = {f"{k}_share": Decimal(st[k]) for k in ("supplier", "loft", "provider", "affiliate", "semi")}
 
         supplier_price = SupplierPrice.objects.filter(product=product).first()
         is_admin_supplier = supplier_price and supplier_price.supplier and supplier_price.supplier.is_superuser
@@ -498,8 +525,9 @@ def build_order_chain_breakdown(order):
                 "retail_price_charged": float(chain["retail_price_charged"]) if chain["retail_price_charged"] else None,
                 "admin_cost_basis": chain["admin_cost_basis"],
             },
+            "pricing_error": pricing_error,
             "profits": {
-                "supplier": 0.0 if is_admin_supplier else float(profit["supplier_share"]),
+                "supplier": float(profit["supplier_share"]),
                 "loft": float(profit["loft_share"]),
                 "provider": float(profit["provider_share"]),
                 "affiliate": float(profit["affiliate_share"]),
@@ -520,7 +548,7 @@ def build_order_chain_breakdown(order):
         "items": items_breakdown,
         "totals": {
             "total": float(order.total_price()),
-            "supplier_share": 0.0 if has_admin_supplier else float(order.supplier_share),
+            "supplier_share": float(order.supplier_share),
             "loft_share": float(order.loft_share),
             "provider_share": float(order.provider_share),
             "affiliate_share": float(order.affiliate_share),
@@ -531,229 +559,119 @@ def build_order_chain_breakdown(order):
 
 def credit_wallets_for_order(order):
     """
-    Credit wallets when an order is marked DELIVERED.
-    Creates Transaction records and detailed notifications for all levels.
+    Credit every participant once when an order is DELIVERED.
+
+    Idempotent: the order's commission_paid flag is switched with a
+    conditional UPDATE, so two simultaneous "Delivered" clicks cannot pay twice.
+    Each supplier only receives the lines of its own products, and Loft's share
+    goes to one platform wallet.
     """
-    from user_auth.models import Wallet, Transaction
+    from collections import defaultdict
     from django.contrib.auth.models import User
+    from django.db import transaction as db_transaction
+    from django.db.models import F
+    from user_auth.models import Wallet, Transaction
+    from .models import Order
 
-    if order.status != "delivered":
-        return
+    if order.status != Order.OrderStatus.DELIVERED:
+        return False
 
-    referred_code = order.referred_by or ""
-
-    referred_profile = None
-    if referred_code:
-        referred_profile = UserProfile.objects.filter(
-            affiliate_code=referred_code, is_approved=True
-        ).first()
-
-    # Gather product-level breakdown for notifications
-    product_details = []
-    for item in order.items:
-        product_id = item.get("product_id")
-        price = item.get("price", 0)
-        qty = item.get("quantity", 1)
-        if product_id:
-            try:
-                from .models import Product
-                product = Product.objects.get(pk=product_id)
-                profit = compute_item_profit(product, price, qty, referred_code)
-                sp = SupplierPrice.objects.filter(product=product).first()
-                if sp and sp.supplier and sp.supplier.is_superuser:
-                    display_supplier = Decimal("0.00")
-                    display_loft = profit["supplier_share"] + profit["loft_share"]
-                else:
-                    display_supplier = profit["supplier_share"]
-                    display_loft = profit["loft_share"]
-                product_details.append({
-                    "title": product.title,
-                    "qty": qty,
-                    "price": price,
-                    "supplier": display_supplier,
-                    "loft": display_loft,
-                    "provider": profit["provider_share"],
-                    "affiliate": profit["affiliate_share"],
-                    "semi": profit["semi_share"],
-                })
-            except Product.DoesNotExist:
-                pass
-
-    # Find supplier users from order items
-    supplier_users = set()
-    for item in order.items:
-        product_id = item.get("product_id")
-        if product_id:
-            try:
-                from .models import Product
-                product = Product.objects.get(pk=product_id)
-                sp = SupplierPrice.objects.filter(product=product).first()
-                if sp and sp.supplier:
-                    supplier_users.add(sp.supplier)
-            except Product.DoesNotExist:
-                pass
-
-    # Build a readable order number
     order_label = order.order_number or f"#{order.id}"
+    lines = order_settlements(order)
 
-    # Determine who gets what
-    credit_entries = []
+    with db_transaction.atomic():
+        claimed = Order.objects.filter(pk=order.pk, commission_paid=False).update(commission_paid=True)
+        if not claimed:
+            return False
+        order.commission_paid = True
 
-    # 1. Supplier — skip superuser suppliers (combined into loft share)
-    if order.supplier_share > 0:
-        for user in supplier_users:
-            if user and not user.is_superuser:
-                credit_entries.append((
-                    user, order.supplier_share,
-                    _("Supplier payment for order %(num)s") % {"num": order_label},
-                ))
+        payouts = defaultdict(lambda: defaultdict(Decimal))
+        platform = platform_wallet_user()
+        for _item, st in lines:
+            supplier_id = st.get("supplier_user")
+            if Decimal(st["supplier"]) > 0:
+                payouts[supplier_id or (platform and platform.pk)]["supplier"] += Decimal(st["supplier"])
+            if Decimal(st["provider"]) > 0 and supplier_id:
+                payouts[supplier_id]["provider"] += Decimal(st["provider"])
+            if Decimal(st["loft"]) > 0 and platform:
+                payouts[platform.pk]["loft"] += Decimal(st["loft"])
+            if Decimal(st["affiliate"]) > 0 and st.get("affiliate_user"):
+                payouts[st["affiliate_user"]]["affiliate"] += Decimal(st["affiliate"])
+            if Decimal(st["semi"]) > 0 and st.get("semi_user"):
+                payouts[st["semi_user"]]["semi"] += Decimal(st["semi"])
 
-    # 1b. Provider network share — the product owner (provider) earns the
-    #     network margin (provider_wholesale - supplier_base) in place of the
-    #     supplier share, credited to the same supplier/provider user.
-    if order.provider_share > 0:
-        for user in supplier_users:
-            if user and not user.is_superuser:
-                credit_entries.append((
-                    user, order.provider_share,
-                    _("Provider network profit for order %(num)s") % {"num": order_label},
-                ))
+        labels = {
+            "supplier": _("Supplier payment for order %(num)s"),
+            "provider": _("Provider network profit for order %(num)s"),
+            "loft": _("Loft Design profit for order %(num)s"),
+            "affiliate": _("Affiliate commission for order %(num)s"),
+            "semi": _("Semi-affiliate commission for order %(num)s"),
+        }
+        credited = []
+        for user_id, parts in payouts.items():
+            if not user_id:
+                continue
+            user = User.objects.filter(pk=user_id).first()
+            if user is None:
+                continue
+            wallet, _created = Wallet.objects.get_or_create(user=user)
+            for kind, amount in parts.items():
+                amount = money(amount)
+                if amount <= 0:
+                    continue
+                Wallet.objects.filter(pk=wallet.pk).update(balance=F("balance") + amount)
+                Transaction.objects.create(
+                    wallet=wallet,
+                    transaction_type=Transaction.TransactionType.EARNING,
+                    amount=amount,
+                    description=labels[kind] % {"num": order_label},
+                    order=order,
+                    status=Transaction.TransactionStatus.COMPLETED,
+                )
+                credited.append((user, kind, amount))
 
-    # 2. Loft (admin)
-    loft_amount = order.loft_share
+        db_transaction.on_commit(lambda: _notify_order_credits(order, credited))
+    return True
 
-    if loft_amount > 0:
-        for admin in User.objects.filter(is_superuser=True):
-            credit_entries.append((
-                admin, loft_amount,
-                _("Loft Design profit for order %(num)s") % {"num": order_label},
-            ))
 
-    # 3. Affiliate
-    if order.affiliate_share > 0 and referred_profile:
-        if referred_profile.role == UserProfile.roleChoices.AFFILIATE:
-            credit_entries.append((
-                referred_profile.user, order.affiliate_share,
-                _("Affiliate commission for order %(num)s") % {"num": order_label},
-            ))
-        elif referred_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE and referred_profile.parent_affiliate:
-            credit_entries.append((
-                referred_profile.parent_affiliate.user, order.affiliate_share,
-                _("Affiliate commission for order %(num)s") % {"num": order_label},
-            ))
+def _notify_order_credits(order, credited):
+    """One notification per credited person, after the money is committed."""
+    from collections import defaultdict
 
-    # 4. Semi-affiliate
-    if order.semi_share > 0 and referred_profile and referred_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE:
-        credit_entries.append((
-            referred_profile.user, order.semi_share,
-            _("Semi-affiliate commission for order %(num)s") % {"num": order_label},
-        ))
-
-    # Create wallet transactions + notifications
-    customer_name = order.customer_name or _("Guest")
-
-    for user, amount, desc in credit_entries:
-        wallet, _wcreated = Wallet.objects.get_or_create(user=user)
-        amount = Decimal(str(amount))
-        wallet.balance = Decimal(str(wallet.balance or "0.00")) + amount
-        wallet.save(update_fields=["balance"])
-        Transaction.objects.create(
-            wallet=wallet,
-            transaction_type=Transaction.TransactionType.EARNING,
-            amount=amount,
-            description=desc,
-            order=order,
-            status=Transaction.TransactionStatus.COMPLETED,
+    order_label = order.order_number or f"#{order.id}"
+    titles = ", ".join(str(i.get("title", "")) for i in order.items if i.get("title"))
+    per_user = defaultdict(Decimal)
+    users = {}
+    for user, _kind, amount in credited:
+        per_user[user.pk] += amount
+        users[user.pk] = user
+    for uid, amount in per_user.items():
+        notify_user(
+            users[uid],
+            _("Payment Received — Order %(num)s") % {"num": order_label},
+            _('You received DZD%(amount)s for "%(products)s" (order %(num)s).')
+            % {"amount": f"{amount:,.2f}", "products": titles, "num": order_label},
+            notification_type="success",
+            link=reverse("dash:wallet_detail"),
         )
 
-    # ── Detailed notifications ──────────────────────────────────
-    for pd in product_details:
-        lines = [
-            _("Order %(num)s — Delivered ✓") % {"num": order_label},
-            _("Customer: %(name)s") % {"name": customer_name},
-            "",
-            _("Product: %(title)s × %(qty)s") % {"title": pd["title"], "qty": pd["qty"]},
-            _("  Loft Design: DZD%(amount)s") % {"amount": f"{pd['loft']:,.2f}"},
-        ]
-        if pd["supplier"] > 0:
-            lines.insert(-1, _("  Supplier:    DZD%(amount)s") % {"amount": f"{pd['supplier']:,.2f}"})
-        if pd["provider"] > 0:
-            lines.insert(-1, _("  Provider:    DZD%(amount)s") % {"amount": f"{pd['provider']:,.2f}"})
-        if pd["affiliate"] > 0:
-            lines.append(_("  Affiliate:   DZD%(amount)s") % {"amount": f"{pd['affiliate']:,.2f}"})
-        if pd["semi"] > 0:
-            lines.append(_("  Semi:        DZD%(amount)s") % {"amount": f"{pd['semi']:,.2f}"})
-        total = pd["supplier"] + pd["loft"] + pd["affiliate"] + pd["semi"]
-        lines.append(_("  Total:       DZD%(amount)s") % {"amount": f"{total:,.2f}"})
 
-        msg = "\n".join(lines)
+def restock_order(order):
+    """Put the quantities of a cancelled order back in stock."""
+    from django.db.models import F
+    from .models import Product, ProductItem
 
-        # Notify all admins with full breakdown
-        for admin in User.objects.filter(is_superuser=True):
-            notify_user(
-                admin,
-                _("Profit Distribution — %(title)s") % {"title": pd["title"]},
-                msg,
-                notification_type="success",
-                link=reverse("dash:order_detail", kwargs={"pk": order.pk}),
-            )
-
-    # Notify non-admin participants
-    if referred_profile and order.affiliate_share > 0:
-        if referred_profile.role == UserProfile.roleChoices.AFFILIATE:
-            aff_user = referred_profile.user
-        elif referred_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE and referred_profile.parent_affiliate:
-            aff_user = referred_profile.parent_affiliate.user
-        else:
-            aff_user = None
-        if aff_user and not aff_user.is_superuser:
-            product_list = ", ".join(pd["title"] for pd in product_details)
-            notify_user(
-                aff_user,
-                _("Commission Earned — Order %(num)s") % {"num": order_label},
-                _('You earned DZD%(amount)s commission on "%(products)s" for order %(num)s.')
-                % {
-                    "amount": f"{order.affiliate_share:,.2f}",
-                    "products": product_list,
-                    "num": order_label,
-                },
-                notification_type="success",
-                link=reverse("dash:wallet_detail"),
-            )
-
-    if referred_profile and order.semi_share > 0 and referred_profile.role == UserProfile.roleChoices.SEMI_AFFILIATE:
-        semi_user = referred_profile.user
-        if not semi_user.is_superuser:
-            product_list = ", ".join(pd["title"] for pd in product_details)
-            notify_user(
-                semi_user,
-                _("Commission Earned — Order %(num)s") % {"num": order_label},
-                _('You earned DZD%(amount)s commission on "%(products)s" for order %(num)s.')
-                % {
-                    "amount": f"{order.semi_share:,.2f}",
-                    "products": product_list,
-                    "num": order_label,
-                },
-                notification_type="success",
-                link=reverse("dash:wallet_detail"),
-            )
-
-    for supplier_user in supplier_users:
-        if supplier_user and not supplier_user.is_superuser:
-            product_list = ", ".join(pd["title"] for pd in product_details)
-            supplier_payment = order.supplier_share + order.provider_share
-            notify_user(
-                supplier_user,
-                _("Payment Received — Order %(num)s") % {"num": order_label},
-                _('You received DZD%(amount)s for "%(products)s" (order %(num)s).')
-                % {
-                    "amount": f"{supplier_payment:,.2f}",
-                    "products": product_list,
-                    "num": order_label,
-                },
-                notification_type="success",
-                link=reverse("dash:wallet_detail"),
-            )
+    for item in order.items or []:
+        try:
+            qty = int(item.get("quantity") or 0)
+        except (TypeError, ValueError):
+            continue
+        if qty <= 0:
+            continue
+        if item.get("item_id"):
+            ProductItem.objects.filter(pk=item["item_id"]).update(stock_quantity=F("stock_quantity") + qty)
+        elif item.get("product_id"):
+            Product.objects.filter(pk=item["product_id"]).update(quantity=F("quantity") + qty)
 
 
 def check_low_stock(product, threshold=5):

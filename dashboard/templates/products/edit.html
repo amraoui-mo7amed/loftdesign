@@ -216,6 +216,26 @@
                 </div>
                 <div class="form-text-hint">{% trans "Price your own affiliates pay when reselling this product." %}</div>
               </div>
+              <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-briefcase me-1 text-primary"></i> {% trans "Professional Price" %}</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-0 fw-bold small">DZD</span>
+                  <input type="number" name="pro_price" step="0.01" min="0"
+                         class="form-control form-control-lg" placeholder="0" lang="en"
+                         value="{{ product.pro_price|default:''|stringformat:'.2f' }}">
+                </div>
+                <div class="form-text-hint">{% trans "Price for approved professional clients (between wholesale and retail). Leave empty to use retail." %}</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-euro-sign me-1 text-primary"></i> {% trans "Price (EUR, outside Algeria)" %}</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-0 fw-bold small">EUR</span>
+                  <input type="number" name="price_eur" step="0.01" min="0"
+                         class="form-control form-control-lg" placeholder="0" lang="en"
+                         value="{{ product.price_eur|default:''|stringformat:'.2f' }}">
+                </div>
+                <div class="form-text-hint">{% trans "Shown to visitors outside Algeria. Leave empty to hide the product price abroad." %}</div>
+              </div>
             </div>
           </div>
         </div>

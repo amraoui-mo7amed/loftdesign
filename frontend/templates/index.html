@@ -20,6 +20,13 @@
                 favicon: "{% if site_config.favicon %}{{ site_config.favicon }}{% else %}{% static 'icons/logo.jpg' %}{% endif %}"
             };
         </script>
+        <script>
+            window.STORE = {
+                currency: "{{ store_currency|default:'DZD' }}",
+                i18n: {country: "{% trans 'Country' %}", city: "{% trans 'City' %}"}
+            };
+        </script>
+        <script src="{% static 'js/store_currency.js' %}?v=1" defer></script>
         <title>
             {% if IS_RTL %}
                 {{ site_config.ar_name }}

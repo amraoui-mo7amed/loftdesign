@@ -40,6 +40,11 @@ def role_required(allowed_roles):
                 return view_func(request, *args, **kwargs)
 
             profile = getattr(request.user, "profile", None)
+            if profile and profile.is_blocked:
+                # A blocked account loses access immediately, even with an open session.
+                from django.contrib.auth import logout
+                logout(request)
+                return redirect(reverse("user_auth:login"))
             if profile and profile.role in allowed_roles:
                 return view_func(request, *args, **kwargs)
 

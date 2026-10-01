@@ -16,6 +16,9 @@ from .utils import (
     create_affiliate_account,
     user_profile_upload_path,
 )
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def login_view(request):
@@ -71,7 +74,8 @@ def login_view(request):
                     }
                 )
         except Exception as e:
-            return JsonResponse({"success": False, "errors": [str(e)]})
+            logger.exception("user_auth/views.py: request failed")
+            return JsonResponse({"success": False, "errors": [_("Something went wrong. Please try again.")]})
 
     return render(request, "auth/login.html")
 
@@ -137,7 +141,8 @@ def signup_view(request):
                 }
             )
         except Exception as e:
-            return JsonResponse({"success": False, "errors": [str(e)]})
+            logger.exception("user_auth/views.py: request failed")
+            return JsonResponse({"success": False, "errors": [_("Something went wrong. Please try again.")]})
 
     return render(request, "auth/signup.html")
 
@@ -202,7 +207,8 @@ def set_password(request, uidb64, token):
                     "errors": [_("Something went wrong. Please try logging in manually.")],
                 })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": [str(e)]})
+            logger.exception("user_auth/views.py: request failed")
+            return JsonResponse({"success": False, "errors": [_("Something went wrong. Please try again.")]})
 
     return render(request, "auth/set_password.html", {
         "valid_link": True,
@@ -329,7 +335,8 @@ def password_reset_confirm(request, uidb64, token):
                 "redirect_url": reverse("user_auth:password_reset_complete"),
             })
         except Exception as e:
-            return JsonResponse({"success": False, "errors": [str(e)]})
+            logger.exception("user_auth/views.py: request failed")
+            return JsonResponse({"success": False, "errors": [_("Something went wrong. Please try again.")]})
 
     return render(request, "auth/password_reset_confirm.html", {
         "validlink": True,

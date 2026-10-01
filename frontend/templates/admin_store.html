@@ -71,7 +71,7 @@
                             {% endif %}
                             {% if item.retail_price %}
                             <span class="badge bg-dark position-absolute bottom-0 start-0 m-3 px-3 py-2 rounded-pill fw-bold">
-                                {{ item.retail_price|floatformat:0 }} DZD
+                                {% shop_amount item.retail_price item.product.price_eur %}
                             </span>
                             {% endif %}
                         </div>

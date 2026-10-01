@@ -11,7 +11,9 @@ def product_list(request):
         del request.session["affiliate_code"]
         request.session.modified = True
 
-    products = Product.objects.filter(is_active=True, show_in_global_store=True)
+    products = Product.objects.filter(
+        is_active=True, show_in_global_store=True, status=Product.ProductStatus.APPROVED
+    )
     categories = Category.objects.all()
     
     category_id = request.GET.get('category')
@@ -30,13 +32,26 @@ def product_list(request):
     if category_id:
         products = products.filter(category_id=category_id)
     
-    if min_price:
-        products = products.filter(price__gte=min_price)
-    
-    if max_price:
-        products = products.filter(price__lte=max_price)
-        
-    products = products.order_by(sort)
+    from decimal import Decimal, InvalidOperation
+
+    def _num(v):
+        try:
+            d = Decimal(str(v).replace(",", "."))
+            return d if d.is_finite() and d >= 0 else None
+        except (InvalidOperation, ValueError):
+            return None
+
+    min_price, max_price = _num(min_price) if min_price else None, _num(max_price) if max_price else None
+    if min_price is not None:
+        products = products.filter(loft_retail_price__gte=min_price)
+    if max_price is not None:
+        products = products.filter(loft_retail_price__lte=max_price)
+
+    sort_fields = {"-created_at": "-created_at", "price": "loft_retail_price",
+                   "-price": "-loft_retail_price", "title": "title"}
+    if sort not in sort_fields:
+        sort = "-created_at"
+    products = products.order_by(sort_fields[sort])
     
     category_options = [{"value": "", "label": _("All Collections")}]
     category_options += [{"value": str(c.id), "label": c.name} for c in categories]
@@ -79,10 +94,9 @@ def product_detail(request, pk):
     affiliate_code = request.GET.get("affiliate")
     admin_store_param = request.GET.get("admin_store")
     provider_username = request.GET.get("provider")
-    if affiliate_code or provider_username:
-        product = get_object_or_404(Product, pk=pk)
-    else:
-        product = get_object_or_404(Product, pk=pk, is_active=True)
+    product = get_object_or_404(
+        Product, pk=pk, is_active=True, status=Product.ProductStatus.APPROVED
+    )
     wilaya_options, communes_data = get_algeria_locations()
     if affiliate_code:
         request.session["affiliate_code"] = affiliate_code
@@ -164,7 +178,7 @@ def product_detail(request, pk):
 
 
 def product_viewer_3d(request, pk):
-    product = get_object_or_404(Product, pk=pk, is_active=True)
+    product = get_object_or_404(Product, pk=pk, is_active=True, status=Product.ProductStatus.APPROVED)
     if not product.model_3d:
         raise Http404(_("No 3D model available for this product"))
     back = request.GET.get("back")

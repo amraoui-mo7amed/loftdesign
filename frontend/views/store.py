@@ -12,7 +12,7 @@ def affiliate_redirect(request, code, pk):
     profile = get_object_or_404(
         UserProfile, affiliate_code=code, is_approved=True
     )
-    product = get_object_or_404(Product, pk=pk)
+    product = get_object_or_404(Product, pk=pk, is_active=True, status=Product.ProductStatus.APPROVED)
     if not PartnerPrice.objects.filter(
         product=product, buyer=profile.user, is_active=True
     ).exists():

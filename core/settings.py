@@ -84,6 +84,7 @@ TEMPLATES = [
                 "dashboard.context_processors.dashboard_sidebar",
                 "frontend.context_processors.cart_context",
             ],
+            "builtins": ["frontend.templatetags.frontend_tags"],
         },
     },
 ]

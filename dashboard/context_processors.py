@@ -129,7 +129,7 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
         })
 
     # Provider: create and manage its own affiliates
-    if (role == "provider" and is_trusted) or is_admin:
+    if role == "provider" and is_trusted:
         menu.append({
             "title": _("My Affiliates"),
             "icon": "fas fa-user-friends",

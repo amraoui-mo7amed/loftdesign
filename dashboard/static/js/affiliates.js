@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .catch(function () {
                         Swal.fire({
                             icon: "error",
-                            title: btn.dataset.swalError || "An error occurred.",
+                            title: btn.dataset.swalError || gettext("An error occurred."),
                             customClass: { popup: "rounded-5" }
                         });
                     });

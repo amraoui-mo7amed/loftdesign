@@ -19,7 +19,7 @@
       el.textContent = el.dataset.eur;
     });
     // Outside Algeria: country and city instead of wilaya / commune lists.
-    [["wilaya", store.i18n.country || "Country", "country-name"], ["commune", store.i18n.city || "City", "address-level2"]].forEach(function (f) {
+    [["wilaya", store.i18n.country || gettext("Country"), "country-name"], ["commune", store.i18n.city || gettext("City"), "address-level2"]].forEach(function (f) {
       document.querySelectorAll('input[type="hidden"][name="' + f[0] + '"]').forEach(function (hidden) {
         var wrap = hidden.closest(".searchable-select-wrapper");
         if (!wrap) return;

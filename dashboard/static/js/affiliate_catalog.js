@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
             function showCopied() {
                 Swal.fire({
                     icon: "success",
-                    title: "Link copied!",
+                    title: gettext("Link copied!"),
                     text: "\"" + title + "\" share link copied to clipboard.",
                     timer: 2000,
                     showConfirmButton: false,
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
             function showError() {
                 Swal.fire({
                     icon: "error",
-                    title: "Could not copy",
+                    title: gettext("Could not copy"),
                     text: fullUrl,
                     confirmButtonColor: "#b79454",
                     customClass: {
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     Swal.fire({
                         icon: "success",
-                        title: data.message || "Saved!",
+                        title: data.message || gettext("Saved!"),
                         timer: 1500,
                         showConfirmButton: false,
                         customClass: { popup: "rounded-4 border-0" }
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     Swal.fire({
                         icon: "success",
-                        title: data.message || "Added!",
+                        title: data.message || gettext("Added!"),
                         timer: 1500,
                         showConfirmButton: false,
                         customClass: { popup: "rounded-4 border-0" }
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(function () {
                 Swal.fire({
                     icon: "error",
-                    title: "Network error",
+                    title: gettext("Network error"),
                     customClass: {
                         popup: "rounded-4 border-0",
                         confirmButton: "rounded-pill px-4"
@@ -183,12 +183,12 @@ document.addEventListener("DOMContentLoaded", function () {
             var name = this.dataset.name;
 
             Swal.fire({
-                title: this.dataset.swalTitle || "Remove from Catalog?",
-                text: (this.dataset.swalText || "Remove") + " " + name + "?",
+                title: this.dataset.swalTitle || gettext("Remove from Catalog?"),
+                text: (this.dataset.swalText || gettext("Remove")) + " " + name + "?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: this.dataset.swalConfirm || "Yes, remove",
-                cancelButtonText: this.dataset.swalCancel || "Cancel",
+                confirmButtonText: this.dataset.swalConfirm || gettext("Yes, remove"),
+                cancelButtonText: this.dataset.swalCancel || gettext("Cancel"),
                 reverseButtons: true,
                 customClass: {
                     popup: "rounded-4 border-0",

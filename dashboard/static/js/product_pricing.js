@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 nameEl.innerHTML =
                     "<strong>" + this.dataset.product + "</strong>" +
                     '<br><span class="text-muted small">' +
-                    (this.dataset.approveLabel || "Set the pricing for this product") +
+                    (this.dataset.approveLabel || gettext("Set the pricing for this product")) +
                     "</span>";
             }
             var providerInfo = document.getElementById("approveProviderInfo");

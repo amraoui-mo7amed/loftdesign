@@ -16,12 +16,12 @@
   var msgs = {
     unsupported: form.getAttribute("data-msg-unsupported") || ".{ext} not supported (use GLB/GLTF)",
     ready: form.getAttribute("data-msg-ready") || "{name} ready to upload",
-    preparing: form.getAttribute("data-msg-preparing") || "Preparing {name}...",
-    confirmRemove: form.getAttribute("data-msg-confirm-remove") || "Remove this variant?",
-    newVariant: form.getAttribute("data-msg-new-variant") || "New Variant",
-    editVariant: form.getAttribute("data-msg-edit-variant") || "Edit Variant",
-    newVariantSub: form.getAttribute("data-msg-new-variant-sub") || "Configure a product variant with its own media, color, dimensions, and stock.",
-    editVariantSub: form.getAttribute("data-msg-edit-variant-sub") || "Update the variant name, media, dimensions, or stock.",
+    preparing: form.getAttribute("data-msg-preparing") || gettext("Preparing {name}..."),
+    confirmRemove: form.getAttribute("data-msg-confirm-remove") || gettext("Remove this variant?"),
+    newVariant: form.getAttribute("data-msg-new-variant") || gettext("New Variant"),
+    editVariant: form.getAttribute("data-msg-edit-variant") || gettext("Edit Variant"),
+    newVariantSub: form.getAttribute("data-msg-new-variant-sub") || gettext("Configure a product variant with its own media, color, dimensions, and stock."),
+    editVariantSub: form.getAttribute("data-msg-edit-variant-sub") || gettext("Update the variant name, media, dimensions, or stock."),
   };
 
   // ── Helpers ─────────────────────────────────────────────
@@ -222,7 +222,7 @@
     var galleryPreview = document.getElementById("varGalleryPreview");
 
     function getEmptyText() {
-      return container.getAttribute("data-empty-text") || "No variants yet.";
+      return container.getAttribute("data-empty-text") || gettext("No variants yet.");
     }
 
     function renderEmpty() {
@@ -529,7 +529,7 @@
           if (data.redirect_url) { window.location.href = data.redirect_url; }
           else { window.location.href = "/dashboard/products/"; }
         } else {
-          var errMsg = data.message || "Error";
+          var errMsg = data.message || gettext("Error");
           if (data.errors) {
             var list = Object.values(data.errors).flat().join("<br>");
             errMsg = list;

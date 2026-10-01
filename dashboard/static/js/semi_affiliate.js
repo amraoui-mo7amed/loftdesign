@@ -56,12 +56,12 @@ document.addEventListener("DOMContentLoaded", function () {
             var name = this.dataset.name;
 
             Swal.fire({
-                title: this.dataset.swalTitle || "Delete?",
-                text: (this.dataset.swalText || "Delete") + " " + name + "?",
+                title: this.dataset.swalTitle || gettext("Delete?"),
+                text: (this.dataset.swalText || gettext("Delete")) + " " + name + "?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: this.dataset.swalConfirm || "Yes, delete",
-                cancelButtonText: this.dataset.swalCancel || "Cancel",
+                confirmButtonText: this.dataset.swalConfirm || gettext("Yes, delete"),
+                cancelButtonText: this.dataset.swalCancel || gettext("Cancel"),
                 reverseButtons: true,
                 customClass: {
                     popup: "rounded-4 border-0",
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (data.success) {
                             Swal.fire({
                                 icon: "success",
-                                title: data.message || "Deleted!",
+                                title: data.message || gettext("Deleted!"),
                                 timer: 1500,
                                 showConfirmButton: false,
                                 customClass: { popup: "rounded-4 border-0" }

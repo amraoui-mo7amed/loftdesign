@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `,
-                confirmButtonText: 'CLOSE',
+                confirmButtonText: gettext('CLOSE'),
                 confirmButtonColor: 'var(--brand-dark)',
                 customClass: {
                     popup: 'rounded-5 border-0',

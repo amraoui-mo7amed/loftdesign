@@ -39,12 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const itemTitle = button.dataset.itemTitle || "this item";
 
             Swal.fire({
-                title: "Are you sure?",
+                title: gettext("Are you sure?"),
                 text: `You are about to delete ${itemTitle}. This action cannot be undone!`,
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: "Yes, delete it",
-                cancelButtonText: "Cancel",
+                confirmButtonText: gettext("Yes, delete it"),
+                cancelButtonText: gettext("Cancel"),
                 buttonsStyling: false,
                 customClass: {
                     confirmButton: "btn btn-danger mx-2",
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .then(data => {
                         Swal.fire({
                             title: data.success ? "Deleted!" : "Error",
-                            text: data.message || "Operation completed",
+                            text: data.message || gettext("Operation completed"),
                             icon: data.success ? "success" : "error"
                         }).then(() => {
                             if (data.success) location.reload();
@@ -73,8 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     })
                     .catch(() => {
                         Swal.fire({
-                            title: "Error",
-                            text: "Connection failed",
+                            title: gettext("Error"),
+                            text: gettext("Connection failed"),
                             icon: "error"
                         });
                     });

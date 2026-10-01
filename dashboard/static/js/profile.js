@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.success) {
                 Swal.fire({
                     icon: "success",
-                    title: data.message || "Profile updated successfully.",
+                    title: data.message || gettext("Profile updated successfully."),
                     timer: 1500,
                     showConfirmButton: false,
                 }).then(function () {
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
                 Swal.fire({
                     icon: "error",
-                    title: "Validation Error",
+                    title: gettext("Validation Error"),
                     html: "<ul class='mb-0 text-start'>" + errorHtml + "</ul>",
                 });
             }
@@ -109,8 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             Swal.fire({
                 icon: "error",
-                title: "Error",
-                text: "An unexpected error occurred.",
+                title: gettext("Error"),
+                text: gettext("An unexpected error occurred."),
             });
         });
     });

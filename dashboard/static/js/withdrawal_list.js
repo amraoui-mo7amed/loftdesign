@@ -7,12 +7,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var transApprove = container.dataset.transApprove || "approve";
     var transReject = container.dataset.transReject || "reject";
-    var transConfirm = container.dataset.transConfirm || "Confirm";
-    var transConfirmText = container.dataset.transConfirmText || "Are you sure you want to";
+    var transConfirm = container.dataset.transConfirm || gettext("Confirm");
+    var transConfirmText = container.dataset.transConfirmText || gettext("Are you sure you want to");
     var transThisWithdrawal = container.dataset.transThisWithdrawal || "this withdrawal?";
-    var transYes = container.dataset.transYes || "Yes";
-    var transCancel = container.dataset.transCancel || "Cancel";
-    var transError = container.dataset.transError || "Error";
+    var transYes = container.dataset.transYes || gettext("Yes");
+    var transCancel = container.dataset.transCancel || gettext("Cancel");
+    var transError = container.dataset.transError || gettext("Error");
 
     document.querySelectorAll(".approve-btn, .reject-btn").forEach(function (btn) {
         btn.addEventListener("click", function () {

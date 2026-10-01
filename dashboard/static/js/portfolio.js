@@ -209,10 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
             // Get translations from data attrs or defaults
-            const title = this.getAttribute('data-swal-title') || 'Are you sure?';
+            const title = this.getAttribute('data-swal-title') || gettext('Are you sure?');
             const text = this.getAttribute('data-swal-text') || `You are about to delete "${name}".`;
-            const confirmText = this.getAttribute('data-swal-confirm') || 'Yes, delete it';
-            const cancelText = this.getAttribute('data-swal-cancel') || 'Cancel';
+            const confirmText = this.getAttribute('data-swal-confirm') || gettext('Yes, delete it');
+            const cancelText = this.getAttribute('data-swal-cancel') || gettext('Cancel');
 
             Swal.fire({
                 title: title,
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(data => {
                         if (data.success) {
                             Swal.fire({
-                                title: 'Deleted!',
+                                title: gettext('Deleted!'),
                                 text: data.message,
                                 icon: 'success',
                                 confirmButtonColor: 'var(--brand-primary)'

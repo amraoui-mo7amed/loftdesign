@@ -6,12 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         btn.addEventListener("click", () => {
             const config = {
-                title: btn.dataset.swalTitle || 'Are you sure?',
+                title: btn.dataset.swalTitle || gettext('Are you sure?'),
                 text: btn.dataset.swalText || '',
                 icon: icon,
                 showCancelButton: true,
-                confirmButtonText: btn.dataset.swalConfirm || 'Confirm',
-                cancelButtonText: btn.dataset.swalCancel || 'Cancel',
+                confirmButtonText: btn.dataset.swalConfirm || gettext('Confirm'),
+                cancelButtonText: btn.dataset.swalCancel || gettext('Cancel'),
                 showLoaderOnConfirm: true,
                 reverseButtons: true,
                 preConfirm: async () => {
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             Swal.fire(config).then((result) => {
                 if (result.isConfirmed && result.value) {
                     Swal.fire({
-                        title: btn.dataset.swalSuccessTitle || 'Success!',
+                        title: btn.dataset.swalSuccessTitle || gettext('Success!'),
                         text: result.value.message,
                         icon: 'success'
                     }).then(() => {

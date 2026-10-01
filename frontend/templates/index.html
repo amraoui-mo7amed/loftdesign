@@ -26,6 +26,7 @@
                 i18n: {country: "{% trans 'Country' %}", city: "{% trans 'City' %}"}
             };
         </script>
+        <script src="{% url 'javascript-catalog' %}"></script>
         <script src="{% static 'js/store_currency.js' %}?v=1" defer></script>
         <title>
             {% if IS_RTL %}

@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     showMiniNotif(data.message);
                     openDrawer();
                 } else {
-                    showMiniNotif(data.message || "Error");
+                    showMiniNotif(data.message || gettext("Error"));
                 }
                 btn.disabled = false;
                 btn.innerHTML = originalHtml;
@@ -335,7 +335,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     if (typeof reloadPageSummary === "function") reloadPageSummary(data.cart_total_display);
                 } else {
-                    showMiniNotif(data.message || "Error");
+                    showMiniNotif(data.message || gettext("Error"));
                 }
                 if (!isRow) {
                     element.disabled = false;

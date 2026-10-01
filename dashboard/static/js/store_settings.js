@@ -79,17 +79,17 @@ document.addEventListener("DOMContentLoaded", function () {
         if (data.success) {
           Swal.fire({
             icon: "success",
-            title: "Saved",
+            title: gettext("Saved"),
             text: data.message,
             timer: 2000,
             showConfirmButton: false,
           }).then(function () { location.reload(); });
         } else {
-          Swal.fire({ icon: "error", title: "Error", text: data.message || "Something went wrong." });
+          Swal.fire({ icon: "error", title: gettext("Error"), text: data.message || gettext("Something went wrong.") });
         }
       })
       .catch(function () {
-        Swal.fire({ icon: "error", title: "Error", text: "Something went wrong." });
+        Swal.fire({ icon: "error", title: gettext("Error"), text: gettext("Something went wrong.") });
       })
       .finally(function () {
         if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnHtml; }

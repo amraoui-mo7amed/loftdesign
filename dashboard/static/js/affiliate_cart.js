@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
                     Swal.fire({
                         icon: "error",
-                        title: data.message || "Error",
+                        title: data.message || gettext("Error"),
                         confirmButtonColor: "#b79454",
                         customClass: { popup: "rounded-4 border-0" }
                     });
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(function () {
                 Swal.fire({
                     icon: "error",
-                    title: "Something went wrong",
+                    title: gettext("Something went wrong"),
                     confirmButtonColor: "#b79454",
                     customClass: { popup: "rounded-4 border-0" }
                 });
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (newQty > max) {
                 Swal.fire({
                     icon: "warning",
-                    title: "Only " + max + " available",
+                    title: interpolate(gettext("Only %s available"), [max]),
                     confirmButtonColor: "#b79454",
                     customClass: { popup: "rounded-4 border-0" }
                 });
@@ -181,12 +181,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (newQty < 1) {
                 Swal.fire({
-                    title: this.dataset.swalTitle || "Remove from cart?",
-                    text: (this.dataset.swalText || "Remove") + " \"" + this.dataset.title + "\"?",
+                    title: this.dataset.swalTitle || gettext("Remove from cart?"),
+                    text: (this.dataset.swalText || gettext("Remove")) + " \"" + this.dataset.title + "\"?",
                     icon: "question",
                     showCancelButton: true,
-                    confirmButtonText: this.dataset.swalConfirm || "Yes, remove",
-                    cancelButtonText: this.dataset.swalCancel || "Cancel",
+                    confirmButtonText: this.dataset.swalConfirm || gettext("Yes, remove"),
+                    cancelButtonText: this.dataset.swalCancel || gettext("Cancel"),
                     confirmButtonColor: "#dc3545",
                     cancelButtonColor: "#6c757d",
                     customClass: {
@@ -236,12 +236,12 @@ document.addEventListener("DOMContentLoaded", function () {
             var title = this.dataset.title;
 
             Swal.fire({
-                title: this.dataset.swalTitle || "Remove from cart?",
-                text: (this.dataset.swalText || "Remove") + " \"" + title + "\"?",
+                title: this.dataset.swalTitle || gettext("Remove from cart?"),
+                text: (this.dataset.swalText || gettext("Remove")) + " \"" + title + "\"?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: this.dataset.swalConfirm || "Yes, remove",
-                cancelButtonText: this.dataset.swalCancel || "Cancel",
+                confirmButtonText: this.dataset.swalConfirm || gettext("Yes, remove"),
+                cancelButtonText: this.dataset.swalCancel || gettext("Cancel"),
                 confirmButtonColor: "#dc3545",
                 cancelButtonColor: "#6c757d",
                 customClass: {
@@ -279,8 +279,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!name || !phone) {
                 Swal.fire({
                     icon: "warning",
-                    title: "Missing fields",
-                    text: "Name and phone are required.",
+                    title: gettext("Missing fields"),
+                    text: gettext("Name and phone are required."),
                     confirmButtonColor: "#b79454",
                     customClass: { popup: "rounded-4 border-0" }
                 });
@@ -288,12 +288,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             Swal.fire({
-                title: orderForm.dataset.swalConfirmTitle || "Confirm Order?",
-                html: (orderForm.dataset.swalConfirmHtml || "Create order for") + " <strong>" + name + "</strong>?",
+                title: orderForm.dataset.swalConfirmTitle || gettext("Confirm Order?"),
+                html: (orderForm.dataset.swalConfirmHtml || gettext("Create order for")) + " <strong>" + name + "</strong>?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: orderForm.dataset.swalConfirmText || "Yes, place order",
-                cancelButtonText: orderForm.dataset.swalCancelText || "Cancel",
+                confirmButtonText: orderForm.dataset.swalConfirmText || gettext("Yes, place order"),
+                cancelButtonText: orderForm.dataset.swalCancelText || gettext("Cancel"),
                 confirmButtonColor: "#198754",
                 cancelButtonColor: "#6c757d",
                 customClass: {
@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (data.success) {
                         Swal.fire({
                             icon: "success",
-                            title: data.message || "Order Created!",
+                            title: data.message || gettext("Order Created!"),
                             confirmButtonColor: "#b79454",
                             customClass: { popup: "rounded-4 border-0" }
                         }).then(function () {
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         Swal.fire({
                             icon: "error",
-                            title: data.message || "Error creating order",
+                            title: data.message || gettext("Error creating order"),
                             confirmButtonColor: "#b79454",
                             customClass: { popup: "rounded-4 border-0" }
                         });
@@ -337,7 +337,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(function () {
                     Swal.fire({
                         icon: "error",
-                        title: "Something went wrong",
+                        title: gettext("Something went wrong"),
                         confirmButtonColor: "#b79454",
                         customClass: { popup: "rounded-4 border-0" }
                     });

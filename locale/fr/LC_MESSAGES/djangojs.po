@@ -1,0 +1,346 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-01 23:40+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: dashboard/static/js/admin_store_settings.js:98
+#: dashboard/static/js/store_settings.js:82
+msgid "Saved"
+msgstr "Enregistré"
+
+#: dashboard/static/js/admin_store_settings.js:104
+#: dashboard/static/js/admin_store_settings.js:108
+#: dashboard/static/js/affiliate_cart.js:122 dashboard/static/js/client.js:94
+#: dashboard/static/js/dash_index.js:76
+#: dashboard/static/js/product_create.js:532
+#: dashboard/static/js/product_global_toggle.js:24
+#: dashboard/static/js/product_global_toggle.js:35
+#: dashboard/static/js/profile.js:112 dashboard/static/js/store_settings.js:88
+#: dashboard/static/js/store_settings.js:92
+#: dashboard/static/js/wallet_admin.js:28
+#: dashboard/static/js/wallet_admin.js:73
+#: dashboard/static/js/withdrawal_list.js:15 frontend/static/js/cart.js:200
+#: frontend/static/js/cart.js:338
+msgid "Error"
+msgstr "Erreur"
+
+#: dashboard/static/js/admin_store_settings.js:104
+#: dashboard/static/js/admin_store_settings.js:108
+#: dashboard/static/js/product_global_toggle.js:36
+#: dashboard/static/js/store_settings.js:88
+#: dashboard/static/js/store_settings.js:92
+msgid "Something went wrong."
+msgstr "Une erreur est survenue."
+
+#: dashboard/static/js/affiliate_cart.js:131
+#: dashboard/static/js/affiliate_cart.js:340
+msgid "Something went wrong"
+msgstr "Une erreur est survenue"
+
+#: dashboard/static/js/affiliate_cart.js:151
+#, javascript-format
+msgid "Only %s available"
+msgstr "Seulement %s disponible(s)"
+
+#: dashboard/static/js/affiliate_cart.js:184
+#: dashboard/static/js/affiliate_cart.js:239
+msgid "Remove from cart?"
+msgstr "Retirer du panier ?"
+
+#: dashboard/static/js/affiliate_cart.js:185
+#: dashboard/static/js/affiliate_cart.js:240
+#: dashboard/static/js/affiliate_catalog.js:187
+msgid "Remove"
+msgstr "Retirer"
+
+#: dashboard/static/js/affiliate_cart.js:188
+#: dashboard/static/js/affiliate_cart.js:243
+#: dashboard/static/js/affiliate_catalog.js:190
+#: dashboard/static/js/partner_price.js:54
+msgid "Yes, remove"
+msgstr "Oui, retirer"
+
+#: dashboard/static/js/affiliate_cart.js:189
+#: dashboard/static/js/affiliate_cart.js:244
+#: dashboard/static/js/affiliate_cart.js:296
+#: dashboard/static/js/affiliate_catalog.js:191
+#: dashboard/static/js/affiliate_manage.js:63 dashboard/static/js/client.js:72
+#: dashboard/static/js/dash_index.js:47
+#: dashboard/static/js/partner_price.js:55
+#: dashboard/static/js/portfolio.js:215
+#: dashboard/static/js/semi_affiliate.js:64 dashboard/static/js/users.js:14
+#: dashboard/static/js/wallet_admin.js:12
+#: dashboard/static/js/withdrawal_list.js:14
+msgid "Cancel"
+msgstr "Annuler"
+
+#: dashboard/static/js/affiliate_cart.js:282
+msgid "Missing fields"
+msgstr "Champs manquants"
+
+#: dashboard/static/js/affiliate_cart.js:283
+msgid "Name and phone are required."
+msgstr "Le nom et le téléphone sont obligatoires."
+
+#: dashboard/static/js/affiliate_cart.js:291
+msgid "Confirm Order?"
+msgstr "Confirmer la commande ?"
+
+#: dashboard/static/js/affiliate_cart.js:292
+msgid "Create order for"
+msgstr "Créer la commande pour"
+
+#: dashboard/static/js/affiliate_cart.js:295
+msgid "Yes, place order"
+msgstr "Oui, commander"
+
+#: dashboard/static/js/affiliate_cart.js:322
+msgid "Order Created!"
+msgstr "Commande créée !"
+
+#: dashboard/static/js/affiliate_cart.js:331
+msgid "Error creating order"
+msgstr "Erreur lors de la création de la commande"
+
+#: dashboard/static/js/affiliate_catalog.js:18
+msgid "Link copied!"
+msgstr "Lien copié !"
+
+#: dashboard/static/js/affiliate_catalog.js:29
+msgid "Could not copy"
+msgstr "Copie impossible"
+
+#: dashboard/static/js/affiliate_catalog.js:85
+#: dashboard/static/js/product_items.js:396
+msgid "Saved!"
+msgstr "Enregistré !"
+
+#: dashboard/static/js/affiliate_catalog.js:137
+msgid "Added!"
+msgstr "Ajouté !"
+
+#: dashboard/static/js/affiliate_catalog.js:168
+msgid "Network error"
+msgstr "Erreur réseau"
+
+#: dashboard/static/js/affiliate_catalog.js:186
+msgid "Remove from Catalog?"
+msgstr "Retirer du catalogue ?"
+
+#: dashboard/static/js/affiliate_manage.js:58 dashboard/static/js/client.js:65
+#: dashboard/static/js/semi_affiliate.js:59
+msgid "Delete?"
+msgstr "Supprimer ?"
+
+#: dashboard/static/js/affiliate_manage.js:59
+#: dashboard/static/js/semi_affiliate.js:60
+msgid "Delete"
+msgstr "Supprimer"
+
+#: dashboard/static/js/affiliate_manage.js:62 dashboard/static/js/client.js:71
+#: dashboard/static/js/semi_affiliate.js:63
+msgid "Yes, delete"
+msgstr "Oui, supprimer"
+
+#: dashboard/static/js/affiliate_manage.js:84 dashboard/static/js/client.js:87
+#: dashboard/static/js/portfolio.js:246
+#: dashboard/static/js/semi_affiliate.js:85
+msgid "Deleted!"
+msgstr "Supprimé !"
+
+#: dashboard/static/js/affiliate_manage.js:94
+#: dashboard/static/js/affiliates.js:64 dashboard/static/js/wallet_admin.js:32
+#: dashboard/static/js/wallet_admin.js:77
+msgid "An error occurred."
+msgstr "Une erreur est survenue."
+
+#: dashboard/static/js/dash_index.js:42 dashboard/static/js/portfolio.js:212
+#: dashboard/static/js/users.js:9
+msgid "Are you sure?"
+msgstr "Êtes-vous sûr ?"
+
+#: dashboard/static/js/dash_index.js:46 dashboard/static/js/portfolio.js:214
+msgid "Yes, delete it"
+msgstr "Oui, supprimer"
+
+#: dashboard/static/js/dash_index.js:68
+msgid "Operation completed"
+msgstr "Opération terminée"
+
+#: dashboard/static/js/dash_index.js:77
+msgid "Connection failed"
+msgstr "Échec de la connexion"
+
+#: dashboard/static/js/leads.js:41
+msgid "CLOSE"
+msgstr "FERMER"
+
+#: dashboard/static/js/partner_price.js:50
+msgid "Remove Price?"
+msgstr "Supprimer le prix ?"
+
+#: dashboard/static/js/partner_price.js:51
+msgid "Remove custom price for"
+msgstr "Supprimer le prix personnalisé pour"
+
+#: dashboard/static/js/product_create.js:19
+msgid "Preparing {name}..."
+msgstr "Préparation de {name}..."
+
+#: dashboard/static/js/product_create.js:20
+msgid "Remove this variant?"
+msgstr "Supprimer cette variante ?"
+
+#: dashboard/static/js/product_create.js:21
+msgid "New Variant"
+msgstr "Nouvelle variante"
+
+#: dashboard/static/js/product_create.js:22
+msgid "Edit Variant"
+msgstr "Modifier la variante"
+
+#: dashboard/static/js/product_create.js:23
+msgid ""
+"Configure a product variant with its own media, color, dimensions, and "
+"stock."
+msgstr ""
+"Configurez une variante avec ses propres médias, couleur, dimensions et "
+"stock."
+
+#: dashboard/static/js/product_create.js:24
+msgid "Update the variant name, media, dimensions, or stock."
+msgstr ""
+"Modifiez le nom, les médias, les dimensions ou le stock de la variante."
+
+#: dashboard/static/js/product_create.js:225
+msgid "No variants yet."
+msgstr "Aucune variante pour le moment."
+
+#: dashboard/static/js/product_global_toggle.js:25
+msgid "Failed to update."
+msgstr "Échec de la mise à jour."
+
+#: dashboard/static/js/product_items.js:179
+msgid "No items yet."
+msgstr "Aucun élément pour le moment."
+
+#: dashboard/static/js/product_items.js:347
+msgid "Removed!"
+msgstr "Retiré !"
+
+#: dashboard/static/js/product_pricing.js:11
+msgid "Set the pricing for this product"
+msgstr "Définissez les prix de ce produit"
+
+#: dashboard/static/js/profile.js:81
+msgid "Profile updated successfully."
+msgstr "Profil mis à jour."
+
+#: dashboard/static/js/profile.js:100
+msgid "Validation Error"
+msgstr "Erreur de validation"
+
+#: dashboard/static/js/profile.js:113
+msgid "An unexpected error occurred."
+msgstr "Une erreur inattendue est survenue."
+
+#: dashboard/static/js/users.js:13 dashboard/static/js/withdrawal_list.js:10
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: dashboard/static/js/users.js:57
+msgid "Success!"
+msgstr "Succès !"
+
+#: dashboard/static/js/wallet_admin.js:7
+msgid "Clear Wallet?"
+msgstr "Remettre le portefeuille à zéro ?"
+
+#: dashboard/static/js/wallet_admin.js:8
+msgid "This will reset the balance to 0. The history is kept."
+msgstr "Le solde sera remis à 0. L'historique est conservé."
+
+#: dashboard/static/js/wallet_admin.js:11
+msgid "Yes, clear it"
+msgstr "Oui, remettre à zéro"
+
+#: dashboard/static/js/wallet_chain.js:24
+msgid "No chain data available."
+msgstr "Aucune donnée de répartition."
+
+#: dashboard/static/js/wallet_chain.js:57
+#: dashboard/static/js/wallet_chain.js:120
+msgid "Provider"
+msgstr "Fournisseur"
+
+#: dashboard/static/js/wallet_chain.js:63
+msgid "Commission"
+msgstr "Commission"
+
+#: dashboard/static/js/wallet_chain.js:69
+msgid "Loft Design"
+msgstr "Loft Design"
+
+#: dashboard/static/js/wallet_chain.js:72
+#: dashboard/static/js/wallet_chain.js:122
+msgid "Affiliate"
+msgstr "Affilié"
+
+#: dashboard/static/js/wallet_chain.js:76
+msgid "Semi-Affiliate"
+msgstr "Semi-affilié"
+
+#: dashboard/static/js/wallet_chain.js:93
+msgid "Purchased"
+msgstr "Acheté"
+
+#: dashboard/static/js/wallet_chain.js:94
+msgid "Sold"
+msgstr "Vendu"
+
+#: dashboard/static/js/wallet_chain.js:105
+msgid "Item Profit"
+msgstr "Marge"
+
+#: dashboard/static/js/wallet_chain.js:115
+msgid "Order Total"
+msgstr "Total de la commande"
+
+#: dashboard/static/js/wallet_chain.js:121
+msgid "Loft"
+msgstr "Loft"
+
+#: dashboard/static/js/wallet_chain.js:123
+msgid "Semi"
+msgstr "Semi"
+
+#: dashboard/static/js/withdrawal_list.js:11
+msgid "Are you sure you want to"
+msgstr "Voulez-vous vraiment"
+
+#: dashboard/static/js/withdrawal_list.js:13
+msgid "Yes"
+msgstr "Oui"
+
+#: frontend/static/js/store_currency.js:22
+msgid "Country"
+msgstr "Pays"
+
+#: frontend/static/js/store_currency.js:22
+msgid "City"
+msgstr "Ville"

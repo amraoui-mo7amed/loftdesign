@@ -21,6 +21,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 import django_eventstream
+from django.views.i18n import JavaScriptCatalog
+from django.views.decorators.cache import cache_page
 
 from user_auth import views as user_views
 
@@ -29,6 +31,7 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls", namespace="dash")),
     path("", include("frontend.urls", namespace="frontend")),
     path("i18n/", include("django.conf.urls.i18n")),
+    path("jsi18n/", cache_page(86400, key_prefix="jsi18n-%s" % settings.STATIC_URL)(JavaScriptCatalog.as_view()), name="javascript-catalog"),
     # Notifications API
     path("events/", include(django_eventstream.urls)),
 ]

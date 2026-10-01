@@ -47,12 +47,12 @@ document.addEventListener("DOMContentLoaded", function () {
             var csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
             Swal.fire({
-                title: this.dataset.swalTitle || "Remove Price?",
-                text: (this.dataset.swalText || "Remove custom price for") + " " + name + "?",
+                title: this.dataset.swalTitle || gettext("Remove Price?"),
+                text: (this.dataset.swalText || gettext("Remove custom price for")) + " " + name + "?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: this.dataset.swalConfirm || "Yes, remove",
-                cancelButtonText: this.dataset.swalCancel || "Cancel",
+                confirmButtonText: this.dataset.swalConfirm || gettext("Yes, remove"),
+                cancelButtonText: this.dataset.swalCancel || gettext("Cancel"),
                 reverseButtons: true,
                 customClass: {
                     popup: "rounded-4 border-0",

@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
             container.innerHTML =
                 '<div class="text-center py-4" id="noItemsPlaceholder">' +
                 '<i class="fas fa-box-open fa-3x text-muted opacity-25 mb-3"></i>' +
-                '<p class="text-muted mb-0">' + (container.dataset.emptyText || "No items yet.") + '</p>' +
+                '<p class="text-muted mb-0">' + (container.dataset.emptyText || gettext("No items yet.")) + '</p>' +
                 "</div>";
             document.getElementById("itemsCount").textContent = "0 items";
             return;
@@ -344,7 +344,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
                     if (data.success) {
-                        Swal.fire({ icon: "success", title: "Removed!", timer: 1500, showConfirmButton: false });
+                        Swal.fire({ icon: "success", title: gettext("Removed!"), timer: 1500, showConfirmButton: false });
                         loadItems();
                     }
                 });
@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.success) {
                 var modal = bootstrap.Modal.getInstance(document.getElementById("itemFormModal"));
                 if (modal) modal.hide();
-                Swal.fire({ icon: "success", title: data.message || "Saved!", timer: 1500, showConfirmButton: false });
+                Swal.fire({ icon: "success", title: data.message || gettext("Saved!"), timer: 1500, showConfirmButton: false });
                 loadItems();
                 resetModal();
             } else {

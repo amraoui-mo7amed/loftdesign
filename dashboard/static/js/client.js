@@ -62,14 +62,14 @@ document.addEventListener("DOMContentLoaded", function () {
             var name = this.dataset.deleteName;
             var csrf = document.querySelector("[name=csrfmiddlewaretoken]");
             Swal.fire({
-                title: btn.dataset.swalTitle || "Delete?",
+                title: btn.dataset.swalTitle || gettext("Delete?"),
                 text: btn.dataset.swalText || ('Permanently delete "' + name + '"? This cannot be undone.'),
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#6c757d",
-                confirmButtonText: btn.dataset.swalConfirm || "Yes, delete",
-                cancelButtonText: btn.dataset.swalCancel || "Cancel",
+                confirmButtonText: btn.dataset.swalConfirm || gettext("Yes, delete"),
+                cancelButtonText: btn.dataset.swalCancel || gettext("Cancel"),
             }).then(function (result) {
                 if (result.isConfirmed) {
                     fetch(url, {
@@ -84,14 +84,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (data.success) {
                             Swal.fire({
                                 icon: "success",
-                                title: btn.dataset.swalDeletedTitle || "Deleted!",
+                                title: btn.dataset.swalDeletedTitle || gettext("Deleted!"),
                                 text: data.message,
                             });
                             setTimeout(function () { location.reload(); }, 1000);
                         } else {
                             Swal.fire({
                                 icon: "error",
-                                title: btn.dataset.swalErrorTitle || "Error",
+                                title: btn.dataset.swalErrorTitle || gettext("Error"),
                                 text: data.message,
                             });
                         }

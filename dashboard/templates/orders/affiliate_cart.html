@@ -5,7 +5,7 @@
 {% block dashTitle %}{% trans "Create Order" %}{% endblock dashTitle %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/affiliate_cart.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/affiliate_cart.css' %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -225,5 +225,5 @@
 {% endblock dashContent %}
 
 {% block extra_js %}
-<script src="{% static 'js/affiliate_cart.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/affiliate_cart.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

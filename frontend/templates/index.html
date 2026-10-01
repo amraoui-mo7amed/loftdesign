@@ -69,7 +69,7 @@
         {% block extra_css %}
         {% endblock extra_css %}
         {# Core CSS #}
-        <link rel="stylesheet" href="{% static "css/index.css" %}?v={% now "U" %}" />
+        <link rel="stylesheet" href="{% static "css/index.css" %}?v={{ ASSET_VERSION }}" />
     </head>
     <body class="{% block body_class %}{% endblock body_class %}">
         <!-- Navigation Bar -->
@@ -166,8 +166,8 @@
         {# Cart Component Block #}
 {% block cart %}
     {% include 'cart/cart_drawer.html' %}
-    <link rel="stylesheet" href="{% static "css/cart.css" %}?v={% now "U" %}">
-    <script src="{% static "js/cart.js" %}?v={% now "U" %}"></script>
+    <link rel="stylesheet" href="{% static "css/cart.css" %}?v={{ ASSET_VERSION }}">
+    <script src="{% static "js/cart.js" %}?v={{ ASSET_VERSION }}"></script>
 {% endblock cart %}
         {# Bootstrap JS #}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -175,7 +175,7 @@
                 crossorigin="anonymous"></script>
 
         {# Core JS #}
-        <script src="{% static "js/index.js" %}?v={% now "U" %}">
+        <script src="{% static "js/index.js" %}?v={{ ASSET_VERSION }}">
         </script>
         {% block js %}
         {% endblock js %}

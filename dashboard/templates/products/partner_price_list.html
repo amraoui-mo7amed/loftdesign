@@ -5,7 +5,7 @@
 {% block dashTitle %}{% trans "Partner Pricing" %} — {{ product.title }}{% endblock dashTitle %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -148,5 +148,5 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{% static 'js/partner_price.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/partner_price.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

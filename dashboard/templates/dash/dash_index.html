@@ -5,9 +5,9 @@
 
 {% block css %}
     <link rel="stylesheet"
-          href="{% static 'css/dash_index.css' %}?v={% now "U" %}" />
+          href="{% static 'css/dash_index.css' %}?v={{ ASSET_VERSION }}" />
     <link rel="stylesheet"
-          href="{% static 'css/notifications.css' %}?v={% now "U" %}" />
+          href="{% static 'css/notifications.css' %}?v={{ ASSET_VERSION }}" />
 {% endblock css %}
 {% block nav %}
 {% endblock nav %}
@@ -115,7 +115,7 @@
                            class="d-flex align-items-center gap-2 text-decoration-none text-dark dropdown-toggle no-caret user-dropdown-trigger"
                            data-bs-toggle="dropdown">
                             {% if request.user.profile.profile_picture %}
-                            <img src="{{ request.user.profile.profile_picture.url }}?v={% now "U" %}"
+                            <img src="{{ request.user.profile.profile_picture.url }}?v={{ ASSET_VERSION }}"
                                  alt="{% trans 'Profile' %}"
                                  class="rounded-circle"
                                  style="width: 38px; height: 38px; object-fit: cover;">
@@ -184,6 +184,6 @@
 {% endblock footer %}
 {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{% static 'js/dash_index.js' %}?v={% now "U" %}"></script>
-    <script src="{% static 'js/notifications.js' %}?v={% now "U" %}"></script>
+    <script src="{% static 'js/dash_index.js' %}?v={{ ASSET_VERSION }}"></script>
+    <script src="{% static 'js/notifications.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock js %}

@@ -8,7 +8,7 @@
 {% endblock dashTitle %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/dash_home.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/dash_home.css" %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -135,5 +135,5 @@
 
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static "js/dash_home.js" %}?v={% now "U" %}"></script>
+    <script src="{% static "js/dash_home.js" %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

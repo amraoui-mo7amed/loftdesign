@@ -5,8 +5,8 @@
 {% block dashTitle %}{% trans "Global Site Settings" %}{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
-    <link rel="stylesheet" href="{% static 'css/settings.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={{ ASSET_VERSION }}">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}?v={{ ASSET_VERSION }}">
 {% endblock %}
 
 {% block dashContent %}
@@ -95,6 +95,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
-<script src="{% static 'js/settings.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/portfolio.js' %}?v={{ ASSET_VERSION }}"></script>
+<script src="{% static 'js/settings.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock %}

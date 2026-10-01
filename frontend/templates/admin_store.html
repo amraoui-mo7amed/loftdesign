@@ -5,8 +5,8 @@
 {% block body_class %}affiliate-store{% endblock body_class %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static "css/home.css" %}?v={% now "U" %}">
-<link rel="stylesheet" href="{% static "css/store.css" %}?v={% now "U" %}">
+<link rel="stylesheet" href="{% static "css/home.css" %}?v={{ ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static "css/store.css" %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 
 {% block nav %}

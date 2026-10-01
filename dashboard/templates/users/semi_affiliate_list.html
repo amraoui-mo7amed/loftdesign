@@ -5,7 +5,7 @@
 {% block dashTitle %}{% trans "Semi-Affiliates" %}{% endblock dashTitle %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/users.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'css/users.css' %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -45,7 +45,7 @@
                 <div class="semi-card-top {% if request.user.is_superuser %}semi-card-top-affiliate{% endif %}">
                     <div class="semi-avatar-wrapper">
                         {% if sa.profile_picture %}
-                            <img src="{{ sa.profile_picture.url }}?v={% now 'U' %}" alt="" class="semi-avatar-img">
+                            <img src="{{ sa.profile_picture.url }}?v={{ ASSET_VERSION }}" alt="" class="semi-avatar-img">
                         {% else %}
                             <div class="semi-avatar-circle {% if request.user.is_superuser %}semi-avatar-circle-affiliate{% endif %}">
                                 {{ sa.user.first_name|first|upper }}{{ sa.user.last_name|first|upper }}
@@ -211,5 +211,5 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{% static 'js/semi_affiliate.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/semi_affiliate.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

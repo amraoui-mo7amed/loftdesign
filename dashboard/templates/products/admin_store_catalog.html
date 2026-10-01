@@ -5,7 +5,7 @@
 {% block dashTitle %}{% trans "Store Products" %}{% endblock dashTitle %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/products.css' %}?v={{ ASSET_VERSION }}">
 <style>
 .product-toggle-row {
     transition: background 0.15s;

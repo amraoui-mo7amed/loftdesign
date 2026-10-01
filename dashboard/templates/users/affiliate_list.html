@@ -6,7 +6,7 @@
 {% block dashTitle %}{{ title }}{% endblock dashTitle %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/users.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/users.css" %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -109,7 +109,7 @@
                     {% endif %}
                         <div class="aff-avatar-wrap">
                             {% if profile.profile_picture %}
-                                <img src="{{ profile.profile_picture.url }}?v={% now "U" %}"
+                                <img src="{{ profile.profile_picture.url }}?v={{ ASSET_VERSION }}"
                                      alt="{% trans 'Profile' %}" class="aff-avatar-img">
                             {% else %}
                                 <div class="aff-avatar-circle">
@@ -244,6 +244,6 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{% static 'js/affiliates.js' %}?v={% now 'U' %}"></script>
-<script src="{% static 'js/affiliate_manage.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/affiliates.js' %}?v={{ ASSET_VERSION }}"></script>
+<script src="{% static 'js/affiliate_manage.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

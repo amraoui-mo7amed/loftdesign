@@ -5,9 +5,9 @@
     landing-page
 {% endblock body_class %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/home.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/home.css" %}?v={{ ASSET_VERSION }}">
     <link rel="stylesheet"
-          href="{% static "css/products_list.css" %}?v={% now "U" %}">
+          href="{% static "css/products_list.css" %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 {% block nav %}
     <nav class="navbar navbar-expand-lg bg-white navbar-light fixed-top transition-all"
@@ -454,5 +454,5 @@
 
 {% endblock footer %}
 {% block extra_js %}
-    <script src="{% static 'js/home.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/home.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

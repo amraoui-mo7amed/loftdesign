@@ -94,7 +94,7 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "url_name": "dash:end_client_list",
         })
         menu.append({
-            "title": _("Providers"),
+            "title": _("Providers & pro clients"),
             "icon": "fas fa-users",
             "url_name": "dash:user_list",
         })

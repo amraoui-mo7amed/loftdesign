@@ -21,9 +21,9 @@
 
 {% block cart %}{% endblock cart %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/cart.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/cart.css" %}?v={{ ASSET_VERSION }}">
     {% if affiliate_code %}
-    <link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={{ ASSET_VERSION }}">
     {% endif %}
 {% endblock extra_css %}
 
@@ -209,5 +209,5 @@
 </div>
 
 {% block extra_js %}
-    <script src="{% static 'js/cart.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/cart.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

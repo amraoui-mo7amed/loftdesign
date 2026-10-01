@@ -8,7 +8,7 @@
 {% endblock dashTitle %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/users.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/users.css" %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -37,7 +37,7 @@
                 <button type="button" class="btn btn-dark rounded-3 px-4 fw-bold shadow-sm d-flex align-items-center gap-2" 
                         data-bs-toggle="modal" data-bs-target="#providerModal" style="height: 45px;">
                     <i class="fas fa-user-plus text-primary"></i>
-                    <span>{% trans "New Provider" %}</span>
+                    <span>{% trans "New account" %}</span>
                 </button>
             </div>
             
@@ -105,8 +105,8 @@
                     <!-- Top Section with Gradient and Badges -->
                     <div class="card-header-gradient">
                         <div class="activity-badge-floating">
-                             <i class="fas fa-user me-1"></i>
-                             {% trans "User" %}
+                             <i class="fas {% if profile.role == 'professional_client' %}fa-briefcase{% else %}fa-truck{% endif %} me-1"></i>
+                             {{ profile.get_role_display }}
                         </div>
                         <div class="status-badge-premium">
                             <div class="d-flex flex-wrap gap-1">
@@ -132,7 +132,7 @@
                         </div>
                         <div class="avatar-wrapper-floating">
                             {% if profile.profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}?v={% now "U" %}"
+                            <img src="{{ profile.profile_picture.url }}?v={{ ASSET_VERSION }}"
                                  alt="{% trans 'Profile' %}"
                                  class="avatar-image-premium">
                             {% else %}
@@ -209,7 +209,7 @@
             <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
                 <div class="modal-header border-0 bg-dark text-white p-4">
                     <h5 class="modal-title fw-black text-uppercase" id="providerModalLabel">
-                        <i class="fas fa-user-shield me-2 text-primary"></i>{% trans "Add New Provider" %}
+                        <i class="fas fa-user-shield me-2 text-primary"></i>{% trans "Add a provider or professional client" %}
                     </h5>
                     <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -236,6 +236,14 @@
                                 <input type="tel" name="phone" class="form-control rounded-3" placeholder="+213 ...">
                             </div>
                             <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase">{% trans "Account type" %}</label>
+                                <select name="account_type" class="form-select rounded-3" id="accountTypeSelect">
+                                    <option value="provider">{% trans "Provider" %}</option>
+                                    <option value="professional_client">{% trans "Professional Client" %}</option>
+                                </select>
+                                <div class="form-text small" id="proHint" hidden>{% trans "Professional clients see the professional price of each product when they are logged in." %}</div>
+                            </div>
+                            <div class="col-12 provider-only">
                                 <label class="form-label fw-bold small text-uppercase">{% trans "Commission (%)" %}</label>
                                 <input type="number" name="commission" class="form-control rounded-3" step="0.01" min="0" max="100" placeholder="0.00" required>
                             </div>
@@ -243,7 +251,7 @@
                                 <label class="form-label fw-bold small text-uppercase">{% trans "Office Address" %}</label>
                                 <textarea name="address" class="form-control rounded-3" rows="2" placeholder="Street, City, Country"></textarea>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12 provider-only">
                                 <div class="form-check form-switch mt-2">
                                     <input type="checkbox" name="is_trusted" class="form-check-input" id="isTrustedCheck" role="switch">
                                     <label class="form-check-label fw-bold small text-uppercase" for="isTrustedCheck">
@@ -268,4 +276,22 @@
             </div>
         </div>
     </div>
+<script>
+  (function () {
+    var sel = document.getElementById("accountTypeSelect");
+    if (!sel) return;
+    function sync() {
+      var pro = sel.value === "professional_client";
+      document.querySelectorAll("#providerForm .provider-only").forEach(function (el) {
+        el.hidden = pro;
+        el.querySelectorAll("input").forEach(function (i) {
+          if (i.name === "commission") { i.required = !pro; if (pro) i.value = "0"; }
+        });
+      });
+      document.getElementById("proHint").hidden = !pro;
+    }
+    sel.addEventListener("change", sync);
+    sync();
+  })();
+</script>
 {% endblock dashContent %}

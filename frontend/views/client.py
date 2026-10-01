@@ -15,10 +15,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+_CLIENT_ROLES = (UserProfile.roleChoices.FINAL_CLIENT, UserProfile.roleChoices.PROFESSIONAL_CLIENT)
+
+
 @login_required
 def client_home(request):
     profile = getattr(request.user, "profile", None)
-    if not profile or profile.role != UserProfile.roleChoices.FINAL_CLIENT:
+    if not profile or profile.role not in _CLIENT_ROLES:
         return redirect("frontend:home")
 
     orders = Order.objects.filter(buyer=request.user).order_by("-created_at")[:5]
@@ -264,7 +267,7 @@ def client_order_create(request):
 @login_required
 def client_orders(request):
     profile = getattr(request.user, "profile", None)
-    if not profile or profile.role != UserProfile.roleChoices.FINAL_CLIENT:
+    if not profile or profile.role not in _CLIENT_ROLES:
         return redirect("frontend:home")
 
     orders = Order.objects.filter(buyer=request.user).order_by("-created_at")

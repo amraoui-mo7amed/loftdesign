@@ -9,10 +9,10 @@
 {% block extra_css %}{% endblock extra_css %}
 
 {% block extra_js %}
-    <script src="{% static "js/users.js" %}?v={% now "U" %}"></script>
+    <script src="{% static "js/users.js" %}?v={{ ASSET_VERSION }}"></script>
     {% if profile.role == 'affiliate' or profile.role == 'semi_affiliate' %}
-    <script src="{% static 'js/affiliates.js' %}?v={% now 'U' %}"></script>
-    <script src="{% static 'js/store_settings.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/affiliates.js' %}?v={{ ASSET_VERSION }}"></script>
+    <script src="{% static 'js/store_settings.js' %}?v={{ ASSET_VERSION }}"></script>
     {% endif %}
 {% endblock extra_js %}
 
@@ -116,7 +116,7 @@
             <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden bg-white">
                 <div class="card-header bg-primary bg-opacity-10 border-0 p-5 text-center">
                     {% if profile.profile_picture %}
-                    <img src="{{ profile.profile_picture.url }}?v={% now "U" %}"
+                    <img src="{{ profile.profile_picture.url }}?v={{ ASSET_VERSION }}"
                          alt="{% trans 'Profile' %}"
                          class="rounded-circle shadow-sm mx-auto mb-3"
                          style="width: 100px; height: 100px; object-fit: cover;">

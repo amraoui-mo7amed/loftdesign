@@ -119,5 +119,5 @@
 {% endblock dashContent %}
 
 {% block extra_js %}
-<script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/portfolio.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

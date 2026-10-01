@@ -17,9 +17,9 @@
 {% block sidebar %}{% endblock sidebar %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/checkout.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/checkout.css" %}?v={{ ASSET_VERSION }}">
     {% if affiliate_code %}
-    <link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={% now "U" %}">
+    <link rel="stylesheet" href="{% static "css/affiliate_product_detail.css" %}?v={{ ASSET_VERSION }}">
     {% endif %}
 {% endblock extra_css %}
 
@@ -141,5 +141,5 @@
 {% endblock content %}
 
 {% block extra_js %}
-    <script src="{% static "js/checkout.js" %}?v={% now "U" %}"></script>
+    <script src="{% static "js/checkout.js" %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

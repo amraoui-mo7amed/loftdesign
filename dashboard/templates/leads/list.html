@@ -5,7 +5,7 @@
 {% block dashTitle %}{% trans "Contact Leads" %}{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/leads.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'css/leads.css' %}?v={{ ASSET_VERSION }}">
 {% endblock %}
 
 {% block dashContent %}
@@ -75,6 +75,6 @@
 
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
-    <script src="{% static 'js/leads.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/portfolio.js' %}?v={{ ASSET_VERSION }}"></script>
+    <script src="{% static 'js/leads.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock %}

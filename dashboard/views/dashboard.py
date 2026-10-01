@@ -16,6 +16,12 @@ def dash_home(request):
         user_profile and user_profile.role == UserProfile.roleChoices.ADMIN
     )
     role = user_profile.role if user_profile else "provider"
+    if not request.user.is_superuser and role in (
+        UserProfile.roleChoices.FINAL_CLIENT, UserProfile.roleChoices.PROFESSIONAL_CLIENT
+    ):
+        # Clients have their own space on the storefront, not the business dashboard.
+        from django.shortcuts import redirect
+        return redirect("frontend:client_home")
 
     if is_admin or role == "admin":
         total_providers = UserProfile.objects.filter(

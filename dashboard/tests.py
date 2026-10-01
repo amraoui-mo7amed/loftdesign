@@ -222,3 +222,48 @@ class AccessTests(TestCase):
         self.assertEqual(r.status_code, 200)
         r = self.client.get(reverse("frontend:product_list") + "?sort=password")
         self.assertEqual(r.status_code, 200)
+
+
+class StorefrontPriceTests(TestCase):
+    def setUp(self):
+        from django.contrib.sessions.middleware import SessionMiddleware
+        from django.test import RequestFactory
+
+        self.admin = make_user("admin", superuser=True)
+        self.product = make_product(self.admin, D("100"), D("150"), D("200"))
+        Product.objects.filter(pk=self.product.pk).update(pro_price=D("170"), price_eur=D("12.50"))
+        self.product.refresh_from_db()
+        self.rf, self.sessions = RequestFactory(), SessionMiddleware(lambda r: None)
+
+    def req(self, user=None, **meta):
+        from django.contrib.auth.models import AnonymousUser
+        r = self.rf.get("/", **meta)
+        self.sessions.process_request(r)
+        r.user = user or AnonymousUser()
+        return r
+
+    def test_public_pro_and_euro_prices(self):
+        from frontend.pricing import charge_eur, customer_price, visitor_currency
+
+        self.assertEqual(customer_price(self.req(), self.product)["dzd"], D("200"))
+        pro = make_user("pro", R.PROFESSIONAL_CLIENT)
+        price = customer_price(self.req(pro), self.product)
+        self.assertEqual((price["dzd"], price["pro"]), (D("170"), True))
+        pending = make_user("pro2", R.PROFESSIONAL_CLIENT, is_approved=False)
+        self.assertEqual(customer_price(self.req(pending), self.product)["dzd"], D("200"))
+
+        self.assertEqual(visitor_currency(self.req(HTTP_CF_IPCOUNTRY="FR")), "EUR")
+        self.assertEqual(visitor_currency(self.req(HTTP_CF_IPCOUNTRY="DZ")), "DZD")
+        self.assertEqual(charge_eur(self.req(HTTP_CF_IPCOUNTRY="FR"), self.product), D("12.50"))
+        self.assertIsNone(charge_eur(self.req(HTTP_CF_IPCOUNTRY="DZ"), self.product))
+
+    def test_product_form_rejects_incoherent_prices(self):
+        from dashboard.views.products import _parse_pricing
+
+        _p, errors = _parse_pricing({"loft_purchase_price": "100", "loft_wholesale_price": "90",
+                                     "loft_retail_price": "80", "pro_price": "500"}, True)
+        self.assertEqual(set(errors), {"loft_wholesale_price", "loft_retail_price", "pro_price"})
+        p, errors = _parse_pricing({"loft_purchase_price": "100", "loft_wholesale_price": "150",
+                                    "loft_retail_price": "200", "pro_price": "170", "price_eur": "12,5"}, True)
+        self.assertEqual(errors, {})
+        self.assertEqual(p["eur"], D("12.50"))

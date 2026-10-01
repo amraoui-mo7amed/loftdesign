@@ -6,8 +6,8 @@
 {% block dashTitle %}{% trans "Product Inventory" %}{% endblock dashTitle %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={% now 'U' %}">
-    <link rel="stylesheet" href="{% static 'css/products.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={{ ASSET_VERSION }}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}?v={{ ASSET_VERSION }}">
 {% endblock extra_css %}
 
 {% block dashContent %}
@@ -146,6 +146,6 @@
 
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{% static 'js/portfolio.js' %}?v={% now 'U' %}"></script>
-    <script src="{% static 'js/product_global_toggle.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'js/portfolio.js' %}?v={{ ASSET_VERSION }}"></script>
+    <script src="{% static 'js/product_global_toggle.js' %}?v={{ ASSET_VERSION }}"></script>
 {% endblock extra_js %}

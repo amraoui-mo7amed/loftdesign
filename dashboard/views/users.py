@@ -36,6 +36,10 @@ def provider_create(request):
         address = request.POST.get("address")
         commission = request.POST.get("commission")
         is_trusted = request.POST.get("is_trusted") == "on"
+        is_pro = request.POST.get("account_type") == UserProfile.roleChoices.PROFESSIONAL_CLIENT
+        if is_pro:
+            # Professional clients buy at the professional price; no commission, no catalog.
+            commission, is_trusted = "0", False
 
         errors = {}
         if not first_name: errors["first_name"] = [_("First name is required")]
@@ -80,7 +84,8 @@ def provider_create(request):
                     commission=commission,
                     is_approved=True,
                     is_trusted=is_trusted,
-                    role=UserProfile.roleChoices.PROVIDER
+                    role=(UserProfile.roleChoices.PROFESSIONAL_CLIENT if is_pro
+                          else UserProfile.roleChoices.PROVIDER),
                 )
 
                 # Generate password-set token
@@ -124,7 +129,8 @@ def provider_create(request):
 
                 return JsonResponse({
                     "success": True,
-                    "message": _("Provider account created and invitation sent successfully."),
+                    "message": (_("Professional client account created and invitation sent successfully.") if is_pro
+                                else _("Provider account created and invitation sent successfully.")),
                     "redirect_url": reverse("dash:user_list")
                 })
         except Exception as e:
@@ -139,9 +145,13 @@ def user_list(request):
     query = request.GET.get("q", "")
     status = request.GET.get("status", "")
 
+    role_filter = request.GET.get("role", "")
+    roles = [UserProfile.roleChoices.PROVIDER, UserProfile.roleChoices.PROFESSIONAL_CLIENT]
+    if role_filter in roles:
+        roles = [role_filter]
     profiles_list = (
         UserProfile.objects.select_related("user")
-        .filter(role=UserProfile.roleChoices.PROVIDER)
+        .filter(role__in=roles)
         .order_by("-created_at")
     )
 
@@ -181,6 +191,7 @@ def user_list(request):
         "query": query,
         "selected_status": status,
         "selected_status_label": selected_status_label,
+        "selected_role": role_filter,
     }
 
     return render(request, "users/list.html", context)

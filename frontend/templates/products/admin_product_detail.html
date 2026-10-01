@@ -21,18 +21,18 @@
         --store-color: {{ admin_store.header_bg_color|default:"#1a1a2e" }};
     }
 </style>
-<link rel="stylesheet" href="{% static "css/admin_product_detail.css" %}?v={% now "U" %}">
-<link rel="stylesheet" href="{% static "css/product_detail.css" %}?v={% now "U" %}">
+<link rel="stylesheet" href="{% static "css/admin_product_detail.css" %}?v={{ ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static "css/product_detail.css" %}?v={{ ASSET_VERSION }}">
 {% if product.gallery_images.all %}
-<link rel="stylesheet" href="{% static "css/gallery.css" %}?v={% now "U" %}">
+<link rel="stylesheet" href="{% static "css/gallery.css" %}?v={{ ASSET_VERSION }}">
 {% endif %}
 {% endblock extra_css %}
 
 {% block extra_js %}
-<script src="{% static "js/products_list.js" %}?v={% now "U" %}"></script>
-<script src="{% static "js/product_detail.js" %}?v={% now "U" %}"></script>
+<script src="{% static "js/products_list.js" %}?v={{ ASSET_VERSION }}"></script>
+<script src="{% static "js/product_detail.js" %}?v={{ ASSET_VERSION }}"></script>
 {% if product.gallery_images.all %}
-<script src="{% static "js/gallery.js" %}?v={% now "U" %}"></script>
+<script src="{% static "js/gallery.js" %}?v={{ ASSET_VERSION }}"></script>
 {% endif %}
 {% endblock extra_js %}
 

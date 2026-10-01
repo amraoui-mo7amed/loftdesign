@@ -5,7 +5,7 @@
 
 {% block css %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static "css/wallet.css" %}?v={% now "U" %}">
+<link rel="stylesheet" href="{% static "css/wallet.css" %}?v={{ ASSET_VERSION }}">
 {% endblock css %}
 
 {% block dashContent %}
@@ -380,9 +380,9 @@
 {% endblock dashContent %}
 
 {% block extra_js %}
-<script src="{% static "js/wallet.js" %}?v={% now "U" %}"></script>
+<script src="{% static "js/wallet.js" %}?v={{ ASSET_VERSION }}"></script>
 {% if is_admin %}
-<script src="{% static "js/wallet_admin.js" %}?v={% now "U" %}"></script>
-<script src="{% static "js/wallet_chain.js" %}?v={% now "U" %}"></script>
+<script src="{% static "js/wallet_admin.js" %}?v={{ ASSET_VERSION }}"></script>
+<script src="{% static "js/wallet_chain.js" %}?v={{ ASSET_VERSION }}"></script>
 {% endif %}
 {% endblock extra_js %}

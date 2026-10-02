@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "frontend",
     "dashboard",
     "user_auth",
+    "shopping",
 ]
 LOGIN_URL = "user_auth:login"
 LOGOUT_URL = "user_auth:logout"

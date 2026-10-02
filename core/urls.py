@@ -29,6 +29,7 @@ from user_auth import views as user_views
 urlpatterns = [
     path("auth/", include("user_auth.urls", namespace="user_auth")),
     path("dashboard/", include("dashboard.urls", namespace="dash")),
+    path("", include("shopping.urls", namespace="shopping")),
     path("", include("frontend.urls", namespace="frontend")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("api/catalog/", include("dashboard.catalog_urls", namespace="catalog")),

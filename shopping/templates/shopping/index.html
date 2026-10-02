@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+{% load i18n static shopping_tags %}
+{% block title %} | {% trans "My projects" %}{% endblock title %}
+{% block nav %}{% include 'partials/landing-nav.html' %}{% endblock nav %}
+{% block sidebar %}{% endblock sidebar %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'shopping/shopping.css' %}?v={{ ASSET_VERSION }}">{% endblock extra_css %}
+
+{% block content %}
+<section class="sl-page">
+    <div class="container">
+        <header class="sl-head">
+            <span class="sl-eyebrow"><i class="fas fa-clipboard-list"></i> {% trans "My projects" %}</span>
+            <h1>{% trans "Your shopping lists, room by room" %}</h1>
+            <p>{% trans "Gather the products of a project, set a budget per room, share the list with your client or architect, then order everything in one click." %}</p>
+        </header>
+
+        <form method="post" class="sl-new">
+            {% csrf_token %}
+            <input type="text" name="name" maxlength="120" required placeholder="{% trans 'New project, e.g. Apartment Hydra' %}" aria-label="{% trans 'Project name' %}">
+            <button type="submit" class="sl-btn sl-btn-ink"><i class="fas fa-plus"></i> {% trans "Create a list" %}</button>
+        </form>
+
+        {% if lists %}
+        <div class="sl-cards">
+            {% for lst in lists %}
+            <a class="sl-card" href="{{ lst.get_absolute_url }}">
+                <span class="sl-code">{{ lst.code }}</span>
+                <h2>{{ lst.name }}</h2>
+                <p>{% if lst.client_name %}{{ lst.client_name }} · {% endif %}{% blocktrans count counter=lst.items.all|length %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</p>
+                <span class="sl-card-foot">{% trans "Updated" %} {{ lst.updated_at|date:"d/m/Y" }} <i class="fas fa-arrow-right"></i></span>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="sl-empty">
+            <i class="fas fa-couch"></i>
+            <p>{% trans "No list yet. Open a product and choose “Add to my project”, or create a list above." %}</p>
+            <a href="{% url 'frontend:product_list' %}" class="sl-btn sl-btn-line">{% trans "Browse the products" %}</a>
+        </div>
+        {% endif %}
+        {% if not user.is_authenticated and lists %}
+        <p class="sl-hint"><i class="fas fa-info-circle"></i> {% trans "These lists are kept in this browser. Use the private edit link of each list to open it on another device." %}</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock content %}

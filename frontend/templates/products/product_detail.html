@@ -166,6 +166,11 @@
                                 {% if items %}data-item-id="{{ items.0.id }}"{% endif %}>
                             <i class="fas fa-cart-plus me-2"></i>{% trans "Add to Cart" %}
                         </button>
+                        <a href="{% url 'shopping:add' %}?product={{ product.pk }}{% if items %}&item={{ items.0.id }}{% endif %}"
+                           class="btn btn-outline-dark btn-lg rounded-pill px-5 fw-bold w-100 mt-2 btn-add-to-list"
+                           data-base="{% url 'shopping:add' %}?product={{ product.pk }}">
+                            <i class="fas fa-clipboard-list me-2"></i>{% trans "Add to my project" %}
+                        </a>
                     </div>
                 </div>
             </div>

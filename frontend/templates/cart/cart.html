@@ -152,6 +152,14 @@
                     <a href="{% url 'frontend:checkout' %}" class="btn btn-dark w-100 rounded-pill py-3 fw-bold shadow">
                         <i class="fas fa-lock me-2"></i>{% trans "Proceed to Checkout" %}
                     </a>
+                    {% if not affiliate_code %}
+                    <form method="post" action="{% url 'shopping:from_cart' %}" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-dark w-100 rounded-pill py-3 fw-bold">
+                            <i class="fas fa-clipboard-list me-2"></i>{% trans "Save as a project list" %}
+                        </button>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -1,0 +1,167 @@
+{% extends 'index.html' %}
+{% load i18n static shopping_tags %}
+{% block title %} | {{ lst.name }}{% endblock title %}
+{% block nav %}{% include 'partials/landing-nav.html' %}{% endblock nav %}
+{% block sidebar %}{% endblock sidebar %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'shopping/shopping.css' %}?v={{ ASSET_VERSION }}">{% endblock extra_css %}
+
+{% block content %}
+<section class="sl-page">
+    <div class="container">
+        <header class="sl-detail-head">
+            <div>
+                <span class="sl-eyebrow"><i class="fas fa-clipboard-list"></i> {% trans "Shopping list" %} · <span dir="ltr">{{ lst.code }}</span></span>
+                <h1>{{ lst.name }}</h1>
+                <p class="sl-sub">
+                    {% if lst.client_name %}<span><i class="far fa-user"></i> {{ lst.client_name }}</span>{% endif %}
+                    {% if lst.bilnov_project_id %}<span><i class="fas fa-cube"></i> BILNOV <code>{{ lst.bilnov_project_id }}</code></span>{% endif %}
+                    <span><i class="far fa-clock"></i> {% trans "Updated" %} {{ lst.updated_at|date:"d/m/Y" }}</span>
+                </p>
+            </div>
+            <aside class="sl-summary">
+                <div class="sl-sum-line"><span>{% trans "Total today" %}</span><b>{{ total|dzd }}</b></div>
+                {% if snapshot_total != total %}<div class="sl-sum-line sl-muted"><span>{% trans "Total when added" %}</span><span>{{ snapshot_total|dzd }}</span></div>{% endif %}
+                {% if lst.budget %}<div class="sl-sum-line {% if total > lst.budget %}sl-over{% endif %}"><span>{% trans "Budget" %}</span><span>{{ lst.budget|dzd }}</span></div>{% endif %}
+                {% if alerts %}<p class="sl-alert"><i class="fas fa-exclamation-triangle"></i> {% blocktrans count counter=alerts %}{{ counter }} product changed (price or stock){% plural %}{{ counter }} products changed (price or stock){% endblocktrans %}</p>{% endif %}
+                <form method="post" action="{% url 'shopping:to_cart' lst.code %}">{% csrf_token %}
+                    <button type="submit" class="sl-btn sl-btn-red w-100" {% if not item_count %}disabled{% endif %}><i class="fas fa-cart-plus"></i> {% trans "Add everything to the cart" %}</button>
+                </form>
+                <div class="sl-sum-actions">
+                    <a class="sl-btn sl-btn-line" href="{% url 'shopping:print' lst.code %}" target="_blank" rel="noopener"><i class="fas fa-print"></i> {% trans "Print / PDF" %}</a>
+                    <button type="button" class="sl-btn sl-btn-line" data-copy="{{ share_url }}" data-done="{% trans 'Link copied' %}"><i class="fas fa-link"></i> {% trans "Share" %}</button>
+                </div>
+            </aside>
+        </header>
+
+        {% if editable %}
+        <details class="sl-settings">
+            <summary><i class="fas fa-sliders-h"></i> {% trans "Project settings and sharing" %}</summary>
+            <div class="sl-settings-grid">
+                <form method="post" action="{% url 'shopping:action' lst.code %}" class="sl-form">
+                    {% csrf_token %}<input type="hidden" name="action" value="update_list">
+                    <div class="sl-row">
+                        <label class="sl-field"><span>{% trans "Project name" %}</span><input type="text" name="name" maxlength="120" value="{{ lst.name }}" required></label>
+                        <label class="sl-field"><span>{% trans "Client" %}</span><input type="text" name="client_name" maxlength="120" value="{{ lst.client_name }}"></label>
+                    </div>
+                    <div class="sl-row">
+                        <label class="sl-field"><span>{% trans "Total budget (DZD)" %}</span><input type="text" inputmode="numeric" name="budget" value="{{ lst.budget|default_if_none:''|floatformat:'0' }}"></label>
+                        <label class="sl-field"><span>{% trans "BILNOV project ID" %}</span><input type="text" name="bilnov_project_id" maxlength="64" value="{{ lst.bilnov_project_id }}"></label>
+                    </div>
+                    <button type="submit" class="sl-btn sl-btn-ink">{% trans "Save" %}</button>
+                </form>
+                <div class="sl-share">
+                    <label class="sl-field"><span>{% trans "Link to share (read and order)" %}</span>
+                        <span class="sl-copyrow"><input type="text" readonly value="{{ share_url }}" dir="ltr"><button type="button" class="sl-btn sl-btn-line" data-copy="{{ share_url }}" data-done="{% trans 'Link copied' %}"><i class="far fa-copy"></i></button></span></label>
+                    <label class="sl-field"><span>{% trans "Private edit link (keep it for yourself)" %}</span>
+                        <span class="sl-copyrow"><input type="text" readonly value="{{ edit_url }}" dir="ltr"><button type="button" class="sl-btn sl-btn-line" data-copy="{{ edit_url }}" data-done="{% trans 'Link copied' %}"><i class="far fa-copy"></i></button></span></label>
+                    <form method="post" action="{% url 'shopping:action' lst.code %}" onsubmit="return confirm('{% trans "Delete this list?" %}')">
+                        {% csrf_token %}<input type="hidden" name="action" value="delete_list">
+                        <button type="submit" class="sl-link-danger"><i class="far fa-trash-alt"></i> {% trans "Delete the list" %}</button>
+                    </form>
+                </div>
+            </div>
+        </details>
+        {% endif %}
+
+        {% for g in groups %}
+        <section class="sl-room" id="room-{{ g.room.pk|default:'none' }}">
+            <header class="sl-room-head">
+                <h2>{% if g.room %}{{ g.room.name }}{% else %}{% trans "Without room" %}{% endif %}</h2>
+                <div class="sl-room-total">
+                    <b>{{ g.total|dzd }}</b>
+                    {% if g.budget %}<span class="{% if g.over %}sl-over{% endif %}">/ {{ g.budget|dzd }}</span>{% endif %}
+                </div>
+                {% if g.budget %}<div class="sl-bar {% if g.over %}sl-over{% endif %}"><i style="width: {{ g.percent }}%"></i></div>{% endif %}
+                {% if editable and g.room %}
+                <details class="sl-room-edit">
+                    <summary title="{% trans 'Edit the room' %}"><i class="fas fa-pen"></i></summary>
+                    <form method="post" action="{% url 'shopping:action' lst.code %}" class="sl-inline">
+                        {% csrf_token %}<input type="hidden" name="room" value="{{ g.room.pk }}"><input type="hidden" name="anchor" value="room-{{ g.room.pk }}">
+                        <input type="text" name="name" value="{{ g.room.name }}" maxlength="80" aria-label="{% trans 'Room' %}">
+                        <input type="text" inputmode="numeric" name="budget" value="{{ g.room.budget|default_if_none:''|floatformat:'0' }}" placeholder="{% trans 'Budget (DZD)' %}" aria-label="{% trans 'Budget (DZD)' %}">
+                        <button type="submit" name="action" value="update_room" class="sl-btn sl-btn-ink">{% trans "Save" %}</button>
+                        <button type="submit" name="action" value="delete_room" class="sl-link-danger">{% trans "Delete the room" %}</button>
+                    </form>
+                </details>
+                {% endif %}
+            </header>
+
+            {% for it in g.items %}
+            <article class="sl-item {% if not it.counts %}sl-off{% endif %}" id="item-{{ it.pk }}">
+                <a class="sl-thumb" {% if it.product %}href="{% url 'frontend:product_detail' it.product.pk %}"{% endif %}>
+                    {% if it.variant.thumbnail %}<img src="{{ it.variant.thumbnail.url }}" alt="">{% elif it.product.thumbnail %}<img src="{{ it.product.thumbnail.url }}" alt="">{% else %}<i class="fas fa-cube"></i>{% endif %}
+                </a>
+                <div class="sl-main">
+                    <h3>{% if it.product %}<a href="{% url 'frontend:product_detail' it.product.pk %}">{{ it.title_snapshot }}</a>{% else %}{{ it.title_snapshot }}{% endif %}</h3>
+                    <div class="sl-tags">
+                        <code dir="ltr">{{ it.variant_id_snapshot|default:it.bpid_snapshot }}</code>
+                        <span class="sl-status sl-st-{{ it.status }}">{{ it.get_status_display }}</span>
+                        {% if it.state == "unavailable" %}<span class="sl-badge sl-bad">{% trans "No longer sold" %}</span>
+                        {% elif it.state == "out_of_stock" %}<span class="sl-badge sl-bad">{% trans "Out of stock" %}</span>
+                        {% elif it.state == "low" %}<span class="sl-badge sl-warn">{% trans "Not enough stock" %}</span>
+                        {% else %}<span class="sl-badge sl-ok">{% trans "In stock" %}</span>{% endif %}
+                    </div>
+                    {% if it.note %}<p class="sl-note"><i class="far fa-comment"></i> {{ it.note }}</p>{% endif %}
+                    {% if it.state == "unavailable" or it.state == "out_of_stock" %}<p class="sl-note">{% trans "We never replace a product on our own: choose an alternative or ask us." %}</p>{% endif %}
+                </div>
+                <div class="sl-price">
+                    <b>{% if it.current_price is not None %}{{ it.current_price|dzd }}{% else %}{{ it.price_snapshot|dzd }}{% endif %}</b>
+                    {% if it.delta %}
+                    <small class="{% if it.delta > 0 %}sl-up{% else %}sl-down{% endif %}">
+                        {% if it.delta > 0 %}▲{% else %}▼{% endif %} {{ it.delta|absval|dzd }} · {% trans "when added" %} {{ it.price_snapshot|dzd }}
+                    </small>
+                    {% endif %}
+                    <small>× {{ it.quantity }} = {{ it.line_total|dzd }}</small>
+                </div>
+                {% if editable %}
+                <details class="sl-item-edit">
+                    <summary title="{% trans 'Edit' %}"><i class="fas fa-ellipsis-h"></i></summary>
+                    <form method="post" action="{% url 'shopping:action' lst.code %}" class="sl-form">
+                        {% csrf_token %}<input type="hidden" name="item" value="{{ it.pk }}"><input type="hidden" name="anchor" value="item-{{ it.pk }}">
+                        <div class="sl-row">
+                            <label class="sl-field sl-qty"><span>{% trans "Quantity" %}</span><input type="number" name="quantity" min="1" max="9999" value="{{ it.quantity }}"></label>
+                            <label class="sl-field"><span>{% trans "Room" %}</span>
+                                <select name="room"><option value="">{% trans "Without room" %}</option>{% for r in lst.rooms.all %}<option value="{{ r.pk }}" {% if r.pk == it.room_id %}selected{% endif %}>{{ r.name }}</option>{% endfor %}</select></label>
+                            <label class="sl-field"><span>{% trans "Status" %}</span>
+                                <select name="status">{% for value, label in statuses %}<option value="{{ value }}" {% if value == it.status %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+                        </div>
+                        <label class="sl-field"><span>{% trans "Note" %}</span><input type="text" name="note" maxlength="255" value="{{ it.note }}"></label>
+                        <div class="sl-actions">
+                            <button type="submit" name="action" value="update_item" class="sl-btn sl-btn-ink">{% trans "Save" %}</button>
+                            {% if it.delta %}<button type="submit" name="action" value="refresh_price" class="sl-btn sl-btn-line">{% trans "Accept today's price" %}</button>{% endif %}
+                            <button type="submit" name="action" value="remove_item" class="sl-link-danger">{% trans "Remove" %}</button>
+                        </div>
+                    </form>
+                </details>
+                {% endif %}
+            </article>
+            {% empty %}
+            <p class="sl-room-empty">{% trans "No product in this room yet." %}</p>
+            {% endfor %}
+        </section>
+        {% empty %}
+        <div class="sl-empty">
+            <i class="fas fa-couch"></i>
+            <p>{% trans "This list is empty. Open a product and choose “Add to my project”." %}</p>
+            <a href="{% url 'frontend:product_list' %}" class="sl-btn sl-btn-line">{% trans "Browse the products" %}</a>
+        </div>
+        {% endfor %}
+
+        {% if editable %}
+        <form method="post" action="{% url 'shopping:action' lst.code %}" class="sl-new sl-new-room">
+            {% csrf_token %}<input type="hidden" name="action" value="add_room">
+            <input type="text" name="name" maxlength="80" required placeholder="{% trans 'Add a room, e.g. Kitchen' %}" aria-label="{% trans 'Room' %}">
+            <button type="submit" class="sl-btn sl-btn-line"><i class="fas fa-plus"></i> {% trans "Add the room" %}</button>
+        </form>
+        {% endif %}
+        <p class="sl-hint"><i class="fas fa-info-circle"></i> {% trans "Prices and stock are updated live. The price when added stays visible next to today's price; a product is never replaced automatically." %}</p>
+    </div>
+</section>
+<script>
+document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-copy]");
+    if (!b || !navigator.clipboard) return;
+    navigator.clipboard.writeText(b.dataset.copy).then(() => { b.classList.add("done"); b.title = b.dataset.done; setTimeout(() => b.classList.remove("done"), 1500); });
+});
+</script>
+{% endblock content %}

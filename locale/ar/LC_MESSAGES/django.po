@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 11:51+0000\n"
+"POT-Creation-Date: 2026-10-02 12:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,15 +39,15 @@ msgstr ""
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "تصميم داخلي، لوفت، هندسة معمارية، أثاث عصري، ديكور"
 
-#: core/settings.py:134
+#: core/settings.py:135
 msgid "French"
 msgstr "الفرنسية"
 
-#: core/settings.py:134
+#: core/settings.py:135
 msgid "English"
 msgstr "الإنجليزية"
 
-#: core/settings.py:134
+#: core/settings.py:135
 msgid "Arabic"
 msgstr "العربية"
 
@@ -58,7 +58,7 @@ msgstr "العربية"
 #: dashboard/templates/products/provider_store_settings.html:20
 #: dashboard/templates/products/store_settings.html:20
 #: frontend/templates/home.html:94
-#: frontend/templates/partials/landing-nav.html:81
+#: frontend/templates/partials/landing-nav.html:84
 msgid "Dashboard"
 msgstr "لوحة التحكم"
 
@@ -203,7 +203,7 @@ msgstr "صور شريط العرض لإعدادات الموقع"
 #: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:193
 #: frontend/templates/products/admin_product_detail.html:241
 #: frontend/templates/products/affiliate_product_detail.html:245
-#: frontend/templates/products/product_detail.html:223
+#: frontend/templates/products/product_detail.html:228
 #: frontend/templates/products/provider_product_detail.html:243
 msgid "Full Name"
 msgstr "الاسم الكامل"
@@ -218,7 +218,7 @@ msgstr "الاسم الكامل"
 #: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:195
 #: frontend/templates/products/admin_product_detail.html:246
 #: frontend/templates/products/affiliate_product_detail.html:250
-#: frontend/templates/products/product_detail.html:229
+#: frontend/templates/products/product_detail.html:234
 #: frontend/templates/products/provider_product_detail.html:248
 #: user_auth/models.py:34
 msgid "Phone Number"
@@ -370,7 +370,7 @@ msgstr "قيد الانتظار"
 #: dashboard/templates/wallets/withdrawal_list.html:202
 #: dashboard/templates/wallets/withdrawal_list.html:221
 #: dashboard/views/users.py:177 dashboard/views/users.py:490
-#: dashboard/views/wallets.py:370
+#: dashboard/views/wallets.py:370 shopping/models.py:28
 msgid "Approved"
 msgstr "مقبول"
 
@@ -416,7 +416,7 @@ msgstr "ارفع ملف نموذج 3D بصيغة GLB أو GLTF"
 #: dashboard/templates/products/edit.html:151
 #: frontend/templates/products/admin_product_detail.html:207
 #: frontend/templates/products/affiliate_product_detail.html:211
-#: frontend/templates/products/product_detail.html:191
+#: frontend/templates/products/product_detail.html:196
 #: frontend/templates/products/provider_product_detail.html:208
 #: user_auth/models.py:128
 msgid "Description"
@@ -432,7 +432,7 @@ msgstr "رابط شراء خارجي"
 
 #: dashboard/models.py:180 dashboard/templates/products/create.html:230
 #: dashboard/templates/products/edit.html:254
-#: frontend/templates/products/product_detail.html:199
+#: frontend/templates/products/product_detail.html:204
 msgid "Tags"
 msgstr "الوسوم"
 
@@ -512,7 +512,9 @@ msgstr "حدّد لإبراز هذا المنتج في واجهة متجر ال�
 #: dashboard/templates/wallets/wallet.html:119
 #: dashboard/templates/wallets/wallet.html:140
 #: dashboard/templates/wallets/withdrawal_list.html:121
-#: dashboard/templates/wallets/withdrawal_list.html:163 user_auth/models.py:149
+#: dashboard/templates/wallets/withdrawal_list.html:163 shopping/models.py:39
+#: shopping/models.py:107 shopping/templates/shopping/detail.html:125
+#: shopping/templates/shopping/print.html:23 user_auth/models.py:149
 msgid "Status"
 msgstr "الحالة"
 
@@ -571,6 +573,7 @@ msgstr ""
 #: dashboard/models.py:621 dashboard/models.py:640 dashboard/models.py:671
 #: dashboard/models.py:753 dashboard/templates/orders/detail.html:160
 #: dashboard/templates/orders/list.html:206
+#: shopping/templates/shopping/print.html:23
 msgid "Product"
 msgstr "المنتج"
 
@@ -743,7 +746,7 @@ msgstr "العنوان"
 #: dashboard/models.py:451 frontend/templates/cart/checkout.html:65
 #: frontend/templates/products/admin_product_detail.html:256
 #: frontend/templates/products/affiliate_product_detail.html:260
-#: frontend/templates/products/product_detail.html:239
+#: frontend/templates/products/product_detail.html:244
 #: frontend/templates/products/provider_product_detail.html:258
 msgid "Wilaya"
 msgstr "الولاية"
@@ -751,7 +754,7 @@ msgstr "الولاية"
 #: dashboard/models.py:452 frontend/templates/cart/checkout.html:86
 #: frontend/templates/products/admin_product_detail.html:276
 #: frontend/templates/products/affiliate_product_detail.html:280
-#: frontend/templates/products/product_detail.html:260
+#: frontend/templates/products/product_detail.html:265
 #: frontend/templates/products/provider_product_detail.html:278
 msgid "Commune"
 msgstr "البلدية"
@@ -831,8 +834,9 @@ msgstr "الإجمالي (EUR)"
 msgid "Order %(num)s - %(name)s"
 msgstr "الطلب %(num)s - %(name)s"
 
-#: dashboard/models.py:537 frontend/templates/products/product_detail.html:233
-#: user_auth/models.py:146
+#: dashboard/models.py:537 frontend/templates/products/product_detail.html:238
+#: shopping/models.py:99 shopping/templates/shopping/add.html:40
+#: shopping/templates/shopping/detail.html:122 user_auth/models.py:146
 msgid "Quantity"
 msgstr "الكمية"
 
@@ -1090,9 +1094,9 @@ msgstr "المقياس"
 msgid "Polygons"
 msgstr "المضلّعات"
 
+#
 #: dashboard/models.py:770
 #: dashboard/templates/products/partials/asset_upload.html:26
-#
 msgid "Compatibility"
 msgstr "التوافق"
 
@@ -1150,6 +1154,7 @@ msgstr "إضافة فئة"
 
 #: dashboard/templates/categories/list.html:36
 #: dashboard/templates/products/items/item_list_partial.html:40
+#: shopping/templates/shopping/detail.html:118
 msgid "Edit"
 msgstr "تعديل"
 
@@ -1342,6 +1347,7 @@ msgstr "عرض الكل"
 #: dashboard/templates/orders/detail.html:161
 #: dashboard/templates/orders/list.html:206
 #: frontend/templates/cart/checkout.html:129
+#: shopping/templates/shopping/print.html:23
 msgid "Qty"
 msgstr "الكمية"
 
@@ -1536,6 +1542,7 @@ msgstr "إزالة من السلة؟"
 #: dashboard/templates/products/provider_store_settings.html:146
 #: dashboard/templates/products/store_settings.html:121
 #: dashboard/templates/products/store_settings.html:146
+#: shopping/templates/shopping/detail.html:132
 msgid "Remove"
 msgstr "إزالة"
 
@@ -1575,6 +1582,7 @@ msgstr "ملخص السلة"
 #: dashboard/templates/orders/list.html:206
 #: frontend/templates/cart/checkout.html:137
 #: frontend/templates/cart/order_success.html:25
+#: shopping/templates/shopping/print.html:23
 msgid "Total"
 msgstr "الإجمالي"
 
@@ -1663,6 +1671,7 @@ msgstr "سعر الوحدة"
 #: dashboard/templates/orders/detail.html:163
 #: frontend/templates/cart/cart.html:148
 #: frontend/templates/cart/cart_drawer.html:30
+#: shopping/templates/shopping/print.html:36
 msgid "Subtotal"
 msgstr "المجموع الفرعي"
 
@@ -1954,6 +1963,7 @@ msgstr "من الكتالوج الخاص بك؟"
 
 #: dashboard/templates/products/affiliate_catalog.html:99
 #: dashboard/templates/products/my_catalog.html:95
+#: shopping/templates/shopping/detail.html:31
 msgid "Share"
 msgstr "مشاركة"
 
@@ -2532,6 +2542,9 @@ msgid "Actions"
 msgstr "الإجراءات"
 
 #: dashboard/templates/products/edit.html:435
+#: shopping/templates/shopping/detail.html:50
+#: shopping/templates/shopping/detail.html:82
+#: shopping/templates/shopping/detail.html:130
 msgid "Save"
 msgstr "حفظ"
 
@@ -2629,12 +2642,14 @@ msgstr "تكلفتك"
 msgid "Browse available products and add them to your catalog."
 msgstr "تصفّح المنتجات المتاحة وأضفها إلى الكتالوج الخاص بك."
 
-#: dashboard/templates/products/partials/asset_upload.html:30
 #
+#: dashboard/templates/products/partials/asset_upload.html:30
 msgid ""
 "Each file keeps the product's BPID. Uploading a new file of the same format "
 "creates a new version; projects keep the version they use."
-msgstr "يحتفظ كل ملف بمعرّف BPID للمنتج. رفع ملف جديد بنفس الصيغة يُنشئ إصدارًا جديدًا، وتحتفظ المشاريع بالإصدار الذي تستعمله."
+msgstr ""
+"يحتفظ كل ملف بمعرّف BPID للمنتج. رفع ملف جديد بنفس الصيغة يُنشئ إصدارًا جديدًا، "
+"وتحتفظ المشاريع بالإصدار الذي تستعمله."
 
 #: dashboard/templates/products/partner_price_list.html:5
 #: dashboard/templates/products/partner_price_list.html:17
@@ -3835,8 +3850,8 @@ msgstr "أحد المنتجات في سلتك لم يعد متوفرًا."
 msgid "No price is set for %(title)s."
 msgstr "لم يتم تحديد سعر لـ %(title)s."
 
-#: dashboard/views/orders.py:339 frontend/views/cart.py:119
-#: frontend/views/cart.py:123 frontend/views/cart.py:238
+#: dashboard/views/orders.py:339 frontend/views/cart.py:115
+#: frontend/views/cart.py:167 frontend/views/cart.py:238
 msgid "Invalid quantity."
 msgstr "كمية غير صالحة."
 
@@ -4579,7 +4594,7 @@ msgstr "هذا المنتج لم يعد متوفرًا."
 msgid "This variant is no longer available."
 msgstr "هذا المتغيّر لم يعد متوفرًا."
 
-#: frontend/checkout.py:55 frontend/views/cart.py:149
+#: frontend/checkout.py:55 frontend/views/cart.py:132
 msgid "Price not configured for this product. Please contact support."
 msgstr "لم يتم تحديد سعر لهذا المنتج. يرجى التواصل مع الدعم."
 
@@ -4718,45 +4733,49 @@ msgstr "العناصر"
 msgid "Proceed to Checkout"
 msgstr "المتابعة لإتمام الطلب"
 
-#: frontend/templates/cart/cart.html:163
+#: frontend/templates/cart/cart.html:159
+msgid "Save as a project list"
+msgstr "حفظ كقائمة مشروع"
+
+#: frontend/templates/cart/cart.html:171
 #: frontend/templates/cart/cart_drawer.html:23
 msgid "Your cart is empty"
 msgstr "سلتك فارغة"
 
-#: frontend/templates/cart/cart.html:164
+#: frontend/templates/cart/cart.html:172
 msgid "Looks like you haven't added anything yet."
 msgstr "يبدو أنك لم تضف أي شيء بعد."
 
-#: frontend/templates/cart/cart.html:166
+#: frontend/templates/cart/cart.html:174
 msgid "Start Shopping"
 msgstr "ابدأ التسوق"
 
-#: frontend/templates/cart/cart.html:179
+#: frontend/templates/cart/cart.html:187
 #: frontend/templates/products/admin_product_detail.html:327
 #: frontend/templates/products/affiliate_product_detail.html:331
-#: frontend/templates/products/product_detail.html:302
+#: frontend/templates/products/product_detail.html:307
 #: frontend/templates/products/provider_product_detail.html:329
 msgid "Variant Details"
 msgstr "تفاصيل الخيار"
 
-#: frontend/templates/cart/cart.html:180 frontend/templates/index.html:149
+#: frontend/templates/cart/cart.html:188 frontend/templates/index.html:149
 #: frontend/templates/products/admin_product_detail.html:328
 #: frontend/templates/products/affiliate_product_detail.html:332
-#: frontend/templates/products/product_detail.html:303
+#: frontend/templates/products/product_detail.html:308
 #: frontend/templates/products/provider_product_detail.html:330
 msgid "Close"
 msgstr "إغلاق"
 
-#: frontend/templates/cart/cart.html:202
+#: frontend/templates/cart/cart.html:210
 #: frontend/templates/products/admin_product_detail.html:350
 #: frontend/templates/products/affiliate_product_detail.html:354
-#: frontend/templates/products/product_detail.html:325
+#: frontend/templates/products/product_detail.html:330
 #: frontend/templates/products/provider_product_detail.html:352
 msgid "Select This Variant"
 msgstr "اختيار هذا الخيار"
 
 #: frontend/templates/cart/cart_drawer.html:4 frontend/templates/home.html:84
-#: frontend/templates/partials/landing-nav.html:71
+#: frontend/templates/partials/landing-nav.html:74
 msgid "Open Cart"
 msgstr "فتح السلة"
 
@@ -4776,7 +4795,7 @@ msgstr "إتمام الطلب"
 #: frontend/templates/cart/checkout.html:34
 #: frontend/templates/products/admin_product_detail.html:234
 #: frontend/templates/products/affiliate_product_detail.html:238
-#: frontend/templates/products/product_detail.html:216
+#: frontend/templates/products/product_detail.html:221
 #: frontend/templates/products/provider_product_detail.html:235
 msgid "Please select a wilaya first"
 msgstr "يرجى اختيار الولاية أولاً"
@@ -4785,8 +4804,8 @@ msgstr "يرجى اختيار الولاية أولاً"
 #: frontend/templates/cart/checkout.html:89
 #: frontend/templates/products/admin_product_detail.html:235
 #: frontend/templates/products/affiliate_product_detail.html:239
-#: frontend/templates/products/product_detail.html:217
-#: frontend/templates/products/product_detail.html:263
+#: frontend/templates/products/product_detail.html:222
+#: frontend/templates/products/product_detail.html:268
 #: frontend/templates/products/provider_product_detail.html:236
 msgid "Select Commune"
 msgstr "اختر البلدية"
@@ -4800,14 +4819,14 @@ msgid "City"
 msgstr "المدينة"
 
 #: frontend/templates/cart/checkout.html:68
-#: frontend/templates/products/product_detail.html:242
+#: frontend/templates/products/product_detail.html:247
 msgid "Select Wilaya"
 msgstr "اختر الولاية"
 
 #: frontend/templates/cart/checkout.html:73
 #: frontend/templates/products/admin_product_detail.html:261
 #: frontend/templates/products/affiliate_product_detail.html:265
-#: frontend/templates/products/product_detail.html:247
+#: frontend/templates/products/product_detail.html:252
 #: frontend/templates/products/provider_product_detail.html:263
 msgid "Search wilaya..."
 msgstr "ابحث عن ولاية..."
@@ -4815,7 +4834,7 @@ msgstr "ابحث عن ولاية..."
 #: frontend/templates/cart/checkout.html:94
 #: frontend/templates/products/admin_product_detail.html:281
 #: frontend/templates/products/affiliate_product_detail.html:285
-#: frontend/templates/products/product_detail.html:268
+#: frontend/templates/products/product_detail.html:273
 #: frontend/templates/products/provider_product_detail.html:283
 msgid "Search commune..."
 msgstr "ابحث عن بلدية..."
@@ -4871,17 +4890,17 @@ msgid "Contact"
 msgstr "اتصل بنا"
 
 #: frontend/templates/home.html:41
-#: frontend/templates/partials/landing-nav.html:28
+#: frontend/templates/partials/landing-nav.html:31
 msgid "Bilnov"
 msgstr "Bilnov"
 
 #: frontend/templates/home.html:51
-#: frontend/templates/partials/landing-nav.html:38
+#: frontend/templates/partials/landing-nav.html:41
 msgid "Language"
 msgstr "اللغة"
 
 #: frontend/templates/home.html:100
-#: frontend/templates/partials/landing-nav.html:87
+#: frontend/templates/partials/landing-nav.html:90
 #: user_auth/templates/auth/login.html:10
 #: user_auth/templates/auth/login.html:96
 #: user_auth/templates/auth/signup.html:151
@@ -5027,6 +5046,13 @@ msgstr "الدفع عند الاستلام · التوصيل إلى 58 ولاي�
 msgid "Choose a file..."
 msgstr "اختر ملفاً..."
 
+#: frontend/templates/partials/landing-nav.html:28
+#: shopping/templates/shopping/index.html:3
+#: shopping/templates/shopping/index.html:12
+#
+msgid "My projects"
+msgstr "مشاريعي"
+
 #: frontend/templates/partials/product_card.html:9
 #: frontend/templates/partials/product_card.html:10
 #: frontend/templates/products/admin_product_detail.html:103
@@ -5040,6 +5066,8 @@ msgid "View in your space"
 msgstr "شاهده في مساحتك"
 
 #: frontend/templates/partials/product_card.html:14
+#: shopping/templates/shopping/detail.html:100
+#: shopping/templates/shopping/print.html:27
 msgid "Out of stock"
 msgstr "نفدت الكمية"
 
@@ -5079,7 +5107,7 @@ msgid "Powered By"
 msgstr "مدعوم من"
 
 #: frontend/templates/products/partials/bim_block.html:5
-#: frontend/templates/products/product_detail.html:185
+#: frontend/templates/products/product_detail.html:190
 msgid "Architect & BIM space"
 msgstr "فضاء المهندس المعماري و BIM"
 
@@ -5092,15 +5120,17 @@ msgid ""
 "Place this exact product in your projects: SketchUp, Revit, Archicad, IFC "
 "and BILNOV keep its BPID, so the client always finds the real product in the "
 "Store."
-msgstr "ضع هذا المنتج بعينه في مشاريعك: يحتفظ SketchUp وRevit وArchicad وIFC وBILNOV بمعرّفه BPID، فيجد العميل دائمًا المنتج الحقيقي في المتجر."
+msgstr ""
+"ضع هذا المنتج بعينه في مشاريعك: يحتفظ SketchUp وRevit وArchicad وIFC وBILNOV "
+"بمعرّفه BPID، فيجد العميل دائمًا المنتج الحقيقي في المتجر."
 
-#: frontend/templates/products/partials/bim_block.html:11
 #
+#: frontend/templates/products/partials/bim_block.html:11
 msgid "Copied"
 msgstr "تم النسخ"
 
-#: frontend/templates/products/partials/bim_block.html:15
 #
+#: frontend/templates/products/partials/bim_block.html:15
 msgid "Category code"
 msgstr "رمز الفئة"
 
@@ -5113,14 +5143,18 @@ msgstr "تحميل"
 msgid ""
 "No design file for this product yet. Ask us: we can send the model on "
 "request."
-msgstr "لا يوجد ملف تصميم لهذا المنتج بعد. اطلبه منا: يمكننا إرسال النموذج عند الطلب."
+msgstr ""
+"لا يوجد ملف تصميم لهذا المنتج بعد. اطلبه منا: يمكننا إرسال النموذج عند الطلب."
 
 #: frontend/templates/products/partials/bim_block.html:58
 msgid ""
 "Each file carries the BPID in its metadata (SketchUp attributes, IFC "
 "Pset_BilnovProduct, GLB extras). A new version never replaces the one "
 "already placed in a project."
-msgstr "يحمل كل ملف معرّف BPID في بياناته الوصفية (سمات SketchUp، و Pset_BilnovProduct في IFC، و extras في GLB). لا يحلّ إصدار جديد أبدًا محلّ الإصدار الموضوع في مشروع."
+msgstr ""
+"يحمل كل ملف معرّف BPID في بياناته الوصفية (سمات SketchUp، و "
+"Pset_BilnovProduct في IFC، و extras في GLB). لا يحلّ إصدار جديد أبدًا محلّ "
+"الإصدار الموضوع في مشروع."
 
 #: frontend/templates/products/partials/bim_block.html:59
 msgid "JSON data (API)"
@@ -5135,32 +5169,39 @@ msgstr "السعر"
 msgid "Availability"
 msgstr "التوفر"
 
-#: frontend/templates/products/product_detail.html:178
+#: frontend/templates/products/product_detail.html:172
+#: shopping/templates/shopping/add.html:3
+#: shopping/templates/shopping/add.html:12
+#
+msgid "Add to my project"
+msgstr "إضافة إلى مشروعي"
+
+#: frontend/templates/products/product_detail.html:183
 msgid "Bespoke Collection"
 msgstr "مجموعة حسب الطلب"
 
-#: frontend/templates/products/product_detail.html:210
+#: frontend/templates/products/product_detail.html:215
 msgid "Quick order"
 msgstr "طلب سريع"
 
-#: frontend/templates/products/product_detail.html:211
+#: frontend/templates/products/product_detail.html:216
 msgid ""
 "Leave your details: an advisor calls you to confirm. You pay on delivery."
 msgstr "اترك بياناتك: يتصل بك مستشار للتأكيد. الدفع عند الاستلام."
 
-#: frontend/templates/products/product_detail.html:224
+#: frontend/templates/products/product_detail.html:229
 msgid "Your Name"
 msgstr "اسمك"
 
-#: frontend/templates/products/product_detail.html:279
+#: frontend/templates/products/product_detail.html:284
 msgid "Specific Address (Optional)"
 msgstr "العنوان التفصيلي (اختياري)"
 
-#: frontend/templates/products/product_detail.html:280
+#: frontend/templates/products/product_detail.html:285
 msgid "Street, Building..."
 msgstr "الشارع، العمارة..."
 
-#: frontend/templates/products/product_detail.html:284
+#: frontend/templates/products/product_detail.html:289
 msgid "Order (pay on delivery)"
 msgstr "اطلب (الدفع عند الاستلام)"
 
@@ -5219,11 +5260,11 @@ msgstr "الأقصى"
 msgid "Sort Preferences"
 msgstr "خيارات الترتيب"
 
-#: frontend/views/cart.py:133
+#: frontend/views/cart.py:122
 msgid "Requested quantity exceeds available stock for this variant."
 msgstr "الكمية المطلوبة تتجاوز المخزون المتوفر لهذا الخيار."
 
-#: frontend/views/cart.py:141 frontend/views/cart.py:272
+#: frontend/views/cart.py:127 frontend/views/cart.py:272
 #, python-format
 msgid "Only %(stock)s available for this product."
 msgstr "المتوفر من هذا المنتج %(stock)s فقط."
@@ -5496,6 +5537,436 @@ msgstr "لا يتوفر نموذج 3D لهذا المنتج"
 #: frontend/views/store.py:19
 msgid "Product not available through this affiliate."
 msgstr "المنتج غير متوفر عبر هذا المسوّق بالعمولة."
+
+#: shopping/apps.py:8 shopping/models.py:45
+#
+msgid "Shopping lists"
+msgstr "قوائم الشراء"
+
+#: shopping/models.py:26
+msgid "Draft"
+msgstr "مسودة"
+
+#: shopping/models.py:27
+#
+msgid "Shared"
+msgstr "مُشاركة"
+
+#: shopping/models.py:29
+#
+msgid "Ordered"
+msgstr "تم طلبها"
+
+#: shopping/models.py:31
+msgid "Code"
+msgstr "الرمز"
+
+#: shopping/models.py:34
+msgid "Owner"
+msgstr "المالك"
+
+#: shopping/models.py:35 shopping/templates/shopping/detail.html:43
+#: shopping/templates/shopping/index.html:19
+#
+msgid "Project name"
+msgstr "اسم المشروع"
+
+#: shopping/models.py:36 shopping/templates/shopping/detail.html:44
+#: shopping/templates/shopping/print.html:16
+#
+msgid "Client"
+msgstr "العميل"
+
+#: shopping/models.py:37 shopping/templates/shopping/detail.html:47
+#
+msgid "Total budget (DZD)"
+msgstr "الميزانية الإجمالية (دج)"
+
+#: shopping/models.py:38 shopping/templates/shopping/detail.html:48
+#
+msgid "BILNOV project ID"
+msgstr "معرّف مشروع BILNOV"
+
+#: shopping/models.py:44 shopping/templates/shopping/detail.html:13
+#
+msgid "Shopping list"
+msgstr "قائمة الشراء"
+
+#: shopping/models.py:67 shopping/models.py:72 shopping/models.py:96
+#: shopping/templates/shopping/add.html:36
+#: shopping/templates/shopping/detail.html:80
+#: shopping/templates/shopping/detail.html:123
+#: shopping/templates/shopping/detail.html:153
+msgid "Room"
+msgstr "الغرفة"
+
+#: shopping/models.py:68 shopping/templates/shopping/detail.html:81
+#
+msgid "Budget (DZD)"
+msgstr "الميزانية (دج)"
+
+#: shopping/models.py:73
+msgid "Rooms"
+msgstr "الغرف"
+
+#: shopping/models.py:82
+msgid "Proposed by the client"
+msgstr "مقترح من العميل"
+
+#: shopping/models.py:83
+msgid "Proposed by the architect"
+msgstr "مقترح من المهندس المعماري"
+
+#: shopping/models.py:84
+msgid "To discuss"
+msgstr "للنقاش"
+
+#: shopping/models.py:85
+msgid "Accepted"
+msgstr "مقبول"
+
+#: shopping/models.py:86
+msgid "Refused"
+msgstr "مرفوض"
+
+#: shopping/models.py:87
+msgid "Replaced"
+msgstr "مُستبدل"
+
+#: shopping/models.py:88
+msgid "Integrated in the design"
+msgstr "مُدمج في التصميم"
+
+#: shopping/models.py:89
+#
+msgid "Final validation"
+msgstr "مُعتمد نهائيًا"
+
+#: shopping/models.py:104
+#
+msgid "Price when added (DZD)"
+msgstr "السعر عند الإضافة (دج)"
+
+#: shopping/models.py:108 shopping/templates/shopping/detail.html:128
+#
+msgid "Note"
+msgstr "ملاحظة"
+
+#: shopping/models.py:116
+msgid "List item"
+msgstr "عنصر القائمة"
+
+#: shopping/models.py:117
+#
+msgid "List items"
+msgstr "عناصر القائمة"
+
+#: shopping/templates/shopping/add.html:27
+#: shopping/templates/shopping/print.html:16
+msgid "List"
+msgstr "القائمة"
+
+#: shopping/templates/shopping/add.html:31
+#
+msgid "New list"
+msgstr "قائمة جديدة"
+
+#: shopping/templates/shopping/add.html:32
+msgid "e.g. Apartment Hydra"
+msgstr "مثلًا شقة حيدرة"
+
+#: shopping/templates/shopping/add.html:37
+msgid "e.g. Living room"
+msgstr "مثلًا الصالون"
+
+#: shopping/templates/shopping/add.html:45
+#
+msgid "Add to the list"
+msgstr "إضافة إلى القائمة"
+
+#: shopping/templates/shopping/add.html:46
+#
+msgid "Back to the product"
+msgstr "العودة إلى المنتج"
+
+#: shopping/templates/shopping/add.html:48
+msgid ""
+"The price shown today is kept with the line. If it changes later, the list "
+"shows both prices."
+msgstr "يُحفظ سعر اليوم مع العنصر. إذا تغيّر لاحقًا، تعرض القائمة السعرين."
+
+#: shopping/templates/shopping/detail.html:18
+#: shopping/templates/shopping/index.html:30
+#
+msgid "Updated"
+msgstr "حُدّثت في"
+
+#: shopping/templates/shopping/detail.html:22
+#: shopping/templates/shopping/print.html:39
+#
+msgid "Total today"
+msgstr "المجموع اليوم"
+
+#: shopping/templates/shopping/detail.html:23
+#
+msgid "Total when added"
+msgstr "المجموع عند الإضافة"
+
+#: shopping/templates/shopping/detail.html:24
+#: shopping/templates/shopping/print.html:21
+#: shopping/templates/shopping/print.html:40
+msgid "Budget"
+msgstr "الميزانية"
+
+#: shopping/templates/shopping/detail.html:25
+#, python-format
+msgid "%(counter)s product changed (price or stock)"
+msgid_plural "%(counter)s products changed (price or stock)"
+msgstr[0] "لم يتغيّر أي منتج"
+msgstr[1] "تغيّر منتج واحد (السعر أو المخزون)"
+msgstr[2] "تغيّر منتجان (السعر أو المخزون)"
+msgstr[3] "تغيّرت %(counter)s منتجات (السعر أو المخزون)"
+msgstr[4] "تغيّر %(counter)s منتجًا (السعر أو المخزون)"
+msgstr[5] "تغيّر %(counter)s منتج (السعر أو المخزون)"
+
+#: shopping/templates/shopping/detail.html:27
+msgid "Add everything to the cart"
+msgstr "إضافة الكل إلى السلة"
+
+#: shopping/templates/shopping/detail.html:30
+msgid "Print / PDF"
+msgstr "طباعة / PDF"
+
+#: shopping/templates/shopping/detail.html:31
+#: shopping/templates/shopping/detail.html:54
+#: shopping/templates/shopping/detail.html:56
+msgid "Link copied"
+msgstr "تم نسخ الرابط"
+
+#: shopping/templates/shopping/detail.html:38
+msgid "Project settings and sharing"
+msgstr "إعدادات المشروع والمشاركة"
+
+#: shopping/templates/shopping/detail.html:53
+msgid "Link to share (read and order)"
+msgstr "رابط للمشاركة (الاطلاع والطلب)"
+
+#: shopping/templates/shopping/detail.html:55
+msgid "Private edit link (keep it for yourself)"
+msgstr "رابط التعديل الخاص (احتفظ به لنفسك)"
+
+#: shopping/templates/shopping/detail.html:57
+#
+msgid "Delete this list?"
+msgstr "حذف هذه القائمة؟"
+
+#: shopping/templates/shopping/detail.html:59
+#
+msgid "Delete the list"
+msgstr "حذف القائمة"
+
+#: shopping/templates/shopping/detail.html:69
+#: shopping/templates/shopping/detail.html:124
+#: shopping/templates/shopping/print.html:21
+msgid "Without room"
+msgstr "بدون غرفة"
+
+#: shopping/templates/shopping/detail.html:77
+#
+msgid "Edit the room"
+msgstr "تعديل الغرفة"
+
+#: shopping/templates/shopping/detail.html:83
+#
+msgid "Delete the room"
+msgstr "حذف الغرفة"
+
+#: shopping/templates/shopping/detail.html:99
+#: shopping/templates/shopping/print.html:27
+msgid "No longer sold"
+msgstr "لم يعد يُباع"
+
+#: shopping/templates/shopping/detail.html:101
+#: shopping/templates/shopping/print.html:27
+#
+msgid "Not enough stock"
+msgstr "المخزون غير كافٍ"
+
+#: shopping/templates/shopping/detail.html:102
+#
+msgid "In stock"
+msgstr "متوفر"
+
+#: shopping/templates/shopping/detail.html:105
+msgid "We never replace a product on our own: choose an alternative or ask us."
+msgstr "لا نستبدل أي منتج من تلقاء أنفسنا: اختر بديلًا أو اسألنا."
+
+#: shopping/templates/shopping/detail.html:111
+#
+msgid "when added"
+msgstr "عند الإضافة"
+
+#: shopping/templates/shopping/detail.html:131
+msgid "Accept today's price"
+msgstr "قبول سعر اليوم"
+
+#: shopping/templates/shopping/detail.html:139
+#
+msgid "No product in this room yet."
+msgstr "لا توجد منتجات في هذه الغرفة بعد."
+
+#: shopping/templates/shopping/detail.html:145
+msgid "This list is empty. Open a product and choose “Add to my project”."
+msgstr "هذه القائمة فارغة. افتح منتجًا واختر «إضافة إلى مشروعي»."
+
+#: shopping/templates/shopping/detail.html:146
+#: shopping/templates/shopping/index.html:38
+#
+msgid "Browse the products"
+msgstr "تصفّح المنتجات"
+
+#: shopping/templates/shopping/detail.html:153
+msgid "Add a room, e.g. Kitchen"
+msgstr "أضف غرفة، مثلًا المطبخ"
+
+#: shopping/templates/shopping/detail.html:154
+#
+msgid "Add the room"
+msgstr "إضافة الغرفة"
+
+#: shopping/templates/shopping/detail.html:157
+msgid ""
+"Prices and stock are updated live. The price when added stays visible next "
+"to today's price; a product is never replaced automatically."
+msgstr "الأسعار والمخزون محدّثة مباشرة. يبقى السعر عند الإضافة ظاهرًا بجانب سعر اليوم، ولا يُستبدل أي منتج تلقائيًا."
+
+#: shopping/templates/shopping/index.html:13
+msgid "Your shopping lists, room by room"
+msgstr "قوائم الشراء الخاصة بك، غرفة بغرفة"
+
+#: shopping/templates/shopping/index.html:14
+msgid ""
+"Gather the products of a project, set a budget per room, share the list with "
+"your client or architect, then order everything in one click."
+msgstr "اجمع منتجات المشروع، وحدّد ميزانية لكل غرفة، وشارك القائمة مع عميلك أو مهندسك المعماري، ثم اطلب الكل بنقرة واحدة."
+
+#: shopping/templates/shopping/index.html:19
+msgid "New project, e.g. Apartment Hydra"
+msgstr "مشروع جديد، مثلًا شقة حيدرة"
+
+#: shopping/templates/shopping/index.html:20
+#
+msgid "Create a list"
+msgstr "إنشاء قائمة"
+
+#: shopping/templates/shopping/index.html:29
+#, python-format
+msgid "%(counter)s product"
+msgid_plural "%(counter)s products"
+msgstr[0] "لا منتجات"
+msgstr[1] "منتج واحد"
+msgstr[2] "منتجان"
+msgstr[3] "%(counter)s منتجات"
+msgstr[4] "%(counter)s منتجًا"
+msgstr[5] "%(counter)s منتج"
+
+#: shopping/templates/shopping/index.html:37
+msgid ""
+"No list yet. Open a product and choose “Add to my project”, or create a list "
+"above."
+msgstr "لا توجد قوائم بعد. افتح منتجًا واختر «إضافة إلى مشروعي»، أو أنشئ قائمة أعلاه."
+
+#: shopping/templates/shopping/index.html:42
+msgid ""
+"These lists are kept in this browser. Use the private edit link of each list "
+"to open it on another device."
+msgstr "تُحفظ هذه القوائم في هذا المتصفح. استعمل الرابط الخاص لكل قائمة لفتحها على جهاز آخر."
+
+#: shopping/templates/shopping/print.html:10
+msgid "Print / save as PDF"
+msgstr "طباعة / حفظ بصيغة PDF"
+
+#: shopping/templates/shopping/print.html:23
+#
+msgid "Reference"
+msgstr "المرجع"
+
+#: shopping/templates/shopping/print.html:23
+#
+msgid "Unit price"
+msgstr "سعر الوحدة"
+
+#: shopping/templates/shopping/print.html:41
+msgid ""
+"Indicative prices on the date above. Scan the QR code to see the list with "
+"up-to-date prices and stock, and to order."
+msgstr "أسعار إرشادية بالتاريخ أعلاه. امسح رمز QR لرؤية القائمة بالأسعار والمخزون المحدّثة وللطلب."
+
+#: shopping/views.py:60
+#
+msgid "My project"
+msgstr "مشروعي"
+
+#: shopping/views.py:122
+#, python-format
+msgid "%(title)s added to %(list)s."
+msgstr "تمت إضافة %(title)s إلى %(list)s."
+
+#: shopping/views.py:129
+msgid "Living room"
+msgstr "الصالون"
+
+#: shopping/views.py:129
+msgid "Kitchen"
+msgstr "المطبخ"
+
+#: shopping/views.py:129
+msgid "Bedroom"
+msgstr "غرفة النوم"
+
+#: shopping/views.py:129
+msgid "Bathroom"
+msgstr "الحمّام"
+
+#: shopping/views.py:129
+#
+msgid "Office"
+msgstr "المكتب"
+
+#: shopping/views.py:129
+#
+msgid "Entrance"
+msgstr "المدخل"
+
+#: shopping/views.py:242
+#
+msgid "The list has been deleted."
+msgstr "تم حذف القائمة."
+
+#: shopping/views.py:257
+#
+msgid "No longer available"
+msgstr "لم يعد متوفرًا"
+
+#: shopping/views.py:265
+#, python-format
+msgid "%(count)s product(s) of %(list)s added to the cart."
+msgstr "تمت إضافة %(count)s منتج من %(list)s إلى السلة."
+
+#: shopping/views.py:267
+#, python-format
+msgid "Not added: %(line)s"
+msgstr "لم تتم الإضافة: %(line)s"
+
+#: shopping/views.py:277
+#
+msgid "My cart"
+msgstr "سلتي"
+
+#: shopping/views.py:284
+#
+msgid "Your cart has been saved as a list."
+msgstr "تم حفظ سلتك كقائمة."
 
 #: user_auth/migrations/0010_wallet_decimal_defaults.py:20
 #: user_auth/models.py:85

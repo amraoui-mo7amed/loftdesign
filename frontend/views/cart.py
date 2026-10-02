@@ -109,45 +109,27 @@ def _get_cart_items_data(request):
     return items
 
 
-@require_POST
-def cart_add(request):
-    product_id = request.POST.get("product_id")
-    item_id = request.POST.get("item_id")
-    try:
-        quantity = int(request.POST.get("quantity", 1))
-    except (TypeError, ValueError):
-        return JsonResponse({"success": False, "message": _("Invalid quantity.")})
-
-    product = get_object_or_404(Product, pk=product_id, is_active=True, status=Product.ProductStatus.APPROVED)
+def add_to_cart(request, product, item, quantity):
+    """Add a line to the session cart. Returns None, or the error message."""
     if quantity < 1:
-        return JsonResponse({"success": False, "message": _("Invalid quantity.")})
+        return _("Invalid quantity.")
 
     # Check item stock if variant selected
-    item = None
-    if item_id:
-        from dashboard.models import ProductItem
-        item = get_object_or_404(ProductItem, pk=item_id, product=product, is_active=True)
+    item_id = item.pk if item else None
+    product_id = product.pk
+    if item:
         if item.stock_quantity < quantity:
-            return JsonResponse({
-                "success": False,
-                "message": _("Requested quantity exceeds available stock for this variant.")
-            })
+            return _("Requested quantity exceeds available stock for this variant.")
 
     else:
         in_cart = _get_cart(request).get(str(product_id), {}).get("quantity", 0)
         if product.quantity < quantity + in_cart:
-            return JsonResponse({
-                "success": False,
-                "message": _("Only %(stock)s available for this product.") % {"stock": product.quantity}
-            })
+            return _("Only %(stock)s available for this product.") % {"stock": product.quantity}
 
     # Resolve price before adding
     resolved = _resolve_for_cart(request, product)
     if resolved is None:
-        return JsonResponse({
-            "success": False,
-            "message": _("Price not configured for this product. Please contact support.")
-        })
+        return _("Price not configured for this product. Please contact support.")
 
     cart = _get_cart(request)
     key = str(item_id) if item_id else str(product_id)
@@ -172,6 +154,24 @@ def cart_add(request):
     cart[key]["price_eur"] = str(product.price_eur) if product.price_eur else ""
 
     _save_cart(request, cart)
+    return None
+
+
+@require_POST
+def cart_add(request):
+    product_id = request.POST.get("product_id")
+    item_id = request.POST.get("item_id")
+    try:
+        quantity = int(request.POST.get("quantity", 1))
+    except (TypeError, ValueError):
+        return JsonResponse({"success": False, "message": _("Invalid quantity.")})
+
+    product = get_object_or_404(Product, pk=product_id, is_active=True, status=Product.ProductStatus.APPROVED)
+    item = get_object_or_404(ProductItem, pk=item_id, product=product, is_active=True) if item_id else None
+    error = add_to_cart(request, product, item, quantity)
+    if error:
+        return JsonResponse({"success": False, "message": error})
+    cart = _get_cart(request)
 
     return JsonResponse({
         "success": True,

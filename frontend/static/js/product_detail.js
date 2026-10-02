@@ -149,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update Add to Cart buttons
         addToCartBtns.forEach(function(b) { b.dataset.itemId = itemId; });
+        document.querySelectorAll('.btn-add-to-list').forEach(function(a) { a.href = a.dataset.base + '&item=' + itemId; });
 
         // Update order form hidden inputs
         orderItemIds.forEach(function(el) { el.value = itemId; });

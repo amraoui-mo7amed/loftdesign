@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+{% load i18n static shopping_tags %}
+{% block title %} | {% trans "Add to my project" %}{% endblock title %}
+{% block nav %}{% include 'partials/landing-nav.html' %}{% endblock nav %}
+{% block sidebar %}{% endblock sidebar %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'shopping/shopping.css' %}?v={{ ASSET_VERSION }}">{% endblock extra_css %}
+
+{% block content %}
+<section class="sl-page">
+    <div class="container sl-narrow">
+        <header class="sl-head">
+            <span class="sl-eyebrow"><i class="fas fa-clipboard-list"></i> {% trans "Add to my project" %}</span>
+        </header>
+        <div class="sl-product">
+            {% if variant.thumbnail %}<img src="{{ variant.thumbnail.url }}" alt="">{% elif product.thumbnail %}<img src="{{ product.thumbnail.url }}" alt="">{% endif %}
+            <div>
+                <strong>{{ product.title }}{% if variant %} — {{ variant.name }}{% endif %}</strong>
+                <span>{{ price|dzd }} · <code>{% if variant %}{{ variant.variant_id }}{% else %}{{ product.bpid }}{% endif %}</code></span>
+            </div>
+        </div>
+        <form method="post" class="sl-form">
+            {% csrf_token %}
+            <input type="hidden" name="product" value="{{ product.pk }}">
+            {% if variant %}<input type="hidden" name="item" value="{{ variant.pk }}">{% endif %}
+
+            <fieldset>
+                <legend>{% trans "List" %}</legend>
+                {% for lst in lists %}
+                <label class="sl-radio"><input type="radio" name="list" value="{{ lst.code }}" {% if forloop.first %}checked{% endif %}><span><b>{{ lst.name }}</b><small>{{ lst.code }}</small></span></label>
+                {% endfor %}
+                <label class="sl-radio"><input type="radio" name="list" value="" {% if not lists %}checked{% endif %}><span><b>{% trans "New list" %}</b>
+                    <input type="text" name="new_list" maxlength="120" placeholder="{% trans 'e.g. Apartment Hydra' %}"></span></label>
+            </fieldset>
+
+            <div class="sl-row">
+                <label class="sl-field"><span>{% trans "Room" %}</span>
+                    <input type="text" name="room" maxlength="80" list="roomList" placeholder="{% trans 'e.g. Living room' %}">
+                    <datalist id="roomList">{% for r in rooms %}<option value="{{ r }}">{% endfor %}{% for r in suggested_rooms %}<option value="{{ r }}">{% endfor %}</datalist>
+                </label>
+                <label class="sl-field sl-qty"><span>{% trans "Quantity" %}</span>
+                    <input type="number" name="quantity" value="1" min="1" max="9999">
+                </label>
+            </div>
+            <div class="sl-actions">
+                <button type="submit" class="sl-btn sl-btn-ink"><i class="fas fa-check"></i> {% trans "Add to the list" %}</button>
+                <a href="{% url 'frontend:product_detail' product.pk %}" class="sl-btn sl-btn-line">{% trans "Back to the product" %}</a>
+            </div>
+            <p class="sl-hint">{% trans "The price shown today is kept with the line. If it changes later, the list shows both prices." %}</p>
+        </form>
+    </div>
+</section>
+{% endblock content %}

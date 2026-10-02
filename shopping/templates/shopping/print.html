@@ -1,0 +1,44 @@
+{% load i18n static shopping_tags %}{% get_current_language as LANG %}{% get_current_language_bidi as RTL %}<!doctype html>
+<html lang="{{ LANG }}" dir="{% if RTL %}rtl{% else %}ltr{% endif %}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ lst.name }} · {{ lst.code }} · Store Bilnov</title>
+<link rel="stylesheet" href="{% static 'shopping/shopping.css' %}?v={{ ASSET_VERSION }}">
+</head>
+<body class="sl-print">
+<div class="sl-print-bar"><button type="button" onclick="window.print()">{% trans "Print / save as PDF" %}</button></div>
+<main class="sl-sheet">
+    <header class="sl-sheet-head">
+        <div>
+            <div class="sl-sheet-brand">Store <b>Bilnov</b></div>
+            <h1>{{ lst.name }}</h1>
+            <p>{% if lst.client_name %}{% trans "Client" %} : {{ lst.client_name }} · {% endif %}{% trans "List" %} <span dir="ltr">{{ lst.code }}</span> · {% now "d/m/Y" %}{% if lst.bilnov_project_id %} · BILNOV {{ lst.bilnov_project_id }}{% endif %}</p>
+        </div>
+        <figure class="sl-qr">{{ qr|safe }}<figcaption dir="ltr">{{ share_url }}</figcaption></figure>
+    </header>
+    {% for g in groups %}{% if g.items %}
+    <h2>{% if g.room %}{{ g.room.name }}{% else %}{% trans "Without room" %}{% endif %}{% if g.budget %} <small>{% trans "Budget" %} {{ g.budget|dzd }}</small>{% endif %}</h2>
+    <table>
+        <thead><tr><th>{% trans "Product" %}</th><th>{% trans "Reference" %}</th><th>{% trans "Status" %}</th><th class="n">{% trans "Unit price" %}</th><th class="n">{% trans "Qty" %}</th><th class="n">{% trans "Total" %}</th></tr></thead>
+        <tbody>
+        {% for it in g.items %}
+        <tr class="{% if not it.counts %}off{% endif %}">
+            <td>{{ it.title_snapshot }}{% if it.state != "available" %} <em>({% if it.state == "unavailable" %}{% trans "No longer sold" %}{% elif it.state == "out_of_stock" %}{% trans "Out of stock" %}{% else %}{% trans "Not enough stock" %}{% endif %})</em>{% endif %}</td>
+            <td dir="ltr">{{ it.variant_id_snapshot|default:it.bpid_snapshot }}</td>
+            <td>{{ it.get_status_display }}</td>
+            <td class="n">{% if it.current_price is not None %}{{ it.current_price|dzd }}{% else %}{{ it.price_snapshot|dzd }}{% endif %}</td>
+            <td class="n">{{ it.quantity }}</td>
+            <td class="n">{{ it.line_total|dzd }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot><tr><td colspan="5">{% trans "Subtotal" %}</td><td class="n">{{ g.total|dzd }}</td></tr></tfoot>
+    </table>
+    {% endif %}{% endfor %}
+    <div class="sl-sheet-total"><span>{% trans "Total today" %}</span><b>{{ total|dzd }}</b></div>
+    {% if lst.budget %}<div class="sl-sheet-total sl-small"><span>{% trans "Budget" %}</span><span>{{ lst.budget|dzd }}</span></div>{% endif %}
+    <p class="sl-sheet-note">{% trans "Indicative prices on the date above. Scan the QR code to see the list with up-to-date prices and stock, and to order." %}</p>
+</main>
+</body>
+</html>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 09:57+0000\n"
+"POT-Creation-Date: 2026-10-02 11:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,19 +22,19 @@ msgstr ""
 msgid "Elevate Your Space"
 msgstr "Élevez votre espace"
 
-#: core/context_processors.py:21
+#: core/context_processors.py:23
 msgid "Lun-Ven: 09h - 18h"
 msgstr "Lun-Ven: 09h - 18h"
 
-#: core/context_processors.py:28
+#: core/context_processors.py:30
 msgid ""
 "Store Bilnov by LOFT Design - furniture, materials, lighting and 3D/BIM "
 "objects for your projects."
 msgstr ""
-"Store Bilnov par LOFT Design : mobilier, matériaux, éclairage et objets "
-"3D/BIM pour vos projets."
+"Store Bilnov par LOFT Design : mobilier, matériaux, éclairage et objets 3D/"
+"BIM pour vos projets."
 
-#: core/context_processors.py:31
+#: core/context_processors.py:33
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "design d'intérieur, loft, architecture, mobilier moderne, décoration"
 
@@ -68,8 +68,7 @@ msgstr "Tableau de bord"
 #: dashboard/templates/products/admin_store_catalog.html:89
 #: dashboard/templates/products/list.html:19 dashboard/templatetags/tags.py:43
 #: frontend/templates/admin_store.html:52
-#: frontend/templates/affiliate_store.html:52
-#: frontend/templates/index.html:107
+#: frontend/templates/affiliate_store.html:52 frontend/templates/index.html:107
 #: frontend/templates/products/products_list.html:5
 #: frontend/templates/provider_store.html:52 frontend/views/client.py:114
 msgid "Products"
@@ -200,7 +199,7 @@ msgstr "Images du diaporama des paramètres du site"
 
 #: dashboard/models.py:44 dashboard/models_settings.py:23
 #: dashboard/templates/orders/affiliate_cart.html:186
-#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:302
+#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:193
 #: frontend/templates/products/admin_product_detail.html:241
 #: frontend/templates/products/affiliate_product_detail.html:245
 #: frontend/templates/products/product_detail.html:222
@@ -215,7 +214,7 @@ msgstr "Nom complet"
 #: dashboard/templates/users/list.html:235
 #: dashboard/templates/users/partials/_details_info.html:15
 #: dashboard/templates/users/profile_edit.html:102
-#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:306
+#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:195
 #: frontend/templates/products/admin_product_detail.html:246
 #: frontend/templates/products/affiliate_product_detail.html:250
 #: frontend/templates/products/product_detail.html:228
@@ -225,12 +224,12 @@ msgid "Phone Number"
 msgstr "Numéro de téléphone"
 
 #: dashboard/models.py:46 dashboard/models_settings.py:25
-#: frontend/templates/home.html:310
+#: frontend/templates/home.html:199
 msgid "Project Type"
 msgstr "Type de projet"
 
 #: dashboard/models.py:47 dashboard/models_settings.py:26
-#: frontend/templates/home.html:318
+#: frontend/templates/home.html:206
 msgid "Message"
 msgstr "Message"
 
@@ -347,8 +346,7 @@ msgstr "En attente"
 msgid "Approved"
 msgstr "Approuvé"
 
-#: dashboard/models.py:125
-#: dashboard/templates/wallets/withdrawal_list.html:204
+#: dashboard/models.py:125 dashboard/templates/wallets/withdrawal_list.html:204
 #: dashboard/templates/wallets/withdrawal_list.html:223
 #: dashboard/views/wallets.py:371
 msgid "Rejected"
@@ -477,8 +475,7 @@ msgstr "Cocher pour mettre ce produit en avant dans la vitrine de l'admin"
 #: dashboard/templates/wallets/wallet.html:119
 #: dashboard/templates/wallets/wallet.html:140
 #: dashboard/templates/wallets/withdrawal_list.html:121
-#: dashboard/templates/wallets/withdrawal_list.html:163
-#: user_auth/models.py:149
+#: dashboard/templates/wallets/withdrawal_list.html:163 user_auth/models.py:149
 msgid "Status"
 msgstr "Statut"
 
@@ -534,8 +531,8 @@ msgid ""
 "Price for approved professional clients buying directly. Leave empty to use "
 "the retail price."
 msgstr ""
-"Prix pour les clients professionnels approuvés achetant directement. Laisser"
-" vide pour utiliser le prix de détail."
+"Prix pour les clients professionnels approuvés achetant directement. Laisser "
+"vide pour utiliser le prix de détail."
 
 #: dashboard/models.py:213 dashboard/models.py:259 dashboard/models.py:294
 #: dashboard/models.py:325 dashboard/models.py:349 dashboard/models.py:502
@@ -565,8 +562,8 @@ msgstr "Prix de gros affilié (DZD)"
 msgid ""
 "Price the provider charges its own affiliates when reselling this product"
 msgstr ""
-"Prix facturé par le fournisseur à ses propres affiliés pour la revente de ce"
-" produit"
+"Prix facturé par le fournisseur à ses propres affiliés pour la revente de ce "
+"produit"
 
 #: dashboard/models.py:275
 msgid "Suggested Retail Price (DZD)"
@@ -996,7 +993,7 @@ msgstr "Texture (JPG / PNG / PBR)"
 msgid "Technical sheet (PDF)"
 msgstr "Fiche technique (PDF)"
 
-#: dashboard/models.py:702 frontend/templates/home.html:314
+#: dashboard/models.py:702 frontend/templates/home.html:203
 msgid "Other"
 msgstr "Autre"
 
@@ -1235,9 +1232,9 @@ msgstr "Voici l'aperçu de vos commandes."
 msgid "Your agent"
 msgstr "Votre agent"
 
-#: dashboard/templates/dash/client_home.html:32
-#: dashboard/views/dashboard.py:72 dashboard/views/dashboard.py:130
-#: dashboard/views/dashboard.py:180 dashboard/views/dashboard.py:247
+#: dashboard/templates/dash/client_home.html:32 dashboard/views/dashboard.py:72
+#: dashboard/views/dashboard.py:130 dashboard/views/dashboard.py:180
+#: dashboard/views/dashboard.py:247
 msgid "Total Orders"
 msgstr "Total des commandes"
 
@@ -1358,8 +1355,7 @@ msgstr "Aide & Support"
 #: dashboard/templates/leads/list.html:16
 msgid "Inquiries captured from landing page contact form."
 msgstr ""
-"Demandes capturées depuis le formulaire de contact de la page "
-"d'atterrissage."
+"Demandes capturées depuis le formulaire de contact de la page d'atterrissage."
 
 #: dashboard/templates/leads/list.html:36
 #: dashboard/templates/orders/detail.html:60
@@ -2046,8 +2042,7 @@ msgstr "Modifier la variante"
 #: dashboard/templates/products/create.html:404
 #: dashboard/templates/products/items/form_modal.html:11
 msgid ""
-"Configure a product variant with its own media, color, dimensions, and "
-"stock."
+"Configure a product variant with its own media, color, dimensions, and stock."
 msgstr ""
 "Configurez une variante de produit avec ses propres médias, couleurs, "
 "dimensions et stock."
@@ -2510,8 +2505,8 @@ msgstr "Aucune variante pour le moment"
 msgid ""
 "Click 'Add Variant' to create product options like color, size, or finish."
 msgstr ""
-"Cliquez sur « Ajouter une variante » pour créer des options de produit comme"
-" la couleur, la taille ou la finition."
+"Cliquez sur « Ajouter une variante » pour créer des options de produit comme "
+"la couleur, la taille ou la finition."
 
 #: dashboard/templates/products/items/section.html:12
 msgid "No variants yet. Click 'Add Variant' to create product options."
@@ -2961,8 +2956,7 @@ msgstr "Bloquer l'utilisateur ?"
 #: dashboard/templates/users/details.html:83
 #, python-format
 msgid ""
-"Are you sure you want to unblock %(name)s? They will be able to log in "
-"again."
+"Are you sure you want to unblock %(name)s? They will be able to log in again."
 msgstr ""
 "Êtes‑vous sûr de vouloir débloquer %(name)s ? Ils pourront se reconnecter."
 
@@ -2972,8 +2966,8 @@ msgid ""
 "Are you sure you want to block %(name)s? They will not be able to log in "
 "until unblocked."
 msgstr ""
-"Êtes‑vous sûr de vouloir bloquer %(name)s ? Ils ne pourront pas se connecter"
-" tant qu'ils ne seront pas débloqués."
+"Êtes‑vous sûr de vouloir bloquer %(name)s ? Ils ne pourront pas se connecter "
+"tant qu'ils ne seront pas débloqués."
 
 #: dashboard/templates/users/details.html:84
 msgid "Yes, unblock!"
@@ -3997,11 +3991,11 @@ msgstr "Commande #%(num)s livrée — Commission perçue"
 #: dashboard/views/orders.py:728
 #, python-format
 msgid ""
-"Order #%(num)s has been delivered. Your commission has been credited to your"
-" wallet."
+"Order #%(num)s has been delivered. Your commission has been credited to your "
+"wallet."
 msgstr ""
-"La commande #%(num)s a été livrée. Votre commission a été créditée sur votre"
-" portefeuille."
+"La commande #%(num)s a été livrée. Votre commission a été créditée sur votre "
+"portefeuille."
 
 #: dashboard/views/orders.py:739 dashboard/views/orders.py:748
 #: dashboard/views/orders.py:758
@@ -4153,7 +4147,7 @@ msgstr "Catégorie mise à jour avec succès"
 #: dashboard/views/users.py:356 dashboard/views/users.py:411
 #: dashboard/views/users.py:546 dashboard/views/users.py:671
 #: dashboard/views/users.py:784 dashboard/views/users.py:1006
-#: frontend/views/main.py:75 frontend/views/main.py:150
+#: frontend/views/main.py:77 frontend/views/main.py:152
 #: frontend/views/orders.py:38 user_auth/views.py:78 user_auth/views.py:145
 #: user_auth/views.py:211 user_auth/views.py:339
 msgid "Something went wrong. Please try again."
@@ -4225,8 +4219,7 @@ msgstr "Produit approuvé!"
 #: dashboard/views/products.py:359
 #, python-format
 msgid "Your product '%(product)s' has been approved and is now live."
-msgstr ""
-"Votre produit '%(product)s' a été approuvé et est maintenant en ligne."
+msgstr "Votre produit '%(product)s' a été approuvé et est maintenant en ligne."
 
 #: dashboard/views/products.py:445
 msgid "Product updated successfully"
@@ -4854,17 +4847,17 @@ msgstr ""
 msgid "Continue shopping"
 msgstr "Continuer mes achats"
 
-#: frontend/templates/home.html:29 frontend/templates/home.html:364
+#: frontend/templates/home.html:29 frontend/templates/home.html:245
 #: frontend/templates/partials/landing-nav.html:19
-msgid "About"
-msgstr "À propos"
+msgid "Services"
+msgstr "Services"
 
 #: frontend/templates/home.html:32
 #: frontend/templates/partials/landing-nav.html:22
 msgid "Shop"
 msgstr "Boutique"
 
-#: frontend/templates/home.html:35
+#: frontend/templates/home.html:35 frontend/templates/home.html:162
 #: frontend/templates/partials/landing-nav.html:25
 msgid "Contact"
 msgstr "Contact"
@@ -4928,177 +4921,80 @@ msgid "Place it at real size"
 msgstr "Placez-le en taille réelle"
 
 #: frontend/templates/home.html:144
-msgid "Our Philosophy"
-msgstr "Notre philosophie"
-
-#: frontend/templates/home.html:145
-msgid "Crafting Spaces, Shaping Emotions"
-msgstr "Concevoir des espaces, façonner les émotions"
-
-#: frontend/templates/home.html:154
-msgid "Visionary Design"
-msgstr "Design visionnaire"
-
-#: frontend/templates/home.html:156
-msgid ""
-"We don't just follow trends; we create timeless environments that speak to "
-"your soul and elevate your daily experience."
-msgstr ""
-"Nous ne nous contentons pas de suivre les tendances ; nous créons des "
-"environnements intemporels qui parlent à votre âme et élèvent votre "
-"quotidien."
-
-#: frontend/templates/home.html:165
-msgid "Personal Touch"
-msgstr "Touche personnelle"
-
-#: frontend/templates/home.html:167
-msgid ""
-"Every client is unique. We dive deep into your lifestyle to ensure every "
-"corner of your space is functional and personalized."
-msgstr ""
-"Chaque client est unique. Nous plongeons au cœur de votre mode de vie pour "
-"garantir que chaque recoin de votre espace soit fonctionnel et personnalisé."
-
-#: frontend/templates/home.html:176
-msgid "360° Immersion"
-msgstr "Immersion à 360°"
-
-#: frontend/templates/home.html:178
-msgid ""
-"Project yourself even before the build. Thanks to our immersive "
-"technologies, explore your future space in 360° and experience your project "
-"before it comes to life."
-msgstr ""
-"Projetez-vous avant même la construction. Grâce à nos technologies "
-"immersives, explorez votre futur espace en 360° et vivez votre projet avant "
-"qu'il ne prenne forme."
-
-#: frontend/templates/home.html:191
-msgid "Projects Completed"
-msgstr "Projets réalisés"
-
-#: frontend/templates/home.html:196
-msgid "Designing spaces crafted for your well-being"
-msgstr "Concevoir des espaces conçus pour votre bien-être"
-
-#: frontend/templates/home.html:198
-msgid ""
-"At LOFT Design, we craft spaces where design meets everyday comfort. Every "
-"project is designed to adapt to your lifestyle, optimize your spaces, and "
-"create a harmonious, functional, and pleasant atmosphere to live in."
-msgstr ""
-"Chez LOFT Design, nous créons des espaces où le design rencontre le confort "
-"quotidien. Chaque projet est conçu pour s'adapter à votre mode de vie, "
-"optimiser vos espaces et créer une atmosphère harmonieuse, fonctionnelle et "
-"agréable à vivre."
-
-#: frontend/templates/home.html:203
-msgid "Optimized layout for maximum comfort."
-msgstr "Disposition optimisée pour un confort maximal."
-
-#: frontend/templates/home.html:207
-msgid "Modern, clean, and functional design."
-msgstr "Design moderne, épuré et fonctionnel."
-
-#: frontend/templates/home.html:211
-msgid "Integration of smart and immersive solutions (360°, 3D visualization)."
-msgstr ""
-"Intégration de solutions intelligentes et immersives (360°, visualisation "
-"3D)."
-
-#: frontend/templates/home.html:215
-msgid "Personalized support, from concept to completion"
-msgstr "Accompagnement personnalisé, du concept à la réalisation."
-
-#: frontend/templates/home.html:219
-msgid "Discover Our Process"
-msgstr "Découvrez notre processus"
-
-#: frontend/templates/home.html:228
 msgid "Featured Collections"
 msgstr "Collections en vedette"
 
-#: frontend/templates/home.html:229
+#: frontend/templates/home.html:145
 msgid "Handpicked pieces from our latest interior projects."
 msgstr "Pièces sélectionnées parmi nos derniers projets d'intérieur."
 
-#: frontend/templates/home.html:239
+#: frontend/templates/home.html:155
 msgid "View All Products"
 msgstr "Voir tous les produits"
 
-#: frontend/templates/home.html:248
-msgid "Start Your Project Today"
-msgstr "Commencez votre projet dès aujourd'hui"
+#: frontend/templates/home.html:163
+msgid "A message is all it takes"
+msgstr "Un message suffit"
 
-#: frontend/templates/home.html:250
-msgid ""
-"Ready to redefine your space? Fill out the form and our design specialists "
-"will get back to you within 24 hours."
-msgstr ""
-"Prêt à redéfinir votre espace ? Remplissez le formulaire et nos spécialistes"
-" du design vous répondront sous 24 heures."
+#: frontend/templates/home.html:163
+msgid "to get started."
+msgstr "pour commencer."
 
-#: frontend/templates/home.html:258 frontend/templates/home.html:267
-msgid "Call Us"
-msgstr "Appelez-nous"
+#: frontend/templates/home.html:175
+msgid "Our team answers within 24 hours, by phone, e-mail or WhatsApp."
+msgstr "Notre équipe vous répond sous 24 heures, par téléphone, e-mail ou WhatsApp."
 
-#: frontend/templates/home.html:276
-msgid "Email Us"
-msgstr "Envoyez-nous un e‑mail"
-
-#: frontend/templates/home.html:285
+#: frontend/templates/home.html:184
 msgid "try Bilnov"
 msgstr "essayez Bilnov"
 
-#: frontend/templates/home.html:287
-msgid "Access Details"
-msgstr "Détails d'accès"
+#: frontend/templates/home.html:184
+msgid "Follow your project in 360° and 3D"
+msgstr "Suivez votre projet en 360° et en 3D"
 
-#: frontend/templates/home.html:312
+#: frontend/templates/home.html:201
 msgid "Residential"
 msgstr "Résidentiel"
 
-#: frontend/templates/home.html:313
+#: frontend/templates/home.html:202
 msgid "Commercial"
 msgstr "Commercial"
 
-#: frontend/templates/home.html:321
+#: frontend/templates/home.html:207
 msgid "Tell us about your dream space..."
 msgstr "Parlez-nous de votre espace de rêve..."
 
-#: frontend/templates/home.html:326
+#: frontend/templates/home.html:209
 #: frontend/templates/products/admin_product_detail.html:296
 #: frontend/templates/products/affiliate_product_detail.html:300
 #: frontend/templates/products/provider_product_detail.html:298
 msgid "Send Inquiry"
 msgstr "Envoyer la demande"
 
-#: frontend/templates/home.html:356
+#: frontend/templates/home.html:210
+msgid "Send on WhatsApp"
+msgstr "Envoyer sur WhatsApp"
+
+#: frontend/templates/home.html:237
 msgid ""
-"Redefining modern living through innovative design and premium "
-"craftsmanship."
+"Redefining modern living through innovative design and premium craftsmanship."
 msgstr ""
 "Redéfinir le mode de vie moderne grâce à un design innovant et un artisanat "
 "haut de gamme."
 
-#: frontend/templates/home.html:360
+#: frontend/templates/home.html:241
 msgid "Quick Links"
 msgstr "Liens rapides"
 
-#: frontend/templates/home.html:368
-msgid "Services"
-msgstr "Services"
-
-#: frontend/templates/home.html:372
+#: frontend/templates/home.html:249
 msgid "Projects"
 msgstr "Projets"
 
-#: frontend/templates/home.html:377
+#: frontend/templates/home.html:254
 msgid "Follow Us"
 msgstr "Suivez‑nous"
 
-#: frontend/templates/home.html:394
+#: frontend/templates/home.html:271
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
@@ -5416,28 +5312,28 @@ msgstr ""
 msgid "The order could not be placed. Please try again."
 msgstr "La commande n'a pas pu être passée. Veuillez réessayer."
 
-#: frontend/views/main.py:43
+#: frontend/views/main.py:45
 msgid "Full Name is required"
 msgstr "Le nom complet est requis"
 
-#: frontend/views/main.py:44
+#: frontend/views/main.py:46
 msgid "Phone Number is required"
 msgstr "Le numéro de téléphone est requis"
 
-#: frontend/views/main.py:45
+#: frontend/views/main.py:47
 msgid "Message is required"
 msgstr "Le message est requis"
 
-#: frontend/views/main.py:63
+#: frontend/views/main.py:65
 msgid "New Contact Request"
 msgstr "Nouvelle demande de contact"
 
-#: frontend/views/main.py:64
+#: frontend/views/main.py:66
 #, python-format
 msgid "New contact lead from %(name)s"
 msgstr "Nouveau lead de contact de %(name)s"
 
-#: frontend/views/main.py:71
+#: frontend/views/main.py:73
 msgid ""
 "Your contact request has been sent successfully. We will get back to you "
 "shortly."
@@ -5445,50 +5341,49 @@ msgstr ""
 "Votre demande de contact a été envoyée avec succès. Nous reviendrons vers "
 "vous sous peu."
 
-#: frontend/views/main.py:92 user_auth/views.py:103
+#: frontend/views/main.py:94 user_auth/views.py:103
 msgid "First name is required."
 msgstr "Le prénom est obligatoire."
 
-#: frontend/views/main.py:94 user_auth/views.py:105
+#: frontend/views/main.py:96 user_auth/views.py:105
 msgid "Last name is required."
 msgstr "Le nom de famille est obligatoire."
 
-#: frontend/views/main.py:96 user_auth/views.py:107 user_auth/views.py:229
+#: frontend/views/main.py:98 user_auth/views.py:107 user_auth/views.py:229
 msgid "Email is required."
 msgstr "L'e-mail est obligatoire."
 
-#: frontend/views/main.py:98 user_auth/views.py:109 user_auth/views.py:181
+#: frontend/views/main.py:100 user_auth/views.py:109 user_auth/views.py:181
 #: user_auth/views.py:320
 msgid "Password is required."
 msgstr "Le mot de passe est obligatoire."
 
-#: frontend/views/main.py:100
+#: frontend/views/main.py:102
 msgid "Password must be at least 8 characters."
 msgstr "Le mot de passe doit contenir au moins 8 caractères."
 
-#: frontend/views/main.py:102 user_auth/views.py:111 user_auth/views.py:185
+#: frontend/views/main.py:104 user_auth/views.py:111 user_auth/views.py:185
 #: user_auth/views.py:324
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: frontend/views/main.py:110 user_auth/views.py:120
+#: frontend/views/main.py:112 user_auth/views.py:120
 msgid "This email is already registered."
 msgstr "Cet e-mail est déjà enregistré."
 
-#: frontend/views/main.py:131
+#: frontend/views/main.py:133
 msgid "New Affiliate Signup"
 msgstr "Nouvelle inscription d'affilié"
 
-#: frontend/views/main.py:133
+#: frontend/views/main.py:135
 #, python-format
 msgid ""
-"%(name)s (%(email)s) has registered as an affiliate and is awaiting "
-"approval."
+"%(name)s (%(email)s) has registered as an affiliate and is awaiting approval."
 msgstr ""
 "%(name)s (%(email)s) s'est inscrit en tant qu'affilié et attend "
 "l'approbation."
 
-#: frontend/views/main.py:142
+#: frontend/views/main.py:144
 msgid ""
 "Your affiliate account has been created! An admin will review and activate "
 "your account. You will receive an email once approved."
@@ -5797,8 +5692,8 @@ msgid ""
 "We've emailed you instructions for setting your password, if an account "
 "exists with the email you entered."
 msgstr ""
-"Nous vous avons envoyé par e‑mail les instructions pour définir votre mot de"
-" passe, si un compte existe avec l'e‑mail que vous avez saisi."
+"Nous vous avons envoyé par e‑mail les instructions pour définir votre mot de "
+"passe, si un compte existe avec l'e‑mail que vous avez saisi."
 
 #: user_auth/templates/auth/password_reset_email.txt:2
 #, python-format
@@ -5809,7 +5704,8 @@ msgid ""
 msgstr ""
 "Bonjour %(user.get_short_name|default:user.get_username)s,\n"
 "\n"
-"Vous avez demandé une réinitialisation du mot de passe pour votre compte LOFT Design."
+"Vous avez demandé une réinitialisation du mot de passe pour votre compte "
+"LOFT Design."
 
 #: user_auth/templates/auth/password_reset_email.txt:6
 msgid "Your username:"
@@ -5825,7 +5721,8 @@ msgid ""
 "\n"
 "The LOFT Design team"
 msgstr ""
-"Si vous n'êtes pas à l'origine de cette réinitialisation, veuillez ignorer cet e‑mail.\n"
+"Si vous n'êtes pas à l'origine de cette réinitialisation, veuillez ignorer "
+"cet e‑mail.\n"
 "\n"
 "L'équipe LOFT Design"
 
@@ -5859,11 +5756,11 @@ msgstr "Lien invalide ou expiré"
 
 #: user_auth/templates/auth/set_password.html:104
 msgid ""
-"This password setup link is invalid or has already been used. Please contact"
-" your administrator to request a new invitation."
+"This password setup link is invalid or has already been used. Please contact "
+"your administrator to request a new invitation."
 msgstr ""
-"Ce lien de configuration du mot de passe est invalide ou a déjà été utilisé."
-" Veuillez contacter votre administrateur pour demander une nouvelle "
+"Ce lien de configuration du mot de passe est invalide ou a déjà été utilisé. "
+"Veuillez contacter votre administrateur pour demander une nouvelle "
 "invitation."
 
 #: user_auth/templates/auth/set_password.html:107
@@ -5948,8 +5845,7 @@ msgstr "Votre compte a été bloqué. Veuillez contacter le support."
 
 #: user_auth/views.py:72
 msgid "Invalid username/email or password. Please try again."
-msgstr ""
-"Nom d'utilisateur/e‑mail ou mot de passe invalide. Veuillez réessayer."
+msgstr "Nom d'utilisateur/e‑mail ou mot de passe invalide. Veuillez réessayer."
 
 #: user_auth/views.py:113 user_auth/views.py:183 user_auth/views.py:322
 msgid "Password must be at least 8 characters long."
@@ -5996,6 +5892,103 @@ msgstr ""
 msgid "Password reset successfully."
 msgstr "Mot de passe réinitialisé avec succès."
 
+#~ msgid "About"
+#~ msgstr "À propos"
+
+#~ msgid "Our Philosophy"
+#~ msgstr "Notre philosophie"
+
+#~ msgid "Crafting Spaces, Shaping Emotions"
+#~ msgstr "Concevoir des espaces, façonner les émotions"
+
+#~ msgid "Visionary Design"
+#~ msgstr "Design visionnaire"
+
+#~ msgid ""
+#~ "We don't just follow trends; we create timeless environments that speak "
+#~ "to your soul and elevate your daily experience."
+#~ msgstr ""
+#~ "Nous ne nous contentons pas de suivre les tendances ; nous créons des "
+#~ "environnements intemporels qui parlent à votre âme et élèvent votre "
+#~ "quotidien."
+
+#~ msgid "Personal Touch"
+#~ msgstr "Touche personnelle"
+
+#~ msgid ""
+#~ "Every client is unique. We dive deep into your lifestyle to ensure every "
+#~ "corner of your space is functional and personalized."
+#~ msgstr ""
+#~ "Chaque client est unique. Nous plongeons au cœur de votre mode de vie "
+#~ "pour garantir que chaque recoin de votre espace soit fonctionnel et "
+#~ "personnalisé."
+
+#~ msgid "360° Immersion"
+#~ msgstr "Immersion à 360°"
+
+#~ msgid ""
+#~ "Project yourself even before the build. Thanks to our immersive "
+#~ "technologies, explore your future space in 360° and experience your "
+#~ "project before it comes to life."
+#~ msgstr ""
+#~ "Projetez-vous avant même la construction. Grâce à nos technologies "
+#~ "immersives, explorez votre futur espace en 360° et vivez votre projet "
+#~ "avant qu'il ne prenne forme."
+
+#~ msgid "Projects Completed"
+#~ msgstr "Projets réalisés"
+
+#~ msgid "Designing spaces crafted for your well-being"
+#~ msgstr "Concevoir des espaces conçus pour votre bien-être"
+
+#~ msgid ""
+#~ "At LOFT Design, we craft spaces where design meets everyday comfort. "
+#~ "Every project is designed to adapt to your lifestyle, optimize your "
+#~ "spaces, and create a harmonious, functional, and pleasant atmosphere to "
+#~ "live in."
+#~ msgstr ""
+#~ "Chez LOFT Design, nous créons des espaces où le design rencontre le "
+#~ "confort quotidien. Chaque projet est conçu pour s'adapter à votre mode de "
+#~ "vie, optimiser vos espaces et créer une atmosphère harmonieuse, "
+#~ "fonctionnelle et agréable à vivre."
+
+#~ msgid "Optimized layout for maximum comfort."
+#~ msgstr "Disposition optimisée pour un confort maximal."
+
+#~ msgid "Modern, clean, and functional design."
+#~ msgstr "Design moderne, épuré et fonctionnel."
+
+#~ msgid ""
+#~ "Integration of smart and immersive solutions (360°, 3D visualization)."
+#~ msgstr ""
+#~ "Intégration de solutions intelligentes et immersives (360°, visualisation "
+#~ "3D)."
+
+#~ msgid "Personalized support, from concept to completion"
+#~ msgstr "Accompagnement personnalisé, du concept à la réalisation."
+
+#~ msgid "Discover Our Process"
+#~ msgstr "Découvrez notre processus"
+
+#~ msgid "Start Your Project Today"
+#~ msgstr "Commencez votre projet dès aujourd'hui"
+
+#~ msgid ""
+#~ "Ready to redefine your space? Fill out the form and our design "
+#~ "specialists will get back to you within 24 hours."
+#~ msgstr ""
+#~ "Prêt à redéfinir votre espace ? Remplissez le formulaire et nos "
+#~ "spécialistes du design vous répondront sous 24 heures."
+
+#~ msgid "Call Us"
+#~ msgstr "Appelez-nous"
+
+#~ msgid "Email Us"
+#~ msgstr "Envoyez-nous un e‑mail"
+
+#~ msgid "Access Details"
+#~ msgstr "Détails d'accès"
+
 #~ msgid "Market Valuation"
 #~ msgstr "Évaluation du marché"
 
@@ -6006,11 +5999,11 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgstr "Chef-d'œuvre"
 
 #~ msgid ""
-#~ "We combine elegance, functionality, and modern aesthetics to create living "
-#~ "environments that reflect your personality."
+#~ "We combine elegance, functionality, and modern aesthetics to create "
+#~ "living environments that reflect your personality."
 #~ msgstr ""
-#~ "Nous combinons élégance, fonctionnalité et esthétique moderne pour créer des"
-#~ " environnements de vie qui reflètent votre personnalité."
+#~ "Nous combinons élégance, fonctionnalité et esthétique moderne pour créer "
+#~ "des environnements de vie qui reflètent votre personnalité."
 
 #~ msgid "Book a Consultation"
 #~ msgstr "Réserver une consultation"
@@ -6020,7 +6013,8 @@ msgstr "Mot de passe réinitialisé avec succès."
 
 #~ msgid "LOFT Design - High-end interior design and architectural solutions."
 #~ msgstr ""
-#~ "LOFT Design - Design d'intérieur haut de gamme et solutions architecturales."
+#~ "LOFT Design - Design d'intérieur haut de gamme et solutions "
+#~ "architecturales."
 
 #~ msgid "New Provider"
 #~ msgstr "Nouveau fournisseur"
@@ -6040,8 +6034,8 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgid ""
 #~ "Connect with our design specialists for personalized acquisition support."
 #~ msgstr ""
-#~ "Contactez nos spécialistes du design pour un accompagnement personnalisé à "
-#~ "l'acquisition."
+#~ "Contactez nos spécialistes du design pour un accompagnement personnalisé "
+#~ "à l'acquisition."
 
 #~ msgid "Search projects or pieces..."
 #~ msgstr "Rechercher des projets ou des pièces..."
@@ -6191,13 +6185,14 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgid ""
 #~ "After submission, an admin will review your product before it goes live."
 #~ msgstr ""
-#~ "Après la soumission, un administrateur examinera votre produit et définira "
-#~ "les prix de gros/de détail avant sa mise en ligne."
+#~ "Après la soumission, un administrateur examinera votre produit et "
+#~ "définira les prix de gros/de détail avant sa mise en ligne."
 
 #~ msgid "Submit for Review"
 #~ msgstr "Soumettre pour examen"
 
-#~ msgid "Set wholesale & retail prices and click Save to approve this product."
+#~ msgid ""
+#~ "Set wholesale & retail prices and click Save to approve this product."
 #~ msgstr ""
 #~ "Définissez les prix de gros et de détail et cliquez sur Enregistrer pour "
 #~ "approuver ce produit."
@@ -6276,7 +6271,8 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgstr "Commission gagnée"
 
 #, python-format
-#~ msgid "You earned DZD%(amount)s commission on \"%(products)s\" for order %(num)s."
+#~ msgid ""
+#~ "You earned DZD%(amount)s commission on \"%(products)s\" for order %(num)s."
 #~ msgstr ""
 #~ "Vous avez gagné DZD%(amount)s de commission sur \"%(products)s\" pour la "
 #~ "commande %(num)s."
@@ -6306,8 +6302,8 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgid ""
 #~ "%(name)s added '%(product)s' — set wholesale/retail prices to activate."
 #~ msgstr ""
-#~ "%(name)s a ajouté '%(product)s' — définissez les prix de gros/de détail pour"
-#~ " activer."
+#~ "%(name)s a ajouté '%(product)s' — définissez les prix de gros/de détail "
+#~ "pour activer."
 
 #~ msgid "Product submitted for review."
 #~ msgstr "Produit soumis pour examen."
@@ -6483,8 +6479,8 @@ msgstr "Mot de passe réinitialisé avec succès."
 
 #~ msgid "You can only view your own billing or your semi-affiliates."
 #~ msgstr ""
-#~ "Vous ne pouvez consulter que votre propre facturation ou celle de vos semi-"
-#~ "affiliés."
+#~ "Vous ne pouvez consulter que votre propre facturation ou celle de vos "
+#~ "semi-affiliés."
 
 #, python-format
 #~ msgid "%(provider)s changed order #%(id)s from «%(old)s» to «%(new)s»"

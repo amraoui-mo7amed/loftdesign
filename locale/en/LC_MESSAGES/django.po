@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 09:57+0000\n"
+"POT-Creation-Date: 2026-10-02 11:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,17 +22,17 @@ msgstr ""
 msgid "Elevate Your Space"
 msgstr "Elevate Your Space"
 
-#: core/context_processors.py:21
+#: core/context_processors.py:23
 msgid "Lun-Ven: 09h - 18h"
 msgstr "Mon-Fri: 9am - 6pm"
 
-#: core/context_processors.py:28
+#: core/context_processors.py:30
 msgid ""
 "Store Bilnov by LOFT Design - furniture, materials, lighting and 3D/BIM "
 "objects for your projects."
 msgstr ""
 
-#: core/context_processors.py:31
+#: core/context_processors.py:33
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "interior design, loft, architecture, modern furniture, decor"
 
@@ -205,7 +205,7 @@ msgstr "Site Settings Slider Images"
 
 #: dashboard/models.py:44 dashboard/models_settings.py:23
 #: dashboard/templates/orders/affiliate_cart.html:186
-#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:302
+#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:193
 #: frontend/templates/products/admin_product_detail.html:241
 #: frontend/templates/products/affiliate_product_detail.html:245
 #: frontend/templates/products/product_detail.html:222
@@ -220,7 +220,7 @@ msgstr "Full Name"
 #: dashboard/templates/users/list.html:235
 #: dashboard/templates/users/partials/_details_info.html:15
 #: dashboard/templates/users/profile_edit.html:102
-#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:306
+#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:195
 #: frontend/templates/products/admin_product_detail.html:246
 #: frontend/templates/products/affiliate_product_detail.html:250
 #: frontend/templates/products/product_detail.html:228
@@ -230,12 +230,12 @@ msgid "Phone Number"
 msgstr "Phone Number"
 
 #: dashboard/models.py:46 dashboard/models_settings.py:25
-#: frontend/templates/home.html:310
+#: frontend/templates/home.html:199
 msgid "Project Type"
 msgstr "Project Type"
 
 #: dashboard/models.py:47 dashboard/models_settings.py:26
-#: frontend/templates/home.html:318
+#: frontend/templates/home.html:206
 msgid "Message"
 msgstr "Message"
 
@@ -1047,7 +1047,7 @@ msgstr ""
 msgid "Technical sheet (PDF)"
 msgstr "Technical Details"
 
-#: dashboard/models.py:702 frontend/templates/home.html:314
+#: dashboard/models.py:702 frontend/templates/home.html:203
 msgid "Other"
 msgstr "Other"
 
@@ -4451,7 +4451,7 @@ msgstr "Category updated successfully"
 #: dashboard/views/users.py:356 dashboard/views/users.py:411
 #: dashboard/views/users.py:546 dashboard/views/users.py:671
 #: dashboard/views/users.py:784 dashboard/views/users.py:1006
-#: frontend/views/main.py:75 frontend/views/main.py:150
+#: frontend/views/main.py:77 frontend/views/main.py:152
 #: frontend/views/orders.py:38 user_auth/views.py:78 user_auth/views.py:145
 #: user_auth/views.py:211 user_auth/views.py:339
 #, fuzzy
@@ -5207,17 +5207,17 @@ msgstr ""
 msgid "Continue shopping"
 msgstr "Continue Shopping"
 
-#: frontend/templates/home.html:29 frontend/templates/home.html:364
+#: frontend/templates/home.html:29 frontend/templates/home.html:245
 #: frontend/templates/partials/landing-nav.html:19
-msgid "About"
-msgstr "About"
+msgid "Services"
+msgstr "Services"
 
 #: frontend/templates/home.html:32
 #: frontend/templates/partials/landing-nav.html:22
 msgid "Shop"
 msgstr "Shop"
 
-#: frontend/templates/home.html:35
+#: frontend/templates/home.html:35 frontend/templates/home.html:162
 #: frontend/templates/partials/landing-nav.html:25
 msgid "Contact"
 msgstr "Contact"
@@ -5285,171 +5285,79 @@ msgid "Place it at real size"
 msgstr ""
 
 #: frontend/templates/home.html:144
-msgid "Our Philosophy"
-msgstr "Our Philosophy"
-
-#: frontend/templates/home.html:145
-msgid "Crafting Spaces, Shaping Emotions"
-msgstr "Crafting Spaces, Shaping Emotions"
-
-#: frontend/templates/home.html:154
-msgid "Visionary Design"
-msgstr "Visionary Design"
-
-#: frontend/templates/home.html:156
-msgid ""
-"We don't just follow trends; we create timeless environments that speak to "
-"your soul and elevate your daily experience."
-msgstr ""
-"We don't just follow trends; we create timeless environments that speak to "
-"your soul and elevate your daily experience."
-
-#: frontend/templates/home.html:165
-msgid "Personal Touch"
-msgstr "Personal Touch"
-
-#: frontend/templates/home.html:167
-msgid ""
-"Every client is unique. We dive deep into your lifestyle to ensure every "
-"corner of your space is functional and personalized."
-msgstr ""
-"Every client is unique. We dive deep into your lifestyle to ensure every "
-"corner of your space is functional and personalized."
-
-#: frontend/templates/home.html:176
-msgid "360° Immersion"
-msgstr "360° Immersion"
-
-#: frontend/templates/home.html:178
-msgid ""
-"Project yourself even before the build. Thanks to our immersive "
-"technologies, explore your future space in 360° and experience your project "
-"before it comes to life."
-msgstr ""
-"Project yourself even before the build. Thanks to our immersive "
-"technologies, explore your future space in 360° and experience your project "
-"before it comes to life."
-
-#: frontend/templates/home.html:191
-msgid "Projects Completed"
-msgstr "Projects Completed"
-
-#: frontend/templates/home.html:196
-msgid "Designing spaces crafted for your well-being"
-msgstr "Designing spaces crafted for your well-being"
-
-#: frontend/templates/home.html:198
-msgid ""
-"At LOFT Design, we craft spaces where design meets everyday comfort. Every "
-"project is designed to adapt to your lifestyle, optimize your spaces, and "
-"create a harmonious, functional, and pleasant atmosphere to live in."
-msgstr ""
-"At LOFT Design, we craft spaces where design meets everyday comfort. Every "
-"project is designed to adapt to your lifestyle, optimize your spaces, and "
-"create a harmonious, functional, and pleasant atmosphere to live in."
-
-#: frontend/templates/home.html:203
-msgid "Optimized layout for maximum comfort."
-msgstr "Optimized layout for maximum comfort."
-
-#: frontend/templates/home.html:207
-msgid "Modern, clean, and functional design."
-msgstr "Modern, clean, and functional design."
-
-#: frontend/templates/home.html:211
-msgid "Integration of smart and immersive solutions (360°, 3D visualization)."
-msgstr "Integration of smart and immersive solutions (360°, 3D visualization)."
-
-#: frontend/templates/home.html:215
-msgid "Personalized support, from concept to completion"
-msgstr "Personalized support, from concept to completion"
-
-#: frontend/templates/home.html:219
-msgid "Discover Our Process"
-msgstr "Discover Our Process"
-
-#: frontend/templates/home.html:228
 msgid "Featured Collections"
 msgstr "Featured Collections"
 
-#: frontend/templates/home.html:229
+#: frontend/templates/home.html:145
 msgid "Handpicked pieces from our latest interior projects."
 msgstr "Handpicked pieces from our latest interior projects."
 
-#: frontend/templates/home.html:239
+#: frontend/templates/home.html:155
 msgid "View All Products"
 msgstr "View All Products"
 
-#: frontend/templates/home.html:248
-msgid "Start Your Project Today"
-msgstr "Start Your Project Today"
-
-#: frontend/templates/home.html:250
-msgid ""
-"Ready to redefine your space? Fill out the form and our design specialists "
-"will get back to you within 24 hours."
+#: frontend/templates/home.html:163
+msgid "A message is all it takes"
 msgstr ""
-"Ready to redefine your space? Fill out the form and our design specialists "
-"will get back to you within 24 hours."
 
-#: frontend/templates/home.html:258 frontend/templates/home.html:267
-msgid "Call Us"
-msgstr "Call Us"
+#: frontend/templates/home.html:163
+msgid "to get started."
+msgstr ""
 
-#: frontend/templates/home.html:276
-msgid "Email Us"
-msgstr "Email Us"
+#: frontend/templates/home.html:175
+msgid "Our team answers within 24 hours, by phone, e-mail or WhatsApp."
+msgstr ""
 
-#: frontend/templates/home.html:285
+#: frontend/templates/home.html:184
 msgid "try Bilnov"
 msgstr "try Bilnov"
 
-#: frontend/templates/home.html:287
-msgid "Access Details"
-msgstr "Access Details"
+#: frontend/templates/home.html:184
+msgid "Follow your project in 360° and 3D"
+msgstr ""
 
-#: frontend/templates/home.html:312
+#: frontend/templates/home.html:201
 msgid "Residential"
 msgstr "Residential"
 
-#: frontend/templates/home.html:313
+#: frontend/templates/home.html:202
 msgid "Commercial"
 msgstr "Commercial"
 
-#: frontend/templates/home.html:321
+#: frontend/templates/home.html:207
 msgid "Tell us about your dream space..."
 msgstr "Tell us about your dream space..."
 
-#: frontend/templates/home.html:326
+#: frontend/templates/home.html:209
 #: frontend/templates/products/admin_product_detail.html:296
 #: frontend/templates/products/affiliate_product_detail.html:300
 #: frontend/templates/products/provider_product_detail.html:298
 msgid "Send Inquiry"
 msgstr "Send Inquiry"
 
-#: frontend/templates/home.html:356
+#: frontend/templates/home.html:210
+msgid "Send on WhatsApp"
+msgstr ""
+
+#: frontend/templates/home.html:237
 msgid ""
 "Redefining modern living through innovative design and premium craftsmanship."
 msgstr ""
 "Redefining modern living through innovative design and premium craftsmanship."
 
-#: frontend/templates/home.html:360
+#: frontend/templates/home.html:241
 msgid "Quick Links"
 msgstr "Quick Links"
 
-#: frontend/templates/home.html:368
-msgid "Services"
-msgstr "Services"
-
-#: frontend/templates/home.html:372
+#: frontend/templates/home.html:249
 msgid "Projects"
 msgstr "Projects"
 
-#: frontend/templates/home.html:377
+#: frontend/templates/home.html:254
 msgid "Follow Us"
 msgstr "Follow Us"
 
-#: frontend/templates/home.html:394
+#: frontend/templates/home.html:271
 msgid "All rights reserved."
 msgstr "All rights reserved."
 
@@ -5809,28 +5717,28 @@ msgstr "Price not configured for this product. Please contact support."
 msgid "The order could not be placed. Please try again."
 msgstr "Failed to send email. Please try again later."
 
-#: frontend/views/main.py:43
+#: frontend/views/main.py:45
 msgid "Full Name is required"
 msgstr "Full Name is required"
 
-#: frontend/views/main.py:44
+#: frontend/views/main.py:46
 msgid "Phone Number is required"
 msgstr "Phone Number is required"
 
-#: frontend/views/main.py:45
+#: frontend/views/main.py:47
 msgid "Message is required"
 msgstr "Message is required"
 
-#: frontend/views/main.py:63
+#: frontend/views/main.py:65
 msgid "New Contact Request"
 msgstr "New Contact Request"
 
-#: frontend/views/main.py:64
+#: frontend/views/main.py:66
 #, python-format
 msgid "New contact lead from %(name)s"
 msgstr "New contact lead from %(name)s"
 
-#: frontend/views/main.py:71
+#: frontend/views/main.py:73
 msgid ""
 "Your contact request has been sent successfully. We will get back to you "
 "shortly."
@@ -5838,48 +5746,48 @@ msgstr ""
 "Your contact request has been sent successfully. We will get back to you "
 "shortly."
 
-#: frontend/views/main.py:92 user_auth/views.py:103
+#: frontend/views/main.py:94 user_auth/views.py:103
 msgid "First name is required."
 msgstr "First name is required."
 
-#: frontend/views/main.py:94 user_auth/views.py:105
+#: frontend/views/main.py:96 user_auth/views.py:105
 msgid "Last name is required."
 msgstr "Last name is required."
 
-#: frontend/views/main.py:96 user_auth/views.py:107 user_auth/views.py:229
+#: frontend/views/main.py:98 user_auth/views.py:107 user_auth/views.py:229
 msgid "Email is required."
 msgstr "Email is required."
 
-#: frontend/views/main.py:98 user_auth/views.py:109 user_auth/views.py:181
+#: frontend/views/main.py:100 user_auth/views.py:109 user_auth/views.py:181
 #: user_auth/views.py:320
 msgid "Password is required."
 msgstr "Password is required."
 
-#: frontend/views/main.py:100
+#: frontend/views/main.py:102
 msgid "Password must be at least 8 characters."
 msgstr "Password must be at least 8 characters."
 
-#: frontend/views/main.py:102 user_auth/views.py:111 user_auth/views.py:185
+#: frontend/views/main.py:104 user_auth/views.py:111 user_auth/views.py:185
 #: user_auth/views.py:324
 msgid "Passwords do not match."
 msgstr "Passwords do not match."
 
-#: frontend/views/main.py:110 user_auth/views.py:120
+#: frontend/views/main.py:112 user_auth/views.py:120
 msgid "This email is already registered."
 msgstr "This email is already registered."
 
-#: frontend/views/main.py:131
+#: frontend/views/main.py:133
 msgid "New Affiliate Signup"
 msgstr "New Affiliate Signup"
 
-#: frontend/views/main.py:133
+#: frontend/views/main.py:135
 #, python-format
 msgid ""
 "%(name)s (%(email)s) has registered as an affiliate and is awaiting approval."
 msgstr ""
 "%(name)s (%(email)s) has registered as an affiliate and is awaiting approval."
 
-#: frontend/views/main.py:142
+#: frontend/views/main.py:144
 msgid ""
 "Your affiliate account has been created! An admin will review and activate "
 "your account. You will receive an email once approved."
@@ -6387,6 +6295,100 @@ msgstr "A password reset link has been sent to your email."
 #: user_auth/views.py:334
 msgid "Password reset successfully."
 msgstr "Password reset successfully."
+
+#~ msgid "About"
+#~ msgstr "About"
+
+#~ msgid "Our Philosophy"
+#~ msgstr "Our Philosophy"
+
+#~ msgid "Crafting Spaces, Shaping Emotions"
+#~ msgstr "Crafting Spaces, Shaping Emotions"
+
+#~ msgid "Visionary Design"
+#~ msgstr "Visionary Design"
+
+#~ msgid ""
+#~ "We don't just follow trends; we create timeless environments that speak "
+#~ "to your soul and elevate your daily experience."
+#~ msgstr ""
+#~ "We don't just follow trends; we create timeless environments that speak "
+#~ "to your soul and elevate your daily experience."
+
+#~ msgid "Personal Touch"
+#~ msgstr "Personal Touch"
+
+#~ msgid ""
+#~ "Every client is unique. We dive deep into your lifestyle to ensure every "
+#~ "corner of your space is functional and personalized."
+#~ msgstr ""
+#~ "Every client is unique. We dive deep into your lifestyle to ensure every "
+#~ "corner of your space is functional and personalized."
+
+#~ msgid "360° Immersion"
+#~ msgstr "360° Immersion"
+
+#~ msgid ""
+#~ "Project yourself even before the build. Thanks to our immersive "
+#~ "technologies, explore your future space in 360° and experience your "
+#~ "project before it comes to life."
+#~ msgstr ""
+#~ "Project yourself even before the build. Thanks to our immersive "
+#~ "technologies, explore your future space in 360° and experience your "
+#~ "project before it comes to life."
+
+#~ msgid "Projects Completed"
+#~ msgstr "Projects Completed"
+
+#~ msgid "Designing spaces crafted for your well-being"
+#~ msgstr "Designing spaces crafted for your well-being"
+
+#~ msgid ""
+#~ "At LOFT Design, we craft spaces where design meets everyday comfort. "
+#~ "Every project is designed to adapt to your lifestyle, optimize your "
+#~ "spaces, and create a harmonious, functional, and pleasant atmosphere to "
+#~ "live in."
+#~ msgstr ""
+#~ "At LOFT Design, we craft spaces where design meets everyday comfort. "
+#~ "Every project is designed to adapt to your lifestyle, optimize your "
+#~ "spaces, and create a harmonious, functional, and pleasant atmosphere to "
+#~ "live in."
+
+#~ msgid "Optimized layout for maximum comfort."
+#~ msgstr "Optimized layout for maximum comfort."
+
+#~ msgid "Modern, clean, and functional design."
+#~ msgstr "Modern, clean, and functional design."
+
+#~ msgid ""
+#~ "Integration of smart and immersive solutions (360°, 3D visualization)."
+#~ msgstr ""
+#~ "Integration of smart and immersive solutions (360°, 3D visualization)."
+
+#~ msgid "Personalized support, from concept to completion"
+#~ msgstr "Personalized support, from concept to completion"
+
+#~ msgid "Discover Our Process"
+#~ msgstr "Discover Our Process"
+
+#~ msgid "Start Your Project Today"
+#~ msgstr "Start Your Project Today"
+
+#~ msgid ""
+#~ "Ready to redefine your space? Fill out the form and our design "
+#~ "specialists will get back to you within 24 hours."
+#~ msgstr ""
+#~ "Ready to redefine your space? Fill out the form and our design "
+#~ "specialists will get back to you within 24 hours."
+
+#~ msgid "Call Us"
+#~ msgstr "Call Us"
+
+#~ msgid "Email Us"
+#~ msgstr "Email Us"
+
+#~ msgid "Access Details"
+#~ msgstr "Access Details"
 
 #~ msgid "Market Valuation"
 #~ msgstr "Market Valuation"

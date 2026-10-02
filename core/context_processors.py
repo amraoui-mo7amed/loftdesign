@@ -19,6 +19,7 @@ def _build_site_config(lang):
             "contact_email": "Loftdesign@live.fr",
             "phone": "+213 776139475",
             "mobile": "+213 541960603",
+            "whatsapp": "213776139475",
             "working_hours": _("Lun-Ven: 09h - 18h"),
             "social": {
                 "facebook": "https://www.facebook.com/profile.php?id=100067199886406",

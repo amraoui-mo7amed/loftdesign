@@ -100,3 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+// Contact : envoie le message du formulaire sur WhatsApp
+document.getElementById('contactWhatsapp')?.addEventListener('click', (e) => {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+    const val = (n) => (form.elements[n]?.value || '').trim();
+    const type = form.querySelector('input[name="project_type"]:checked');
+    const typeLabel = type ? type.nextElementSibling.textContent.trim() : '';
+    const lines = [val('name'), val('phone'), typeLabel, val('message')].filter(Boolean);
+    const url = `https://wa.me/${e.currentTarget.dataset.wa}?text=${encodeURIComponent(lines.join('\n'))}`;
+    window.open(url, '_blank', 'noopener');
+});

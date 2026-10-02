@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 09:57+0000\n"
+"POT-Creation-Date: 2026-10-02 11:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,17 +16,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 
 #: core/context_processors.py:14
 msgid "Elevate Your Space"
 msgstr "ارتقِ بمساحتك"
 
-#: core/context_processors.py:21
+#: core/context_processors.py:23
 msgid "Lun-Ven: 09h - 18h"
 msgstr "الإثنين-الجمعة: 09:00 - 18:00"
 
-#: core/context_processors.py:28
+#: core/context_processors.py:30
 msgid ""
 "Store Bilnov by LOFT Design - furniture, materials, lighting and 3D/BIM "
 "objects for your projects."
@@ -34,7 +35,7 @@ msgstr ""
 "متجر بيلنوف من LOFT Design: أثاث ومواد وإنارة وعناصر ثلاثية الأبعاد/BIM "
 "لمشاريعكم."
 
-#: core/context_processors.py:31
+#: core/context_processors.py:33
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "تصميم داخلي، لوفت، هندسة معمارية، أثاث عصري، ديكور"
 
@@ -68,8 +69,7 @@ msgstr "لوحة التحكم"
 #: dashboard/templates/products/admin_store_catalog.html:89
 #: dashboard/templates/products/list.html:19 dashboard/templatetags/tags.py:43
 #: frontend/templates/admin_store.html:52
-#: frontend/templates/affiliate_store.html:52
-#: frontend/templates/index.html:107
+#: frontend/templates/affiliate_store.html:52 frontend/templates/index.html:107
 #: frontend/templates/products/products_list.html:5
 #: frontend/templates/provider_store.html:52 frontend/views/client.py:114
 msgid "Products"
@@ -200,7 +200,7 @@ msgstr "صور شريط العرض لإعدادات الموقع"
 
 #: dashboard/models.py:44 dashboard/models_settings.py:23
 #: dashboard/templates/orders/affiliate_cart.html:186
-#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:302
+#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:193
 #: frontend/templates/products/admin_product_detail.html:241
 #: frontend/templates/products/affiliate_product_detail.html:245
 #: frontend/templates/products/product_detail.html:222
@@ -215,7 +215,7 @@ msgstr "الاسم الكامل"
 #: dashboard/templates/users/list.html:235
 #: dashboard/templates/users/partials/_details_info.html:15
 #: dashboard/templates/users/profile_edit.html:102
-#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:306
+#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:195
 #: frontend/templates/products/admin_product_detail.html:246
 #: frontend/templates/products/affiliate_product_detail.html:250
 #: frontend/templates/products/product_detail.html:228
@@ -225,12 +225,12 @@ msgid "Phone Number"
 msgstr "رقم الهاتف"
 
 #: dashboard/models.py:46 dashboard/models_settings.py:25
-#: frontend/templates/home.html:310
+#: frontend/templates/home.html:199
 msgid "Project Type"
 msgstr "نوع المشروع"
 
 #: dashboard/models.py:47 dashboard/models_settings.py:26
-#: frontend/templates/home.html:318
+#: frontend/templates/home.html:206
 msgid "Message"
 msgstr "الرسالة"
 
@@ -312,8 +312,7 @@ msgstr "رمز بيلنوف"
 msgid ""
 "3 letters used in the Bilnov Object ID, e.g. FUR (furniture), LGT "
 "(lighting), TIL (tiles)."
-msgstr ""
-"3 أحرف تُستعمل في معرّف بيلنوف، مثل FUR (أثاث) وLGT (إنارة) وTIL (بلاط)."
+msgstr "3 أحرف تُستعمل في معرّف بيلنوف، مثل FUR (أثاث) وLGT (إنارة) وTIL (بلاط)."
 
 #: dashboard/models.py:112 dashboard/models.py:142
 #: dashboard/templates/products/create.html:123
@@ -346,8 +345,7 @@ msgstr "قيد الانتظار"
 msgid "Approved"
 msgstr "مقبول"
 
-#: dashboard/models.py:125
-#: dashboard/templates/wallets/withdrawal_list.html:204
+#: dashboard/models.py:125 dashboard/templates/wallets/withdrawal_list.html:204
 #: dashboard/templates/wallets/withdrawal_list.html:223
 #: dashboard/views/wallets.py:371
 msgid "Rejected"
@@ -476,8 +474,7 @@ msgstr "حدّد لإبراز هذا المنتج في واجهة متجر ال�
 #: dashboard/templates/wallets/wallet.html:119
 #: dashboard/templates/wallets/wallet.html:140
 #: dashboard/templates/wallets/withdrawal_list.html:121
-#: dashboard/templates/wallets/withdrawal_list.html:163
-#: user_auth/models.py:149
+#: dashboard/templates/wallets/withdrawal_list.html:163 user_auth/models.py:149
 msgid "Status"
 msgstr "الحالة"
 
@@ -528,8 +525,8 @@ msgid ""
 "Price for approved professional clients buying directly. Leave empty to use "
 "the retail price."
 msgstr ""
-"سعر العملاء المحترفين المعتمدين عند الشراء المباشر. اتركه فارغًا لاستخدام "
-"سعر التجزئة."
+"سعر العملاء المحترفين المعتمدين عند الشراء المباشر. اتركه فارغًا لاستخدام سعر "
+"التجزئة."
 
 #: dashboard/models.py:213 dashboard/models.py:259 dashboard/models.py:294
 #: dashboard/models.py:325 dashboard/models.py:349 dashboard/models.py:502
@@ -558,8 +555,7 @@ msgstr "سعر الجملة للمسوّقين بالعمولة (DZD)"
 #: dashboard/models.py:272
 msgid ""
 "Price the provider charges its own affiliates when reselling this product"
-msgstr ""
-"السعر الذي يفرضه المورّد على مسوّقيه بالعمولة عند إعادة بيع هذا المنتج"
+msgstr "السعر الذي يفرضه المورّد على مسوّقيه بالعمولة عند إعادة بيع هذا المنتج"
 
 #: dashboard/models.py:275
 msgid "Suggested Retail Price (DZD)"
@@ -985,7 +981,7 @@ msgstr "خامة (JPG / PNG / PBR)"
 msgid "Technical sheet (PDF)"
 msgstr "البطاقة التقنية (PDF)"
 
-#: dashboard/models.py:702 frontend/templates/home.html:314
+#: dashboard/models.py:702 frontend/templates/home.html:203
 msgid "Other"
 msgstr "أخرى"
 
@@ -1222,9 +1218,9 @@ msgstr "إليك نظرة عامة على طلباتك."
 msgid "Your agent"
 msgstr "وكيلك"
 
-#: dashboard/templates/dash/client_home.html:32
-#: dashboard/views/dashboard.py:72 dashboard/views/dashboard.py:130
-#: dashboard/views/dashboard.py:180 dashboard/views/dashboard.py:247
+#: dashboard/templates/dash/client_home.html:32 dashboard/views/dashboard.py:72
+#: dashboard/views/dashboard.py:130 dashboard/views/dashboard.py:180
+#: dashboard/views/dashboard.py:247
 msgid "Total Orders"
 msgstr "إجمالي الطلبات"
 
@@ -2027,8 +2023,7 @@ msgstr "تعديل المتغير"
 #: dashboard/templates/products/create.html:404
 #: dashboard/templates/products/items/form_modal.html:11
 msgid ""
-"Configure a product variant with its own media, color, dimensions, and "
-"stock."
+"Configure a product variant with its own media, color, dimensions, and stock."
 msgstr "أعدّ متغيرًا للمنتج بوسائطه ولونه وأبعاده ومخزونه الخاص."
 
 #: dashboard/templates/products/create.html:25
@@ -2192,16 +2187,15 @@ msgid ""
 "Price for approved professional clients (between wholesale and retail). "
 "Leave empty to use retail."
 msgstr ""
-"السعر للعملاء المحترفين المعتمدين (بين سعر الجملة وسعر التجزئة). اتركه "
-"فارغًا لاستخدام سعر التجزئة."
+"السعر للعملاء المحترفين المعتمدين (بين سعر الجملة وسعر التجزئة). اتركه فارغًا "
+"لاستخدام سعر التجزئة."
 
 #: dashboard/templates/products/create.html:213
 #: dashboard/templates/products/edit.html:237
 msgid ""
 "Shown to visitors outside Algeria. Leave empty to hide the product price "
 "abroad."
-msgstr ""
-"يظهر للزوار من خارج الجزائر. اتركه فارغًا لإخفاء سعر المنتج في الخارج."
+msgstr "يظهر للزوار من خارج الجزائر. اتركه فارغًا لإخفاء سعر المنتج في الخارج."
 
 #: dashboard/templates/products/create.html:226
 #: dashboard/templates/products/edit.html:250
@@ -2480,8 +2474,7 @@ msgstr "لا توجد متغيرات بعد"
 msgid ""
 "Click 'Add Variant' to create product options like color, size, or finish."
 msgstr ""
-"انقر على \"إضافة متغير\" لإنشاء خيارات للمنتج مثل اللون أو المقاس أو "
-"التشطيب."
+"انقر على \"إضافة متغير\" لإنشاء خيارات للمنتج مثل اللون أو المقاس أو التشطيب."
 
 #: dashboard/templates/products/items/section.html:12
 msgid "No variants yet. Click 'Add Variant' to create product options."
@@ -2923,8 +2916,7 @@ msgstr "حظر المستخدم؟"
 #: dashboard/templates/users/details.html:83
 #, python-format
 msgid ""
-"Are you sure you want to unblock %(name)s? They will be able to log in "
-"again."
+"Are you sure you want to unblock %(name)s? They will be able to log in again."
 msgstr ""
 "هل أنت متأكد أنك تريد إلغاء حظر %(name)s؟ سيتمكن من تسجيل الدخول مجددًا."
 
@@ -3190,8 +3182,7 @@ msgstr "تعيين كمورّد موثوق"
 msgid ""
 "The provider will receive an email with their generated login credentials "
 "automatically."
-msgstr ""
-"سيتلقى المورّد تلقائيًا بريدًا إلكترونيًا يتضمن بيانات الدخول الخاصة به."
+msgstr "سيتلقى المورّد تلقائيًا بريدًا إلكترونيًا يتضمن بيانات الدخول الخاصة به."
 
 #: dashboard/templates/users/list.html:271
 msgid "Create Provider & Send Credentials"
@@ -3867,8 +3858,8 @@ msgid ""
 "The prices of this order are inconsistent (a commission would be negative). "
 "Fix the product prices, then try again."
 msgstr ""
-"أسعار هذا الطلب غير متسقة (ستكون إحدى العمولات سالبة). صحّح أسعار المنتجات "
-"ثم أعد المحاولة."
+"أسعار هذا الطلب غير متسقة (ستكون إحدى العمولات سالبة). صحّح أسعار المنتجات ثم "
+"أعد المحاولة."
 
 #: dashboard/views/orders.py:648 dashboard/views/orders.py:668
 #, python-format
@@ -3941,8 +3932,8 @@ msgstr "تم تسليم الطلب #%(num)s — تم كسب العمولة"
 #: dashboard/views/orders.py:728
 #, python-format
 msgid ""
-"Order #%(num)s has been delivered. Your commission has been credited to your"
-" wallet."
+"Order #%(num)s has been delivered. Your commission has been credited to your "
+"wallet."
 msgstr "تم تسليم الطلب #%(num)s. أُضيفت عمولتك إلى محفظتك."
 
 #: dashboard/views/orders.py:739 dashboard/views/orders.py:748
@@ -3999,7 +3990,8 @@ msgstr "تمت إضافة المنتج!"
 msgid ""
 "\"%(product)s\" has been added to your catalog with purchase price "
 "DZD%(price)s."
-msgstr "تمت إضافة \"%(product)s\" إلى الكتالوج الخاص بك بسعر شراء DZD%(price)s."
+msgstr ""
+"تمت إضافة \"%(product)s\" إلى الكتالوج الخاص بك بسعر شراء DZD%(price)s."
 
 #: dashboard/views/partner_prices.py:371
 msgid "New Catalog Addition"
@@ -4091,7 +4083,7 @@ msgstr "تم تحديث الفئة بنجاح"
 #: dashboard/views/users.py:356 dashboard/views/users.py:411
 #: dashboard/views/users.py:546 dashboard/views/users.py:671
 #: dashboard/views/users.py:784 dashboard/views/users.py:1006
-#: frontend/views/main.py:75 frontend/views/main.py:150
+#: frontend/views/main.py:77 frontend/views/main.py:152
 #: frontend/views/orders.py:38 user_auth/views.py:78 user_auth/views.py:145
 #: user_auth/views.py:211 user_auth/views.py:339
 msgid "Something went wrong. Please try again."
@@ -4775,17 +4767,17 @@ msgstr "تدفع عند الاستلام. سيتصل بك مستشار قريب�
 msgid "Continue shopping"
 msgstr "مواصلة التسوق"
 
-#: frontend/templates/home.html:29 frontend/templates/home.html:364
+#: frontend/templates/home.html:29 frontend/templates/home.html:245
 #: frontend/templates/partials/landing-nav.html:19
-msgid "About"
-msgstr "من نحن"
+msgid "Services"
+msgstr "الخدمات"
 
 #: frontend/templates/home.html:32
 #: frontend/templates/partials/landing-nav.html:22
 msgid "Shop"
 msgstr "المتجر"
 
-#: frontend/templates/home.html:35
+#: frontend/templates/home.html:35 frontend/templates/home.html:162
 #: frontend/templates/partials/landing-nav.html:25
 msgid "Contact"
 msgstr "اتصل بنا"
@@ -4848,170 +4840,78 @@ msgid "Place it at real size"
 msgstr "ضعه بحجمه الحقيقي"
 
 #: frontend/templates/home.html:144
-msgid "Our Philosophy"
-msgstr "فلسفتنا"
-
-#: frontend/templates/home.html:145
-msgid "Crafting Spaces, Shaping Emotions"
-msgstr "نصمّم المساحات، ونصوغ المشاعر"
-
-#: frontend/templates/home.html:154
-msgid "Visionary Design"
-msgstr "تصميم برؤية"
-
-#: frontend/templates/home.html:156
-msgid ""
-"We don't just follow trends; we create timeless environments that speak to "
-"your soul and elevate your daily experience."
-msgstr ""
-"لا نكتفي باتباع الصيحات؛ بل نصنع بيئات خالدة تخاطب روحك وترتقي بتجربتك "
-"اليومية."
-
-#: frontend/templates/home.html:165
-msgid "Personal Touch"
-msgstr "لمسة شخصية"
-
-#: frontend/templates/home.html:167
-msgid ""
-"Every client is unique. We dive deep into your lifestyle to ensure every "
-"corner of your space is functional and personalized."
-msgstr ""
-"كل عميل فريد. نتعمق في نمط حياتك لنضمن أن تكون كل زاوية من مساحتك عملية "
-"ومخصصة لك."
-
-#: frontend/templates/home.html:176
-msgid "360° Immersion"
-msgstr "انغماس بزاوية 360°"
-
-#: frontend/templates/home.html:178
-msgid ""
-"Project yourself even before the build. Thanks to our immersive "
-"technologies, explore your future space in 360° and experience your project "
-"before it comes to life."
-msgstr ""
-"تخيّل نفسك قبل البناء. بفضل تقنياتنا الغامرة، استكشف مساحتك المستقبلية "
-"بزاوية 360° وعِش مشروعك قبل أن يتحقق."
-
-#: frontend/templates/home.html:191
-msgid "Projects Completed"
-msgstr "مشاريع منجزة"
-
-#: frontend/templates/home.html:196
-msgid "Designing spaces crafted for your well-being"
-msgstr "نصمّم مساحات مصنوعة لراحتك"
-
-#: frontend/templates/home.html:198
-msgid ""
-"At LOFT Design, we craft spaces where design meets everyday comfort. Every "
-"project is designed to adapt to your lifestyle, optimize your spaces, and "
-"create a harmonious, functional, and pleasant atmosphere to live in."
-msgstr ""
-"في LOFT Design، نصمّم مساحات يلتقي فيها التصميم بالراحة اليومية. كل مشروع "
-"مصمَّم ليتكيف مع نمط حياتك، ويحسّن استغلال مساحاتك، ويخلق أجواءً متناغمة "
-"وعملية ومريحة للعيش."
-
-#: frontend/templates/home.html:203
-msgid "Optimized layout for maximum comfort."
-msgstr "تخطيط محسَّن لأقصى درجات الراحة."
-
-#: frontend/templates/home.html:207
-msgid "Modern, clean, and functional design."
-msgstr "تصميم عصري وأنيق وعملي."
-
-#: frontend/templates/home.html:211
-msgid "Integration of smart and immersive solutions (360°, 3D visualization)."
-msgstr "دمج حلول ذكية وغامرة (360°، تصور ثلاثي الأبعاد 3D)."
-
-#: frontend/templates/home.html:215
-msgid "Personalized support, from concept to completion"
-msgstr "مرافقة مخصصة، من الفكرة إلى التنفيذ"
-
-#: frontend/templates/home.html:219
-msgid "Discover Our Process"
-msgstr "اكتشف طريقة عملنا"
-
-#: frontend/templates/home.html:228
 msgid "Featured Collections"
 msgstr "مجموعات مميزة"
 
-#: frontend/templates/home.html:229
+#: frontend/templates/home.html:145
 msgid "Handpicked pieces from our latest interior projects."
 msgstr "قطع مختارة بعناية من أحدث مشاريعنا الداخلية."
 
-#: frontend/templates/home.html:239
+#: frontend/templates/home.html:155
 msgid "View All Products"
 msgstr "عرض جميع المنتجات"
 
-#: frontend/templates/home.html:248
-msgid "Start Your Project Today"
-msgstr "ابدأ مشروعك اليوم"
+#: frontend/templates/home.html:163
+msgid "A message is all it takes"
+msgstr "رسالة واحدة تكفي"
 
-#: frontend/templates/home.html:250
-msgid ""
-"Ready to redefine your space? Fill out the form and our design specialists "
-"will get back to you within 24 hours."
-msgstr ""
-"هل أنت مستعد لإعادة تصميم مساحتك؟ املأ النموذج وسيتواصل معك خبراء التصميم "
-"لدينا خلال 24 ساعة."
+#: frontend/templates/home.html:163
+msgid "to get started."
+msgstr "للبدء."
 
-#: frontend/templates/home.html:258 frontend/templates/home.html:267
-msgid "Call Us"
-msgstr "اتصل بنا"
+#: frontend/templates/home.html:175
+msgid "Our team answers within 24 hours, by phone, e-mail or WhatsApp."
+msgstr "يرد فريقنا خلال 24 ساعة عبر الهاتف أو البريد الإلكتروني أو واتساب."
 
-#: frontend/templates/home.html:276
-msgid "Email Us"
-msgstr "راسلنا"
-
-#: frontend/templates/home.html:285
+#: frontend/templates/home.html:184
 msgid "try Bilnov"
 msgstr "جرّب Bilnov"
 
-#: frontend/templates/home.html:287
-msgid "Access Details"
-msgstr "تفاصيل الوصول"
+#: frontend/templates/home.html:184
+msgid "Follow your project in 360° and 3D"
+msgstr "تابع مشروعك بتقنية 360° وثلاثية الأبعاد"
 
-#: frontend/templates/home.html:312
+#: frontend/templates/home.html:201
 msgid "Residential"
 msgstr "سكني"
 
-#: frontend/templates/home.html:313
+#: frontend/templates/home.html:202
 msgid "Commercial"
 msgstr "تجاري"
 
-#: frontend/templates/home.html:321
+#: frontend/templates/home.html:207
 msgid "Tell us about your dream space..."
 msgstr "حدّثنا عن المساحة التي تحلم بها..."
 
-#: frontend/templates/home.html:326
+#: frontend/templates/home.html:209
 #: frontend/templates/products/admin_product_detail.html:296
 #: frontend/templates/products/affiliate_product_detail.html:300
 #: frontend/templates/products/provider_product_detail.html:298
 msgid "Send Inquiry"
 msgstr "إرسال الاستفسار"
 
-#: frontend/templates/home.html:356
+#: frontend/templates/home.html:210
+msgid "Send on WhatsApp"
+msgstr "إرسال عبر واتساب"
+
+#: frontend/templates/home.html:237
 msgid ""
-"Redefining modern living through innovative design and premium "
-"craftsmanship."
+"Redefining modern living through innovative design and premium craftsmanship."
 msgstr "نعيد تعريف الحياة العصرية من خلال تصميم مبتكر وحرفية متميزة."
 
-#: frontend/templates/home.html:360
+#: frontend/templates/home.html:241
 msgid "Quick Links"
 msgstr "روابط سريعة"
 
-#: frontend/templates/home.html:368
-msgid "Services"
-msgstr "الخدمات"
-
-#: frontend/templates/home.html:372
+#: frontend/templates/home.html:249
 msgid "Projects"
 msgstr "المشاريع"
 
-#: frontend/templates/home.html:377
+#: frontend/templates/home.html:254
 msgid "Follow Us"
 msgstr "تابعنا"
 
-#: frontend/templates/home.html:394
+#: frontend/templates/home.html:271
 msgid "All rights reserved."
 msgstr "جميع الحقوق محفوظة."
 
@@ -5326,75 +5226,74 @@ msgstr "سعر هذا المنتج غير مُعدّ بشكل صحيح. يرجى
 msgid "The order could not be placed. Please try again."
 msgstr "تعذّر تقديم الطلب. يرجى المحاولة مرة أخرى."
 
-#: frontend/views/main.py:43
+#: frontend/views/main.py:45
 msgid "Full Name is required"
 msgstr "الاسم الكامل مطلوب"
 
-#: frontend/views/main.py:44
+#: frontend/views/main.py:46
 msgid "Phone Number is required"
 msgstr "رقم الهاتف مطلوب"
 
-#: frontend/views/main.py:45
+#: frontend/views/main.py:47
 msgid "Message is required"
 msgstr "الرسالة مطلوبة"
 
-#: frontend/views/main.py:63
+#: frontend/views/main.py:65
 msgid "New Contact Request"
 msgstr "طلب تواصل جديد"
 
-#: frontend/views/main.py:64
+#: frontend/views/main.py:66
 #, python-format
 msgid "New contact lead from %(name)s"
 msgstr "طلب تواصل جديد من %(name)s"
 
-#: frontend/views/main.py:71
+#: frontend/views/main.py:73
 msgid ""
 "Your contact request has been sent successfully. We will get back to you "
 "shortly."
 msgstr "تم إرسال طلب التواصل بنجاح. سنتواصل معك قريباً."
 
-#: frontend/views/main.py:92 user_auth/views.py:103
+#: frontend/views/main.py:94 user_auth/views.py:103
 msgid "First name is required."
 msgstr "الاسم مطلوب."
 
-#: frontend/views/main.py:94 user_auth/views.py:105
+#: frontend/views/main.py:96 user_auth/views.py:105
 msgid "Last name is required."
 msgstr "اللقب مطلوب."
 
-#: frontend/views/main.py:96 user_auth/views.py:107 user_auth/views.py:229
+#: frontend/views/main.py:98 user_auth/views.py:107 user_auth/views.py:229
 msgid "Email is required."
 msgstr "البريد الإلكتروني مطلوب."
 
-#: frontend/views/main.py:98 user_auth/views.py:109 user_auth/views.py:181
+#: frontend/views/main.py:100 user_auth/views.py:109 user_auth/views.py:181
 #: user_auth/views.py:320
 msgid "Password is required."
 msgstr "كلمة المرور مطلوبة."
 
-#: frontend/views/main.py:100
+#: frontend/views/main.py:102
 msgid "Password must be at least 8 characters."
 msgstr "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل."
 
-#: frontend/views/main.py:102 user_auth/views.py:111 user_auth/views.py:185
+#: frontend/views/main.py:104 user_auth/views.py:111 user_auth/views.py:185
 #: user_auth/views.py:324
 msgid "Passwords do not match."
 msgstr "كلمتا المرور غير متطابقتين."
 
-#: frontend/views/main.py:110 user_auth/views.py:120
+#: frontend/views/main.py:112 user_auth/views.py:120
 msgid "This email is already registered."
 msgstr "هذا البريد الإلكتروني مسجّل مسبقاً."
 
-#: frontend/views/main.py:131
+#: frontend/views/main.py:133
 msgid "New Affiliate Signup"
 msgstr "تسجيل مسوّق بالعمولة جديد"
 
-#: frontend/views/main.py:133
+#: frontend/views/main.py:135
 #, python-format
 msgid ""
-"%(name)s (%(email)s) has registered as an affiliate and is awaiting "
-"approval."
+"%(name)s (%(email)s) has registered as an affiliate and is awaiting approval."
 msgstr "سجّل %(name)s (%(email)s) كمسوّق بالعمولة وهو في انتظار الموافقة."
 
-#: frontend/views/main.py:142
+#: frontend/views/main.py:144
 msgid ""
 "Your affiliate account has been created! An admin will review and activate "
 "your account. You will receive an email once approved."
@@ -5758,8 +5657,8 @@ msgstr "رابط غير صالح أو منتهي الصلاحية"
 
 #: user_auth/templates/auth/set_password.html:104
 msgid ""
-"This password setup link is invalid or has already been used. Please contact"
-" your administrator to request a new invitation."
+"This password setup link is invalid or has already been used. Please contact "
+"your administrator to request a new invitation."
 msgstr ""
 "رابط إعداد كلمة المرور هذا غير صالح أو تم استخدامه مسبقاً. يرجى التواصل مع "
 "المسؤول لطلب دعوة جديدة."
@@ -5892,6 +5791,97 @@ msgstr "تم إرسال رابط إعادة تعيين كلمة المرور إ�
 msgid "Password reset successfully."
 msgstr "تمت إعادة تعيين كلمة المرور بنجاح."
 
+#~ msgid "About"
+#~ msgstr "من نحن"
+
+#~ msgid "Our Philosophy"
+#~ msgstr "فلسفتنا"
+
+#~ msgid "Crafting Spaces, Shaping Emotions"
+#~ msgstr "نصمّم المساحات، ونصوغ المشاعر"
+
+#~ msgid "Visionary Design"
+#~ msgstr "تصميم برؤية"
+
+#~ msgid ""
+#~ "We don't just follow trends; we create timeless environments that speak "
+#~ "to your soul and elevate your daily experience."
+#~ msgstr ""
+#~ "لا نكتفي باتباع الصيحات؛ بل نصنع بيئات خالدة تخاطب روحك وترتقي بتجربتك "
+#~ "اليومية."
+
+#~ msgid "Personal Touch"
+#~ msgstr "لمسة شخصية"
+
+#~ msgid ""
+#~ "Every client is unique. We dive deep into your lifestyle to ensure every "
+#~ "corner of your space is functional and personalized."
+#~ msgstr ""
+#~ "كل عميل فريد. نتعمق في نمط حياتك لنضمن أن تكون كل زاوية من مساحتك عملية "
+#~ "ومخصصة لك."
+
+#~ msgid "360° Immersion"
+#~ msgstr "انغماس بزاوية 360°"
+
+#~ msgid ""
+#~ "Project yourself even before the build. Thanks to our immersive "
+#~ "technologies, explore your future space in 360° and experience your "
+#~ "project before it comes to life."
+#~ msgstr ""
+#~ "تخيّل نفسك قبل البناء. بفضل تقنياتنا الغامرة، استكشف مساحتك المستقبلية "
+#~ "بزاوية 360° وعِش مشروعك قبل أن يتحقق."
+
+#~ msgid "Projects Completed"
+#~ msgstr "مشاريع منجزة"
+
+#~ msgid "Designing spaces crafted for your well-being"
+#~ msgstr "نصمّم مساحات مصنوعة لراحتك"
+
+#~ msgid ""
+#~ "At LOFT Design, we craft spaces where design meets everyday comfort. "
+#~ "Every project is designed to adapt to your lifestyle, optimize your "
+#~ "spaces, and create a harmonious, functional, and pleasant atmosphere to "
+#~ "live in."
+#~ msgstr ""
+#~ "في LOFT Design، نصمّم مساحات يلتقي فيها التصميم بالراحة اليومية. كل مشروع "
+#~ "مصمَّم ليتكيف مع نمط حياتك، ويحسّن استغلال مساحاتك، ويخلق أجواءً متناغمة "
+#~ "وعملية ومريحة للعيش."
+
+#~ msgid "Optimized layout for maximum comfort."
+#~ msgstr "تخطيط محسَّن لأقصى درجات الراحة."
+
+#~ msgid "Modern, clean, and functional design."
+#~ msgstr "تصميم عصري وأنيق وعملي."
+
+#~ msgid ""
+#~ "Integration of smart and immersive solutions (360°, 3D visualization)."
+#~ msgstr "دمج حلول ذكية وغامرة (360°، تصور ثلاثي الأبعاد 3D)."
+
+#~ msgid "Personalized support, from concept to completion"
+#~ msgstr "مرافقة مخصصة، من الفكرة إلى التنفيذ"
+
+#~ msgid "Discover Our Process"
+#~ msgstr "اكتشف طريقة عملنا"
+
+#~ msgid "Start Your Project Today"
+#~ msgstr "ابدأ مشروعك اليوم"
+
+#~ msgid ""
+#~ "Ready to redefine your space? Fill out the form and our design "
+#~ "specialists will get back to you within 24 hours."
+#~ msgstr ""
+#~ "هل أنت مستعد لإعادة تصميم مساحتك؟ املأ النموذج وسيتواصل معك خبراء التصميم "
+#~ "لدينا خلال 24 ساعة."
+
+#~ msgid "Call Us"
+#~ msgstr "اتصل بنا"
+
+#~ msgid "Email Us"
+#~ msgstr "راسلنا"
+
+#~ msgid "Access Details"
+#~ msgstr "تفاصيل الوصول"
+
 #~ msgid "Market Valuation"
 #~ msgstr "القيمة السوقية"
 
@@ -5902,10 +5892,11 @@ msgstr "تمت إعادة تعيين كلمة المرور بنجاح."
 #~ msgstr "تحفة فنية"
 
 #~ msgid ""
-#~ "We combine elegance, functionality, and modern aesthetics to create living "
-#~ "environments that reflect your personality."
+#~ "We combine elegance, functionality, and modern aesthetics to create "
+#~ "living environments that reflect your personality."
 #~ msgstr ""
-#~ "نجمع بين الأناقة والعملية والجمالية العصرية لنصنع بيئات معيشية تعكس شخصيتك."
+#~ "نجمع بين الأناقة والعملية والجمالية العصرية لنصنع بيئات معيشية تعكس "
+#~ "شخصيتك."
 
 #~ msgid "Book a Consultation"
 #~ msgstr "احجز استشارة"

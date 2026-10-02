@@ -156,95 +156,60 @@
         </div>
     </section>
     <!-- 5. Contact Section -->
-    <section id="contact" class="py-10 bg-dark text-white">
+    <section id="contact" class="sb-contact">
         <div class="container">
-            <div class="row g-4 g-lg-5 align-items-center">
-                <div class="col-lg-6">
-                    <div class="reveal reveal-right">
-                        <h2 class="display-4 fw-black mb-4">{% trans "Start Your Project Today" %}</h2>
-                        <p class="text-white-50 fs-5 mb-5">
-                            {% trans "Ready to redefine your space? Fill out the form and our design specialists will get back to you within 24 hours." %}
-                        </p>
-                        <div class="d-flex flex-column gap-4">
-                            <div class="d-flex gap-3 align-items-center">
-                                <div class="bg-primary text-secondary p-3 rounded-3">
-                                    <i class="fas fa-phone-alt"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold">{% trans "Call Us" %}</h6>
-                                    <p class="mb-0 text-white-50">{{ site_config.phone }}</p>
-                                </div>
-                            </div>
-                            <div class="d-flex gap-3 align-items-center">
-                                <div class="bg-primary text-secondary p-3 rounded-3">
-                                    <i class="fas fa-phone-alt"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold">{% trans "Call Us" %}</h6>
-                                    <p class="mb-0 text-white-50">{{ site_config.mobile }}</p>
-                                </div>
-                            </div>
-                            <div class="d-flex gap-3 align-items-center">
-                                <div class="bg-primary text-secondary p-3 rounded-3">
-                                    <i class="fas fa-envelope"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold">{% trans "Email Us" %}</h6>
-                                    <p class="mb-0 text-white-50">{{ site_config.contact_email }}</p>
-                                </div>
-                            </div>
-                            <div class="d-flex gap-3 align-items-center">
-                                <div class="bg-primary text-secondary  rounded-3">
-                                    <img src="{% static 'images/bilnov.png' %}" class="rounded" width="48" alt="bilnov" />
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold">{% trans "try Bilnov" %}</h6>
-                                    <a href="{% url 'user_auth:login' %}" class="text-white-50 small text-decoration-none fw-bold hover-text-primary">
-                                        {% trans "Access Details" %}
-                                    </a>
-                                </div>
-                            </div>
-
+            <div class="sb-contact-head reveal reveal-up">
+                <span class="sb-contact-eyebrow">{% trans "Contact" %}</span>
+                <h2>{% trans "A message is all it takes" %} <span>{% trans "to get started." %}</span></h2>
+            </div>
+            <div class="sb-contact-grid">
+                <aside class="sb-contact-card reveal reveal-right">
+                    <div class="sb-contact-card-top">
+                        <span class="sb-brand"><img src="{{ site_config.logo }}" alt="" width="28" height="27"><span class="sb-word">{% if IS_RTL %}{{ site_config.ar_name }}{% else %}Store <b>Bilnov</b>{% endif %}</span></span>
+                        <div class="sb-contact-social">
+                            <a href="https://wa.me/{{ site_config.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                            <a href="{{ site_config.social.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="{{ site_config.social.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="bg-white p-5 rounded-4 shadow-2xl reveal reveal-left">
-                        {% include "partials/errorList.html" with form_id="contactForm" %}
-                        <form class="form" method="POST" action="{% url 'frontend:contact_request_submit' %}" id="contactForm">
-                            {% csrf_token %}
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label text-dark">{% trans "Full Name" %}</label>
-                                    <input type="text" name="name" class="form-control" placeholder="John Doe" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label text-dark">{% trans "Phone Number" %}</label>
-                                    <input type="tel" name="phone" class="form-control" placeholder="+213 000 000" required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label text-dark">{% trans "Project Type" %}</label>
-                                    <select name="project_type" class="form-select">
-                                        <option value="Residential">{% trans "Residential" %}</option>
-                                        <option value="Commercial">{% trans "Commercial" %}</option>
-                                        <option value="Other">{% trans "Other" %}</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label text-dark">{% trans "Message" %}</label>
-                                    <textarea name="message" class="form-control"
-                                              rows="4"
-                                              placeholder="{% trans 'Tell us about your dream space...' %}" required></textarea>
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <button type="submit"
-                                             class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-lg">
-                                        {% trans "Send Inquiry" %}
-                                    </button>
-                                </div>
+                    <p class="sb-contact-lead">{% trans "Our team answers within 24 hours, by phone, e-mail or WhatsApp." %}</p>
+                    <ul class="sb-contact-lines">
+                        <li><i class="far fa-envelope" aria-hidden="true"></i><a href="mailto:{{ site_config.contact_email }}">{{ site_config.contact_email }}</a></li>
+                        <li><i class="fas fa-phone-alt" aria-hidden="true"></i><a href="tel:{{ site_config.phone|cut:' ' }}" dir="ltr">{{ site_config.phone }}</a></li>
+                        <li><i class="fas fa-phone-alt" aria-hidden="true"></i><a href="tel:{{ site_config.mobile|cut:' ' }}" dir="ltr">{{ site_config.mobile }}</a></li>
+                        <li><i class="far fa-clock" aria-hidden="true"></i><span>{{ site_config.working_hours }}</span></li>
+                    </ul>
+                    <a class="sb-contact-bilnov" href="https://bilnov.com/promoter/login" target="_blank" rel="noopener">
+                        <img src="{% static 'images/bilnov.png' %}" width="36" height="36" alt="">
+                        <span><b>{% trans "try Bilnov" %}</b><small>{% trans "Follow your project in 360° and 3D" %}</small></span>
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </aside>
+                <div class="sb-contact-form reveal reveal-left">
+                    {% include "partials/errorList.html" with form_id="contactForm" %}
+                    <form class="form" method="POST" action="{% url 'frontend:contact_request_submit' %}" id="contactForm">
+                        {% csrf_token %}
+                        <div class="sb-field-row">
+                            <label class="sb-field"><span>{% trans "Full Name" %}</span>
+                                <input type="text" name="name" autocomplete="name" required></label>
+                            <label class="sb-field"><span>{% trans "Phone Number" %}</span>
+                                <input type="tel" name="phone" autocomplete="tel" dir="ltr" required></label>
+                        </div>
+                        <fieldset class="sb-field">
+                            <legend>{% trans "Project Type" %}</legend>
+                            <div class="sb-chips">
+                                <label><input type="radio" name="project_type" value="Residential" checked><span>{% trans "Residential" %}</span></label>
+                                <label><input type="radio" name="project_type" value="Commercial"><span>{% trans "Commercial" %}</span></label>
+                                <label><input type="radio" name="project_type" value="Other"><span>{% trans "Other" %}</span></label>
                             </div>
-                        </form>
-                    </div>
+                        </fieldset>
+                        <label class="sb-field"><span>{% trans "Message" %}</span>
+                            <textarea name="message" rows="4" placeholder="{% trans 'Tell us about your dream space...' %}" required></textarea></label>
+                        <div class="sb-contact-actions">
+                            <button type="submit" class="sb-btn sb-btn-ink">{% trans "Send Inquiry" %}</button>
+                            <button type="button" class="sb-btn sb-btn-wa" id="contactWhatsapp" data-wa="{{ site_config.whatsapp }}"><i class="fab fa-whatsapp" aria-hidden="true"></i>{% trans "Send on WhatsApp" %}</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

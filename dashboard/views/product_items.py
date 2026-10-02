@@ -26,6 +26,7 @@ def item_list(request, product_pk):
         data.append({
             "id": item.id,
             "name": item.name,
+            "sku": item.sku or "",
             "color": item.color,
             "dimensions": item.dimensions,
             "thumbnail": thumb_url,
@@ -34,6 +35,14 @@ def item_list(request, product_pk):
             "gallery_images": images,
         })
     return JsonResponse({"success": True, "items": data})
+
+
+def _clean_sku(request, item=None):
+    """Variant SKU, unique across the catalog. Returns (sku or None, error or None)."""
+    sku = (request.POST.get("sku") or "").strip() or None
+    if sku and ProductItem.objects.filter(sku__iexact=sku).exclude(pk=getattr(item, "pk", None)).exists():
+        return sku, _("This SKU is already used by another variant.")
+    return sku, None
 
 
 def _sync_product_stock(product):
@@ -58,9 +67,14 @@ def item_create(request, product_pk):
     if not name:
         return JsonResponse({"success": False, "errors": {"name": [_("Item name is required.")]}})
 
+    sku, sku_error = _clean_sku(request)
+    if sku_error:
+        return JsonResponse({"success": False, "errors": {"sku": [sku_error]}})
+
     item = ProductItem.objects.create(
         product=product,
         name=name,
+        sku=sku,
         color=request.POST.get("color", "").strip(),
         dimensions=request.POST.get("dimensions", "").strip(),
         stock_quantity=int(request.POST.get("stock_quantity", 0)),
@@ -82,6 +96,7 @@ def item_create(request, product_pk):
         "item": {
             "id": item.id,
             "name": item.name,
+            "sku": item.sku or "",
             "color": item.color,
             "dimensions": item.dimensions,
             "thumbnail": item.thumbnail.url if item.thumbnail else "",
@@ -104,7 +119,11 @@ def item_update(request, pk):
     if not name:
         return JsonResponse({"success": False, "errors": {"name": [_("Item name is required.")]}})
 
+    sku, sku_error = _clean_sku(request, item)
+    if sku_error:
+        return JsonResponse({"success": False, "errors": {"sku": [sku_error]}})
     item.name = name
+    item.sku = sku
     item.color = request.POST.get("color", "").strip()
     item.dimensions = request.POST.get("dimensions", "").strip()
     item.stock_quantity = int(request.POST.get("stock_quantity", 0))
@@ -133,6 +152,7 @@ def item_update(request, pk):
         "item": {
             "id": item.id,
             "name": item.name,
+            "sku": item.sku or "",
             "color": item.color,
             "dimensions": item.dimensions,
             "thumbnail": item.thumbnail.url if item.thumbnail else "",

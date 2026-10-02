@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -6,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.utils.translation import gettext as _
 from django.urls import reverse
-from ..models import Product, Category, ProductImage, ProductItem, ProductItemImage, PartnerPrice, Notification, SupplierPrice, LoftPrice
+from ..models import Product, Category, ProductImage, ProductItem, ProductItemImage, PartnerPrice, Notification, SupplierPrice, LoftPrice, ProductAsset
 from dashboard.decorator import role_required
 from dashboard.utils import notify_user
 from user_auth.models import UserProfile
@@ -14,6 +15,11 @@ from django.contrib.auth.models import User
 import logging
 
 logger = logging.getLogger(__name__)
+
+def _category_code(request):
+    """3 uppercase letters used in new Bilnov Object IDs (existing IDs never change)."""
+    return re.sub(r"[^A-Z]", "", (request.POST.get("code") or "").upper())[:3]
+
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN])
 def category_list(request):
@@ -34,6 +40,7 @@ def category_update(request, pk):
             return JsonResponse({"success": False, "errors": [_("Category name is required")]})
         try:
             category.name = name
+            category.code = _category_code(request)
             category.save()
             return JsonResponse({
                 "success": True,
@@ -66,7 +73,7 @@ def category_create(request):
         if not name:
             return JsonResponse({"success": False, "errors": [_("Category name is required")]})
         try:
-            category = Category.objects.create(name=name)
+            category = Category.objects.create(name=name, code=_category_code(request))
             return JsonResponse({
                 "success": True,
                 "message": _("Category created successfully"),
@@ -158,6 +165,14 @@ def _parse_pricing(post, is_provider):
         p["purchase"] = 0
     return p, errors
 
+def _save_asset(request, product):
+    """Attach the uploaded design file (if any) as a new version."""
+    upload = request.FILES.get("asset_file")
+    fmt = request.POST.get("asset_format")
+    if upload and fmt in ProductAsset.Format.values:
+        ProductAsset.objects.create(product=product, file_format=fmt, file=upload)
+
+
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
 def product_create(request):
     """View to create a new product with pricing workflow"""
@@ -209,6 +224,8 @@ def product_create(request):
                 "thumbnail": thumbnail,
                 "model_3d": model_3d,
                 "is_featured": request.POST.get("is_featured") == "on",
+                "brand": (request.POST.get("brand") or "").strip()[:255],
+                "collection": (request.POST.get("collection") or "").strip()[:255],
             }
 
             product_kwargs["status"] = Product.ProductStatus.APPROVED
@@ -220,6 +237,7 @@ def product_create(request):
 
             for i, img in enumerate(request.FILES.getlist("gallery_images")):
                 ProductImage.objects.create(product=product, image=img, order=i)
+            _save_asset(request, product)
 
             LoftPrice.objects.update_or_create(
                 product=product,
@@ -278,7 +296,8 @@ def product_create(request):
 
     categories = [{"value": c.id, "label": c.name} for c in Category.objects.all()]
     return render(request, "products/create.html", {
-        "categories": categories, "values": {}, "is_provider": is_provider
+        "categories": categories, "values": {}, "is_provider": is_provider,
+        "asset_formats": ProductAsset.Format.choices,
     })
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
@@ -312,6 +331,8 @@ def product_update(request, pk):
         product.external_link = request.POST.get("external_link")
         product.tags = request.POST.get("tags")
         product.is_featured = request.POST.get("is_featured") == "on"
+        product.brand = (request.POST.get("brand") or "").strip()[:255]
+        product.collection = (request.POST.get("collection") or "").strip()[:255]
 
         pricing, price_errors = _parse_pricing(request.POST, not is_admin)
         if price_errors:
@@ -419,6 +440,7 @@ def product_update(request, pk):
 
         try:
             product.save()
+            _save_asset(request, product)
             return JsonResponse({
                 "success": True, "message": _("Product updated successfully"),
                 "redirect_url": reverse("dash:product_list")
@@ -433,6 +455,7 @@ def product_update(request, pk):
     return render(request, "products/edit.html", {
         "product": product, "categories": categories, "is_admin": is_admin,
         "price_history": price_history, "items": items,
+        "asset_formats": ProductAsset.Format.choices,
     })
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])

@@ -267,3 +267,65 @@ class StorefrontPriceTests(TestCase):
                                     "loft_retail_price": "200", "pro_price": "170", "price_eur": "12,5"}, True)
         self.assertEqual(errors, {})
         self.assertEqual(p["eur"], D("12.50"))
+
+
+class BilnovReferentialTests(TestCase):
+    def setUp(self):
+        from dashboard.models import Category, ProductItem
+
+        self.admin = make_user("admin", superuser=True)
+        cat = Category.objects.create(name="Fauteuils", code="FUR")
+        self.product = make_product(self.admin, D("100"), D("150"), D("200"))
+        self.product.category = cat
+        self.product.save()
+        self.product.refresh_from_db()
+        self.variant = ProductItem.objects.create(product=self.product, name="Beige", sku="NOR-BGE-01", stock_quantity=4)
+
+    def test_boid_is_assigned_once_and_never_changes(self):
+        from dashboard.models import Category
+
+        boid = self.product.bilnov_object_id
+        self.assertRegex(boid, r"^BLV-[A-Z]{3}-\d{10}$")
+        self.product.category = Category.objects.create(name="Luminaires", code="LGT")
+        self.product.title = "Renamed"
+        self.product.loft_retail_price = D("250")
+        self.product.save()
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.bilnov_object_id, boid)
+
+    def test_new_file_creates_a_version(self):
+        from dashboard.models import ProductAsset
+
+        for _ in range(2):
+            ProductAsset.objects.create(product=self.product, file_format="skp",
+                                        file=SimpleUploadedFile("nora.skp", b"x"))
+        current = ProductAsset.objects.get(product=self.product, is_current=True)
+        self.assertEqual(current.version, 2)
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.model_version, 2)
+
+    def test_catalog_api(self):
+        import json
+
+        boid = self.product.bilnov_object_id
+        data = self.client.get(reverse("catalog:product", args=[boid])).json()
+        self.assertEqual(data["bilnovObjectId"], boid)
+        self.assertEqual(data["variants"][0]["sku"], "NOR-BGE-01")
+        self.assertEqual(data["ifcPropertySet"]["name"], "Pset_BilnovProduct")
+        self.assertNotIn("loft_purchase_price", json.dumps(data))
+        self.assertEqual(self.client.get(reverse("catalog:product", args=["BLV-XXX-0"])).status_code, 404)
+
+        found = self.client.get(reverse("catalog:search") + "?q=NOR-BGE-01").json()
+        self.assertEqual(found["results"][0]["bilnovObjectId"], boid)
+
+        body = {"objects": [
+            {"bilnovObjectId": boid.lower(), "ifcGuid": "3Hs8JK", "sku": "NOR-BGE-01"},
+            {"bilnovObjectId": None, "ifcGuid": "generic"},
+            {"bilnovObjectId": "BLV-FUR-9999999999", "ifcGuid": "gone"},
+        ]}
+        r = self.client.post(reverse("catalog:bim_resolve"), json.dumps(body), content_type="application/json").json()
+        self.assertEqual([o["status"] for o in r["objects"]], ["identified", "generic", "unknown"])
+        self.assertEqual(r["objects"][0]["variantId"], self.variant.pk)
+
+        r = self.client.get(reverse("frontend:product_by_boid", args=[boid]))
+        self.assertRedirects(r, reverse("frontend:product_detail", args=[self.product.pk]), fetch_redirect_response=False)

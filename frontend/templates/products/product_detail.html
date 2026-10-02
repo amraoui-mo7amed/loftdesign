@@ -172,6 +172,12 @@
                         </span>
                         <h1 class="display-3 fw-black text-uppercase mb-4" style="line-height: 0.9;">{{ product.title }}</h1>
                         <div class="bg-primary" style="height: 5px; width: 80px;"></div>
+                        {% if product.bilnov_object_id %}
+                        <div class="small text-muted mt-3">
+                            {% if product.brand %}<span class="me-3">{{ product.brand }}{% if product.collection %} · {{ product.collection }}{% endif %}</span>{% endif %}
+                            <span>{% trans "Bilnov ref." %} <code>{{ product.bilnov_object_id }}</code></span>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="description-narrative mb-5">

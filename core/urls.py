@@ -31,6 +31,7 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls", namespace="dash")),
     path("", include("frontend.urls", namespace="frontend")),
     path("i18n/", include("django.conf.urls.i18n")),
+    path("api/catalog/", include("dashboard.catalog_urls", namespace="catalog")),
     path("jsi18n/", cache_page(86400, key_prefix="jsi18n-%s" % settings.STATIC_URL)(JavaScriptCatalog.as_view()), name="javascript-catalog"),
     # Notifications API
     path("events/", include(django_eventstream.urls)),

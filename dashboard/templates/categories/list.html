@@ -68,6 +68,11 @@
                                 <label class="form-label fw-bold">{% trans "Category Name" %}</label>
                                 <input type="text" name="name" class="form-control form-control-lg" value="{{ cat.name }}" required>
                             </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">{% trans "Bilnov code (3 letters)" %}</label>
+                                <input type="text" name="code" maxlength="3" class="form-control text-uppercase" placeholder="FUR" value="{{ cat.code }}">
+                                <div class="form-text">{% trans "Used in the Bilnov Object ID of new products, e.g. BLV-FUR-0000000125." %}</div>
+                            </div>
                             <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
                                 {% trans "Save Changes" %}
                             </button>
@@ -108,6 +113,11 @@
                         <label class="form-label fw-bold">{% trans "Category Name" %}</label>
                         <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g. Modern Seating" required>
                     </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">{% trans "Bilnov code (3 letters)" %}</label>
+                                <input type="text" name="code" maxlength="3" class="form-control text-uppercase" placeholder="FUR">
+                                <div class="form-text">{% trans "Used in the Bilnov Object ID of new products, e.g. BLV-FUR-0000000125." %}</div>
+                            </div>
                     <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
                         {% trans "Create Category" %}
                     </button>

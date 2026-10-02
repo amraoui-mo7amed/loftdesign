@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -101,6 +102,10 @@ class Notification(models.Model):
 class Category(models.Model):
     """Category model for products"""
     name = models.CharField(max_length=255, verbose_name=_("Category Name"))
+    code = models.CharField(
+        _("Bilnov code"), max_length=3, blank=True,
+        help_text=_("3 letters used in the Bilnov Object ID, e.g. FUR (furniture), LGT (lighting), TIL (tiles).")
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -150,6 +155,18 @@ class Product(models.Model):
     tags = models.CharField(max_length=10000, verbose_name=_("Tags"), blank=True)
     brand = models.CharField(_("Brand"), max_length=255, blank=True)
     sku = models.CharField(_("SKU"), max_length=100, unique=True, blank=True, null=True)
+    # Bilnov ecosystem identity. The BOID is assigned once and never changes,
+    # whatever happens to price, supplier, images or 3D files; Bilnov Project,
+    # the BIM viewer, Bilnov 360 and the CAD plugins all refer to it.
+    bilnov_object_id = models.CharField(
+        _("Bilnov Object ID"), max_length=32, unique=True, null=True, blank=True, editable=False
+    )
+    bilnov_uuid = models.UUIDField(_("Bilnov UUID"), default=uuid.uuid4, unique=True, editable=False)
+    collection = models.CharField(_("Collection"), max_length=255, blank=True)
+    model_version = models.PositiveIntegerField(
+        _("Digital model version"), default=1,
+        help_text=_("Increases each time a 3D/BIM file is replaced. Projects keep the version they use.")
+    )
     is_active = models.BooleanField(default=True, verbose_name=_("Is Active"))
     is_featured = models.BooleanField(default=False, verbose_name=_("Is Featured"))
     show_in_global_store = models.BooleanField(
@@ -219,6 +236,20 @@ class Product(models.Model):
         effective = qty or item_stock
         self.is_active = effective > 0 and self.status == self.ProductStatus.APPROVED
         super().save(*args, **kwargs)
+        if not self.bilnov_object_id:
+            self.bilnov_object_id = self.build_boid()
+            type(self).objects.filter(pk=self.pk, bilnov_object_id__isnull=True).update(
+                bilnov_object_id=self.bilnov_object_id
+            )
+
+    def build_boid(self):
+        """BLV-<category code>-<10 digits>, e.g. BLV-FUR-0000012458."""
+        code = ((self.category.code if self.category_id and self.category else "") or "GEN").upper()
+        return f"BLV-{code[:3]}-{self.pk:010d}"
+
+    @property
+    def store_path(self):
+        return f"/store/product/{self.bilnov_object_id}/"
 
 
 class SupplierPrice(models.Model):
@@ -607,6 +638,10 @@ class ProductItem(models.Model):
         verbose_name=_("Product")
     )
     name = models.CharField(_("Item Name"), max_length=200)
+    sku = models.CharField(
+        _("SKU"), max_length=100, unique=True, null=True, blank=True,
+        help_text=_("Commercial reference of this variant, e.g. SKU-LUNA-BLK.")
+    )
     color = models.CharField(_("Color"), max_length=100, blank=True)
     dimensions = models.CharField(_("Dimensions"), max_length=200, blank=True)
     thumbnail = models.ImageField(
@@ -643,3 +678,61 @@ class ProductItemImage(models.Model):
 
     def __str__(self):
         return f"Image {self.order} for {self.item}"
+
+
+class ProductAsset(models.Model):
+    """Digital file of a catalog product (3D, BIM, CAD, texture, documentation).
+
+    Every file is tied to the product's permanent Bilnov Object ID. Uploading a
+    new file of the same format creates a new version; old versions stay
+    downloadable so existing projects are never changed behind the architect's back.
+    """
+
+    class Format(models.TextChoices):
+        SKP = "skp", "SketchUp (SKP)"
+        RFA = "rfa", "Revit (RFA)"
+        GSM = "gsm", "Archicad (GSM)"
+        IFC = "ifc", "IFC"
+        GLB = "glb", "GLB / GLTF"
+        OBJ = "obj", "OBJ"
+        FBX = "fbx", "FBX"
+        DWG = "dwg", "DWG"
+        TEXTURE = "texture", _("Texture (JPG / PNG / PBR)")
+        PDF = "pdf", _("Technical sheet (PDF)")
+        OTHER = "other", _("Other")
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="assets",
+                                verbose_name=_("Product"))
+    variant = models.ForeignKey(ProductItem, on_delete=models.SET_NULL, null=True, blank=True,
+                                related_name="assets", verbose_name=_("Variant"))
+    file_format = models.CharField(_("Format"), max_length=10, choices=Format.choices)
+    file = models.FileField(_("File"), upload_to="products/assets/")
+    version = models.PositiveIntegerField(_("Version"), default=1, editable=False)
+    is_current = models.BooleanField(_("Current version"), default=True, editable=False)
+    notes = models.CharField(_("Notes"), max_length=255, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Product file")
+        verbose_name_plural = _("Product files")
+        ordering = ["product", "file_format", "-version"]
+
+    def __str__(self):
+        return f"{self.product.bilnov_object_id} {self.file_format} v{self.version}"
+
+    def save(self, *args, **kwargs):
+        from django.db import transaction
+        from django.db.models import F, Max
+
+        if self.pk:
+            return super().save(*args, **kwargs)
+        with transaction.atomic():
+            same = ProductAsset.objects.select_for_update().filter(
+                product=self.product, file_format=self.file_format, variant=self.variant
+            )
+            last = same.aggregate(v=Max("version"))["v"] or 0
+            self.version = last + 1
+            same.update(is_current=False)
+            super().save(*args, **kwargs)
+            if last and self.file_format not in (self.Format.PDF, self.Format.OTHER):
+                Product.objects.filter(pk=self.product_id).update(model_version=F("model_version") + 1)

@@ -475,6 +475,8 @@
     var standardFields = [
       "title", "category", "description", "tags", "external_link",
       "loft_purchase_price", "loft_wholesale_price", "loft_retail_price",
+      "affiliate_wholesale_price", "pro_price", "price_eur",
+      "brand", "collection", "asset_format",
       "is_active", "is_featured",
     ];
     standardFields.forEach(function (name) {
@@ -487,6 +489,10 @@
         }
       }
     });
+
+    // Bilnov design file
+    var assetInput = qs('[name="asset_file"]');
+    if (assetInput && assetInput.files[0]) fd.append("asset_file", assetInput.files[0]);
 
     // Thumbnail
     var thumbInput = document.getElementById("thumbInput");

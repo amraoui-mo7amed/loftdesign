@@ -254,6 +254,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("itemForm").action = "/dashboard/items/" + data.id + "/update/";
         document.getElementById("itemIdInput").value = data.id;
         document.getElementById("itemNameInput").value = data.name;
+        var skuInput = document.getElementById("itemSkuInput");
+        if (skuInput) skuInput.value = data.sku || "";
 
         // Color
         if (data.color) {

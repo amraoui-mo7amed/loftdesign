@@ -245,6 +245,40 @@
           </div>
         </div>
 
+        {# ── Bilnov referential ──────────────────────── #}
+        <div class="create-section mb-4" id="section-bilnov" data-aos="fade-up">
+          <div class="card-body">
+            <div class="create-section-header">
+              <div class="icon-box" style="background:rgba(25,135,84,0.15);color:#198754;">
+                <i class="fas fa-fingerprint"></i>
+              </div>
+              <h5>{% trans "Bilnov referential" %}</h5>
+            </div>
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label class="form-label"><i class="fas fa-industry me-1 text-primary"></i> {% trans "Manufacturer / brand" %}</label>
+                <input type="text" name="brand" maxlength="255" class="form-control form-control-lg">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><i class="fas fa-swatchbook me-1 text-primary"></i> {% trans "Collection" %}</label>
+                <input type="text" name="collection" maxlength="255" class="form-control form-control-lg">
+              </div>
+            </div>
+            <label class="form-label mt-4"><i class="fas fa-file-download me-1 text-primary"></i> {% trans "Design files (3D, BIM, CAD, textures)" %}</label>
+            <div class="row g-2 align-items-end">
+              <div class="col-md-4">
+                <select name="asset_format" class="form-select">
+                  {% for value, label in asset_formats %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="col-md-8">
+                <input type="file" name="asset_file" class="form-control">
+              </div>
+            </div>
+            <div class="form-text-hint mt-2">{% trans "Each file keeps the product's Bilnov Object ID. Uploading a new file of the same format creates a new version; projects keep the version they use." %}</div>
+          </div>
+        </div>
+
         {# ── 4. Variants ──────────────────────────────── #}
         <div class="create-section mb-4" id="section-variants" data-aos="fade-up">
           <div class="card-body">

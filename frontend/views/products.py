@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from dashboard.models import Product, Category, PartnerPrice, AffiliateStore, AdminStore
@@ -175,6 +176,15 @@ def product_detail(request, pk):
         "items": items,
         "admin_store": admin_store_obj,
     })
+
+
+def product_by_boid(request, boid):
+    """Permanent product link used inside BIM/IFC files and 360 hotspots."""
+    from django.shortcuts import redirect
+    product = get_object_or_404(Product, bilnov_object_id__iexact=boid.strip())
+    url = reverse("frontend:product_detail", args=[product.pk])
+    query = request.GET.urlencode()
+    return redirect(f"{url}?{query}" if query else url)
 
 
 def product_viewer_3d(request, pk):

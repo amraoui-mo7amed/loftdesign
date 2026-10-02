@@ -18,15 +18,19 @@
                 <span>{{ price|dzd }} · <code>{% if variant %}{{ variant.variant_id }}{% else %}{{ product.bpid }}{% endif %}</code></span>
             </div>
         </div>
+        {% if replaces %}
+        <p class="sl-alert"><i class="fas fa-exchange-alt"></i> {% blocktrans with title=replaces.title_snapshot list=replaces.shopping_list.name %}This product will replace “{{ title }}” in {{ list }}. The old line stays visible, marked as replaced.{% endblocktrans %}</p>
+        {% endif %}
         <form method="post" class="sl-form">
             {% csrf_token %}
+            {% if replaces %}<input type="hidden" name="replaces" value="{{ replaces.pk }}">{% endif %}
             <input type="hidden" name="product" value="{{ product.pk }}">
             {% if variant %}<input type="hidden" name="item" value="{{ variant.pk }}">{% endif %}
 
             <fieldset>
                 <legend>{% trans "List" %}</legend>
                 {% for lst in lists %}
-                <label class="sl-radio"><input type="radio" name="list" value="{{ lst.code }}" {% if forloop.first %}checked{% endif %}><span><b>{{ lst.name }}</b><small>{{ lst.code }}</small></span></label>
+                <label class="sl-radio"><input type="radio" name="list" value="{{ lst.code }}" {% if replaces %}{% if replaces.shopping_list_id == lst.pk %}checked{% endif %}{% elif forloop.first %}checked{% endif %}><span><b>{{ lst.name }}</b><small>{{ lst.code }}</small></span></label>
                 {% endfor %}
                 <label class="sl-radio"><input type="radio" name="list" value="" {% if not lists %}checked{% endif %}><span><b>{% trans "New list" %}</b>
                     <input type="text" name="new_list" maxlength="120" placeholder="{% trans 'e.g. Apartment Hydra' %}"></span></label>
@@ -34,7 +38,7 @@
 
             <div class="sl-row">
                 <label class="sl-field"><span>{% trans "Room" %}</span>
-                    <input type="text" name="room" maxlength="80" list="roomList" placeholder="{% trans 'e.g. Living room' %}">
+                    <input type="text" name="room" maxlength="80" list="roomList" placeholder="{% trans 'e.g. Living room' %}" value="{{ replaces.room.name|default:'' }}">
                     <datalist id="roomList">{% for r in rooms %}<option value="{{ r }}">{% endfor %}{% for r in suggested_rooms %}<option value="{{ r }}">{% endfor %}</datalist>
                 </label>
                 <label class="sl-field sl-qty"><span>{% trans "Quantity" %}</span>

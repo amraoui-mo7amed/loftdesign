@@ -28,8 +28,8 @@ class ShoppingListTests(TestCase):
     def test_visitor_creates_a_list_with_rooms_and_price_snapshot(self):
         r = self._add(self.client, self.sofa, item=self.variant.pk)
         lst = ShoppingList.objects.get()
-        self.assertRedirects(r, lst.get_absolute_url())
         item = lst.items.get()
+        self.assertRedirects(r, lst.get_absolute_url() + f"#item-{item.pk}")
         self.assertEqual((item.room.name, item.quantity, item.price_snapshot), ("Salon", 2, D("200")))
         self.assertEqual(item.variant_id_snapshot, self.variant.variant_id)
         self.assertEqual(item.bpid_snapshot, self.sofa.bpid)
@@ -102,3 +102,64 @@ class ShoppingListTests(TestCase):
         printed = self.client.get(reverse("shopping:print", args=[lst.code]))
         self.assertContains(printed, "<svg")
         self.assertContains(printed, lst.code)
+
+
+class CollaborationTests(TestCase):
+    def setUp(self):
+        self.admin = make_user("admin", superuser=True)
+        self.sofa = make_product(self.admin, D("100"), D("150"), D("200"))
+        self.chair = make_product(self.admin, D("50"), D("70"), D("90"))
+        self.client.post(reverse("shopping:add"), {"product": self.sofa.pk, "list": "", "new_list": "Villa", "room": "Salon"})
+        self.lst = ShoppingList.objects.get()
+        self.line = self.lst.items.get()
+
+    def _invite_architect(self):
+        self.client.post(reverse("shopping:action", args=[self.lst.code]),
+                         {"action": "invite", "role": "architect", "name": "Studio A"})
+        member = self.lst.members.get()
+        architect = Client()
+        architect.get(self.lst.get_absolute_url() + "?invite=" + member.token)
+        return architect, member
+
+    def test_architect_joins_comments_and_changes_statuses(self):
+        architect, member = self._invite_architect()
+        member.refresh_from_db()
+        self.assertIsNotNone(member.joined_at)
+        self.lst.refresh_from_db()
+        self.assertEqual(self.lst.status, ShoppingList.Status.SHARED)
+
+        url = reverse("shopping:action", args=[self.lst.code])
+        architect.post(url, {"action": "update_item", "item": self.line.pk, "quantity": 1, "status": "to_discuss", "note": ""})
+        architect.post(url, {"action": "comment", "item": self.line.pk, "comment": "Trop grand pour le salon ?"})
+        # Final validation belongs to the client
+        architect.post(url, {"action": "update_item", "item": self.line.pk, "quantity": 1, "status": "validated", "note": ""})
+        self.line.refresh_from_db()
+        self.assertEqual(self.line.status, "to_discuss")
+        self.client.post(url, {"action": "update_item", "item": self.line.pk, "quantity": 1, "status": "validated", "note": ""})
+        self.line.refresh_from_db()
+        self.assertEqual(self.line.status, "validated")
+
+        events = list(self.line.events.values_list("author", "new_status", "comment"))
+        self.assertEqual(events[1], ("Studio A", "to_discuss", ""))
+        self.assertEqual(events[2], ("Studio A", "", "Trop grand pour le salon ?"))
+        self.assertEqual(events[3][1], "validated")
+        self.assertContains(self.client.get(self.lst.get_absolute_url()), "Trop grand pour le salon ?")
+
+        # Products added by the architect are marked as such; members cannot manage the list
+        architect.post(reverse("shopping:add"), {"product": self.chair.pk, "list": self.lst.code, "room": "Salon"})
+        self.assertEqual(self.lst.items.get(product=self.chair).status, "proposed_architect")
+        self.assertEqual(architect.post(url, {"action": "delete_list"}).status_code, 404)
+
+    def test_alternative_replaces_without_deleting(self):
+        architect, _ = self._invite_architect()
+        url = reverse("shopping:action", args=[self.lst.code])
+        r = architect.post(url, {"action": "propose_alternative", "item": self.line.pk})
+        self.assertEqual(r.status_code, 302)
+        page = architect.get(reverse("shopping:add") + f"?product={self.chair.pk}")
+        self.assertContains(page, f'name="replaces" value="{self.line.pk}"')
+        architect.post(reverse("shopping:add"), {"product": self.chair.pk, "list": self.lst.code, "room": "Salon",
+                                                 "replaces": self.line.pk})
+        self.line.refresh_from_db()
+        new = self.lst.items.get(product=self.chair)
+        self.assertEqual((self.line.status, self.line.replaced_by), ("replaced", new))
+        self.assertEqual(self.lst.items.count(), 2)

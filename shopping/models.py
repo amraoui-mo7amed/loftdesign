@@ -37,6 +37,8 @@ class ShoppingList(models.Model):
     budget = models.DecimalField(_("Total budget (DZD)"), max_digits=14, decimal_places=2, null=True, blank=True)
     bilnov_project_id = models.CharField(_("BILNOV project ID"), max_length=64, blank=True)
     status = models.CharField(_("Status"), max_length=10, choices=Status.choices, default=Status.DRAFT)
+    owner_role = models.CharField(_("I am"), max_length=10, choices=[("client", _("The client")), ("architect", _("The architect"))],
+                                  default="client")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -60,6 +62,35 @@ class ShoppingList(models.Model):
 
     def get_absolute_url(self):
         return reverse("shopping:detail", args=[self.code])
+
+
+class ListMember(models.Model):
+    """Someone invited on a list: the client invites the architect, or the reverse."""
+
+    class Role(models.TextChoices):
+        CLIENT = "client", _("Client")
+        ARCHITECT = "architect", _("Architect")
+
+    shopping_list = models.ForeignKey(ShoppingList, on_delete=models.CASCADE, related_name="members")
+    role = models.CharField(_("Role"), max_length=10, choices=Role.choices)
+    name = models.CharField(_("Name"), max_length=120)
+    token = models.CharField(max_length=40, unique=True, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
+    joined_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("List member")
+        verbose_name_plural = _("List members")
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.name} ({self.get_role_display()})"
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = secrets.token_urlsafe(24)
+        super().save(*args, **kwargs)
 
 
 class Room(models.Model):
@@ -138,3 +169,21 @@ class ShoppingListItem(models.Model):
         if stock <= 0:
             return "out_of_stock"
         return "low" if stock < self.quantity else "available"
+
+
+class ItemEvent(models.Model):
+    """History of a line: who proposed, discussed, accepted, refused or replaced it."""
+
+    item = models.ForeignKey(ShoppingListItem, on_delete=models.CASCADE, related_name="events")
+    author = models.CharField(max_length=120)
+    role = models.CharField(max_length=10, blank=True)
+    old_status = models.CharField(max_length=20, blank=True)
+    new_status = models.CharField(max_length=20, blank=True)
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at", "pk"]
+
+    def get_new_status_display(self):
+        return ShoppingListItem.Status(self.new_status).label if self.new_status else ""

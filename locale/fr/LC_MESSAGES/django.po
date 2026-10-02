@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 12:02+0000\n"
+"POT-Creation-Date: 2026-10-02 12:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -322,6 +322,7 @@ msgid "Category"
 msgstr "Catégorie"
 
 #: dashboard/models.py:121 dashboard/templates/orders/detail.html:56
+#: shopping/models.py:76 shopping/templates/shopping/detail.html:86
 msgid "Name"
 msgstr "Nom"
 
@@ -513,7 +514,7 @@ msgstr "Cocher pour mettre ce produit en avant dans la vitrine de l'admin"
 #: dashboard/templates/wallets/wallet.html:140
 #: dashboard/templates/wallets/withdrawal_list.html:121
 #: dashboard/templates/wallets/withdrawal_list.html:163 shopping/models.py:39
-#: shopping/models.py:107 shopping/templates/shopping/detail.html:125
+#: shopping/models.py:138 shopping/templates/shopping/detail.html:173
 #: shopping/templates/shopping/print.html:23 user_auth/models.py:149
 msgid "Status"
 msgstr "Statut"
@@ -846,8 +847,8 @@ msgid "Order %(num)s - %(name)s"
 msgstr "Commande %(num)s - %(name)s"
 
 #: dashboard/models.py:537 frontend/templates/products/product_detail.html:238
-#: shopping/models.py:99 shopping/templates/shopping/add.html:40
-#: shopping/templates/shopping/detail.html:122 user_auth/models.py:146
+#: shopping/models.py:130 shopping/templates/shopping/add.html:44
+#: shopping/templates/shopping/detail.html:170 user_auth/models.py:146
 msgid "Quantity"
 msgstr "Quantité"
 
@@ -1165,7 +1166,7 @@ msgstr "Ajouter une catégorie"
 
 #: dashboard/templates/categories/list.html:36
 #: dashboard/templates/products/items/item_list_partial.html:40
-#: shopping/templates/shopping/detail.html:118
+#: shopping/templates/shopping/detail.html:166
 msgid "Edit"
 msgstr "Modifier"
 
@@ -1559,7 +1560,8 @@ msgstr "Supprimer du panier ?"
 #: dashboard/templates/products/provider_store_settings.html:146
 #: dashboard/templates/products/store_settings.html:121
 #: dashboard/templates/products/store_settings.html:146
-#: shopping/templates/shopping/detail.html:132
+#: shopping/templates/shopping/detail.html:80
+#: shopping/templates/shopping/detail.html:181
 msgid "Remove"
 msgstr "Supprimer"
 
@@ -1981,7 +1983,7 @@ msgstr "de votre catalogue ?"
 
 #: dashboard/templates/products/affiliate_catalog.html:99
 #: dashboard/templates/products/my_catalog.html:95
-#: shopping/templates/shopping/detail.html:31
+#: shopping/templates/shopping/detail.html:37
 msgid "Share"
 msgstr "Partager"
 
@@ -2571,9 +2573,9 @@ msgid "Actions"
 msgstr "Actions"
 
 #: dashboard/templates/products/edit.html:435
-#: shopping/templates/shopping/detail.html:50
-#: shopping/templates/shopping/detail.html:82
-#: shopping/templates/shopping/detail.html:130
+#: shopping/templates/shopping/detail.html:58
+#: shopping/templates/shopping/detail.html:109
+#: shopping/templates/shopping/detail.html:178
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -3126,7 +3128,8 @@ msgstr "En attente d'approbation"
 #: dashboard/templates/users/details.html:145
 #: dashboard/templates/wallets/wallet_list.html:47
 #: dashboard/templates/wallets/withdrawal_list.html:53
-#: dashboard/templates/wallets/withdrawal_list.html:151 user_auth/models.py:19
+#: dashboard/templates/wallets/withdrawal_list.html:151 shopping/models.py:75
+#: shopping/templates/shopping/detail.html:85 user_auth/models.py:19
 msgid "Role"
 msgstr "Rôle"
 
@@ -5128,10 +5131,10 @@ msgstr "Paiement à la livraison · Livraison dans les 58 wilayas"
 msgid "Choose a file..."
 msgstr "Choisissez un fichier…"
 
+#
 #: frontend/templates/partials/landing-nav.html:28
 #: shopping/templates/shopping/index.html:3
 #: shopping/templates/shopping/index.html:12
-#
 msgid "My projects"
 msgstr "Mes projets"
 
@@ -5148,7 +5151,7 @@ msgid "View in your space"
 msgstr "Voir chez vous"
 
 #: frontend/templates/partials/product_card.html:14
-#: shopping/templates/shopping/detail.html:100
+#: shopping/templates/shopping/detail.html:127
 #: shopping/templates/shopping/print.html:27
 msgid "Out of stock"
 msgstr "Épuisé"
@@ -5253,10 +5256,10 @@ msgstr "Prix"
 msgid "Availability"
 msgstr "Disponibilité"
 
+#
 #: frontend/templates/products/product_detail.html:172
 #: shopping/templates/shopping/add.html:3
 #: shopping/templates/shopping/add.html:12
-#
 msgid "Add to my project"
 msgstr "Ajouter à mon projet"
 
@@ -5632,8 +5635,8 @@ msgstr "Aucun modèle 3D disponible pour ce produit"
 msgid "Product not available through this affiliate."
 msgstr "Produit non disponible via cet affilié."
 
-#: shopping/apps.py:8 shopping/models.py:45
 #
+#: shopping/apps.py:8 shopping/models.py:47
 msgid "Shopping lists"
 msgstr "Listes d'achat"
 
@@ -5641,13 +5644,13 @@ msgstr "Listes d'achat"
 msgid "Draft"
 msgstr "Brouillon"
 
-#: shopping/models.py:27
 #
+#: shopping/models.py:27
 msgid "Shared"
 msgstr "Partagée"
 
-#: shopping/models.py:29
 #
+#: shopping/models.py:29
 msgid "Ordered"
 msgstr "Commandée"
 
@@ -5659,276 +5662,397 @@ msgstr "Code"
 msgid "Owner"
 msgstr "Propriétaire"
 
-#: shopping/models.py:35 shopping/templates/shopping/detail.html:43
-#: shopping/templates/shopping/index.html:19
 #
+#: shopping/models.py:35 shopping/templates/shopping/detail.html:49
+#: shopping/templates/shopping/index.html:19
 msgid "Project name"
 msgstr "Nom du projet"
 
-#: shopping/models.py:36 shopping/templates/shopping/detail.html:44
-#: shopping/templates/shopping/print.html:16
 #
+#: shopping/models.py:36 shopping/models.py:71
+#: shopping/templates/shopping/detail.html:19
+#: shopping/templates/shopping/detail.html:50
+#: shopping/templates/shopping/detail.html:85
+#: shopping/templates/shopping/detail.html:138
+#: shopping/templates/shopping/print.html:16
 msgid "Client"
 msgstr "Client"
 
-#: shopping/models.py:37 shopping/templates/shopping/detail.html:47
 #
+#: shopping/models.py:37 shopping/templates/shopping/detail.html:53
 msgid "Total budget (DZD)"
 msgstr "Budget total (DZD)"
 
-#: shopping/models.py:38 shopping/templates/shopping/detail.html:48
 #
+#: shopping/models.py:38 shopping/templates/shopping/detail.html:54
 msgid "BILNOV project ID"
 msgstr "Identifiant du projet BILNOV"
 
-#: shopping/models.py:44 shopping/templates/shopping/detail.html:13
+#: shopping/models.py:40 shopping/templates/shopping/detail.html:56
+msgid "I am"
+msgstr "Je suis"
+
 #
+#: shopping/models.py:40 shopping/templates/shopping/detail.html:57
+msgid "The client"
+msgstr "Le client"
+
+#
+#: shopping/models.py:40 shopping/templates/shopping/detail.html:57
+msgid "The architect"
+msgstr "L'architecte"
+
+#
+#: shopping/models.py:46 shopping/templates/shopping/detail.html:13
 msgid "Shopping list"
 msgstr "Liste d'achat"
 
-#: shopping/models.py:67 shopping/models.py:72 shopping/models.py:96
-#: shopping/templates/shopping/add.html:36
-#: shopping/templates/shopping/detail.html:80
-#: shopping/templates/shopping/detail.html:123
-#: shopping/templates/shopping/detail.html:153
+#
+#: shopping/models.py:72 shopping/templates/shopping/detail.html:19
+#: shopping/templates/shopping/detail.html:85
+#: shopping/templates/shopping/detail.html:138
+msgid "Architect"
+msgstr "Architecte"
+
+#
+#: shopping/models.py:83
+msgid "List member"
+msgstr "Membre de la liste"
+
+#
+#
+#: shopping/models.py:84
+msgid "List members"
+msgstr "Membres de la liste"
+
+#: shopping/models.py:98 shopping/models.py:103 shopping/models.py:127
+#: shopping/templates/shopping/add.html:40
+#: shopping/templates/shopping/detail.html:107
+#: shopping/templates/shopping/detail.html:171
+#: shopping/templates/shopping/detail.html:202
 msgid "Room"
 msgstr "Pièce"
 
-#: shopping/models.py:68 shopping/templates/shopping/detail.html:81
 #
+#: shopping/models.py:99 shopping/templates/shopping/detail.html:108
 msgid "Budget (DZD)"
 msgstr "Budget (DZD)"
 
-#: shopping/models.py:73
+#: shopping/models.py:104
 msgid "Rooms"
 msgstr "Pièces"
 
-#: shopping/models.py:82
+#: shopping/models.py:113
 msgid "Proposed by the client"
 msgstr "Proposé par le client"
 
-#: shopping/models.py:83
+#: shopping/models.py:114
 msgid "Proposed by the architect"
 msgstr "Proposé par l'architecte"
 
-#: shopping/models.py:84
+#: shopping/models.py:115
 msgid "To discuss"
 msgstr "À discuter"
 
-#: shopping/models.py:85
+#: shopping/models.py:116
 msgid "Accepted"
 msgstr "Accepté"
 
-#: shopping/models.py:86
+#: shopping/models.py:117
 msgid "Refused"
 msgstr "Refusé"
 
-#: shopping/models.py:87
+#: shopping/models.py:118
 msgid "Replaced"
 msgstr "Remplacé"
 
-#: shopping/models.py:88
+#: shopping/models.py:119
 msgid "Integrated in the design"
 msgstr "Intégré au design"
 
-#: shopping/models.py:89
 #
+#: shopping/models.py:120
 msgid "Final validation"
 msgstr "Validé final"
 
-#: shopping/models.py:104
 #
+#: shopping/models.py:135
 msgid "Price when added (DZD)"
 msgstr "Prix à l'ajout (DZD)"
 
-#: shopping/models.py:108 shopping/templates/shopping/detail.html:128
 #
+#: shopping/models.py:139 shopping/templates/shopping/detail.html:176
 msgid "Note"
 msgstr "Note"
 
-#: shopping/models.py:116
+#: shopping/models.py:147
 msgid "List item"
 msgstr "Ligne de liste"
 
-#: shopping/models.py:117
 #
+#: shopping/models.py:148
 msgid "List items"
 msgstr "Lignes de liste"
 
-#: shopping/templates/shopping/add.html:27
+#: shopping/templates/shopping/add.html:22
+#, python-format
+msgid ""
+"This product will replace “%(title)s” in %(list)s. The old line stays "
+"visible, marked as replaced."
+msgstr ""
+"Ce produit remplacera « %(title)s » dans %(list)s. L'ancienne ligne reste "
+"visible, marquée comme remplacée."
+
+#: shopping/templates/shopping/add.html:31
 #: shopping/templates/shopping/print.html:16
 msgid "List"
 msgstr "Liste"
 
-#: shopping/templates/shopping/add.html:31
 #
+#: shopping/templates/shopping/add.html:35
 msgid "New list"
 msgstr "Nouvelle liste"
 
-#: shopping/templates/shopping/add.html:32
+#: shopping/templates/shopping/add.html:36
 msgid "e.g. Apartment Hydra"
 msgstr "ex. Appartement Hydra"
 
-#: shopping/templates/shopping/add.html:37
+#: shopping/templates/shopping/add.html:41
 msgid "e.g. Living room"
 msgstr "ex. Salon"
 
-#: shopping/templates/shopping/add.html:45
 #
+#: shopping/templates/shopping/add.html:49
 msgid "Add to the list"
 msgstr "Ajouter à la liste"
 
-#: shopping/templates/shopping/add.html:46
 #
+#: shopping/templates/shopping/add.html:50
 msgid "Back to the product"
 msgstr "Retour au produit"
 
-#: shopping/templates/shopping/add.html:48
+#: shopping/templates/shopping/add.html:52
 msgid ""
 "The price shown today is kept with the line. If it changes later, the list "
 "shows both prices."
-msgstr "Le prix affiché aujourd'hui est gardé avec la ligne. S'il change ensuite, la liste affiche les deux prix."
+msgstr ""
+"Le prix affiché aujourd'hui est gardé avec la ligne. S'il change ensuite, la "
+"liste affiche les deux prix."
 
+#
 #: shopping/templates/shopping/detail.html:18
 #: shopping/templates/shopping/index.html:30
-#
 msgid "Updated"
 msgstr "Mise à jour le"
 
-#: shopping/templates/shopping/detail.html:22
-#: shopping/templates/shopping/print.html:39
+#: shopping/templates/shopping/detail.html:19
+#, python-format
+msgid "You: %(name)s"
+msgstr "Vous : %(name)s"
+
+#: shopping/templates/shopping/detail.html:19
+msgid "You:"
+msgstr "Vous :"
+
 #
+#: shopping/templates/shopping/detail.html:28
+#: shopping/templates/shopping/print.html:39
 msgid "Total today"
 msgstr "Total aujourd'hui"
 
-#: shopping/templates/shopping/detail.html:23
 #
+#: shopping/templates/shopping/detail.html:29
 msgid "Total when added"
 msgstr "Total à l'ajout"
 
-#: shopping/templates/shopping/detail.html:24
+#: shopping/templates/shopping/detail.html:30
 #: shopping/templates/shopping/print.html:21
 #: shopping/templates/shopping/print.html:40
 msgid "Budget"
 msgstr "Budget"
 
-#: shopping/templates/shopping/detail.html:25
+#: shopping/templates/shopping/detail.html:31
 #, python-format
 msgid "%(counter)s product changed (price or stock)"
 msgid_plural "%(counter)s products changed (price or stock)"
 msgstr[0] "%(counter)s produit a changé (prix ou stock)"
 msgstr[1] "%(counter)s produits ont changé (prix ou stock)"
 
-#: shopping/templates/shopping/detail.html:27
+#: shopping/templates/shopping/detail.html:33
 msgid "Add everything to the cart"
 msgstr "Tout ajouter au panier"
 
-#: shopping/templates/shopping/detail.html:30
+#: shopping/templates/shopping/detail.html:36
 msgid "Print / PDF"
 msgstr "Imprimer / PDF"
 
-#: shopping/templates/shopping/detail.html:31
-#: shopping/templates/shopping/detail.html:54
-#: shopping/templates/shopping/detail.html:56
+#: shopping/templates/shopping/detail.html:37
+#: shopping/templates/shopping/detail.html:62
+#: shopping/templates/shopping/detail.html:64
+#: shopping/templates/shopping/detail.html:78
 msgid "Link copied"
 msgstr "Lien copié"
 
-#: shopping/templates/shopping/detail.html:38
+#: shopping/templates/shopping/detail.html:44
 msgid "Project settings and sharing"
 msgstr "Réglages du projet et partage"
 
-#: shopping/templates/shopping/detail.html:53
+#: shopping/templates/shopping/detail.html:61
 msgid "Link to share (read and order)"
 msgstr "Lien à partager (consulter et commander)"
 
-#: shopping/templates/shopping/detail.html:55
+#: shopping/templates/shopping/detail.html:63
 msgid "Private edit link (keep it for yourself)"
 msgstr "Lien privé de modification (gardez-le pour vous)"
 
-#: shopping/templates/shopping/detail.html:57
 #
+#: shopping/templates/shopping/detail.html:65
 msgid "Delete this list?"
 msgstr "Supprimer cette liste ?"
 
-#: shopping/templates/shopping/detail.html:59
 #
+#: shopping/templates/shopping/detail.html:67
 msgid "Delete the list"
 msgstr "Supprimer la liste"
 
-#: shopping/templates/shopping/detail.html:69
-#: shopping/templates/shopping/detail.html:124
+#: shopping/templates/shopping/detail.html:72
+msgid "Work together"
+msgstr "Travailler ensemble"
+
+#: shopping/templates/shopping/detail.html:73
+msgid ""
+"Invite your architect or your client: each one adds products, comments and "
+"changes the statuses. Final validation belongs to the client."
+msgstr ""
+"Invitez votre architecte ou votre client : chacun ajoute des produits, "
+"commente et change les statuts. La validation finale revient au client."
+
+#: shopping/templates/shopping/detail.html:77
+msgid "joined"
+msgstr "a rejoint le"
+
+#: shopping/templates/shopping/detail.html:77
+msgid "invitation not opened yet"
+msgstr "invitation pas encore ouverte"
+
+#: shopping/templates/shopping/detail.html:78
+msgid "Invitation link"
+msgstr "Lien d'invitation"
+
+#: shopping/templates/shopping/detail.html:86
+msgid "Name, e.g. Studio Amrani"
+msgstr "Nom, ex. Studio Amrani"
+
+#: shopping/templates/shopping/detail.html:87
+msgid "Create the invitation link"
+msgstr "Créer le lien d'invitation"
+
+#: shopping/templates/shopping/detail.html:96
+#: shopping/templates/shopping/detail.html:172
 #: shopping/templates/shopping/print.html:21
 msgid "Without room"
 msgstr "Sans pièce"
 
-#: shopping/templates/shopping/detail.html:77
 #
+#: shopping/templates/shopping/detail.html:104
 msgid "Edit the room"
 msgstr "Modifier la pièce"
 
-#: shopping/templates/shopping/detail.html:83
 #
+#: shopping/templates/shopping/detail.html:110
 msgid "Delete the room"
 msgstr "Supprimer la pièce"
 
-#: shopping/templates/shopping/detail.html:99
+#: shopping/templates/shopping/detail.html:126
 #: shopping/templates/shopping/print.html:27
 msgid "No longer sold"
 msgstr "N'est plus vendu"
 
-#: shopping/templates/shopping/detail.html:101
-#: shopping/templates/shopping/print.html:27
 #
+#: shopping/templates/shopping/detail.html:128
+#: shopping/templates/shopping/print.html:27
 msgid "Not enough stock"
 msgstr "Stock insuffisant"
 
-#: shopping/templates/shopping/detail.html:102
 #
+#: shopping/templates/shopping/detail.html:129
 msgid "In stock"
 msgstr "En stock"
 
-#: shopping/templates/shopping/detail.html:105
-msgid "We never replace a product on our own: choose an alternative or ask us."
-msgstr "Nous ne remplaçons jamais un produit de nous-mêmes : choisissez une alternative ou demandez-nous."
-
-#: shopping/templates/shopping/detail.html:111
 #
+#: shopping/templates/shopping/detail.html:132
+msgid "Replaced by"
+msgstr "Remplacé par"
+
+#: shopping/templates/shopping/detail.html:135
+msgid "History and discussion"
+msgstr "Historique et discussion"
+
+#: shopping/templates/shopping/detail.html:147
+msgid "Write a comment…"
+msgstr "Écrire un commentaire…"
+
+#
+#: shopping/templates/shopping/detail.html:147
+msgid "Comment"
+msgstr "Commentaire"
+
+#: shopping/templates/shopping/detail.html:148
+msgid "Send"
+msgstr "Envoyer"
+
+#: shopping/templates/shopping/detail.html:153
+msgid "We never replace a product on our own: choose an alternative or ask us."
+msgstr ""
+"Nous ne remplaçons jamais un produit de nous-mêmes : choisissez une "
+"alternative ou demandez-nous."
+
+#
+#: shopping/templates/shopping/detail.html:159
 msgid "when added"
 msgstr "à l'ajout"
 
-#: shopping/templates/shopping/detail.html:131
+#: shopping/templates/shopping/detail.html:179
 msgid "Accept today's price"
 msgstr "Accepter le prix du jour"
 
-#: shopping/templates/shopping/detail.html:139
+#: shopping/templates/shopping/detail.html:180
+msgid "Propose an alternative"
+msgstr "Proposer une alternative"
+
 #
+#: shopping/templates/shopping/detail.html:188
 msgid "No product in this room yet."
 msgstr "Pas encore de produit dans cette pièce."
 
-#: shopping/templates/shopping/detail.html:145
+#: shopping/templates/shopping/detail.html:194
 msgid "This list is empty. Open a product and choose “Add to my project”."
-msgstr "Cette liste est vide. Ouvrez un produit et choisissez « Ajouter à mon projet »."
+msgstr ""
+"Cette liste est vide. Ouvrez un produit et choisissez « Ajouter à mon projet "
+"»."
 
-#: shopping/templates/shopping/detail.html:146
-#: shopping/templates/shopping/index.html:38
 #
+#: shopping/templates/shopping/detail.html:195
+#: shopping/templates/shopping/index.html:38
 msgid "Browse the products"
 msgstr "Voir les produits"
 
-#: shopping/templates/shopping/detail.html:153
+#: shopping/templates/shopping/detail.html:202
 msgid "Add a room, e.g. Kitchen"
 msgstr "Ajouter une pièce, ex. Cuisine"
 
-#: shopping/templates/shopping/detail.html:154
 #
+#: shopping/templates/shopping/detail.html:203
 msgid "Add the room"
 msgstr "Ajouter la pièce"
 
-#: shopping/templates/shopping/detail.html:157
+#: shopping/templates/shopping/detail.html:206
 msgid ""
 "Prices and stock are updated live. The price when added stays visible next "
 "to today's price; a product is never replaced automatically."
-msgstr "Les prix et le stock sont à jour en direct. Le prix à l'ajout reste visible à côté du prix du jour ; un produit n'est jamais remplacé automatiquement."
+msgstr ""
+"Les prix et le stock sont à jour en direct. Le prix à l'ajout reste visible "
+"à côté du prix du jour ; un produit n'est jamais remplacé automatiquement."
 
 #: shopping/templates/shopping/index.html:13
 msgid "Your shopping lists, room by room"
@@ -5938,14 +6062,16 @@ msgstr "Vos listes d'achat, pièce par pièce"
 msgid ""
 "Gather the products of a project, set a budget per room, share the list with "
 "your client or architect, then order everything in one click."
-msgstr "Rassemblez les produits d'un projet, fixez un budget par pièce, partagez la liste avec votre client ou votre architecte, puis commandez tout en un clic."
+msgstr ""
+"Rassemblez les produits d'un projet, fixez un budget par pièce, partagez la "
+"liste avec votre client ou votre architecte, puis commandez tout en un clic."
 
 #: shopping/templates/shopping/index.html:19
 msgid "New project, e.g. Apartment Hydra"
 msgstr "Nouveau projet, ex. Appartement Hydra"
 
-#: shopping/templates/shopping/index.html:20
 #
+#: shopping/templates/shopping/index.html:20
 msgid "Create a list"
 msgstr "Créer une liste"
 
@@ -5960,25 +6086,29 @@ msgstr[1] "%(counter)s produits"
 msgid ""
 "No list yet. Open a product and choose “Add to my project”, or create a list "
 "above."
-msgstr "Pas encore de liste. Ouvrez un produit et choisissez « Ajouter à mon projet », ou créez une liste ci-dessus."
+msgstr ""
+"Pas encore de liste. Ouvrez un produit et choisissez « Ajouter à mon projet "
+"», ou créez une liste ci-dessus."
 
 #: shopping/templates/shopping/index.html:42
 msgid ""
 "These lists are kept in this browser. Use the private edit link of each list "
 "to open it on another device."
-msgstr "Ces listes sont gardées dans ce navigateur. Utilisez le lien privé de chaque liste pour l'ouvrir sur un autre appareil."
+msgstr ""
+"Ces listes sont gardées dans ce navigateur. Utilisez le lien privé de chaque "
+"liste pour l'ouvrir sur un autre appareil."
 
 #: shopping/templates/shopping/print.html:10
 msgid "Print / save as PDF"
 msgstr "Imprimer / enregistrer en PDF"
 
-#: shopping/templates/shopping/print.html:23
 #
+#: shopping/templates/shopping/print.html:23
 msgid "Reference"
 msgstr "Référence"
 
-#: shopping/templates/shopping/print.html:23
 #
+#: shopping/templates/shopping/print.html:23
 msgid "Unit price"
 msgstr "Prix unitaire"
 
@@ -5986,71 +6116,97 @@ msgstr "Prix unitaire"
 msgid ""
 "Indicative prices on the date above. Scan the QR code to see the list with "
 "up-to-date prices and stock, and to order."
-msgstr "Prix indicatifs à la date ci-dessus. Scannez le QR code pour voir la liste avec les prix et le stock à jour, et pour commander."
+msgstr ""
+"Prix indicatifs à la date ci-dessus. Scannez le QR code pour voir la liste "
+"avec les prix et le stock à jour, et pour commander."
 
-#: shopping/views.py:60
 #
+#: shopping/views.py:93
 msgid "My project"
 msgstr "Mon projet"
 
-#: shopping/views.py:122
+#
+#: shopping/views.py:128
+msgid "Visitor"
+msgstr "Visiteur"
+
+#: shopping/views.py:181
+#, python-format
+msgid "Replaced by %(title)s"
+msgstr "Remplacé par %(title)s"
+
+#: shopping/views.py:183
 #, python-format
 msgid "%(title)s added to %(list)s."
 msgstr "%(title)s ajouté à %(list)s."
 
-#: shopping/views.py:129
+#: shopping/views.py:190
 msgid "Living room"
 msgstr "Salon"
 
-#: shopping/views.py:129
+#: shopping/views.py:190
 msgid "Kitchen"
 msgstr "Cuisine"
 
-#: shopping/views.py:129
+#: shopping/views.py:190
 msgid "Bedroom"
 msgstr "Chambre"
 
-#: shopping/views.py:129
+#: shopping/views.py:190
 msgid "Bathroom"
 msgstr "Salle de bain"
 
-#: shopping/views.py:129
 #
+#: shopping/views.py:190
 msgid "Office"
 msgstr "Bureau"
 
-#: shopping/views.py:129
 #
+#: shopping/views.py:190
 msgid "Entrance"
 msgstr "Entrée"
 
-#: shopping/views.py:242
+#: shopping/views.py:256
+#, python-format
+msgid "You joined %(list)s as %(role)s."
+msgstr "Vous avez rejoint %(list)s en tant que %(role)s."
+
+#: shopping/views.py:335
+#, python-format
+msgid ""
+"Choose the replacement product, then “Add to my project”. %(title)s will be "
+"marked as replaced."
+msgstr ""
+"Choisissez le produit de remplacement, puis « Ajouter à mon projet ». "
+"%(title)s sera marqué comme remplacé."
+
 #
+#: shopping/views.py:366
 msgid "The list has been deleted."
 msgstr "La liste a été supprimée."
 
-#: shopping/views.py:257
 #
+#: shopping/views.py:381
 msgid "No longer available"
 msgstr "N'est plus disponible"
 
-#: shopping/views.py:265
+#: shopping/views.py:389
 #, python-format
 msgid "%(count)s product(s) of %(list)s added to the cart."
 msgstr "%(count)s produit(s) de %(list)s ajouté(s) au panier."
 
-#: shopping/views.py:267
+#: shopping/views.py:391
 #, python-format
 msgid "Not added: %(line)s"
 msgstr "Non ajouté : %(line)s"
 
-#: shopping/views.py:277
 #
+#: shopping/views.py:401
 msgid "My cart"
 msgstr "Mon panier"
 
-#: shopping/views.py:284
 #
+#: shopping/views.py:408
 msgid "Your cart has been saved as a list."
 msgstr "Votre panier a été enregistré comme liste."
 
@@ -6828,10 +6984,6 @@ msgstr "Mot de passe réinitialisé avec succès."
 #, python-format
 #~ msgid "Order %(num)s — Delivered ✓"
 #~ msgstr "Commande %(num)s — Livrée ✓"
-
-#, fuzzy, python-format
-#~ msgid "Customer: %(name)s"
-#~ msgstr "Nom du client"
 
 #, python-format
 #~ msgid "Product: %(title)s × %(qty)s"

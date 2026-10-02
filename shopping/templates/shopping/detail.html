@@ -16,7 +16,13 @@
                     {% if lst.client_name %}<span><i class="far fa-user"></i> {{ lst.client_name }}</span>{% endif %}
                     {% if lst.bilnov_project_id %}<span><i class="fas fa-cube"></i> BILNOV <code>{{ lst.bilnov_project_id }}</code></span>{% endif %}
                     <span><i class="far fa-clock"></i> {% trans "Updated" %} {{ lst.updated_at|date:"d/m/Y" }}</span>
+                    {% if who %}<span class="sl-you"><i class="far fa-id-badge"></i> {% if who.member or user.is_authenticated %}{% blocktrans with name=who.name %}You: {{ name }}{% endblocktrans %} · {% else %}{% trans "You:" %} {% endif %}{% if who.role == "architect" %}{% trans "Architect" %}{% else %}{% trans "Client" %}{% endif %}</span>{% endif %}
                 </p>
+                {% if status_counts %}
+                <ul class="sl-counts">
+                    {% for value, label, n in status_counts %}<li class="sl-status sl-st-{{ value }}">{{ label }} · {{ n }}</li>{% endfor %}
+                </ul>
+                {% endif %}
             </div>
             <aside class="sl-summary">
                 <div class="sl-sum-line"><span>{% trans "Total today" %}</span><b>{{ total|dzd }}</b></div>
@@ -33,8 +39,8 @@
             </aside>
         </header>
 
-        {% if editable %}
-        <details class="sl-settings">
+        {% if who.owner %}
+        <details class="sl-settings" {% if request.GET.open %}open{% endif %}>
             <summary><i class="fas fa-sliders-h"></i> {% trans "Project settings and sharing" %}</summary>
             <div class="sl-settings-grid">
                 <form method="post" action="{% url 'shopping:action' lst.code %}" class="sl-form">
@@ -47,6 +53,8 @@
                         <label class="sl-field"><span>{% trans "Total budget (DZD)" %}</span><input type="text" inputmode="numeric" name="budget" value="{{ lst.budget|default_if_none:''|floatformat:'0' }}"></label>
                         <label class="sl-field"><span>{% trans "BILNOV project ID" %}</span><input type="text" name="bilnov_project_id" maxlength="64" value="{{ lst.bilnov_project_id }}"></label>
                     </div>
+                    <label class="sl-field sl-qty-wide"><span>{% trans "I am" %}</span>
+                        <select name="owner_role"><option value="client" {% if lst.owner_role == "client" %}selected{% endif %}>{% trans "The client" %}</option><option value="architect" {% if lst.owner_role == "architect" %}selected{% endif %}>{% trans "The architect" %}</option></select></label>
                     <button type="submit" class="sl-btn sl-btn-ink">{% trans "Save" %}</button>
                 </form>
                 <div class="sl-share">
@@ -59,6 +67,25 @@
                         <button type="submit" class="sl-link-danger"><i class="far fa-trash-alt"></i> {% trans "Delete the list" %}</button>
                     </form>
                 </div>
+            </div>
+            <div class="sl-members" id="members">
+                <h3>{% trans "Work together" %}</h3>
+                <p>{% trans "Invite your architect or your client: each one adds products, comments and changes the statuses. Final validation belongs to the client." %}</p>
+                {% for m, link in members %}
+                <div class="sl-member">
+                    <span class="sl-avatar">{{ m.name|first|upper }}</span>
+                    <div><b>{{ m.name }}</b><small>{{ m.get_role_display }} · {% if m.joined_at %}{% trans "joined" %} {{ m.joined_at|date:"d/m/Y" }}{% else %}{% trans "invitation not opened yet" %}{% endif %}</small></div>
+                    <span class="sl-copyrow"><input type="text" readonly value="{{ link }}" dir="ltr" aria-label="{% trans 'Invitation link' %}"><button type="button" class="sl-btn sl-btn-line" data-copy="{{ link }}" data-done="{% trans 'Link copied' %}"><i class="far fa-copy"></i></button></span>
+                    <form method="post" action="{% url 'shopping:action' lst.code %}">{% csrf_token %}<input type="hidden" name="action" value="remove_member"><input type="hidden" name="member" value="{{ m.pk }}">
+                        <button type="submit" class="sl-link-danger" title="{% trans 'Remove' %}"><i class="fas fa-times"></i></button></form>
+                </div>
+                {% endfor %}
+                <form method="post" action="{% url 'shopping:action' lst.code %}" class="sl-inline">
+                    {% csrf_token %}<input type="hidden" name="action" value="invite">
+                    <select name="role" aria-label="{% trans 'Role' %}"><option value="architect" {% if lst.owner_role == "client" %}selected{% endif %}>{% trans "Architect" %}</option><option value="client" {% if lst.owner_role == "architect" %}selected{% endif %}>{% trans "Client" %}</option></select>
+                    <input type="text" name="name" maxlength="120" placeholder="{% trans 'Name, e.g. Studio Amrani' %}" aria-label="{% trans 'Name' %}">
+                    <button type="submit" class="sl-btn sl-btn-ink"><i class="fas fa-user-plus"></i> {% trans "Create the invitation link" %}</button>
+                </form>
             </div>
         </details>
         {% endif %}
@@ -101,7 +128,28 @@
                         {% elif it.state == "low" %}<span class="sl-badge sl-warn">{% trans "Not enough stock" %}</span>
                         {% else %}<span class="sl-badge sl-ok">{% trans "In stock" %}</span>{% endif %}
                     </div>
-                    {% if it.note %}<p class="sl-note"><i class="far fa-comment"></i> {{ it.note }}</p>{% endif %}
+                    {% if it.note %}<p class="sl-note"><i class="far fa-sticky-note"></i> {{ it.note }}</p>{% endif %}
+                    {% if it.replaced_by %}<p class="sl-note"><i class="fas fa-exchange-alt"></i> {% trans "Replaced by" %} <a href="#item-{{ it.replaced_by.pk }}">{{ it.replaced_by.title_snapshot }}</a></p>{% endif %}
+                    {% with events=it.events.all %}{% if events %}
+                    <details class="sl-thread">
+                        <summary><i class="far fa-comments"></i> {% trans "History and discussion" %} ({{ events|length }})</summary>
+                        <ol>
+                            {% for ev in events %}
+                            <li><b>{{ ev.author }}</b>{% if ev.role %} <small>({% if ev.role == "architect" %}{% trans "Architect" %}{% else %}{% trans "Client" %}{% endif %})</small>{% endif %}
+                                {% if ev.new_status %} → <span class="sl-status sl-st-{{ ev.new_status }}">{{ ev.get_new_status_display }}</span>{% endif %}
+                                <time>{{ ev.created_at|date:"d/m/Y H:i" }}</time>
+                                {% if ev.comment %}<p>{{ ev.comment|linebreaksbr }}</p>{% endif %}</li>
+                            {% endfor %}
+                        </ol>
+                        {% if editable %}
+                        <form method="post" action="{% url 'shopping:action' lst.code %}" class="sl-inline">
+                            {% csrf_token %}<input type="hidden" name="action" value="comment"><input type="hidden" name="item" value="{{ it.pk }}"><input type="hidden" name="anchor" value="item-{{ it.pk }}">
+                            <input type="text" name="comment" maxlength="2000" required placeholder="{% trans 'Write a comment…' %}" aria-label="{% trans 'Comment' %}">
+                            <button type="submit" class="sl-btn sl-btn-ink">{% trans "Send" %}</button>
+                        </form>
+                        {% endif %}
+                    </details>
+                    {% endif %}{% endwith %}
                     {% if it.state == "unavailable" or it.state == "out_of_stock" %}<p class="sl-note">{% trans "We never replace a product on our own: choose an alternative or ask us." %}</p>{% endif %}
                 </div>
                 <div class="sl-price">
@@ -129,6 +177,7 @@
                         <div class="sl-actions">
                             <button type="submit" name="action" value="update_item" class="sl-btn sl-btn-ink">{% trans "Save" %}</button>
                             {% if it.delta %}<button type="submit" name="action" value="refresh_price" class="sl-btn sl-btn-line">{% trans "Accept today's price" %}</button>{% endif %}
+                            {% if it.counts %}<button type="submit" name="action" value="propose_alternative" class="sl-btn sl-btn-line"><i class="fas fa-exchange-alt"></i> {% trans "Propose an alternative" %}</button>{% endif %}
                             <button type="submit" name="action" value="remove_item" class="sl-link-danger">{% trans "Remove" %}</button>
                         </div>
                     </form>

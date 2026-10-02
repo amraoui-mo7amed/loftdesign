@@ -104,7 +104,7 @@ class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("Category Name"))
     code = models.CharField(
         _("Bilnov code"), max_length=3, blank=True,
-        help_text=_("3 letters used in the Bilnov Object ID, e.g. FUR (furniture), LGT (lighting), TIL (tiles).")
+        help_text=_("3-letter category code shared with Bilnov, e.g. FUR (furniture), LGT (lighting), TIL (tiles).")
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -114,6 +114,31 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Manufacturer(models.Model):
+    """Fabricant d'un produit. Distinct de la marque commerciale et du fournisseur qui vend sur le Store."""
+    name = models.CharField(_("Name"), max_length=255)
+    manufacturer_id = models.CharField(
+        _("Manufacturer ID"), max_length=16, unique=True, null=True, blank=True, editable=False
+    )
+    country = models.CharField(_("Country"), max_length=100, blank=True)
+    website = models.URLField(_("Website"), blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Manufacturer")
+        verbose_name_plural = _("Manufacturers")
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.manufacturer_id:
+            self.manufacturer_id = f"MFR-{self.pk:05d}"
+            type(self).objects.filter(pk=self.pk).update(manufacturer_id=self.manufacturer_id)
 
 
 class Product(models.Model):
@@ -155,12 +180,17 @@ class Product(models.Model):
     tags = models.CharField(max_length=10000, verbose_name=_("Tags"), blank=True)
     brand = models.CharField(_("Brand"), max_length=255, blank=True)
     sku = models.CharField(_("SKU"), max_length=100, unique=True, blank=True, null=True)
-    # Bilnov ecosystem identity. The BOID is assigned once and never changes,
-    # whatever happens to price, supplier, images or 3D files; Bilnov Project,
-    # the BIM viewer, Bilnov 360 and the CAD plugins all refer to it.
-    bilnov_object_id = models.CharField(
-        _("Bilnov Object ID"), max_length=32, unique=True, null=True, blank=True, editable=False
+    # BILNOV Product ID (BPID). Assigned once and never changes, whatever happens to
+    # name, price, supplier, images or 3D files. Store, BILNOV, BILNOV Desktop,
+    # SketchUp/IFC/GLB files, the 360 viewer, shopping lists, carts and orders refer to it.
+    bpid = models.CharField(
+        _("BILNOV Product ID (BPID)"), max_length=24, unique=True, null=True, blank=True, editable=False
     )
+    manufacturer = models.ForeignKey(
+        Manufacturer, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="products", verbose_name=_("Manufacturer")
+    )
+    manufacturer_reference = models.CharField(_("Manufacturer reference"), max_length=100, blank=True)
     bilnov_uuid = models.UUIDField(_("Bilnov UUID"), default=uuid.uuid4, unique=True, editable=False)
     collection = models.CharField(_("Collection"), max_length=255, blank=True)
     model_version = models.PositiveIntegerField(
@@ -236,20 +266,23 @@ class Product(models.Model):
         effective = qty or item_stock
         self.is_active = effective > 0 and self.status == self.ProductStatus.APPROVED
         super().save(*args, **kwargs)
-        if not self.bilnov_object_id:
-            self.bilnov_object_id = self.build_boid()
-            type(self).objects.filter(pk=self.pk, bilnov_object_id__isnull=True).update(
-                bilnov_object_id=self.bilnov_object_id
-            )
+        if not self.bpid:
+            self.bpid = self.build_bpid(self.pk)
+            type(self).objects.filter(pk=self.pk, bpid__isnull=True).update(bpid=self.bpid)
 
-    def build_boid(self):
-        """BLV-<category code>-<10 digits>, e.g. BLV-FUR-0000012458."""
-        code = ((self.category.code if self.category_id and self.category else "") or "GEN").upper()
-        return f"BLV-{code[:3]}-{self.pk:010d}"
+    @staticmethod
+    def build_bpid(pk):
+        """BPID-<9 digits>, e.g. BPID-000002548. Never derived from the name or the category."""
+        return f"BPID-{pk:09d}"
+
+    @property
+    def supplier_id(self):
+        """Fournisseur qui vend le produit sur le Store (compte fournisseur), ex. SUP-00012."""
+        return f"SUP-{self.user_id:05d}" if self.user_id else None
 
     @property
     def store_path(self):
-        return f"/store/product/{self.bilnov_object_id}/"
+        return f"/store/product/{self.bpid}/"
 
 
 class SupplierPrice(models.Model):
@@ -638,10 +671,14 @@ class ProductItem(models.Model):
         verbose_name=_("Product")
     )
     name = models.CharField(_("Item Name"), max_length=200)
+    # Variant ID = BPID + rank, e.g. BPID-000002548-V02. Permanent like the BPID.
+    variant_number = models.PositiveIntegerField(_("Variant number"), null=True, blank=True, editable=False)
+    variant_id = models.CharField(_("Variant ID"), max_length=32, unique=True, null=True, blank=True, editable=False)
     sku = models.CharField(
         _("SKU"), max_length=100, unique=True, null=True, blank=True,
         help_text=_("Commercial reference of this variant, e.g. SKU-LUNA-BLK.")
     )
+    manufacturer_reference = models.CharField(_("Manufacturer reference"), max_length=100, blank=True)
     color = models.CharField(_("Color"), max_length=100, blank=True)
     dimensions = models.CharField(_("Dimensions"), max_length=200, blank=True)
     thumbnail = models.ImageField(
@@ -660,6 +697,17 @@ class ProductItem(models.Model):
 
     def __str__(self):
         return f"{self.product.title} — {self.name}"
+
+    def save(self, *args, **kwargs):
+        from django.db.models import Max
+
+        if not self.variant_number and self.product_id:
+            last = ProductItem.objects.filter(product_id=self.product_id).aggregate(n=Max("variant_number"))["n"] or 0
+            self.variant_number = last + 1
+        if not self.variant_id and self.variant_number and self.product_id:
+            bpid = self.product.bpid or Product.build_bpid(self.product_id)
+            self.variant_id = f"{bpid}-V{self.variant_number:02d}"
+        super().save(*args, **kwargs)
 
 
 class ProductItemImage(models.Model):
@@ -718,7 +766,7 @@ class ProductAsset(models.Model):
         ordering = ["product", "file_format", "-version"]
 
     def __str__(self):
-        return f"{self.product.bilnov_object_id} {self.file_format} v{self.version}"
+        return f"{self.product.bpid} {self.file_format} v{self.version}"
 
     def save(self, *args, **kwargs):
         from django.db import transaction

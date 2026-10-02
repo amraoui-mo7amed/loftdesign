@@ -198,6 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 '<div class="flex-shrink-0 rounded-2 overflow-hidden" style="width:40px;height:40px;">' + thumbHtml + '</div>' +
                 '<div class="flex-grow-1 min-w-0">' +
                 '<div class="fw-semibold small text-truncate">' + item.name + '</div>' +
+                (item.variant_id ? '<div class="text-muted" style="font-size:10px;"><code>' + item.variant_id + '</code></div>' : '') +
                 (colorHtml || dimHtml ? '<div class="d-flex align-items-center gap-2 small text-muted">' + colorHtml + (colorHtml && dimHtml ? ' ' : '') + dimHtml + '</div>' : '') +
                 '</div>' +
                 stockBadge +
@@ -256,6 +257,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("itemNameInput").value = data.name;
         var skuInput = document.getElementById("itemSkuInput");
         if (skuInput) skuInput.value = data.sku || "";
+        var mfrRefInput = document.getElementById("itemMfrRefInput");
+        if (mfrRefInput) mfrRefInput.value = data.manufacturer_reference || "";
 
         // Color
         if (data.color) {

@@ -279,12 +279,12 @@
               </div>
               <h5>{% trans "Bilnov referential" %}</h5>
             </div>
-            {% if product.bilnov_object_id %}
+            {% if product.bpid %}
             <div class="alert alert-light border rounded-3 d-flex flex-wrap align-items-center gap-2 mb-4">
-              <span class="small text-muted">{% trans "Bilnov Object ID (permanent)" %}</span>
-              <code class="fs-6 fw-bold" id="boidValue">{{ product.bilnov_object_id }}</code>
+              <span class="small text-muted">{% trans "BILNOV Product ID (permanent)" %}</span>
+              <code class="fs-6 fw-bold" id="bpidValue">{{ product.bpid }}</code>
               <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"
-                      onclick="navigator.clipboard && navigator.clipboard.writeText('{{ product.bilnov_object_id }}')">
+                      onclick="navigator.clipboard && navigator.clipboard.writeText('{{ product.bpid }}')">
                 <i class="fas fa-copy"></i> {% trans "Copy" %}
               </button>
               <span class="small text-muted ms-auto">{% trans "Model version" %} {{ product.model_version }}</span>
@@ -292,8 +292,17 @@
             {% endif %}
             <div class="row g-4">
               <div class="col-md-6">
-                <label class="form-label"><i class="fas fa-industry me-1 text-primary"></i> {% trans "Manufacturer / brand" %}</label>
+                <label class="form-label"><i class="fas fa-tag me-1 text-primary"></i> {% trans "Brand" %}</label>
                 <input type="text" name="brand" maxlength="255" class="form-control form-control-lg" value="{{ product.brand|default:'' }}">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><i class="fas fa-industry me-1 text-primary"></i> {% trans "Manufacturer" %}</label>
+                <input type="text" name="manufacturer" maxlength="255" class="form-control form-control-lg" list="manufacturerList" value="{{ product.manufacturer.name|default:'' }}">
+                <datalist id="manufacturerList">{% for m in manufacturers %}<option value="{{ m }}">{% endfor %}</datalist>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><i class="fas fa-barcode me-1 text-primary"></i> {% trans "Manufacturer reference" %}</label>
+                <input type="text" name="manufacturer_reference" maxlength="100" class="form-control form-control-lg" value="{{ product.manufacturer_reference|default:'' }}">
               </div>
               <div class="col-md-6">
                 <label class="form-label"><i class="fas fa-swatchbook me-1 text-primary"></i> {% trans "Collection" %}</label>

@@ -281,17 +281,27 @@ class BilnovReferentialTests(TestCase):
         self.product.refresh_from_db()
         self.variant = ProductItem.objects.create(product=self.product, name="Beige", sku="NOR-BGE-01", stock_quantity=4)
 
-    def test_boid_is_assigned_once_and_never_changes(self):
+    def test_bpid_is_assigned_once_and_never_changes(self):
         from dashboard.models import Category
 
-        boid = self.product.bilnov_object_id
-        self.assertRegex(boid, r"^BLV-[A-Z]{3}-\d{10}$")
+        bpid = self.product.bpid
+        self.assertEqual(bpid, f"BPID-{self.product.pk:09d}")
         self.product.category = Category.objects.create(name="Luminaires", code="LGT")
         self.product.title = "Renamed"
         self.product.loft_retail_price = D("250")
         self.product.save()
         self.product.refresh_from_db()
-        self.assertEqual(self.product.bilnov_object_id, boid)
+        self.assertEqual(self.product.bpid, bpid)
+
+    def test_variant_ids_follow_the_bpid(self):
+        from dashboard.models import ProductItem
+
+        second = ProductItem.objects.create(product=self.product, name="Gris", stock_quantity=1)
+        self.assertEqual(self.variant.variant_id, f"{self.product.bpid}-V01")
+        self.assertEqual(second.variant_id, f"{self.product.bpid}-V02")
+        self.variant.delete()
+        third = ProductItem.objects.create(product=self.product, name="Vert", stock_quantity=1)
+        self.assertEqual(third.variant_id, f"{self.product.bpid}-V03")
 
     def test_new_file_creates_a_version(self):
         from dashboard.models import ProductAsset
@@ -307,25 +317,27 @@ class BilnovReferentialTests(TestCase):
     def test_catalog_api(self):
         import json
 
-        boid = self.product.bilnov_object_id
-        data = self.client.get(reverse("catalog:product", args=[boid])).json()
-        self.assertEqual(data["bilnovObjectId"], boid)
+        bpid = self.product.bpid
+        data = self.client.get(reverse("catalog:product", args=[bpid])).json()
+        self.assertEqual(data["bpid"], bpid)
         self.assertEqual(data["variants"][0]["sku"], "NOR-BGE-01")
+        self.assertEqual(data["variants"][0]["variantId"], self.variant.variant_id)
         self.assertEqual(data["ifcPropertySet"]["name"], "Pset_BilnovProduct")
+        self.assertEqual(data["ifcPropertySet"]["properties"]["BilnovProductID"], bpid)
         self.assertNotIn("loft_purchase_price", json.dumps(data))
-        self.assertEqual(self.client.get(reverse("catalog:product", args=["BLV-XXX-0"])).status_code, 404)
+        self.assertEqual(self.client.get(reverse("catalog:product", args=["BPID-000000000"])).status_code, 404)
 
         found = self.client.get(reverse("catalog:search") + "?q=NOR-BGE-01").json()
-        self.assertEqual(found["results"][0]["bilnovObjectId"], boid)
+        self.assertEqual(found["results"][0]["bpid"], bpid)
 
         body = {"objects": [
-            {"bilnovObjectId": boid.lower(), "ifcGuid": "3Hs8JK", "sku": "NOR-BGE-01"},
-            {"bilnovObjectId": None, "ifcGuid": "generic"},
-            {"bilnovObjectId": "BLV-FUR-9999999999", "ifcGuid": "gone"},
+            {"bpid": bpid.lower(), "ifcGuid": "3Hs8JK", "variantId": self.variant.variant_id},
+            {"bpid": None, "ifcGuid": "generic"},
+            {"bpid": "BPID-999999999", "ifcGuid": "gone"},
         ]}
         r = self.client.post(reverse("catalog:bim_resolve"), json.dumps(body), content_type="application/json").json()
         self.assertEqual([o["status"] for o in r["objects"]], ["identified", "generic", "unknown"])
-        self.assertEqual(r["objects"][0]["variantId"], self.variant.pk)
+        self.assertEqual(r["objects"][0]["variantId"], self.variant.variant_id)
 
-        r = self.client.get(reverse("frontend:product_by_boid", args=[boid]))
+        r = self.client.get(reverse("frontend:product_by_bpid", args=[bpid]))
         self.assertRedirects(r, reverse("frontend:product_detail", args=[self.product.pk]), fetch_redirect_response=False)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Product, ProductAsset, ProductItem
+from .models import Category, Manufacturer, Product, ProductAsset, ProductItem
 
 
 class ProductAssetInline(admin.TabularInline):
@@ -13,15 +13,16 @@ class ProductAssetInline(admin.TabularInline):
 class ProductItemInline(admin.TabularInline):
     model = ProductItem
     extra = 0
-    fields = ("name", "sku", "color", "dimensions", "stock_quantity", "is_active")
+    fields = ("variant_id", "name", "sku", "manufacturer_reference", "color", "dimensions", "stock_quantity", "is_active")
+    readonly_fields = ("variant_id",)
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("bilnov_object_id", "title", "category", "brand", "status", "model_version")
-    search_fields = ("bilnov_object_id", "title", "sku", "brand", "collection", "items__sku")
+    list_display = ("bpid", "title", "category", "brand", "manufacturer", "status", "model_version")
+    search_fields = ("bpid", "title", "sku", "brand", "collection", "manufacturer_reference", "items__sku", "items__variant_id")
     list_filter = ("status", "category")
-    readonly_fields = ("bilnov_object_id", "bilnov_uuid", "model_version")
+    readonly_fields = ("bpid", "bilnov_uuid", "model_version")
     inlines = [ProductItemInline, ProductAssetInline]
 
 
@@ -35,4 +36,11 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAssetAdmin(admin.ModelAdmin):
     list_display = ("product", "file_format", "version", "is_current", "created_at")
     list_filter = ("file_format", "is_current")
-    search_fields = ("product__bilnov_object_id", "product__title")
+    search_fields = ("product__bpid", "product__title")
+
+
+@admin.register(Manufacturer)
+class ManufacturerAdmin(admin.ModelAdmin):
+    list_display = ("manufacturer_id", "name", "country", "website")
+    search_fields = ("manufacturer_id", "name")
+    readonly_fields = ("manufacturer_id",)

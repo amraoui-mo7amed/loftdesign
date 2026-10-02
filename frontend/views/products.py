@@ -195,10 +195,10 @@ def product_detail(request, pk):
     })
 
 
-def product_by_boid(request, boid):
+def product_by_bpid(request, bpid):
     """Permanent product link used inside BIM/IFC files and 360 hotspots."""
     from django.shortcuts import redirect
-    product = get_object_or_404(Product, bilnov_object_id__iexact=boid.strip())
+    product = get_object_or_404(Product, bpid__iexact=bpid.strip())
     url = reverse("frontend:product_detail", args=[product.pk])
     query = request.GET.urlencode()
     return redirect(f"{url}?{query}" if query else url)

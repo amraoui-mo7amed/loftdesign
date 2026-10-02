@@ -7,12 +7,14 @@ Bilnov 360 et les futurs plugins SketchUp / Revit / Archicad.
 
 | Identifiant | Champ | Rôle |
 |---|---|---|
-| BOID | `Product.bilnov_object_id` (ex. `BLV-FUR-0000000125`) | Le produit du catalogue. Attribué à la création, ne change jamais (prix, fournisseur, images, fichiers, catégorie). |
-| UUID | `Product.bilnov_uuid` | Identifiant interne immuable (`boid:<uuid>`). |
-| SKU | `ProductItem.sku` (ex. `SKU-LUNA-BLK`) | Une variante commerciale. Unique dans tout le catalogue. |
-| IFC GUID | jamais stocké sur le produit | Une instance placée dans un projet. Appartient à Bilnov Project (`ProjectObject.ifc_guid`). |
-
-Le code à 3 lettres vient de la catégorie (`Category.code` : FUR, LGT, TIL...), `GEN` sinon.
+| BPID | `Product.bpid` (ex. `BPID-000002548`) | BILNOV Product ID. Attribué à la création, ne change jamais (nom, prix, fournisseur, images, fichiers, catégorie). Jamais dérivé du nom. |
+| Variant ID | `ProductItem.variant_id` (ex. `BPID-000002548-V02`) | Une variante (couleur, finition, dimension). Le rang n'est jamais réutilisé. |
+| SKU | `ProductItem.sku` / `Product.sku` | Référence commerciale du vendeur. Unique dans le catalogue. |
+| Manufacturer ID | `Manufacturer.manufacturer_id` (ex. `MFR-00012`) | Le fabricant (différent de la marque et du fournisseur). |
+| Manufacturer Reference | `Product.manufacturer_reference`, `ProductItem.manufacturer_reference` | Référence catalogue du fabricant. |
+| Supplier ID | `Product.supplier_id` (ex. `SUP-00007`) | Le compte fournisseur qui vend sur le Store. |
+| UUID | `Product.bilnov_uuid` | Identifiant interne immuable. |
+| IFC GUID | jamais stocké sur le produit | Une instance placée dans un projet BILNOV. |
 
 ## Fichiers de conception
 
@@ -20,34 +22,35 @@ Le code à 3 lettres vient de la catégorie (`Category.code` : FUR, LGT, TIL...)
 Un nouvel envoi du même format crée la version suivante ; les anciennes restent téléchargeables
 et `Product.model_version` augmente. Un projet garde la version qu'il utilise : le store ne remplace rien.
 
-## Property set IFC
+## Métadonnées dans les fichiers
 
-`Pset_BilnovProduct` : BilnovObjectID, BilnovSKU, BilnovProductName, BilnovManufacturerID,
-BilnovManufacturerName, BilnovCategoryID, BilnovCollectionID, BilnovStoreURL,
-BilnovProductVersion, BilnovVariantID. Renvoyé prêt à écrire par `GET /api/catalog/products/{boid}/`.
+`Pset_BilnovProduct` (IFC), attributs de composant (SketchUp, dictionnaire `BilnovProduct`) et
+`extras.bilnov` (GLB/GLTF) portent les mêmes clés : BilnovProductID, BilnovVariantID, Manufacturer,
+ManufacturerReference, StoreURL, ModelVersion (+ ProductName, SKU, CategoryCode).
+Renvoyé prêt à écrire par `GET /api/catalog/products/{bpid}/`.
 
 ## API catalogue (lecture seule, publique)
 
 ```
-GET  /api/catalog/products/{boid}/                fiche + variantes + fichiers + Pset
-GET  /api/catalog/products/{boid}/variants/
-GET  /api/catalog/products/{boid}/assets/[?all=1] fichiers (versions courantes ou toutes)
-GET  /api/catalog/products/{boid}/availability/
-GET  /api/catalog/products/{boid}/prices/         prix public DZD / EUR
-GET  /api/catalog/products/{boid}/suppliers/
-GET  /api/catalog/products/{boid}/alternatives/   même catégorie, prix ±50 %
+GET  /api/catalog/products/{bpid}/                fiche + variantes + fichiers + Pset
+GET  /api/catalog/products/{bpid}/variants/
+GET  /api/catalog/products/{bpid}/assets/[?all=1] fichiers (versions courantes ou toutes)
+GET  /api/catalog/products/{bpid}/availability/
+GET  /api/catalog/products/{bpid}/prices/         prix public DZD / EUR
+GET  /api/catalog/products/{bpid}/suppliers/
+GET  /api/catalog/products/{bpid}/alternatives/   même catégorie, prix ±50 %
 GET  /api/catalog/search/?q=&category=&format=&limit=
-POST /api/catalog/bim/resolve/                    {"objects":[{"bilnovObjectId","ifcGuid","sku"}]}
-GET  /store/product/{boid}/                       lien permanent (StoreURL des fichiers)
+POST /api/catalog/bim/resolve/                    {"objects":[{"bpid","variantId","ifcGuid","sku"}]}
+GET  /store/product/{bpid}/                       lien permanent (StoreURL des fichiers)
 ```
 
 `bim/resolve` classe chaque objet : `identified`, `unavailable` (n'est plus en stock),
-`unknown` (BOID inconnu) ou `generic` (sans BOID, à rapprocher d'un produit du store).
+`unknown` (BPID inconnu) ou `generic` (sans BPID, à rapprocher d'un produit du store).
 Prix d'achat fournisseur et commissions ne sortent jamais par l'API.
 
 ## Ce qui revient à Bilnov Project (hors de ce dépôt)
 
-Table `ProjectObject` (project_id, bilnov_object_id, variant_id, sku, manufacturer_id, ifc_guid,
+Table `ProjectObject` (project_id, bpid, variant_id, sku, manufacturer_id, ifc_guid,
 source_software, source_object_id, model_version, quantity, unit, room/level/model, status),
 nomenclature (BOQ), liste d'achat du projet, prescriptions, hotspots 360, plugins CAO, matching IA.
-Ces briques appellent l'API ci-dessus et ne stockent que le BOID, jamais une copie de la fiche.
+Ces briques appellent l'API ci-dessus et ne stockent que le BPID, jamais une copie de la fiche.

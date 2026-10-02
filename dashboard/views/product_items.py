@@ -27,6 +27,8 @@ def item_list(request, product_pk):
             "id": item.id,
             "name": item.name,
             "sku": item.sku or "",
+            "variant_id": item.variant_id or "",
+            "manufacturer_reference": item.manufacturer_reference,
             "color": item.color,
             "dimensions": item.dimensions,
             "thumbnail": thumb_url,
@@ -75,6 +77,7 @@ def item_create(request, product_pk):
         product=product,
         name=name,
         sku=sku,
+        manufacturer_reference=request.POST.get("manufacturer_reference", "").strip()[:100],
         color=request.POST.get("color", "").strip(),
         dimensions=request.POST.get("dimensions", "").strip(),
         stock_quantity=int(request.POST.get("stock_quantity", 0)),
@@ -124,6 +127,7 @@ def item_update(request, pk):
         return JsonResponse({"success": False, "errors": {"sku": [sku_error]}})
     item.name = name
     item.sku = sku
+    item.manufacturer_reference = request.POST.get("manufacturer_reference", "").strip()[:100]
     item.color = request.POST.get("color", "").strip()
     item.dimensions = request.POST.get("dimensions", "").strip()
     item.stock_quantity = int(request.POST.get("stock_quantity", 0))

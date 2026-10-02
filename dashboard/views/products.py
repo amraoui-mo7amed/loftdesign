@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.utils.translation import gettext as _
 from django.urls import reverse
-from ..models import Product, Category, ProductImage, ProductItem, ProductItemImage, PartnerPrice, Notification, SupplierPrice, LoftPrice, ProductAsset
+from ..models import Product, Category, ProductImage, ProductItem, ProductItemImage, PartnerPrice, Notification, SupplierPrice, LoftPrice, ProductAsset, Manufacturer
 from dashboard.decorator import role_required
 from dashboard.utils import notify_user
 from user_auth.models import UserProfile
@@ -165,6 +165,15 @@ def _parse_pricing(post, is_provider):
         p["purchase"] = 0
     return p, errors
 
+def _manufacturer_from_post(post):
+    """Fabricant saisi par nom : réutilise la fiche existante (même nom) ou la crée."""
+    name = (post.get("manufacturer") or "").strip()[:255]
+    if not name:
+        return None
+    found = Manufacturer.objects.filter(name__iexact=name).first()
+    return found or Manufacturer.objects.create(name=name)
+
+
 def _save_asset(request, product):
     """Attach the uploaded design file (if any) as a new version."""
     upload = request.FILES.get("asset_file")
@@ -226,6 +235,8 @@ def product_create(request):
                 "is_featured": request.POST.get("is_featured") == "on",
                 "brand": (request.POST.get("brand") or "").strip()[:255],
                 "collection": (request.POST.get("collection") or "").strip()[:255],
+                "manufacturer": _manufacturer_from_post(request.POST),
+                "manufacturer_reference": (request.POST.get("manufacturer_reference") or "").strip()[:100],
             }
 
             product_kwargs["status"] = Product.ProductStatus.APPROVED
@@ -298,6 +309,7 @@ def product_create(request):
     return render(request, "products/create.html", {
         "categories": categories, "values": {}, "is_provider": is_provider,
         "asset_formats": ProductAsset.Format.choices,
+        "manufacturers": Manufacturer.objects.values_list("name", flat=True),
     })
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
@@ -333,6 +345,8 @@ def product_update(request, pk):
         product.is_featured = request.POST.get("is_featured") == "on"
         product.brand = (request.POST.get("brand") or "").strip()[:255]
         product.collection = (request.POST.get("collection") or "").strip()[:255]
+        product.manufacturer = _manufacturer_from_post(request.POST)
+        product.manufacturer_reference = (request.POST.get("manufacturer_reference") or "").strip()[:100]
 
         pricing, price_errors = _parse_pricing(request.POST, not is_admin)
         if price_errors:
@@ -456,6 +470,7 @@ def product_update(request, pk):
         "product": product, "categories": categories, "is_admin": is_admin,
         "price_history": price_history, "items": items,
         "asset_formats": ProductAsset.Format.choices,
+        "manufacturers": Manufacturer.objects.values_list("name", flat=True),
     })
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])

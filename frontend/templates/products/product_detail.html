@@ -178,10 +178,10 @@
                             {% if product.category %}{{ product.category.name }}{% else %}{% trans "Bespoke Collection" %}{% endif %}
                         </span>
                         <h1 class="d-none d-lg-block pd-title mb-3">{{ product.title }}</h1>
-                        {% if product.bilnov_object_id %}
+                        {% if product.bpid %}
                         <div class="small text-muted mt-3">
                             {% if product.brand %}<span class="me-3">{{ product.brand }}{% if product.collection %} · {{ product.collection }}{% endif %}</span>{% endif %}
-                            <span>{% trans "Bilnov ref." %} <code>{{ product.bilnov_object_id }}</code></span>
+                            <span>BPID <code>{{ product.bpid }}</code></span>
                         </div>
                         {% endif %}
                     </div>

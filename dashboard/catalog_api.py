@@ -1,10 +1,10 @@
 """Bilnov Catalog API: the product referential shared by the Bilnov ecosystem.
 
 Store Bilnov is the source of truth for products. Bilnov Project, the BIM/IFC
-viewer, Bilnov 360 and the CAD plugins resolve a Bilnov Object ID (BOID) here.
-The BOID identifies the catalog product; a SKU identifies a commercial variant;
-an IFC GUID identifies one placed instance in a project and is never stored as
-a product identity.
+viewer, Bilnov 360, BILNOV Desktop and the CAD plugins resolve a BILNOV Product
+ID (BPID) here. The BPID identifies the catalog product; a Variant ID
+(BPID-…-V01) and its SKU identify a commercial variant; an IFC GUID identifies
+one placed instance in a project and is never stored as a product identity.
 
 Read-only and public: only public data is exposed (retail and euro prices,
 stock, files). Supplier purchase prices and commissions never leave the store.
@@ -26,7 +26,7 @@ MAX_RESOLVE = 500
 
 def _published():
     return Product.objects.filter(
-        status=Product.ProductStatus.APPROVED, bilnov_object_id__isnull=False
+        status=Product.ProductStatus.APPROVED, bpid__isnull=False
     ).select_related("category", "user")
 
 
@@ -34,18 +34,21 @@ def _abs(request, url):
     return request.build_absolute_uri(url) if url else None
 
 
-def _product_or_404(boid):
-    return get_object_or_404(_published(), bilnov_object_id__iexact=boid.strip())
+def _product_or_404(bpid):
+    return get_object_or_404(_published(), bpid__iexact=bpid.strip())
 
 
 def product_summary(request, product):
     return {
-        "bilnovObjectId": product.bilnov_object_id,
+        "bpid": product.bpid,
         "uuid": str(product.bilnov_uuid),
         "name": product.title,
         "category": product.category.name if product.category else None,
         "categoryCode": (product.category.code or None) if product.category else None,
         "brand": product.brand or None,
+        "manufacturer": _manufacturer(product),
+        "manufacturerReference": product.manufacturer_reference or None,
+        "supplierId": product.supplier_id,
         "collection": product.collection or None,
         "image": _abs(request, product.thumbnail.url) if product.thumbnail else None,
         "price": {"dzd": _num(product.loft_retail_price), "eur": _num(product.price_eur)},
@@ -55,31 +58,36 @@ def product_summary(request, product):
     }
 
 
+def _manufacturer(product):
+    m = product.manufacturer
+    return {"id": m.manufacturer_id, "name": m.name} if m else None
+
+
 def _num(value):
     return float(value) if value is not None else None
 
 
 def pset(product, variant=None, request=None):
-    """Properties to write into Pset_BilnovProduct of an IFC object."""
+    """Properties to write into Pset_BilnovProduct of an IFC object (also used for SKP attributes and GLB extras)."""
     return {
-        "BilnovObjectID": product.bilnov_object_id,
-        "BilnovSKU": (variant.sku if variant and variant.sku else product.sku) or "",
-        "BilnovProductName": product.title,
-        "BilnovManufacturerID": str(product.user_id or ""),
-        "BilnovManufacturerName": product.brand or "",
-        "BilnovCategoryID": (product.category.code or "") if product.category else "",
-        "BilnovCollectionID": product.collection or "",
-        "BilnovStoreURL": _abs(request, product.store_path) if request else product.store_path,
-        "BilnovProductVersion": product.model_version,
-        "BilnovVariantID": str(variant.pk) if variant else "",
+        "BilnovProductID": product.bpid,
+        "BilnovVariantID": variant.variant_id if variant else "",
+        "Manufacturer": product.manufacturer.name if product.manufacturer else (product.brand or ""),
+        "ManufacturerReference": (variant.manufacturer_reference if variant and variant.manufacturer_reference else product.manufacturer_reference) or "",
+        "StoreURL": _abs(request, product.store_path) if request else product.store_path,
+        "ModelVersion": product.model_version,
+        "ProductName": product.title,
+        "SKU": (variant.sku if variant and variant.sku else product.sku) or "",
+        "CategoryCode": (product.category.code or "") if product.category else "",
     }
 
 
 def _variants(product):
     return [
         {
-            "variantId": v.pk,
+            "variantId": v.variant_id,
             "sku": v.sku or None,
+            "manufacturerReference": v.manufacturer_reference or None,
             "name": v.name,
             "color": v.color or None,
             "dimensions": v.dimensions or None,
@@ -99,7 +107,7 @@ def _assets(request, product, all_versions=False):
             "label": a.get_file_format_display(),
             "version": a.version,
             "current": a.is_current,
-            "variantId": a.variant_id,
+            "variantId": a.variant.variant_id if a.variant_id else None,
             "url": _abs(request, a.file.url),
         }
         for a in qs
@@ -111,8 +119,8 @@ def _assets(request, product, all_versions=False):
 
 
 @require_GET
-def product_detail(request, boid):
-    product = _product_or_404(boid)
+def product_detail(request, bpid):
+    product = _product_or_404(bpid)
     data = product_summary(request, product)
     data.update({
         "description": product.description,
@@ -125,26 +133,26 @@ def product_detail(request, boid):
 
 
 @require_GET
-def product_variants(request, boid):
-    product = _product_or_404(boid)
-    return JsonResponse({"bilnovObjectId": product.bilnov_object_id, "variants": _variants(product)})
+def product_variants(request, bpid):
+    product = _product_or_404(bpid)
+    return JsonResponse({"bpid": product.bpid, "variants": _variants(product)})
 
 
 @require_GET
-def product_assets(request, boid):
-    product = _product_or_404(boid)
+def product_assets(request, bpid):
+    product = _product_or_404(bpid)
     return JsonResponse({
-        "bilnovObjectId": product.bilnov_object_id,
+        "bpid": product.bpid,
         "modelVersion": product.model_version,
         "assets": _assets(request, product, all_versions=request.GET.get("all") == "1"),
     })
 
 
 @require_GET
-def product_availability(request, boid):
-    product = _product_or_404(boid)
+def product_availability(request, bpid):
+    product = _product_or_404(bpid)
     return JsonResponse({
-        "bilnovObjectId": product.bilnov_object_id,
+        "bpid": product.bpid,
         "available": product.is_active and product.available_stock > 0,
         "stock": product.available_stock,
         "variants": [{"variantId": v["variantId"], "sku": v["sku"], "stock": v["stock"]} for v in _variants(product)],
@@ -152,31 +160,31 @@ def product_availability(request, boid):
 
 
 @require_GET
-def product_prices(request, boid):
-    product = _product_or_404(boid)
+def product_prices(request, bpid):
+    product = _product_or_404(bpid)
     return JsonResponse({
-        "bilnovObjectId": product.bilnov_object_id,
+        "bpid": product.bpid,
         "retail": {"dzd": _num(product.loft_retail_price), "eur": _num(product.price_eur)},
     })
 
 
 @require_GET
-def product_suppliers(request, boid):
-    product = _product_or_404(boid)
+def product_suppliers(request, bpid):
+    product = _product_or_404(bpid)
     owner = product.user
     supplier = None
     if owner and not owner.is_superuser:
         supplier = {"id": owner.pk, "name": owner.get_full_name() or owner.username}
     return JsonResponse({
-        "bilnovObjectId": product.bilnov_object_id,
+        "bpid": product.bpid,
         "brand": product.brand or None,
         "suppliers": [supplier] if supplier else [{"id": None, "name": "Store Bilnov"}],
     })
 
 
 @require_GET
-def product_alternatives(request, boid):
-    product = _product_or_404(boid)
+def product_alternatives(request, bpid):
+    product = _product_or_404(bpid)
     qs = _published().filter(is_active=True).exclude(pk=product.pk)
     if product.category_id:
         qs = qs.filter(category_id=product.category_id)
@@ -184,7 +192,7 @@ def product_alternatives(request, boid):
         price = product.loft_retail_price
         qs = qs.filter(loft_retail_price__gte=price * Decimal("0.5"), loft_retail_price__lte=price * Decimal("1.5"))
     return JsonResponse({
-        "bilnovObjectId": product.bilnov_object_id,
+        "bpid": product.bpid,
         "alternatives": [product_summary(request, p) for p in qs[:12]],
     })
 
@@ -197,7 +205,7 @@ def search(request):
         qs = qs.filter(
             Q(title__icontains=word) | Q(description__icontains=word) | Q(tags__icontains=word)
             | Q(brand__icontains=word) | Q(collection__icontains=word)
-            | Q(category__name__icontains=word) | Q(bilnov_object_id__iexact=word)
+            | Q(category__name__icontains=word) | Q(bpid__iexact=word) | Q(items__variant_id__iexact=word) | Q(manufacturer_reference__iexact=word)
             | Q(items__sku__iexact=word) | Q(items__color__icontains=word)
         )
     category = request.GET.get("category")
@@ -217,11 +225,11 @@ def search(request):
 @csrf_exempt
 @require_POST
 def bim_resolve(request):
-    """Resolve BOIDs read from an IFC/SketchUp/360 scene.
+    """Resolve BPIDs read from an IFC/SketchUp/360 scene.
 
-    Body: {"bilnovObjectId": "BLV-..."} or {"objects": [{"bilnovObjectId", "ifcGuid", "sku"}, ...]}.
+    Body: {"bpid": "BPID-..."} or {"objects": [{"bpid", "variantId", "ifcGuid", "sku"}, ...]}.
     Each object comes back with its product (or null when unknown), so the
-    viewer can sort identified, generic (no BOID) and unavailable products.
+    viewer can sort identified, generic (no BPID) and unavailable products.
     """
     try:
         body = json.loads(request.body or b"{}")
@@ -233,15 +241,15 @@ def bim_resolve(request):
     if not isinstance(objects, list) or len(objects) > MAX_RESOLVE:
         return JsonResponse({"error": f"objects must be a list of at most {MAX_RESOLVE}"}, status=400)
 
-    boids = {str(o.get("bilnovObjectId") or "").strip().upper() for o in objects if isinstance(o, dict)}
-    products = {p.bilnov_object_id.upper(): p for p in _published().filter(bilnov_object_id__in=boids - {""})}
+    bpids = {str(o.get("bpid") or "").strip().upper() for o in objects if isinstance(o, dict)}
+    products = {p.bpid.upper(): p for p in _published().filter(bpid__in=bpids - {""})}
     out = []
     for o in objects:
         if not isinstance(o, dict):
             continue
-        boid = str(o.get("bilnovObjectId") or "").strip().upper()
-        product = products.get(boid)
-        if not boid:
+        bpid = str(o.get("bpid") or "").strip().upper()
+        product = products.get(bpid)
+        if not bpid:
             status = "generic"
         elif product is None:
             status = "unknown"
@@ -250,13 +258,15 @@ def bim_resolve(request):
         else:
             status = "identified"
         variant = None
-        if product is not None and o.get("sku"):
+        if product is not None and o.get("variantId"):
+            variant = product.items.filter(variant_id__iexact=str(o["variantId"])).first()
+        if product is not None and variant is None and o.get("sku"):
             variant = product.items.filter(sku__iexact=str(o["sku"])).first()
         out.append({
             "ifcGuid": o.get("ifcGuid"),
-            "bilnovObjectId": boid or None,
+            "bpid": bpid or None,
             "status": status,
             "product": product_summary(request, product) if product else None,
-            "variantId": variant.pk if variant else None,
+            "variantId": variant.variant_id if variant else None,
         })
     return JsonResponse({"objects": out})

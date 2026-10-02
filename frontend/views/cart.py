@@ -73,18 +73,19 @@ def _get_cart_items_data(request):
         price = item_data.get("resolved_price") or product.loft_retail_price or "0"
         subtotal = Decimal(str(price)) * item_data["quantity"]
         eur = Decimal(item_data["price_eur"]) if item_data.get("price_eur") else None
-        display_title = product.title
+        display_title = product.tr("title")
         display_thumbnail = product.thumbnail.url if product.thumbnail else ""
         available_variants = []
         if item_data.get("item_id"):
-            display_title += f" — {item_data.get('item_name', '')}"
+            variant = ProductItem.objects.filter(pk=item_data["item_id"]).first()
+            display_title += f" — {variant.tr('name') if variant else item_data.get('item_name', '')}"
             if item_data.get("item_thumbnail"):
                 display_thumbnail = item_data["item_thumbnail"]
             variants = ProductItem.objects.filter(product=product, is_active=True)
             for v in variants:
                 available_variants.append({
                     "id": v.pk,
-                    "name": v.name,
+                    "name": v.tr("name"),
                     "color": v.color or "",
                     "dimensions": v.dimensions or "",
                     "stock_quantity": v.stock_quantity,
@@ -316,10 +317,11 @@ def cart_load(request):
         price = item_data.get("resolved_price") or product.loft_retail_price or "0"
         subtotal = Decimal(str(price)) * item_data["quantity"]
         eur = Decimal(item_data["price_eur"]) if item_data.get("price_eur") else None
-        display_title = product.title
+        display_title = product.tr("title")
         display_thumbnail = product.thumbnail.url if product.thumbnail else ""
         if item_data.get("item_id"):
-            display_title += f" — {item_data.get('item_name', '')}"
+            variant = ProductItem.objects.filter(pk=item_data["item_id"]).first()
+            display_title += f" — {variant.tr('name') if variant else item_data.get('item_name', '')}"
             if item_data.get("item_thumbnail"):
                 display_thumbnail = item_data["item_thumbnail"]
         items.append({

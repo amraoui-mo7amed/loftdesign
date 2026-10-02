@@ -230,7 +230,7 @@
                                 <div style="display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap;">
                                     <span style="font-size:0.75rem;color:#6c757d;"><strong style="font-size:0.9rem;color:#111;">{{ store_visits }}</strong> visits</span>
                                     <span style="width:1px;height:16px;background:#e9ecef;"></span>
-                                    <span style="font-size:0.75rem;color:#6c757d;"><strong style="font-size:0.9rem;color:#111;">{{ referred_order_count }}</strong> orders</span>
+                                    <span style="font-size:0.75rem;color:#6c757d;">{% blocktrans count n=referred_order_count %}<strong style="font-size:0.9rem;color:#111;">{{ n }}</strong> order{% plural %}<strong style="font-size:0.9rem;color:#111;">{{ n }}</strong> orders{% endblocktrans %}</span>
                                     <span style="width:1px;height:16px;background:#e9ecef;"></span>
                                     <span style="font-size:0.75rem;color:#6c757d;"><strong style="font-size:0.9rem;color:#111;">{% if store_visits > 0 %}{{ referred_order_count }}/{{ store_visits }}{% else %}--{% endif %}</strong> conv.</span>
                                     <span style="width:1px;height:16px;background:#e9ecef;"></span>

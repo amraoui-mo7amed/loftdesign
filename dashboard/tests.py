@@ -367,3 +367,74 @@ class BilnovReferentialTests(TestCase):
 
         r = self.client.get(reverse("frontend:product_by_bpid", args=[bpid]))
         self.assertRedirects(r, reverse("frontend:product_detail", args=[self.product.pk]), fetch_redirect_response=False)
+
+
+class ContentTranslationTests(TestCase):
+    def setUp(self):
+        from dashboard.models import Category, ProductItem
+
+        self.admin = make_user("admin", superuser=True)
+        self.product = make_product(self.admin, D("100"), D("150"), D("200"))
+        self.product.title, self.product.description = "Fauteuil Nora", "Velours beige"
+        self.product.category = Category.objects.create(name="Fauteuils", code="FUR")
+        self.product.save()
+        self.variant = ProductItem.objects.create(product=self.product, name="Beige", stock_quantity=4)
+
+    def test_tr_falls_back_to_the_main_text(self):
+        p = self.product
+        self.assertEqual(p.tr("title", "ar"), "Fauteuil Nora")
+        p.set_tr("ar", "title", "  كرسي نورا ")
+        self.assertEqual(p.tr("title", "ar"), "كرسي نورا")
+        self.assertEqual(p.tr("title", "fr"), "Fauteuil Nora")  # the main language never reads i18n
+        self.assertIn("ar", p.missing_languages())  # description still missing
+        p.set_tr("ar", "title", "")
+        self.assertEqual(p.i18n, {})
+
+    def test_pages_show_the_visitor_language(self):
+        self.product.set_tr("ar", "title", "كرسي نورا")
+        self.product.save()
+        url = reverse("frontend:product_detail", args=[self.product.pk])
+        self.client.cookies["django_language"] = "ar"
+        self.assertContains(self.client.get(url), "كرسي نورا")
+        self.client.cookies["django_language"] = "fr"
+        page = self.client.get(url)
+        self.assertNotContains(page, "كرسي نورا")
+        self.assertContains(page, "Fauteuil Nora")
+
+    def test_translations_page_saves_and_is_admin_only(self):
+        url = reverse("dash:translations")
+        provider = make_user("prov", role=R.PROVIDER)
+        self.client.force_login(provider)
+        self.assertNotEqual(self.client.get(url).status_code, 200)
+        self.client.force_login(self.admin)
+        page = self.client.get(url + "?section=products")
+        self.assertContains(page, "Fauteuil Nora")
+        res = self.client.post(reverse("dash:translation_save"), {
+            "section": "products", "pk": self.product.pk, "title__ar": "كرسي نورا", "description__en": "Beige velvet",
+        }, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.assertEqual(res.json()["success"], True)
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.get_tr("ar", "title"), "كرسي نورا")
+        self.assertEqual(self.product.get_tr("en", "description"), "Beige velvet")
+
+    def test_product_form_saves_translations(self):
+        self.client.force_login(self.admin)
+        edit = self.client.get(reverse("dash:product_update", args=[self.product.pk]))
+        self.assertContains(edit, 'name="title__ar"')
+        from core.content_i18n import translation_langs
+        rows = translation_langs(self.product, ("title",))
+        self.assertEqual([r["dir"] for r in rows if r["code"] == "ar"], ["rtl"])
+
+    def test_search_and_catalog_api_use_translations(self):
+        self.product.set_tr("en", "title", "Nora armchair")
+        self.product.save()
+        self.product.category.set_tr("en", "name", "Armchairs")
+        self.product.category.save()
+        for q in ("armchair", "Armchairs"):
+            found = self.client.get(reverse("catalog:search"), {"q": q}).json()
+            self.assertEqual(found["count"], 1, q)
+        self.assertEqual(found["results"][0]["translations"]["en"], {"name": "Nora armchair", "category": "Armchairs"})
+        from api.models import ApiClient
+        _, key = ApiClient.create("test")
+        res = self.client.get(reverse("api:products"), {"q": "armchair"}, HTTP_AUTHORIZATION=f"Bearer {key}")
+        self.assertEqual(res.json()["count"], 1)

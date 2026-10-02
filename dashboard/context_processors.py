@@ -111,6 +111,11 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
             "url_name": "dash:category_list",
         })
         menu.append({
+            "title": _("Translations"),
+            "icon": "fas fa-language",
+            "url_name": "dash:translations",
+        })
+        menu.append({
             "title": _("Contact Leads"),
             "icon": "fas fa-envelope-open-text",
             "url_name": "dash:contact_request_list",

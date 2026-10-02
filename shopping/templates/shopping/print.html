@@ -24,7 +24,7 @@
         <tbody>
         {% for it in g.items %}
         <tr class="{% if not it.counts %}off{% endif %}">
-            <td>{{ it.title_snapshot }}{% if it.state != "available" %} <em>({% if it.state == "unavailable" %}{% trans "No longer sold" %}{% elif it.state == "out_of_stock" %}{% trans "Out of stock" %}{% else %}{% trans "Not enough stock" %}{% endif %})</em>{% endif %}</td>
+            <td>{{ it.display_title }}{% if it.state != "available" %} <em>({% if it.state == "unavailable" %}{% trans "No longer sold" %}{% elif it.state == "out_of_stock" %}{% trans "Out of stock" %}{% else %}{% trans "Not enough stock" %}{% endif %})</em>{% endif %}</td>
             <td dir="ltr">{{ it.variant_id_snapshot|default:it.bpid_snapshot }}</td>
             <td>{{ it.get_status_display }}</td>
             <td class="n">{% if it.current_price is not None %}{{ it.current_price|dzd }}{% else %}{{ it.price_snapshot|dzd }}{% endif %}</td>

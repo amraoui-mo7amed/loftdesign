@@ -1,0 +1,98 @@
+{% extends "dash/dash_index.html" %}
+{% load i18n %}
+
+{% block dashTitle %}{% trans "Translations" %}{% endblock dashTitle %}
+
+{% block dashContent %}
+<div class="container-fluid py-4 tr-page">
+    <div class="mb-4">
+        <h1 class="fw-black display-5 mb-1">{% trans "Translations" %}</h1>
+        <p class="text-muted mb-0">{% blocktrans with src=source|upper %}The main texts are written in {{ src }}. Enter the other languages here: an empty field shows the main text.{% endblocktrans %}</p>
+    </div>
+
+    <ul class="nav nav-pills gap-2 mb-3">
+        {% for key, label, count in sections %}
+        <li class="nav-item"><a class="nav-link {% if key == section %}active{% endif %} rounded-pill fw-bold" href="?section={{ key }}&missing={{ only_missing|yesno:'1,0' }}">{{ label }}{% if count %} <span class="badge bg-warning text-dark ms-1">{{ count }}</span>{% endif %}</a></li>
+        {% endfor %}
+    </ul>
+
+    <form method="get" class="d-flex flex-wrap gap-2 align-items-center mb-4">
+        <input type="hidden" name="section" value="{{ section }}">
+        {% if section != "stores" %}<input type="search" name="q" value="{{ q }}" class="form-control rounded-pill" style="max-width:320px" placeholder="{% trans 'Search' %}">{% endif %}
+        <div class="form-check form-switch ms-2">
+            <input class="form-check-input" type="checkbox" role="switch" id="onlyMissing" name="missing" value="1" {% if only_missing %}checked{% endif %} onchange="this.form.elements.missingOff.disabled = this.checked; this.form.submit()">
+            <label class="form-check-label" for="onlyMissing">{% trans "Only what is missing" %}</label>
+        </div>
+        <input type="hidden" name="missing" id="missingOff" value="0" {% if only_missing %}disabled{% endif %}>
+        {% if not auto %}<span class="small text-muted ms-auto"><i class="fas fa-info-circle me-1"></i>{% trans "Automatic translation: add a DeepL key (DEEPL_API_KEY) on the server to show the “Translate automatically” button." %}</span>{% endif %}
+    </form>
+
+    {% for row in rows %}
+    <form method="post" action="{% url 'dash:translation_save' %}" class="card border-0 shadow-sm rounded-4 mb-3 tr-row">
+        {% csrf_token %}
+        <input type="hidden" name="section" value="{{ section }}"><input type="hidden" name="pk" value="{{ row.obj.pk }}"><input type="hidden" name="kind" value="{{ row.kind }}">
+        <div class="card-body p-4">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                <h5 class="fw-black mb-0 me-auto">{{ row.label }}</h5>
+                {% if row.obj.bpid %}<code class="small">{{ row.obj.bpid }}</code>{% endif %}
+                {% if auto %}<button type="button" class="btn btn-outline-dark btn-sm rounded-pill tr-auto" data-url="{% url 'dash:translation_auto' %}"><i class="fas fa-magic me-1"></i>{% trans "Translate automatically" %}</button>{% endif %}
+                <button type="submit" class="btn btn-dark btn-sm rounded-pill px-3"><i class="fas fa-check me-1"></i>{% trans "Save" %}</button>
+                <span class="tr-saved small text-success d-none"><i class="fas fa-check-circle"></i> {% trans "Saved" %}</span>
+            </div>
+            {% for f in row.fields %}
+            <div class="row g-3 mb-2">
+                <div class="col-lg-4">
+                    <div class="small text-uppercase fw-bold text-muted mb-1">{{ f.label }} · {{ source|upper }}</div>
+                    <div class="p-2 rounded-3 bg-light small" style="white-space:pre-line;max-height:9em;overflow:auto">{{ f.source }}</div>
+                </div>
+                {% for lang, value in f.values %}
+                <div class="col-lg">
+                    <label class="small text-uppercase fw-bold text-muted mb-1">{{ f.label }} · {{ lang|upper }}</label>
+                    {% if f.long %}
+                    <textarea name="{{ f.name }}__{{ lang }}" rows="3" class="form-control form-control-sm {% if not value %}border-warning{% endif %}" {% if lang == "ar" %}dir="rtl"{% endif %}>{{ value }}</textarea>
+                    {% else %}
+                    <input type="text" name="{{ f.name }}__{{ lang }}" value="{{ value }}" class="form-control form-control-sm {% if not value %}border-warning{% endif %}" {% if lang == "ar" %}dir="rtl"{% endif %}>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+    {% empty %}
+    <div class="text-center text-muted py-5"><i class="fas fa-check-circle fa-2x text-success mb-3 d-block"></i>{% if only_missing %}{% trans "Everything is translated in this section." %}{% else %}{% trans "Nothing to translate here." %}{% endif %}</div>
+    {% endfor %}
+
+    {% if page_obj.has_other_pages %}
+    <nav class="d-flex justify-content-center gap-2 mt-4">
+        {% if page_obj.has_previous %}<a class="btn btn-outline-dark rounded-pill" href="?section={{ section }}&missing={{ only_missing|yesno:'1,0' }}&q={{ q|urlencode }}&page={{ page_obj.previous_page_number }}">‹</a>{% endif %}
+        <span class="btn disabled">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a class="btn btn-outline-dark rounded-pill" href="?section={{ section }}&missing={{ only_missing|yesno:'1,0' }}&q={{ q|urlencode }}&page={{ page_obj.next_page_number }}">›</a>{% endif %}
+    </nav>
+    {% endif %}
+</div>
+<script>
+document.querySelectorAll(".tr-row").forEach((form) => {
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetch(form.action, {method: "POST", body: new FormData(form), headers: {"X-Requested-With": "XMLHttpRequest"}})
+            .then((r) => r.json()).then((d) => {
+                if (!d.success) return;
+                form.querySelectorAll("input[type=text], textarea").forEach((el) => el.classList.toggle("border-warning", !el.value.trim()));
+                const ok = form.querySelector(".tr-saved"); ok.classList.remove("d-none"); setTimeout(() => ok.classList.add("d-none"), 2000);
+            });
+    });
+    const auto = form.querySelector(".tr-auto");
+    if (auto) auto.addEventListener("click", () => {
+        auto.disabled = true;
+        const data = new FormData(); ["csrfmiddlewaretoken", "section", "pk", "kind"].forEach((n) => data.append(n, form.elements[n].value));
+        fetch(auto.dataset.url, {method: "POST", body: data, headers: {"X-Requested-With": "XMLHttpRequest"}})
+            .then((r) => r.json()).then((d) => {
+                auto.disabled = false;
+                if (!d.success) { alert(d.message || "Error"); return; }
+                Object.entries(d.values).forEach(([name, text]) => { const el = form.elements[name]; if (el && !el.value.trim()) el.value = text; });
+            }).catch(() => { auto.disabled = false; });
+    });
+});
+</script>
+{% endblock dashContent %}

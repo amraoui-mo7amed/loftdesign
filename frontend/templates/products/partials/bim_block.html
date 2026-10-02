@@ -1,3 +1,4 @@
+{% load content_i18n %}
 {% load i18n %}
 {% if product.bpid %}
 <div class="sb-bim" id="bim">
@@ -16,7 +17,7 @@
             <div><dt>{% trans "Model version" %}</dt><dd>v{{ product.model_version }}</dd></div>
             {% if items %}
             <div class="sb-bim-variants"><dt>{% trans "Variants" %}</dt>
-                <dd><ul>{% for item in items %}<li><code>{{ item.variant_id }}</code> {{ item.name }}{% if item.sku %} · {{ item.sku }}{% endif %}{% if item.manufacturer_reference %} · {{ item.manufacturer_reference }}{% endif %}</li>{% endfor %}</ul></dd>
+                <dd><ul>{% for item in items %}<li><code>{{ item.variant_id }}</code> {{ item|tr:'name' }}{% if item.sku %} · {{ item.sku }}{% endif %}{% if item.manufacturer_reference %} · {{ item.manufacturer_reference }}{% endif %}</li>{% endfor %}</ul></dd>
             </div>
             {% endif %}
         </dl>
@@ -34,7 +35,7 @@
                     <span role="cell"><b class="sb-bim-fmt">{{ a.extension|default:a.file_format|upper }}</b><small>{{ a.get_file_format_display }}</small></span>
                     <span role="cell">v{{ a.version }}<small>{{ a.created_at|date:"d/m/Y" }}</small></span>
                     <span role="cell" class="sb-bim-meta">
-                        {% if a.variant %}<em>{{ a.variant.name }}</em>{% endif %}
+                        {% if a.variant %}<em>{{ a.variant|tr:'name' }}</em>{% endif %}
                         <em>{{ a.file_size|filesizeformat }}</em>
                         {% if a.file_format != "pdf" and a.file_format != "texture" %}<em>{{ a.get_unit_display }} · {{ a.scale }}</em>{% endif %}
                         {% if a.polygon_count %}<em>{{ a.polygon_count }} {% trans "polygons" %}</em>{% endif %}

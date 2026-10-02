@@ -39,7 +39,7 @@
                         {% csrf_token %}
                         <div class="mb-4">
                             <label class="form-label fw-bold">{% trans "Category Name" %}</label>
-                            <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g. Modern Chairs" required>
+                            <input type="text" name="name" class="form-control form-control-lg" placeholder="{% trans 'e.g. Modern Chairs' %}" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-3 shadow">
                             {% trans "Create Category" %}
@@ -116,13 +116,13 @@
             </div>
 
             <div class="editorial-actions">
-                    <a href="{% url 'dash:product_update' product.pk %}" class="editorial-btn" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="{% url 'dash:product_update' product.pk %}" class="editorial-btn" title="{% trans 'Edit' %}"><i class="fas fa-edit"></i></a>
                     <button type="button" class="editorial-btn delete delete-btn" 
                             data-url="{% url 'dash:product_delete' product.pk %}"
                             data-name="{{ product.title }}"
                             data-swal-title="{% trans 'Remove Product?' %}"
                             data-swal-text="{% trans 'Are you sure you want to delete' %} '{{ product.title }}'?"
-                            title="Delete"><i class="fas fa-trash-alt"></i></button>
+                            title="{% trans 'Delete' %}"><i class="fas fa-trash-alt"></i></button>
                     {% if request.user.is_superuser and product.status == "approved" %}
                     <a href="{% url 'dash:partner_price_list' product.pk %}" class="editorial-btn" title="{% trans 'Affiliate Pricing' %}">
                         <i class="fas fa-tags"></i>

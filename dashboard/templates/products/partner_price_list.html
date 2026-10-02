@@ -1,8 +1,9 @@
 {% extends "dash/dash_index.html" %}
+{% load content_i18n %}
 {% load static %}
 {% load i18n %}
 
-{% block dashTitle %}{% trans "Partner Pricing" %} — {{ product.title }}{% endblock dashTitle %}
+{% block dashTitle %}{% trans "Partner Pricing" %} — {{ product|tr:'title' }}{% endblock dashTitle %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={{ ASSET_VERSION }}">
@@ -16,7 +17,7 @@
         </a>
         <h1 class="fw-black display-5 mb-1">{% trans "Partner Pricing" %}</h1>
         <p class="text-muted mb-0">
-            <strong>{{ product.title }}</strong>
+            <strong>{{ product|tr:'title' }}</strong>
             {% if product.user and not product.user.is_superuser %}
             — <span class="text-primary fw-bold">{{ product.user.get_full_name|default:product.user.username }}</span>:
             {% trans "Purchase" %} <strong>DZD{{ product.loft_purchase_price|floatformat:0 }}</strong>
@@ -112,7 +113,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">{% trans "Purchase Price (DZD)" %}</label>
-                        <input type="number" name="purchase_price" step="0.01" class="form-control form-control-lg" placeholder="e.g. 1300" lang="en" required>
+                        <input type="number" name="purchase_price" step="0.01" class="form-control form-control-lg" placeholder="{% trans 'e.g.' %} 1300" lang="en" required>
                         <div class="form-text">{% trans "What the affiliate pays Loft Design for this product." %}</div>
                     </div>
                     <div class="row mb-4">

@@ -1,4 +1,5 @@
 {% extends "dash/dash_index.html" %}
+{% load content_i18n %}
 {% load static %}
 {% load i18n %}
 
@@ -55,28 +56,28 @@
                 <span class="cart-badge"><i class="fas fa-check-circle"></i>{% trans "In Cart" %}</span>
                 {% endif %}
                 {% if item.primary_image %}
-                    <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" loading="lazy">
+                    <img src="{{ item.primary_image.image.url }}" alt="{{ item.product|tr:'title' }}" loading="lazy">
                 {% elif item.product.thumbnail %}
-                    <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" loading="lazy">
+                    <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product|tr:'title' }}" loading="lazy">
                 {% else %}
                     <div class="bg-light d-flex align-items-center justify-content-center" style="height:150px;">
                         <i class="fas fa-box-open fa-3x text-muted opacity-25"></i>
                     </div>
                 {% endif %}
                 <div class="body">
-                    <h6>{{ item.product.title }}</h6>
+                    <h6>{{ item.product|tr:'title' }}</h6>
                     <div class="price">DZD {{ item.retail_price|floatformat:0|default:"0" }}</div>
                     {% if pid in cart_product_ids %}
                     <div class="qty-controls">
                         <button type="button" class="qty-btn qty-dec"
                                 data-product-pk="{{ item.product.pk }}"
-                                data-title="{{ item.product.title }}"
+                                data-title="{{ item.product|tr:'title' }}"
                                 data-swal-title="{% trans 'Remove from cart?' %}"
                                 data-swal-text="{% trans 'Remove' %}"
                                 data-swal-confirm="{% trans 'Yes, remove' %}"
                                 data-swal-cancel="{% trans 'Cancel' %}">−</button>
                         <span class="qty-value">{{ item.cart_qty }}</span>
-                        <button type="button" class="qty-btn qty-inc" data-product-pk="{{ item.product.pk }}" data-title="{{ item.product.title }}" data-max="{{ item.product.quantity }}">+</button>
+                        <button type="button" class="qty-btn qty-inc" data-product-pk="{{ item.product.pk }}" data-title="{{ item.product|tr:'title' }}" data-max="{{ item.product.quantity }}">+</button>
                     </div>
                     {% else %}
                     <div class="add-row">
@@ -84,7 +85,7 @@
                         <button type="button"
                                 class="btn btn-primary add-to-cart-btn"
                                 data-product-pk="{{ item.product.pk }}"
-                                data-title="{{ item.product.title }}">
+                                data-title="{{ item.product|tr:'title' }}">
                             <i class="fas fa-cart-plus me-1"></i>{% trans "Add" %}
                         </button>
                     </div>
@@ -123,21 +124,21 @@
                     {% for item in cart_items %}
                     <div class="cart-review-item" data-product-pk="{{ item.product_id }}">
                         {% if item.thumbnail %}
-                        <img src="{{ item.thumbnail }}" alt="{{ item.title }}">
+                        <img src="{{ item.thumbnail }}" alt="{{ item|tr:'title' }}">
                         {% else %}
                         <div class="bg-light d-flex align-items-center justify-content-center rounded-3" style="width:56px;height:56px;flex-shrink:0;">
                             <i class="fas fa-box text-muted small"></i>
                         </div>
                         {% endif %}
                         <div class="info">
-                            <div class="title">{{ item.title }}</div>
+                            <div class="title">{{ item|tr:'title' }}</div>
                             <div class="meta">DZD {{ item.price|floatformat:0 }} each</div>
                         </div>
                         <span class="qty-badge">x{{ item.quantity }}</span>
                         <span class="fw-bold" style="min-width:70px;text-align:right;">DZD {{ item.subtotal|floatformat:0 }}</span>
                         <button type="button" class="remove-btn"
                                 data-product-pk="{{ item.product_id }}"
-                                data-title="{{ item.title }}"
+                                data-title="{{ item|tr:'title' }}"
                                 data-swal-title="{% trans 'Remove from cart?' %}"
                                 data-swal-text="{% trans 'Remove' %}"
                                 data-swal-confirm="{% trans 'Yes, remove' %}"

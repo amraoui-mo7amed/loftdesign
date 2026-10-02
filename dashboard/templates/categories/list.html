@@ -111,7 +111,7 @@
                     {% csrf_token %}
                     <div class="mb-4">
                         <label class="form-label fw-bold">{% trans "Category Name" %}</label>
-                        <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g. Modern Seating" required>
+                        <input type="text" name="name" class="form-control form-control-lg" placeholder="{% trans 'e.g. Modern Seating' %}" required>
                     </div>
                             <div class="mb-4">
                                 <label class="form-label fw-bold">{% trans "Bilnov code (3 letters)" %}</label>

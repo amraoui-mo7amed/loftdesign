@@ -5,6 +5,7 @@ from dashboard.models import Product, Category, PartnerPrice, AffiliateStore, Ad
 from user_auth.models import UserProfile
 from django.contrib.auth.models import User
 from django.db.models import Q
+from core.content_i18n import search_q
 from django.utils.translation import gettext as _
 
 def product_list(request):
@@ -27,8 +28,10 @@ def product_list(request):
         products = products.filter(
             Q(title__icontains=query) | 
             Q(description__icontains=query) |
-            Q(tags__icontains=query)
-        )
+            Q(tags__icontains=query) |
+            search_q(query, ("title", "description")) |
+            search_q(query, ("name",), "category__")
+        ).distinct()
     
     if category_id and not str(category_id).isdigit():
         category_id = None  # stale or hand-typed link: ignore instead of a 500

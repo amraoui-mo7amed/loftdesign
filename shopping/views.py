@@ -109,12 +109,14 @@ def _room(lst, name):
     return room
 
 
-def _line_title(product, variant):
+def _line_title(product, variant, translated=False):
+    title = product.tr("title") if translated else product.title
     if variant is None:
-        return product.title
-    if variant.name.lower().startswith(product.title.lower()):
-        return variant.name[:255]  # variant names often repeat the product name
-    return f"{product.title} — {variant.name}"[:255]
+        return title
+    name = variant.tr("name") if translated else variant.name
+    if name.lower().startswith(title.lower()):
+        return name[:255]  # variant names often repeat the product name
+    return f"{title} — {name}"[:255]
 
 
 def log(item, who, old_status="", new_status="", comment=""):
@@ -180,7 +182,7 @@ def add_to_list(request):
             replaces.save(update_fields=["status", "replaced_by"])
             log(replaces, actor(request, lst), old_status, replaces.status, _("Replaced by %(title)s") % {"title": new.title_snapshot})
             request.session.pop(PENDING_KEY, None)
-        messages.success(request, _("%(title)s added to %(list)s.") % {"title": product.title, "list": lst.name})
+        messages.success(request, _("%(title)s added to %(list)s.") % {"title": product.tr("title"), "list": lst.name})
         return redirect(reverse("shopping:detail", args=[lst.code]) + f"#item-{new.pk}")
 
     rooms = sorted({r.name for l in lists for r in l.rooms.all()})

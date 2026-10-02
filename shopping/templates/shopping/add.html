@@ -1,4 +1,5 @@
 {% extends 'index.html' %}
+{% load content_i18n %}
 {% load i18n static shopping_tags %}
 {% block title %} | {% trans "Add to my project" %}{% endblock title %}
 {% block nav %}{% include 'partials/landing-nav.html' %}{% endblock nav %}
@@ -14,12 +15,12 @@
         <div class="sl-product">
             {% if variant.thumbnail %}<img src="{{ variant.thumbnail.url }}" alt="">{% elif product.thumbnail %}<img src="{{ product.thumbnail.url }}" alt="">{% endif %}
             <div>
-                <strong>{{ product.title }}{% if variant %} — {{ variant.name }}{% endif %}</strong>
+                <strong>{{ product|tr:'title' }}{% if variant %} — {{ variant|tr:'name' }}{% endif %}</strong>
                 <span>{{ price|dzd }} · <code>{% if variant %}{{ variant.variant_id }}{% else %}{{ product.bpid }}{% endif %}</code></span>
             </div>
         </div>
         {% if replaces %}
-        <p class="sl-alert"><i class="fas fa-exchange-alt"></i> {% blocktrans with title=replaces.title_snapshot list=replaces.shopping_list.name %}This product will replace “{{ title }}” in {{ list }}. The old line stays visible, marked as replaced.{% endblocktrans %}</p>
+        <p class="sl-alert"><i class="fas fa-exchange-alt"></i> {% blocktrans with title=replaces.display_title list=replaces.shopping_list.name %}This product will replace “{{ title }}” in {{ list }}. The old line stays visible, marked as replaced.{% endblocktrans %}</p>
         {% endif %}
         <form method="post" class="sl-form">
             {% csrf_token %}

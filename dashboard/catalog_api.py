@@ -13,6 +13,7 @@ import json
 from decimal import Decimal
 
 from django.db.models import Q
+from core.content_i18n import search_q, target_languages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -45,6 +46,7 @@ def product_summary(request, product):
         "name": product.title,
         "category": product.category.name if product.category else None,
         "categoryCode": (product.category.code or None) if product.category else None,
+        "translations": _translations(product),
         "brand": product.brand or None,
         "manufacturer": _manufacturer(product),
         "manufacturerReference": product.manufacturer_reference or None,
@@ -56,6 +58,18 @@ def product_summary(request, product):
         "modelVersion": product.model_version,
         "storeUrl": _abs(request, product.store_path),
     }
+
+
+def _translations(product):
+    """{"ar": {"name": …, "description": …, "category": …}, …} for the languages that are filled in."""
+    out = {}
+    for lang in target_languages():
+        entry = {"name": product.get_tr(lang, "title"), "description": product.get_tr(lang, "description"),
+                 "category": product.category.get_tr(lang, "name") if product.category else ""}
+        entry = {k: v for k, v in entry.items() if v}
+        if entry:
+            out[lang] = entry
+    return out
 
 
 def _manufacturer(product):
@@ -89,6 +103,7 @@ def _variants(product):
             "sku": v.sku or None,
             "manufacturerReference": v.manufacturer_reference or None,
             "name": v.name,
+            "translations": {lang: v.get_tr(lang, "name") for lang in target_languages() if v.get_tr(lang, "name")},
             "color": v.color or None,
             "dimensions": v.dimensions or None,
             "stock": v.stock_quantity,
@@ -223,6 +238,7 @@ def search(request):
             | Q(brand__icontains=word) | Q(collection__icontains=word)
             | Q(category__name__icontains=word) | Q(bpid__iexact=word) | Q(items__variant_id__iexact=word) | Q(manufacturer_reference__iexact=word)
             | Q(items__sku__iexact=word) | Q(items__color__icontains=word)
+            | search_q(word, ("title", "description")) | search_q(word, ("name",), "category__")
         )
     category = request.GET.get("category")
     if category:

@@ -1,4 +1,5 @@
 {% extends "dash/dash_index.html" %}
+{% load content_i18n %}
 {% load static %}
 {% load i18n %}
 
@@ -23,9 +24,9 @@
         <div class="catalog-card" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
             <a href="{% url 'dash:catalog_details' item.product.pk %}">
                 {% if item.primary_image %}
-                    <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" class="catalog-card-img">
+                    <img src="{{ item.primary_image.image.url }}" alt="{{ item.product|tr:'title' }}" class="catalog-card-img">
                 {% elif item.product.thumbnail %}
-                    <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" class="catalog-card-img">
+                    <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product|tr:'title' }}" class="catalog-card-img">
                 {% else %}
                     <div class="catalog-card-img-placeholder"><i class="fas fa-box-open"></i></div>
                 {% endif %}
@@ -33,7 +34,7 @@
 
             <div class="catalog-card-body">
                 <a href="{% url 'dash:catalog_details' item.product.pk %}" class="catalog-card-title">
-                    {{ item.product.title }}
+                    {{ item.product|tr:'title' }}
                 </a>
                 {% if item.product.brand %}
                     <span class="catalog-card-brand">{{ item.product.brand }}</span>
@@ -80,9 +81,9 @@
                     <button type="button"
                             class="btn btn-outline-danger remove-catalog"
                             data-url="{% url 'dash:affiliate_catalog_remove' item.product.pk %}"
-                            data-name="{{ item.product.title }}"
+                            data-name="{{ item.product|tr:'title' }}"
                             data-swal-title="{% trans 'Remove from Catalog?' %}"
-                            data-swal-text="{% trans 'Remove' %} \"{{ item.product.title }}\" {% trans 'from your catalog?' %}"
+                            data-swal-text="{% trans 'Remove' %} \"{{ item.product|tr:'title' }}\" {% trans 'from your catalog?' %}"
                             data-swal-confirm="{% trans 'Yes, remove' %}"
                             data-swal-cancel="{% trans 'Cancel' %}">
                         <i class="fas fa-minus-circle me-1"></i> {% trans "Remove" %}
@@ -91,7 +92,7 @@
                     <button type="button"
                             class="share-btn"
                             data-url="{% url 'frontend:affiliate_redirect' request.user.profile.affiliate_code item.product.pk %}"
-                            data-title="{{ item.product.title }}"
+                            data-title="{{ item.product|tr:'title' }}"
                             title="{% trans 'Share' %}">
                         <i class="fas fa-share-alt"></i>
                     </button>

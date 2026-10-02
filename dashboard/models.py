@@ -1,5 +1,6 @@
 import datetime
 import uuid
+from core.content_i18n import Translatable
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -99,8 +100,9 @@ class Notification(models.Model):
         return f"{self.title} - {self.user.username}"
 
 
-class Category(models.Model):
+class Category(Translatable):
     """Category model for products"""
+    TRANSLATABLE_FIELDS = ("name",)
     name = models.CharField(max_length=255, verbose_name=_("Category Name"))
     code = models.CharField(
         _("Bilnov code"), max_length=3, blank=True,
@@ -141,8 +143,9 @@ class Manufacturer(models.Model):
             type(self).objects.filter(pk=self.pk).update(manufacturer_id=self.manufacturer_id)
 
 
-class Product(models.Model):
+class Product(Translatable):
     """Product model with multi-tier pricing workflow"""
+    TRANSLATABLE_FIELDS = ("title", "description")
 
     class ProductStatus(models.TextChoices):
         PENDING = "pending", _("Pending")
@@ -552,8 +555,9 @@ class OrderItem(models.Model):
         return f"{self.product.title if self.product else 'Deleted product'} x{self.quantity}"
 
 
-class AffiliateStore(models.Model):
+class AffiliateStore(Translatable):
     """Customizable storefront for each affiliate"""
+    TRANSLATABLE_FIELDS = ("store_description",)
     affiliate = models.OneToOneField(
         "user_auth.UserProfile", on_delete=models.CASCADE, related_name="store",
         verbose_name=_("Affiliate")
@@ -581,8 +585,9 @@ class AffiliateStore(models.Model):
         return self.store_name or self.affiliate.affiliate_code or str(self.affiliate)
 
 
-class AdminStore(models.Model):
+class AdminStore(Translatable):
     """Customizable storefront for admin"""
+    TRANSLATABLE_FIELDS = ("store_description",)
     user = models.OneToOneField(
         userModel, on_delete=models.CASCADE, related_name="admin_store",
         verbose_name=_("Admin")
@@ -664,8 +669,9 @@ class PriceHistory(models.Model):
         return f"{self.product.title[:30]} — {self.field_name}: {self.old_value} → {self.new_value}"
 
 
-class ProductItem(models.Model):
+class ProductItem(Translatable):
     """Variant/item of a product with its own media and stock"""
+    TRANSLATABLE_FIELDS = ("name",)
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="items",
         verbose_name=_("Product")

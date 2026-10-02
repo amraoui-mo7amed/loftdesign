@@ -1,9 +1,10 @@
+{% load content_i18n %}
 {% load i18n %}
 {# Minimal product card: the whole card opens the product; quick add and AR stay one tap away. #}
 <article class="pcard{% if product.available_stock <= 0 %} is-out{% endif %}">
     <div class="pcard-media">
         {% if product.thumbnail %}
-            <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" loading="lazy" decoding="async">
+            <img src="{{ product.thumbnail.url }}" alt="{{ product|tr:'title' }}" loading="lazy" decoding="async">
         {% endif %}
         {% if product.model_3d %}
             <a href="{% url 'frontend:product_viewer_3d' product.pk %}" class="pcard-ar" title="{% trans 'View in your space' %}">
@@ -24,9 +25,9 @@
         {% endif %}
     </div>
     <div class="pcard-body">
-        <p class="pcard-meta">{% if product.brand %}{{ product.brand }}{% elif product.category %}{{ product.category.name }}{% endif %}</p>
+        <p class="pcard-meta">{% if product.brand %}{{ product.brand }}{% elif product.category %}{{ product.category|tr:'name' }}{% endif %}</p>
         <h3 class="pcard-title">
-            <a href="{% url 'frontend:product_detail' product.pk %}" class="stretched-link">{{ product.title }}</a>
+            <a href="{% url 'frontend:product_detail' product.pk %}" class="stretched-link">{{ product|tr:'title' }}</a>
         </h3>
         <p class="pcard-price">{% shop_price product %}</p>
     </div>

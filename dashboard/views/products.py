@@ -13,6 +13,7 @@ from dashboard.utils import notify_user
 from user_auth.models import UserProfile
 from django.contrib.auth.models import User
 import logging
+from core.content_i18n import target_languages, translation_langs
 
 logger = logging.getLogger(__name__)
 
@@ -346,6 +347,11 @@ def product_update(request, pk):
         product.title = request.POST.get("title")
         category_id = request.POST.get("category")
         product.description = request.POST.get("description")
+        for lang in target_languages():
+            for field in ("title", "description"):
+                key = f"{field}__{lang}"
+                if key in request.POST:
+                    product.set_tr(lang, field, request.POST.get(key))
         items_qs = product.items.filter(is_active=True)
         if items_qs.exists():
             product.quantity = sum(item.stock_quantity for item in items_qs)
@@ -483,6 +489,7 @@ def product_update(request, pk):
         "asset_formats": ProductAsset.Format.choices,
         "asset_units": ProductAsset.Unit.choices,
         "manufacturers": Manufacturer.objects.values_list("name", flat=True),
+        "translation_langs": translation_langs(product, ("title", "description")),
     })
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])

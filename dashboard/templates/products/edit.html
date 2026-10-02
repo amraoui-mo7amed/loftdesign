@@ -154,6 +154,22 @@
                             maxlength="2000" required style="min-height:100px;">{{ product.description }}</textarea>
                   <div class="char-counter" id="descCounter">{{ product.description|length }} / 2000</div>
                 </div>
+                {% if translation_langs %}
+                <details class="mt-3 border rounded-3 p-3" {% if product.missing_languages %}open{% endif %}>
+                  <summary class="fw-bold" style="cursor:pointer;"><i class="fas fa-language me-1"></i> {% trans "Translations" %}
+                    {% if product.missing_languages %}<span class="badge bg-warning text-dark ms-1">{% trans "To complete" %}</span>{% endif %}
+                  </summary>
+                  <p class="text-muted small mt-2 mb-2">{% trans "Optional. Visitors see the text in their language when it is filled in, otherwise the main text above." %}</p>
+                  {% for lang in translation_langs %}
+                  <div class="mb-3">
+                    <label class="form-label fw-bold small">{% trans "Title" %} ({{ lang.name }})</label>
+                    <input type="text" name="title__{{ lang.code }}" value="{{ lang.title }}" maxlength="255" class="form-control rounded-3" dir="{{ lang.dir }}">
+                    <label class="form-label fw-bold small mt-2">{% trans "Description" %} ({{ lang.name }})</label>
+                    <textarea name="description__{{ lang.code }}" class="form-control rounded-3" rows="3" maxlength="2000" dir="{{ lang.dir }}">{{ lang.description }}</textarea>
+                  </div>
+                  {% endfor %}
+                </details>
+                {% endif %}
               </div>
             </div>
           </div>

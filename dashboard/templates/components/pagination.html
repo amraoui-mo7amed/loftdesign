@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if page_obj.has_other_pages %}
-    <nav aria-label="Page navigation" class="custom-pagination-nav">
+    <nav aria-label="{% trans 'Page navigation' %}" class="custom-pagination-nav">
         <ul class="pagination-list">
             {% if page_obj.has_previous %}
                 <li class="pagination-item prev">

@@ -1,4 +1,5 @@
 {% extends 'index.html' %}
+{% load content_i18n %}
 {% load i18n %}
 {% load static %}
 
@@ -37,7 +38,7 @@
                     </div>
                 </div>
                 {% if store.store_description %}
-                <p class="lead text-white-50 mb-0 mx-auto fs-5" style="max-width: 600px;">{{ store.store_description }}</p>
+                <p class="lead text-white-50 mb-0 mx-auto fs-5" style="max-width: 600px;">{{ store|tr:'store_description' }}</p>
                 {% endif %}
             </div>
         </div>
@@ -61,9 +62,9 @@
                     <a href="{% url 'frontend:product_detail' item.product.pk %}?admin_store=1" class="text-decoration-none text-dark">
                         <div class="position-relative overflow-hidden" style="aspect-ratio: 1/1;">
                             {% if item.primary_image %}
-                            <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;" loading="lazy">
+                            <img src="{{ item.primary_image.image.url }}" alt="{{ item.product|tr:'title' }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;" loading="lazy">
                             {% elif item.product.thumbnail %}
-                            <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;" loading="lazy">
+                            <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product|tr:'title' }}" class="img-fluid w-100 h-100 transition-all hover-scale" style="object-fit: cover;" loading="lazy">
                             {% else %}
                             <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
                                 <i class="fas fa-image fa-3x"></i>
@@ -77,8 +78,8 @@
                         </div>
                     </a>
                     <div class="p-4 d-flex flex-column flex-grow-1">
-                        <h5 class="fw-black mb-2">{{ item.product.title }}</h5>
-                        <p class="text-muted small mb-3 line-height-relaxed flex-grow-1">{{ item.product.description|truncatewords:10 }}</p>
+                        <h5 class="fw-black mb-2">{{ item.product|tr:'title' }}</h5>
+                        <p class="text-muted small mb-3 line-height-relaxed flex-grow-1">{{ item.product|tr:'description'|truncatewords:10 }}</p>
                         <div class="d-flex gap-2 mt-auto">
                             <a href="{% url 'frontend:product_detail' item.product.pk %}?admin_store=1" class="btn btn-outline-dark rounded-pill fw-bold flex-shrink-0 px-3">
                                 <i class="fas fa-eye me-1"></i> {% trans "View" %}

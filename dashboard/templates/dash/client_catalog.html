@@ -1,4 +1,5 @@
 {% extends "dash/dash_index.html" %}
+{% load content_i18n %}
 {% load i18n %}
 {% load static %}
 
@@ -29,15 +30,15 @@
         {% for item in catalog %}
         <div class="catalog-card position-relative"
              data-product-id="{{ item.product.id }}"
-             data-product-title="{{ item.product.title }}"
+             data-product-title="{{ item.product|tr:'title' }}"
              data-product-price="{{ item.wholesale_price }}"
              data-available-qty="{{ item.available_qty }}"
              data-aos="fade-up"
              data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
             {% if item.primary_image %}
-            <img src="{{ item.primary_image.image.url }}" alt="{{ item.product.title }}" class="catalog-card-img">
+            <img src="{{ item.primary_image.image.url }}" alt="{{ item.product|tr:'title' }}" class="catalog-card-img">
             {% elif item.product.thumbnail %}
-            <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}" class="catalog-card-img">
+            <img src="{{ item.product.thumbnail.url }}" alt="{{ item.product|tr:'title' }}" class="catalog-card-img">
             {% else %}
             <div class="catalog-card-img-placeholder">
                 <i class="fas fa-box-open"></i>
@@ -45,7 +46,7 @@
             {% endif %}
 
             <div class="catalog-card-body">
-                <h6 class="catalog-card-title">{{ item.product.title }}</h6>
+                <h6 class="catalog-card-title">{{ item.product|tr:'title' }}</h6>
                 <div class="catalog-card-pricing">
                     <div>
                         <span class="catalog-card-price">{{ item.wholesale_price|floatformat:0 }}</span>

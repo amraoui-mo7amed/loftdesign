@@ -1,4 +1,5 @@
 {% extends 'index.html' %}
+{% load content_i18n %}
 {% load i18n %}
 {% load static %}
 
@@ -48,12 +49,12 @@
                     <div class="cart-page-item" data-item-id="{{ item.id }}">
                         <div class="cart-page-item-img">
                             {% if item.thumbnail %}
-                            <img src="{{ item.thumbnail }}" alt="{{ item.title }}">
+                            <img src="{{ item.thumbnail }}" alt="{{ item|tr:'title' }}">
                             {% endif %}
                         </div>
                         <div class="cart-page-item-info">
-                            <h5 class="fw-black mb-1">{{ item.title }}</h5>
-                            <p class="text-muted small mb-2">{{ item.product.description|truncatewords:15 }}</p>
+                            <h5 class="fw-black mb-1">{{ item|tr:'title' }}</h5>
+                            <p class="text-muted small mb-2">{{ item.product|tr:'description'|truncatewords:15 }}</p>
                             <div class="d-flex align-items-center gap-3 mt-3">
                                 <div class="cart-page-qty">
                                     <button type="button" class="cart-qty-minus" data-item-id="{{ item.id }}"> - </button>
@@ -81,7 +82,7 @@
                                                     {% if v.stock_quantity < 1 %}out-of-stock{% endif %}"
                                              data-old-item-id="{{ item.id }}"
                                              data-new-item-id="{{ v.id }}"
-                                             data-item-name="{{ v.name }}"
+                                             data-item-name="{{ v|tr:'name' }}"
                                              data-item-color="{{ v.color }}"
                                              data-item-dimensions="{{ v.dimensions }}"
                                              data-item-stock="{{ v.stock_quantity }}"
@@ -90,7 +91,7 @@
                                              style="transition: background 0.15s;{% if v.stock_quantity < 1 %}opacity:0.5;{% endif %}">
                                             <div class="flex-shrink-0 rounded-2 overflow-hidden" style="width: 40px; height: 40px;">
                                                 {% if v.thumbnail_url %}
-                                                <img src="{{ v.thumbnail_url }}" alt="{{ v.name }}"
+                                                <img src="{{ v.thumbnail_url }}" alt="{{ v|tr:'name' }}"
                                                      class="w-100 h-100" style="object-fit: cover;">
                                                 {% else %}
                                                 <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
@@ -100,7 +101,7 @@
                                             </div>
                                             <div class="flex-grow-1 min-w-0">
                                                 <div class="fw-semibold small text-truncate">
-                                                    {{ v.name }}
+                                                    {{ v|tr:'name' }}
                                                     {% if v.is_selected %}<span class="badge bg-dark ms-1" style="font-size:0.6rem;vertical-align:middle;">{% trans "Selected" %}</span>{% endif %}
                                                 </div>
                                                 <div class="d-flex align-items-center gap-2 small text-muted">

@@ -132,6 +132,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = "en"
+# Language in which products, categories and store texts are written; the other
+# languages are entered in Dashboard → Translations (see core/content_i18n.py).
+CONTENT_SOURCE_LANGUAGE = config("CONTENT_SOURCE_LANGUAGE", default="fr")
+# Optional machine translation (DeepL) used by the "Translate automatically" buttons.
+DEEPL_API_KEY = config("DEEPL_API_KEY", default="")
+DEEPL_API_URL = config("DEEPL_API_URL", default="https://api-free.deepl.com/v2/translate")
 
 LANGUAGES = [("fr", _("French")), ("en", _("English")), ("ar", _("Arabic"))]
 

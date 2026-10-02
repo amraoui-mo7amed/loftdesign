@@ -10,6 +10,7 @@ from functools import wraps
 
 from django.core import signing
 from django.db.models import Q
+from core.content_i18n import search_q
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -97,6 +98,7 @@ def products(request):
             Q(title__icontains=word) | Q(description__icontains=word) | Q(tags__icontains=word)
             | Q(brand__icontains=word) | Q(category__name__icontains=word) | Q(bpid__iexact=word)
             | Q(items__variant_id__iexact=word) | Q(items__sku__iexact=word) | Q(manufacturer_reference__iexact=word)
+            | search_q(word, ("title", "description")) | search_q(word, ("name",), "category__")
         )
     if request.GET.get("category"):
         c = request.GET["category"]

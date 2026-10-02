@@ -1,8 +1,9 @@
 {% extends "dash/dash_index.html" %}
+{% load content_i18n %}
 {% load static %}
 {% load i18n %}
 
-{% block dashTitle %}{{ product.title }} — {% trans "Catalog Details" %}{% endblock dashTitle %}
+{% block dashTitle %}{{ product|tr:'title' }} — {% trans "Catalog Details" %}{% endblock dashTitle %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/portfolio.css' %}?v={{ ASSET_VERSION }}">
@@ -18,7 +19,7 @@
             <i class="fas fa-arrow-left me-1"></i> {% trans "Catalog" %}
         </a>
         <span class="text-muted small">/</span>
-        <span class="small fw-bold text-dark">{{ product.title }}</span>
+        <span class="small fw-bold text-dark">{{ product|tr:'title' }}</span>
         {% if product.brand %}
         <span class="text-muted small">·</span>
         <span class="small text-muted">{{ product.brand }}</span>
@@ -30,7 +31,7 @@
         <div class="col-lg-7" data-aos="fade-right">
             <div class="detail-hero">
                 {% if gallery %}
-                    <img src="{{ gallery.0.image.url }}" alt="{{ product.title }}" id="mainImage" class="detail-hero-img">
+                    <img src="{{ gallery.0.image.url }}" alt="{{ product|tr:'title' }}" id="mainImage" class="detail-hero-img">
                     <div class="detail-thumbs">
                         {% for img in gallery %}
                         <img src="{{ img.image.url }}"
@@ -40,7 +41,7 @@
                         {% endfor %}
                     </div>
                 {% elif product.thumbnail %}
-                    <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" class="detail-hero-img">
+                    <img src="{{ product.thumbnail.url }}" alt="{{ product|tr:'title' }}" class="detail-hero-img">
                 {% else %}
                     <div class="detail-hero-placeholder">
                         <i class="fas fa-box-open"></i>
@@ -52,7 +53,7 @@
             {% if product.description %}
             <div class="detail-desc mt-4">
                 <div class="detail-card-header"><i class="far fa-file-alt"></i> {% trans "Description" %}</div>
-                <p>{{ product.description }}</p>
+                <p>{{ product|tr:'description' }}</p>
             </div>
             {% endif %}
         </div>
@@ -62,7 +63,7 @@
             <div class="detail-panel">
                 {# ── Product Title ───────────────────────────────── #}
                 <div class="detail-card">
-                    <h1 class="h4 fw-black mb-1" style="color:var(--brand-dark);">{{ product.title }}</h1>
+                    <h1 class="h4 fw-black mb-1" style="color:var(--brand-dark);">{{ product|tr:'title' }}</h1>
                     {% if product.brand %}
                     <span class="small text-muted">{{ product.brand }}</span>
                     {% endif %}
@@ -192,9 +193,9 @@
                 <button type="button"
                         class="btn btn-outline-danger btn-action w-100 remove-catalog"
                         data-url="{% url 'dash:affiliate_catalog_remove' product.pk %}"
-                        data-name="{{ product.title }}"
+                        data-name="{{ product|tr:'title' }}"
                         data-swal-title="{% trans 'Remove from Catalog?' %}"
-                        data-swal-text="{% trans 'Remove' %} \"{{ product.title }}\" {% trans 'from your catalog?' %}"
+                        data-swal-text="{% trans 'Remove' %} \"{{ product|tr:'title' }}\" {% trans 'from your catalog?' %}"
                         data-swal-confirm="{% trans 'Yes, remove' %}"
                         data-swal-cancel="{% trans 'Cancel' %}">
                     <i class="fas fa-minus-circle me-2"></i> {% trans "Remove from Catalog" %}

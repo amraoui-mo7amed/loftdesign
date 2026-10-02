@@ -1,4 +1,5 @@
 {% extends "dash/dash_index.html" %}
+{% load content_i18n %}
 {% load i18n %}
 {% load static %}
 
@@ -38,14 +39,14 @@
                 {% for item in order.items %}
                 <div class="d-flex align-items-center gap-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
                     {% if item.thumbnail %}
-                    <img src="{{ item.thumbnail }}" alt="{{ item.title }}" class="order-item-img">
+                    <img src="{{ item.thumbnail }}" alt="{{ item|tr:'title' }}" class="order-item-img">
                     {% else %}
                     <div class="order-item-img bg-light d-flex align-items-center justify-content-center text-muted">
                         <i class="fas fa-box"></i>
                     </div>
                     {% endif %}
                     <div class="flex-grow-1">
-                        <h6 class="fw-bold mb-0" style="font-size:0.9rem;">{{ item.title }}</h6>
+                        <h6 class="fw-bold mb-0" style="font-size:0.9rem;">{{ item|tr:'title' }}</h6>
                         <small class="text-muted">
                             {% trans "Qty" %}: {{ item.quantity }} &middot;
                             {{ item.price }} {% trans "DZD" %}

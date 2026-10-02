@@ -152,6 +152,14 @@ class ShoppingListItem(models.Model):
         return f"{self.quantity} × {self.title_snapshot}"
 
     @property
+    def display_title(self):
+        """The snapshot in the visitor's language: translated only while the product still has the same name."""
+        from .views import _line_title
+        if self.product is None or _line_title(self.product, self.variant, translated=False) != self.title_snapshot:
+            return self.title_snapshot
+        return _line_title(self.product, self.variant, translated=True)
+
+    @property
     def counts(self):
         return self.status not in self.INACTIVE
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 12:14+0000\n"
+"POT-Creation-Date: 2026-10-02 12:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,37 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: api/apps.py:8
+#
+msgid "Store API"
+msgstr "API du Store"
+
+#: api/models.py:18 dashboard/models.py:121
+#: dashboard/templates/orders/detail.html:56 shopping/models.py:76
+#: shopping/templates/shopping/detail.html:86
+msgid "Name"
+msgstr "Nom"
+
+#: api/models.py:21 dashboard/models.py:341 dashboard/models.py:406
+#: dashboard/models.py:572 dashboard/models.py:601
+#: dashboard/templates/users/affiliate_list.html:105
+#: dashboard/templates/users/list.html:119
+#: dashboard/templates/users/profile_edit.html:61
+#: dashboard/templates/users/semi_affiliate_list.html:61
+#: dashboard/views/dashboard.py:241
+msgid "Active"
+msgstr "Actif"
+
+#: api/models.py:26
+#
+msgid "API client"
+msgstr "Client API"
+
+#: api/models.py:27
+#
+msgid "API clients"
+msgstr "Clients API"
 
 #: core/context_processors.py:14
 msgid "Elevate Your Space"
@@ -38,15 +69,15 @@ msgstr ""
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "design d'intérieur, loft, architecture, mobilier moderne, décoration"
 
-#: core/settings.py:135
+#: core/settings.py:136
 msgid "French"
 msgstr "Français"
 
-#: core/settings.py:135
+#: core/settings.py:136
 msgid "English"
 msgstr "Anglais"
 
-#: core/settings.py:135
+#: core/settings.py:136
 msgid "Arabic"
 msgstr "Arabe"
 
@@ -320,11 +351,6 @@ msgstr ""
 #: dashboard/templates/products/edit.html:141
 msgid "Category"
 msgstr "Catégorie"
-
-#: dashboard/models.py:121 dashboard/templates/orders/detail.html:56
-#: shopping/models.py:76 shopping/templates/shopping/detail.html:86
-msgid "Name"
-msgstr "Nom"
 
 #: dashboard/models.py:123
 msgid "Manufacturer ID"
@@ -637,15 +663,6 @@ msgstr "Prix par défaut pour les affiliés achetant chez Loft"
 #: dashboard/models.py:339
 msgid "Public retail price for end clients"
 msgstr "Prix de détail public pour les clients finaux"
-
-#: dashboard/models.py:341 dashboard/models.py:406 dashboard/models.py:572
-#: dashboard/models.py:601 dashboard/templates/users/affiliate_list.html:105
-#: dashboard/templates/users/list.html:119
-#: dashboard/templates/users/profile_edit.html:61
-#: dashboard/templates/users/semi_affiliate_list.html:61
-#: dashboard/views/dashboard.py:241
-msgid "Active"
-msgstr "Actif"
 
 #: dashboard/models.py:346
 msgid "Loft Price"
@@ -6186,27 +6203,27 @@ msgid "The list has been deleted."
 msgstr "La liste a été supprimée."
 
 #
-#: shopping/views.py:381
+#: shopping/views.py:384
 msgid "No longer available"
 msgstr "N'est plus disponible"
 
-#: shopping/views.py:389
+#: shopping/views.py:392
 #, python-format
 msgid "%(count)s product(s) of %(list)s added to the cart."
 msgstr "%(count)s produit(s) de %(list)s ajouté(s) au panier."
 
-#: shopping/views.py:391
+#: shopping/views.py:394
 #, python-format
 msgid "Not added: %(line)s"
 msgstr "Non ajouté : %(line)s"
 
 #
-#: shopping/views.py:401
+#: shopping/views.py:419
 msgid "My cart"
 msgstr "Mon panier"
 
 #
-#: shopping/views.py:408
+#: shopping/views.py:426
 msgid "Your cart has been saved as a list."
 msgstr "Votre panier a été enregistré comme liste."
 

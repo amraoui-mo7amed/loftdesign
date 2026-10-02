@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 12:14+0000\n"
+"POT-Creation-Date: 2026-10-02 12:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+#: api/apps.py:8
+#
+msgid "Store API"
+msgstr "واجهة برمجة المتجر"
+
+#: api/models.py:18 dashboard/models.py:121
+#: dashboard/templates/orders/detail.html:56 shopping/models.py:76
+#: shopping/templates/shopping/detail.html:86
+msgid "Name"
+msgstr "الاسم"
+
+#: api/models.py:21 dashboard/models.py:341 dashboard/models.py:406
+#: dashboard/models.py:572 dashboard/models.py:601
+#: dashboard/templates/users/affiliate_list.html:105
+#: dashboard/templates/users/list.html:119
+#: dashboard/templates/users/profile_edit.html:61
+#: dashboard/templates/users/semi_affiliate_list.html:61
+#: dashboard/views/dashboard.py:241
+msgid "Active"
+msgstr "نشط"
+
+#: api/models.py:26
+#
+msgid "API client"
+msgstr "عميل API"
+
+#: api/models.py:27
+#
+msgid "API clients"
+msgstr "عملاء API"
 
 #: core/context_processors.py:14
 msgid "Elevate Your Space"
@@ -39,15 +70,15 @@ msgstr ""
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "تصميم داخلي، لوفت، هندسة معمارية، أثاث عصري، ديكور"
 
-#: core/settings.py:135
+#: core/settings.py:136
 msgid "French"
 msgstr "الفرنسية"
 
-#: core/settings.py:135
+#: core/settings.py:136
 msgid "English"
 msgstr "الإنجليزية"
 
-#: core/settings.py:135
+#: core/settings.py:136
 msgid "Arabic"
 msgstr "العربية"
 
@@ -320,11 +351,6 @@ msgstr ""
 #: dashboard/templates/products/edit.html:141
 msgid "Category"
 msgstr "الفئة"
-
-#: dashboard/models.py:121 dashboard/templates/orders/detail.html:56
-#: shopping/models.py:76 shopping/templates/shopping/detail.html:86
-msgid "Name"
-msgstr "الاسم"
 
 #: dashboard/models.py:123
 msgid "Manufacturer ID"
@@ -630,15 +656,6 @@ msgstr "السعر الافتراضي للمسوّقين بالعمولة عند
 #: dashboard/models.py:339
 msgid "Public retail price for end clients"
 msgstr "سعر التجزئة العام للعملاء النهائيين"
-
-#: dashboard/models.py:341 dashboard/models.py:406 dashboard/models.py:572
-#: dashboard/models.py:601 dashboard/templates/users/affiliate_list.html:105
-#: dashboard/templates/users/list.html:119
-#: dashboard/templates/users/profile_edit.html:61
-#: dashboard/templates/users/semi_affiliate_list.html:61
-#: dashboard/views/dashboard.py:241
-msgid "Active"
-msgstr "نشط"
 
 #: dashboard/models.py:346
 msgid "Loft Price"
@@ -6091,27 +6108,27 @@ msgid "The list has been deleted."
 msgstr "تم حذف القائمة."
 
 #
-#: shopping/views.py:381
+#: shopping/views.py:384
 msgid "No longer available"
 msgstr "لم يعد متوفرًا"
 
-#: shopping/views.py:389
+#: shopping/views.py:392
 #, python-format
 msgid "%(count)s product(s) of %(list)s added to the cart."
 msgstr "تمت إضافة %(count)s منتج من %(list)s إلى السلة."
 
-#: shopping/views.py:391
+#: shopping/views.py:394
 #, python-format
 msgid "Not added: %(line)s"
 msgstr "لم تتم الإضافة: %(line)s"
 
 #
-#: shopping/views.py:401
+#: shopping/views.py:419
 msgid "My cart"
 msgstr "سلتي"
 
 #
-#: shopping/views.py:408
+#: shopping/views.py:426
 msgid "Your cart has been saved as a list."
 msgstr "تم حفظ سلتك كقائمة."
 

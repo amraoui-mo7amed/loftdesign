@@ -12,4 +12,5 @@ urlpatterns = [
     path("list/<str:code>/print/", views.list_print, name="print"),
     path("list/<str:code>/edit/", views.list_action, name="action"),
     path("list/<str:code>/to-cart/", views.list_to_cart, name="to_cart"),
+    path("list/<str:code>/cart/", views.list_cart_link, name="cart_link"),
 ]

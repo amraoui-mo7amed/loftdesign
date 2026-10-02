@@ -371,8 +371,11 @@ def list_action(request, code):
 
 @require_POST
 def list_to_cart(request, code):
+    return _fill_cart(request, get_object_or_404(ShoppingList, code=code.upper()))
+
+
+def _fill_cart(request, lst):
     """Put every line still counting and available into the cart, at today's price."""
-    lst = get_object_or_404(ShoppingList, code=code.upper())
     added, skipped = 0, []
     for it in lst.items.select_related("product", "variant"):
         if not it.counts:
@@ -390,6 +393,21 @@ def list_to_cart(request, code):
     for line in skipped:
         messages.warning(request, _("Not added: %(line)s") % {"line": line})
     return redirect("frontend:cart")
+
+
+def list_cart_link(request, code):
+    """Signed link given by the API (BILNOV, desktop app): the cart becomes the list's products."""
+    from django.core import signing
+
+    lst = get_object_or_404(ShoppingList, code=code.upper())
+    try:
+        data = signing.loads(request.GET.get("t", ""), salt="shopping-cart-link", max_age=7 * 24 * 3600)
+    except signing.BadSignature:
+        raise Http404
+    if data.get("c") != lst.code:
+        raise Http404
+    request.session["cart"] = {}
+    return _fill_cart(request, lst)
 
 
 @require_POST

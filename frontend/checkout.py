@@ -110,8 +110,13 @@ def validate_customer(data, foreign=False):
     errors = {}
     if not (data.get("name") or "").strip():
         errors["name"] = [_("Name is required")]
-    if not (data.get("phone") or "").strip():
+    phone = (data.get("phone") or "").strip()
+    if not phone:
         errors["phone"] = [_("Phone is required")]
+    elif sum(c.isdigit() for c in phone) < 9:
+        errors["phone"] = [_("Enter a valid phone number, e.g. 0550 12 34 56")]
+    if not (data.get("address") or "").strip():
+        errors["address"] = [_("Address is required")]
     if not (data.get("wilaya") or "").strip():
         errors["wilaya"] = [_("Country is required") if foreign else _("Wilaya is required")]
     if not (data.get("commune") or "").strip():

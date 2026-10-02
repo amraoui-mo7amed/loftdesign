@@ -202,8 +202,8 @@ Starter Kit Authentication Pages - Common Styles
 
 /* Back to Home Button */
 .auth-back-btn {
-    position: absolute;
-    top: 15px;
+    position: relative;
+    margin-bottom: 1rem;
     z-index: 10;
     display: inline-flex;
     align-items: center;

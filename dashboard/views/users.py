@@ -360,7 +360,7 @@ def user_approve(request, pk):
     return redirect("dash:user_details", pk=pk)
 
 
-@role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER, UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.SEMI_AFFILIATE, UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.FINAL_CLIENT])
+@role_required(allowed_roles=[UserProfile.roleChoices.PROVIDER, UserProfile.roleChoices.AFFILIATE, UserProfile.roleChoices.SEMI_AFFILIATE, UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.FINAL_CLIENT, UserProfile.roleChoices.PROFESSIONAL_CLIENT])
 def profile_update(request):
     """AJAX view for providers/affiliates/admins to update their own profile"""
     profile, created = UserProfile.objects.get_or_create(user=request.user)

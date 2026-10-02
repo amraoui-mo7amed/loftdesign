@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 23:40+0000\n"
+"POT-Creation-Date: 2026-10-02 03:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: dashboard/static/js/admin_store_settings.js:108
 #: dashboard/static/js/affiliate_cart.js:122 dashboard/static/js/client.js:94
 #: dashboard/static/js/dash_index.js:76
-#: dashboard/static/js/product_create.js:532
+#: dashboard/static/js/product_create.js:538
 #: dashboard/static/js/product_global_toggle.js:24
 #: dashboard/static/js/product_global_toggle.js:35
 #: dashboard/static/js/profile.js:112 dashboard/static/js/store_settings.js:88
@@ -125,7 +125,7 @@ msgid "Could not copy"
 msgstr ""
 
 #: dashboard/static/js/affiliate_catalog.js:85
-#: dashboard/static/js/product_items.js:396
+#: dashboard/static/js/product_items.js:398
 msgid "Saved!"
 msgstr ""
 
@@ -234,7 +234,7 @@ msgstr ""
 msgid "No items yet."
 msgstr ""
 
-#: dashboard/static/js/product_items.js:347
+#: dashboard/static/js/product_items.js:349
 msgid "Removed!"
 msgstr ""
 
@@ -332,10 +332,18 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: frontend/static/js/store_currency.js:22
+#: frontend/static/js/checkout.js:108
+msgid "Please choose your wilaya"
+msgstr ""
+
+#: frontend/static/js/checkout.js:108
+msgid "Please choose your commune"
+msgstr ""
+
+#: frontend/static/js/store_currency.js:28
 msgid "Country"
 msgstr ""
 
-#: frontend/static/js/store_currency.js:22
+#: frontend/static/js/store_currency.js:28
 msgid "City"
 msgstr ""

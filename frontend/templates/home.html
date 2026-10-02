@@ -270,7 +270,6 @@
                                 <p class="text-muted small mb-4 line-height-relaxed">{{ product.description|truncatewords:10 }}</p>
                                 <div class="d-grid gap-2">
                                     <a href="{% url 'frontend:product_detail' product.pk %}"
-                                       target="_blank"
                                        class="btn btn-dark rounded-3 py-2 fw-bold small text-uppercase">
                                         {% trans "View Details" %}
                                     </a>
@@ -288,14 +287,13 @@
                 {% endfor %}
             </div>
             <a href="{% url 'frontend:product_list' %}"
-                   target="_blank"
                    class="btn btn-outline-dark rounded-pill px-4 mt-5 reveal reveal-up">{% trans "View All Products" %}</a>
         </div>
     </section>
     <!-- 5. Contact Section -->
     <section id="contact" class="py-10 bg-dark text-white">
         <div class="container">
-            <div class="row g-5 align-items-center">
+            <div class="row g-4 g-lg-5 align-items-center">
                 <div class="col-lg-6">
                     <div class="reveal reveal-right">
                         <h2 class="display-4 fw-black mb-4">{% trans "Start Your Project Today" %}</h2>
@@ -336,7 +334,7 @@
                                 </div>
                                 <div>
                                     <h6 class="mb-0 fw-bold">{% trans "try Bilnov" %}</h6>
-                                    <a href="#" class="text-white-50 small text-decoration-none fw-bold hover-text-primary" data-bs-toggle="modal" data-bs-target="#testAccountModal">
+                                    <a href="{% url 'user_auth:login' %}" class="text-white-50 small text-decoration-none fw-bold hover-text-primary">
                                         {% trans "Access Details" %}
                                     </a>
                                 </div>
@@ -417,7 +415,7 @@
                                class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "About" %}</a>
                         </li>
                         <li>
-                            <a href="#categories"
+                            <a href="{% url 'frontend:product_list' %}"
                                class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "Services" %}</a>
                         </li>
                         <li>

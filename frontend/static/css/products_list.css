@@ -524,3 +524,13 @@
         justify-content: center;
     }
 }
+
+
+/* Category chips, count and sort above the grid */
+.pl-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; min-width: 0; }
+.pl-chip { flex: 0 0 auto; padding: 8px 16px; border-radius: 999px; background: #fff; border: 1px solid #e5e5e5;
+           color: #212121; text-decoration: none; font-weight: 600; font-size: .875rem; min-height: 40px; display: inline-flex; align-items: center; }
+.pl-chip.active, .pl-chip:hover { background: #212121; color: #fff; border-color: #212121; }
+@media (max-width: 575.98px) {
+    .products-section .product-card h5, .products-section .product-card .card-title { font-size: .95rem; }
+}

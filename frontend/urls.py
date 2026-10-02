@@ -17,6 +17,7 @@ urlpatterns = [
     # Cart
     path("cart/", cart.cart_view, name="cart"),
     path("cart/checkout/", cart.cart_checkout, name="checkout"),
+    path("cart/checkout/merci/", cart.order_success, name="order_success"),
     path("cart/add/", cart.cart_add, name="cart_add"),
     path("cart/update/", cart.cart_update, name="cart_update"),
     path("cart/remove/", cart.cart_remove, name="cart_remove"),

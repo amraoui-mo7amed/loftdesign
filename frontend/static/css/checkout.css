@@ -114,3 +114,9 @@
     margin-right: 10px;
     margin-left: 0;
 }
+
+
+.searchable-select-wrapper.is-invalid .searchable-select-display { border-color: #dc3545 !important; }
+@media (max-width: 991.98px) {
+    body:has(#checkoutForm) .cart-fab { display: none !important; }
+}

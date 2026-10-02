@@ -47,6 +47,13 @@ def _build_menu(is_authenticated, is_superuser, role, is_trusted=False):
         })
         return menu
 
+    if role == "professional_client":
+        menu[0] = {"title": _("Dashboard"), "icon": "fas fa-th-large", "url_name": "frontend:client_home"}
+        menu.append({"title": _("Shop (professional prices)"), "icon": "fas fa-store", "url_name": "frontend:product_list"})
+        menu.append({"title": _("My Orders"), "icon": "fas fa-shopping-cart", "url_name": "frontend:client_orders"})
+        menu.append({"title": _("My Profile"), "icon": "fas fa-user", "url_name": "dash:profile_update"})
+        return menu
+
     # Wallet — all business roles
     if is_admin or is_affiliate or is_semi_affiliate or role == "provider":
         menu.append({

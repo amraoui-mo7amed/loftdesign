@@ -1,7 +1,7 @@
 :root {
-    --client-primary: #667eea;
-    --client-secondary: #764ba2;
-    --client-gradient: linear-gradient(135deg, var(--client-primary), var(--client-secondary));
+    --client-primary: #212121;
+    --client-secondary: #3a3a3a;
+    --client-gradient: linear-gradient(135deg, #212121, #3a3a3a);
 }
 
 [dir="ltr"] .client-header {

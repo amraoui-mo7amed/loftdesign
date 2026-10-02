@@ -7,7 +7,9 @@
 {% block body_class %}{% if affiliate_code %}affiliate-store{% endif %}{% endblock body_class %}
 
 {% block nav %}
-    {% if affiliate_code %}
+    {% if not affiliate_code %}
+        {% include "partials/landing-nav.html" %}
+    {% else %}
     <button type="button" class="affiliate-cart-float cart-trigger" title="{% trans 'Cart' %}">
         <i class="fas fa-shopping-bag"></i>
         <span class="badge bg-primary {% if cart_count == 0 %}d-none{% endif %}">{{ cart_count }}</span>
@@ -32,27 +34,31 @@
               data-select-wilaya-first="{% trans 'Please select a wilaya first' %}"
               data-select-commune="{% trans 'Select Commune' %}">
             {% csrf_token %}
-            <div class="row g-5">
+            <div class="row g-4 g-lg-5">
                 <div class="col-lg-8">
                     <div class="inquiry-form-card shadow-sm rounded-4 p-4">
                         <h5 class="fw-bold mb-4">{% trans "Shipping Information" %}</h5>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">{% trans "Full Name" %}</label>
-                                <input type="text" name="name" class="form-control rounded-3" required>
+                                <input type="text" name="name" class="form-control rounded-3{% if errors.name %} is-invalid{% endif %}" autocomplete="name" value="{{ customer.name }}" required>
+                                {% if errors.name %}<div class="invalid-feedback d-block">{{ errors.name.0 }}</div>{% endif %}
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">{% trans "Phone Number" %}</label>
-                                <input type="tel" name="phone" class="form-control rounded-3" required>
+                                <input type="tel" name="phone" class="form-control rounded-3{% if errors.phone %} is-invalid{% endif %}" autocomplete="tel" inputmode="tel" placeholder="05 / 06 / 07 …" value="{{ customer.phone }}" required>
+                                {% if errors.phone %}<div class="invalid-feedback d-block">{{ errors.phone.0 }}</div>{% endif %}
                             </div>
                             {% if foreign %}
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">{% trans "Country" %}</label>
-                                <input type="text" name="wilaya" class="form-control rounded-3" autocomplete="country-name" required>
+                                <input type="text" name="wilaya" class="form-control rounded-3" autocomplete="country-name" value="{{ customer.wilaya }}" required>
+                                {% if errors.wilaya %}<div class="invalid-feedback d-block">{{ errors.wilaya.0 }}</div>{% endif %}
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">{% trans "City" %}</label>
-                                <input type="text" name="commune" class="form-control rounded-3" autocomplete="address-level2" required>
+                                <input type="text" name="commune" class="form-control rounded-3" autocomplete="address-level2" value="{{ customer.commune }}" required>
+                                {% if errors.commune %}<div class="invalid-feedback d-block">{{ errors.commune.0 }}</div>{% endif %}
                             </div>
                             {% else %}
                             <div class="col-md-6">
@@ -72,8 +78,9 @@
                                             {% endfor %}
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="wilaya" id="wilayaSelect_input" required>
+                                    <input type="hidden" name="wilaya" id="wilayaSelect_input" value="{{ customer.wilaya }}" required>
                                 </div>
+                                {% if errors.wilaya %}<div class="invalid-feedback d-block">{{ errors.wilaya.0 }}</div>{% endif %}
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">{% trans "Commune" %}</label>
@@ -90,13 +97,15 @@
                                             <!-- Filled via JS -->
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="commune" id="communeSelect_input" required>
+                                    <input type="hidden" name="commune" id="communeSelect_input" value="{{ customer.commune }}" required>
                                 </div>
+                                {% if errors.commune %}<div class="invalid-feedback d-block">{{ errors.commune.0 }}</div>{% endif %}
                             </div>
                             {% endif %}
                             <div class="col-12">
                                 <label class="form-label fw-bold small">{% trans "Address" %}</label>
-                                <textarea name="address" class="form-control rounded-3" rows="2" required></textarea>
+                                <textarea name="address" class="form-control rounded-3{% if errors.address %} is-invalid{% endif %}" rows="2" autocomplete="street-address" required>{{ customer.address }}</textarea>
+                                {% if errors.address %}<div class="invalid-feedback d-block">{{ errors.address.0 }}</div>{% endif %}
                             </div>
                         </div>
                     </div>
@@ -117,7 +126,7 @@
                                         <div class="text-truncate fw-semibold small">{{ item.title }}</div>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-1">
-                                        <span class="text-muted small">{% trans "Qty" %}: {{ item.quantity }}</span>
+                                        <span class="text-muted small me-2">{% trans "Qty" %}: {{ item.quantity }}</span>
                                         <span class="fw-bold small">{{ item.subtotal_display }}</span>
                                     </div>
                                 </div>
@@ -128,9 +137,15 @@
                             <span class="fw-bold">{% trans "Total" %}</span>
                             <span class="fw-black h5" id="orderTotal">{{ cart_total_display }}</span>
                         </div>
-                        <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 mt-4 fw-bold shadow">
-                            <i class="fas fa-lock me-2"></i>{% trans "Confirm Order (COD)" %}
-                        </button>
+                        <p class="small text-muted mt-3 mb-0">
+                            <i class="fas fa-hand-holding-usd me-1"></i>
+                            {% trans "You pay on delivery. An advisor calls you to confirm the order." %}
+                        </p>
+                        <div class="checkout-submit">
+                            <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 mt-3 fw-bold shadow">
+                                <i class="fas fa-lock me-2"></i>{% trans "Confirm Order (COD)" %}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

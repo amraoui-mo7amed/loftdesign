@@ -8,16 +8,22 @@
   if (currency === "auto") {
     var tz = "";
     try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
-    currency = (!tz || tz === "Africa/Algiers") ? "DZD" : "EUR";
+    // Only a real foreign time zone switches to euros; UTC / unknown stays in dinars.
+    currency = (/^(Europe|America|Asia|Australia|Pacific|Atlantic|Indian)\//.test(tz)) ? "EUR" : "DZD";
     document.cookie = "store_devise=" + currency.toLowerCase() + ";path=/;max-age=31536000;samesite=lax";
   }
   window.STORE.currency = currency;
 
   function apply() {
     if (currency !== "EUR") return;
+    var swapped = 0;
     document.querySelectorAll(".js-price[data-eur]").forEach(function (el) {
+      if (!el.dataset.eur) return;
       el.textContent = el.dataset.eur;
+      swapped++;
     });
+    // Keep the Algerian address form when nothing on the page is sold in euros.
+    if (!swapped) return;
     // Outside Algeria: country and city instead of wilaya / commune lists.
     [["wilaya", store.i18n.country || gettext("Country"), "country-name"], ["commune", store.i18n.city || gettext("City"), "address-level2"]].forEach(function (f) {
       document.querySelectorAll('input[type="hidden"][name="' + f[0] + '"]').forEach(function (hidden) {

@@ -90,4 +90,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     createSearchableSelect("wilaya-searchable", updateCommunes);
     createSearchableSelect("commune-searchable");
+
+    // Prefilled after a validation error: show the chosen wilaya / commune again.
+    const wilayaHidden = document.querySelector('#wilaya-searchable input[type="hidden"]');
+    if (wilayaHidden && wilayaHidden.value) {
+        const chosen = document.querySelector('#wilaya-searchable li[data-value="' + CSS.escape(wilayaHidden.value) + '"]');
+        if (chosen) document.querySelector("#wilaya-searchable .selected-text").textContent = chosen.textContent;
+        const keepCommune = communeHiddenInput.value;
+        updateCommunes(wilayaHidden.value);
+        const c = keepCommune && communeList.querySelector('li[data-value="' + CSS.escape(keepCommune) + '"]');
+        if (c) { communeHiddenInput.value = keepCommune; communeSelectedText.textContent = c.textContent; }
+    }
+
+    // Hidden inputs are not checked by the browser: check wilaya / commune here.
+    if (formEl) {
+        formEl.addEventListener("submit", (e) => {
+            [["wilaya-searchable", gettext("Please choose your wilaya")], ["commune-searchable", gettext("Please choose your commune")]].forEach(([id, msg]) => {
+                const wrap = document.getElementById(id);
+                const hidden = wrap && wrap.querySelector('input[type="hidden"]');
+                if (!hidden || hidden.value || e.defaultPrevented) return;
+                e.preventDefault();
+                wrap.classList.add("is-invalid");
+                wrap.scrollIntoView({ behavior: "smooth", block: "center" });
+                if (window.Swal) Swal.fire({ icon: "warning", title: msg, confirmButtonColor: "#212121" });
+                else alert(msg);
+            });
+        });
+    }
 });

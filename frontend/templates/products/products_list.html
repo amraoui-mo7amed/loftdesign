@@ -29,7 +29,7 @@
                 <div class="search-filter-wrapper">
                     <div class="search-input-box">
                         <i class="fas fa-search text-muted"></i>
-                        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="{% trans 'Search projects or pieces...' %}">
+                        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="{% trans 'Search products' %}" aria-label="{% trans 'Search products' %}">
                     </div>
                     
                     <!-- Hidden fields to preserve filters during search -->
@@ -49,12 +49,28 @@
             </form>
         </div>
 
+        <div class="pl-toolbar d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between mt-4 mb-3">
+            <div class="pl-chips" role="navigation" aria-label="{% trans 'Categories' %}">
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}sort={{ sort }}" class="pl-chip {% if not current_category %}active{% endif %}">{% trans "All" %}</a>
+                {% for c in categories %}
+                <a href="?category={{ c.id }}{% if query %}&q={{ query|urlencode }}{% endif %}&sort={{ sort }}" class="pl-chip {% if current_category == c.id|stringformat:'s' %}active{% endif %}">{{ c.name }}</a>
+                {% endfor %}
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                <span class="small text-muted">{% blocktrans count n=total_count %}{{ n }} product{% plural %}{{ n }} products{% endblocktrans %}</span>
+                <select class="form-select form-select-sm w-auto" aria-label="{% trans 'Sort' %}"
+                        onchange="var u=new URL(location.href);u.searchParams.set('sort',this.value);u.searchParams.delete('page');location.href=u;">
+                    {% for opt in sort_options %}<option value="{{ opt.value }}" {% if opt.value == sort %}selected{% endif %}>{{ opt.label }}</option>{% endfor %}
+                </select>
+            </div>
+        </div>
+
         <div class="row g-4">
             <!-- Product Grid -->
             <div class="col-lg-12">
-                <div class="row g-4">
+                <div class="row g-3 g-md-4">
                     {% for product in products %}
-                    <div class="col-xl-3 col-lg-4 col-md-6 reveal reveal-up">
+                    <div class="col-6 col-md-4 col-xl-3 reveal reveal-up">
                         {% include "partials/product_card.html" %}
                     </div>
                     {% empty %}
@@ -69,7 +85,7 @@
                 </div>
 
                 <div class="mt-5">
-                    {% include 'components/pagination.html' with page_obj=products base_url='?' %}
+                    {% include 'components/pagination.html' with page_obj=page_obj base_url=base_url %}
                 </div>
             </div>
         </div>

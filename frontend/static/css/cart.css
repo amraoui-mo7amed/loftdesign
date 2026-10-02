@@ -32,8 +32,9 @@
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
+    visibility: hidden;
 }
+.cart-drawer.open { box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08); visibility: visible; }
 
 [dir="rtl"] .cart-drawer {
     right: auto;

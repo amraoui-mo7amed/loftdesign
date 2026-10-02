@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 23:38+0000\n"
+"POT-Creation-Date: 2026-10-02 04:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,25 +16,26 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 
-#: core/context_processors.py:11 dashboard/views/users.py:542
-msgid "LOFT Design"
-msgstr "LOFT Design"
-
-#: core/context_processors.py:13
+#: core/context_processors.py:14
 msgid "Elevate Your Space"
 msgstr "ارتقِ بمساحتك"
 
-#: core/context_processors.py:19
+#: core/context_processors.py:20
 msgid "Lun-Ven: 09h - 18h"
 msgstr "الإثنين-الجمعة: 09:00 - 18:00"
 
-#: core/context_processors.py:26
-msgid "LOFT Design - High-end interior design and architectural solutions."
-msgstr "LOFT Design - حلول راقية للتصميم الداخلي والهندسة المعمارية."
+#: core/context_processors.py:27
+msgid ""
+"Store Bilnov by LOFT Design - furniture, materials, lighting and 3D/BIM "
+"objects for your projects."
+msgstr ""
+"متجر بيلنوف من LOFT Design: أثاث ومواد وإنارة وعناصر ثلاثية الأبعاد/BIM "
+"لمشاريعكم."
 
-#: core/context_processors.py:29
+#: core/context_processors.py:30
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "تصميم داخلي، لوفت، هندسة معمارية، أثاث عصري، ديكور"
 
@@ -51,6 +52,7 @@ msgid "Arabic"
 msgstr "العربية"
 
 #: dashboard/context_processors.py:12 dashboard/context_processors.py:29
+#: dashboard/context_processors.py:51
 #: dashboard/templates/dash/dash_index.html:103
 #: dashboard/templates/products/admin_store_settings.html:18
 #: dashboard/templates/products/provider_store_settings.html:20
@@ -60,41 +62,44 @@ msgstr "العربية"
 msgid "Dashboard"
 msgstr "لوحة التحكم"
 
-#: dashboard/context_processors.py:34 dashboard/context_processors.py:115
-#: dashboard/models.py:197 dashboard/templates/categories/list.html:28
+#: dashboard/context_processors.py:34 dashboard/context_processors.py:122
+#: dashboard/models.py:214 dashboard/templates/categories/list.html:28
 #: dashboard/templates/dash/client_catalog.html:19
 #: dashboard/templates/orders/affiliate_cart.html:25
 #: dashboard/templates/products/admin_store_catalog.html:89
 #: dashboard/templates/products/list.html:19 dashboard/templatetags/tags.py:43
 #: frontend/templates/admin_store.html:52
-#: frontend/templates/affiliate_store.html:52
-#: frontend/templates/index.html:105
+#: frontend/templates/affiliate_store.html:52 frontend/templates/index.html:106
 #: frontend/templates/products/products_list.html:5
-#: frontend/templates/provider_store.html:52 frontend/views/client.py:111
+#: frontend/templates/provider_store.html:52 frontend/views/client.py:114
 msgid "Products"
 msgstr "المنتجات"
 
-#: dashboard/context_processors.py:39
+#: dashboard/context_processors.py:39 dashboard/context_processors.py:53
 #: dashboard/templates/dash/client_orders.html:19
-#: dashboard/templatetags/tags.py:57 frontend/views/client.py:274
+#: dashboard/templatetags/tags.py:57 frontend/views/client.py:277
 msgid "My Orders"
 msgstr "طلباتي"
 
-#: dashboard/context_processors.py:44
+#: dashboard/context_processors.py:44 dashboard/context_processors.py:54
 #: dashboard/templates/dash/dash_index.html:155
 #: dashboard/templates/users/profile_edit.html:6
 msgid "My Profile"
 msgstr "ملفي الشخصي"
 
-#: dashboard/context_processors.py:53
+#: dashboard/context_processors.py:52
+msgid "Shop (professional prices)"
+msgstr "المتجر (أسعار المحترفين)"
+
+#: dashboard/context_processors.py:60
 #: dashboard/templates/users/end_client_list.html:78
 #: dashboard/templates/wallets/wallet.html:4 dashboard/views/wallets.py:265
 #: user_auth/models.py:98 user_auth/models.py:118
 msgid "Wallet"
 msgstr "المحفظة"
 
-#: dashboard/context_processors.py:61 dashboard/context_processors.py:69
-#: dashboard/context_processors.py:142
+#: dashboard/context_processors.py:68 dashboard/context_processors.py:76
+#: dashboard/context_processors.py:149
 #: dashboard/templates/products/admin_store_settings.html:5
 #: dashboard/templates/products/admin_store_settings.html:23
 #: dashboard/templates/products/admin_store_settings.html:62
@@ -110,761 +115,794 @@ msgstr "المحفظة"
 msgid "My Store"
 msgstr "متجري"
 
-#: dashboard/context_processors.py:77
-#: dashboard/templates/wallets/wallet_list.html:27
+#: dashboard/context_processors.py:84
+#: dashboard/templates/wallets/wallet_list.html:26
 msgid "Withdrawals"
 msgstr "عمليات السحب"
 
-#: dashboard/context_processors.py:82 dashboard/views/dashboard.py:94
-#: dashboard/views/users.py:489
+#: dashboard/context_processors.py:89 dashboard/views/dashboard.py:100
+#: dashboard/views/users.py:500
 msgid "Affiliates"
 msgstr "المسوّقون بالعمولة"
 
-#: dashboard/context_processors.py:87 dashboard/context_processors.py:164
+#: dashboard/context_processors.py:94 dashboard/context_processors.py:171
 #: dashboard/templates/users/semi_affiliate_list.html:5
 #: dashboard/templates/users/semi_affiliate_list.html:17
-#: dashboard/templates/wallets/wallet.html:36 dashboard/views/dashboard.py:94
-#: dashboard/views/dashboard.py:148
+#: dashboard/templates/wallets/wallet.html:36 dashboard/views/dashboard.py:100
+#: dashboard/views/dashboard.py:154
 msgid "Semi-Affiliates"
 msgstr "المسوّقون الفرعيون"
 
-#: dashboard/context_processors.py:92 dashboard/context_processors.py:157
+#: dashboard/context_processors.py:99 dashboard/context_processors.py:164
 #: dashboard/templates/users/end_client_list.html:17
 msgid "Clients"
 msgstr "العملاء"
 
-#: dashboard/context_processors.py:97 dashboard/templatetags/tags.py:42
-#: dashboard/views/dashboard.py:94
-msgid "Providers"
-msgstr "المورّدون"
+#: dashboard/context_processors.py:104
+msgid "Providers & pro clients"
+msgstr "المورّدون والعملاء المحترفون"
 
-#: dashboard/context_processors.py:102 dashboard/models.py:108
+#: dashboard/context_processors.py:109 dashboard/models.py:113
 #: dashboard/templates/categories/list.html:11
+#: frontend/templates/products/products_list.html:53
 msgid "Categories"
 msgstr "الفئات"
 
-#: dashboard/context_processors.py:107 dashboard/templates/leads/list.html:5
+#: dashboard/context_processors.py:114 dashboard/templates/leads/list.html:5
 #: dashboard/templates/leads/list.html:15
 msgid "Contact Leads"
 msgstr "طلبات التواصل"
 
-#: dashboard/context_processors.py:120 dashboard/context_processors.py:126
-#: dashboard/models.py:437 dashboard/templates/dash/client_orders.html:17
+#: dashboard/context_processors.py:127 dashboard/context_processors.py:133
+#: dashboard/models.py:468 dashboard/templates/dash/client_orders.html:17
 #: dashboard/templates/orders/list.html:16 dashboard/views/orders.py:246
 msgid "Orders"
 msgstr "الطلبات"
 
-#: dashboard/context_processors.py:134
+#: dashboard/context_processors.py:141
 msgid "My Affiliates"
 msgstr "المسوّقون التابعون لي"
 
-#: dashboard/context_processors.py:147
+#: dashboard/context_processors.py:154
 #: dashboard/templates/products/affiliate_catalog.html:5
 #: dashboard/templates/products/affiliate_catalog.html:16
 msgid "Available Products"
 msgstr "المنتجات المتاحة"
 
-#: dashboard/context_processors.py:152
+#: dashboard/context_processors.py:159
 #: dashboard/templates/products/my_catalog.html:5
 #: dashboard/templates/products/my_catalog.html:16
 msgid "My Catalog"
 msgstr "الكتالوج الخاص بي"
 
-#: dashboard/models.py:14 dashboard/models.py:15
+#: dashboard/models.py:15 dashboard/models.py:16
 #: dashboard/models_settings.py:14 dashboard/models_settings.py:15
 #: dashboard/templates/settings/update.html:15
 msgid "Site Settings"
 msgstr "إعدادات الموقع"
 
-#: dashboard/models.py:27 dashboard/templates/dash/dash_index.html:159
-#: frontend/templates/index.html:111
+#: dashboard/models.py:28 dashboard/templates/dash/dash_index.html:159
+#: frontend/templates/index.html:112
 msgid "Settings"
 msgstr "الإعدادات"
 
-#: dashboard/models.py:29
+#: dashboard/models.py:30
 msgid "Slider Image"
 msgstr "صورة شريط العرض"
 
-#: dashboard/models.py:33
+#: dashboard/models.py:34
 msgid "Site Settings Slider Image"
 msgstr "صورة شريط العرض لإعدادات الموقع"
 
-#: dashboard/models.py:34
+#: dashboard/models.py:35
 msgid "Site Settings Slider Images"
 msgstr "صور شريط العرض لإعدادات الموقع"
 
-#: dashboard/models.py:43 dashboard/models_settings.py:23
+#: dashboard/models.py:44 dashboard/models_settings.py:23
 #: dashboard/templates/orders/affiliate_cart.html:186
-#: frontend/templates/cart/checkout.html:41 frontend/templates/home.html:355
+#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:353
 #: frontend/templates/products/admin_product_detail.html:241
 #: frontend/templates/products/affiliate_product_detail.html:245
-#: frontend/templates/products/product_detail.html:210
+#: frontend/templates/products/product_detail.html:223
 #: frontend/templates/products/provider_product_detail.html:243
 msgid "Full Name"
 msgstr "الاسم الكامل"
 
-#: dashboard/models.py:44 dashboard/models.py:385
+#: dashboard/models.py:45 dashboard/models.py:416
 #: dashboard/models_settings.py:24
 #: dashboard/templates/orders/affiliate_cart.html:189
 #: dashboard/templates/users/list.html:168
 #: dashboard/templates/users/list.html:235
 #: dashboard/templates/users/partials/_details_info.html:15
 #: dashboard/templates/users/profile_edit.html:102
-#: frontend/templates/cart/checkout.html:45 frontend/templates/home.html:359
+#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:357
 #: frontend/templates/products/admin_product_detail.html:246
 #: frontend/templates/products/affiliate_product_detail.html:250
-#: frontend/templates/products/product_detail.html:216
+#: frontend/templates/products/product_detail.html:229
 #: frontend/templates/products/provider_product_detail.html:248
 #: user_auth/models.py:34
 msgid "Phone Number"
 msgstr "رقم الهاتف"
 
-#: dashboard/models.py:45 dashboard/models_settings.py:25
-#: frontend/templates/home.html:363
+#: dashboard/models.py:46 dashboard/models_settings.py:25
+#: frontend/templates/home.html:361
 msgid "Project Type"
 msgstr "نوع المشروع"
 
-#: dashboard/models.py:46 dashboard/models_settings.py:26
-#: frontend/templates/home.html:371
+#: dashboard/models.py:47 dashboard/models_settings.py:26
+#: frontend/templates/home.html:369
 msgid "Message"
 msgstr "الرسالة"
 
-#: dashboard/models.py:50 dashboard/models_settings.py:30
+#: dashboard/models.py:51 dashboard/models_settings.py:30
 msgid "Contact Request"
 msgstr "طلب تواصل"
 
-#: dashboard/models.py:51 dashboard/models_settings.py:31
+#: dashboard/models.py:52 dashboard/models_settings.py:31
 msgid "Contact Requests"
 msgstr "طلبات التواصل"
 
-#: dashboard/models.py:62
+#: dashboard/models.py:63
 msgid "معلومة"
 msgstr "معلومة"
 
-#: dashboard/models.py:63
+#: dashboard/models.py:64
 msgid "نجاح"
 msgstr "نجاح"
 
-#: dashboard/models.py:64
+#: dashboard/models.py:65
 msgid "تحذير"
 msgstr "تحذير"
 
-#: dashboard/models.py:65
+#: dashboard/models.py:66
 msgid "خطأ"
 msgstr "خطأ"
 
-#: dashboard/models.py:71
+#: dashboard/models.py:72
 msgid "المستخدم"
 msgstr "المستخدم"
 
-#: dashboard/models.py:74
+#: dashboard/models.py:75
 msgid "العنوان"
 msgstr "العنوان"
 
-#: dashboard/models.py:75
+#: dashboard/models.py:76
 msgid "الرسالة"
 msgstr "الرسالة"
 
-#: dashboard/models.py:80
+#: dashboard/models.py:81
 msgid "نوع الإشعار"
 msgstr "نوع الإشعار"
 
-#: dashboard/models.py:82
+#: dashboard/models.py:83
 msgid "مقروء"
 msgstr "مقروء"
 
-#: dashboard/models.py:83
+#: dashboard/models.py:84
 msgid "تاريخ الإنشاء"
 msgstr "تاريخ الإنشاء"
 
-#: dashboard/models.py:84
+#: dashboard/models.py:85
 msgid "تاريخ القراءة"
 msgstr "تاريخ القراءة"
 
-#: dashboard/models.py:88
+#: dashboard/models.py:89
 msgid "الرابط"
 msgstr "الرابط"
 
-#: dashboard/models.py:89
+#: dashboard/models.py:90
 msgid "رابط اختياري للتنقل"
 msgstr "رابط اختياري للتنقل"
 
-#: dashboard/models.py:93
+#: dashboard/models.py:94
 msgid "إشعار"
 msgstr "إشعار"
 
-#: dashboard/models.py:103 dashboard/templates/categories/list.html:68
-#: dashboard/templates/categories/list.html:108
+#: dashboard/models.py:104 dashboard/templates/categories/list.html:68
+#: dashboard/templates/categories/list.html:113
 #: dashboard/templates/products/list.html:41
 msgid "Category Name"
 msgstr "اسم الفئة"
 
-#: dashboard/models.py:107 dashboard/models.py:137
+#: dashboard/models.py:106
+msgid "Bilnov code"
+msgstr "رمز بيلنوف"
+
+#: dashboard/models.py:107
+msgid ""
+"3 letters used in the Bilnov Object ID, e.g. FUR (furniture), LGT "
+"(lighting), TIL (tiles)."
+msgstr "3 أحرف تُستعمل في معرّف بيلنوف، مثل FUR (أثاث) وLGT (إنارة) وTIL (بلاط)."
+
+#: dashboard/models.py:112 dashboard/models.py:142
 #: dashboard/templates/products/create.html:123
 #: dashboard/templates/products/edit.html:141
 msgid "Category"
 msgstr "الفئة"
 
-#: dashboard/models.py:118 dashboard/models.py:359
+#: dashboard/models.py:123 dashboard/models.py:390
 #: dashboard/templates/users/affiliate_list.html:108
 #: dashboard/templates/users/list.html:123
 #: dashboard/templates/users/profile_edit.html:63
 #: dashboard/templates/users/semi_affiliate_list.html:63
 #: dashboard/templates/wallets/wallet.html:212
 #: dashboard/templates/wallets/wallet.html:361
-#: dashboard/templates/wallets/wallet_list.html:50
+#: dashboard/templates/wallets/wallet_list.html:49
 #: dashboard/templates/wallets/withdrawal_list.html:200
-#: dashboard/views/dashboard.py:130 dashboard/views/dashboard.py:155
-#: dashboard/views/dashboard.py:180 dashboard/views/dashboard.py:199
-#: dashboard/views/dashboard.py:260 dashboard/views/users.py:168
-#: dashboard/views/users.py:480 dashboard/views/wallets.py:246
+#: dashboard/views/dashboard.py:136 dashboard/views/dashboard.py:161
+#: dashboard/views/dashboard.py:186 dashboard/views/dashboard.py:205
+#: dashboard/views/dashboard.py:266 dashboard/views/users.py:178
+#: dashboard/views/users.py:491 dashboard/views/wallets.py:246
 #: dashboard/views/wallets.py:369 user_auth/models.py:112
 msgid "Pending"
 msgstr "قيد الانتظار"
 
-#: dashboard/models.py:119 dashboard/templates/users/details.html:139
+#: dashboard/models.py:124 dashboard/templates/users/details.html:139
 #: dashboard/templates/wallets/withdrawal_list.html:202
 #: dashboard/templates/wallets/withdrawal_list.html:221
-#: dashboard/views/users.py:167 dashboard/views/users.py:479
+#: dashboard/views/users.py:177 dashboard/views/users.py:490
 #: dashboard/views/wallets.py:370
 msgid "Approved"
 msgstr "مقبول"
 
-#: dashboard/models.py:120
-#: dashboard/templates/wallets/withdrawal_list.html:204
+#: dashboard/models.py:125 dashboard/templates/wallets/withdrawal_list.html:204
 #: dashboard/templates/wallets/withdrawal_list.html:223
 #: dashboard/views/wallets.py:371
 msgid "Rejected"
 msgstr "مرفوض"
 
-#: dashboard/models.py:126 dashboard/models.py:580
+#: dashboard/models.py:131 dashboard/models.py:611
 #: dashboard/templates/dash/dash_index.html:138
 #: dashboard/templates/products/create.html:47
 #: dashboard/templates/products/edit.html:45
-#: dashboard/templates/users/list.html:109
-#: dashboard/templates/wallets/wallet_list.html:47 user_auth/models.py:78
+#: dashboard/templates/wallets/wallet_list.html:46 user_auth/models.py:78
 msgid "User"
 msgstr "المستخدم"
 
-#: dashboard/models.py:130
+#: dashboard/models.py:135
 msgid "Title"
 msgstr "العنوان"
 
-#: dashboard/models.py:139 dashboard/models.py:613
+#: dashboard/models.py:144 dashboard/models.py:648
 #: dashboard/templates/products/create.html:100
-#: dashboard/templates/products/create.html:384
+#: dashboard/templates/products/create.html:418
 #: dashboard/templates/products/edit.html:118
 #: dashboard/templates/products/items/form_modal.html:31
 msgid "Thumbnail"
 msgstr "الصورة المصغّرة"
 
-#: dashboard/models.py:142 dashboard/templates/products/create.html:306
-#: dashboard/templates/products/edit.html:347
+#: dashboard/models.py:147 dashboard/templates/products/create.html:340
+#: dashboard/templates/products/edit.html:403
 msgid "3D Model"
 msgstr "نموذج 3D"
 
-#: dashboard/models.py:145
+#: dashboard/models.py:150
 msgid "Upload GLB or GLTF 3D model file"
 msgstr "ارفع ملف نموذج 3D بصيغة GLB أو GLTF"
 
-#: dashboard/models.py:147
+#: dashboard/models.py:152
 #: dashboard/templates/products/admin_store_settings.html:66
 #: dashboard/templates/products/catalog_details.html:54
 #: dashboard/templates/products/create.html:133
 #: dashboard/templates/products/edit.html:151
 #: frontend/templates/products/admin_product_detail.html:207
 #: frontend/templates/products/affiliate_product_detail.html:211
+#: frontend/templates/products/product_detail.html:191
 #: frontend/templates/products/provider_product_detail.html:208
 #: user_auth/models.py:128
 msgid "Description"
 msgstr "الوصف"
 
-#: dashboard/models.py:148
+#: dashboard/models.py:153
 msgid "Available Quantity"
 msgstr "الكمية المتاحة"
 
-#: dashboard/models.py:149
+#: dashboard/models.py:154
 msgid "External Buy Link"
 msgstr "رابط شراء خارجي"
 
-#: dashboard/models.py:150 dashboard/templates/products/create.html:230
+#: dashboard/models.py:155 dashboard/templates/products/create.html:230
 #: dashboard/templates/products/edit.html:254
+#: frontend/templates/products/product_detail.html:199
 msgid "Tags"
 msgstr "الوسوم"
 
-#: dashboard/models.py:151
+#: dashboard/models.py:156
 msgid "Brand"
 msgstr "العلامة التجارية"
 
-#: dashboard/models.py:152
+#: dashboard/models.py:157 dashboard/models.py:642
 #: dashboard/templates/products/catalog_details.html:122
 msgid "SKU"
 msgstr "SKU"
 
-#: dashboard/models.py:153 dashboard/models.py:617
+#: dashboard/models.py:162
+msgid "Bilnov Object ID"
+msgstr "معرّف بيلنوف (BOID)"
+
+#: dashboard/models.py:164
+msgid "Bilnov UUID"
+msgstr "UUID بيلنوف"
+
+#: dashboard/models.py:165 dashboard/templates/products/create.html:263
+#: dashboard/templates/products/edit.html:299
+msgid "Collection"
+msgstr "المجموعة"
+
+#: dashboard/models.py:167
+msgid "Digital model version"
+msgstr "إصدار النموذج الرقمي"
+
+#: dashboard/models.py:168
+msgid ""
+"Increases each time a 3D/BIM file is replaced. Projects keep the version "
+"they use."
+msgstr ""
+"يزداد عند كل استبدال لملف ثلاثي الأبعاد/BIM. تحتفظ المشاريع بالإصدار الذي "
+"تستخدمه."
+
+#: dashboard/models.py:170 dashboard/models.py:652
 msgid "Is Active"
 msgstr "نشط"
 
-#: dashboard/models.py:154
+#: dashboard/models.py:171
 msgid "Is Featured"
 msgstr "مميّز"
 
-#: dashboard/models.py:156
+#: dashboard/models.py:173
 msgid "Show in Global Store"
 msgstr "عرض في المتجر العام"
 
-#: dashboard/models.py:157
+#: dashboard/models.py:174
 msgid "Uncheck to hide this product from the public storefront"
 msgstr "ألغِ التحديد لإخفاء هذا المنتج من الواجهة العامة"
 
-#: dashboard/models.py:160
+#: dashboard/models.py:177
 msgid "Show in Admin Store"
 msgstr "عرض في متجر الإدارة"
 
-#: dashboard/models.py:161
+#: dashboard/models.py:178
 msgid "Check to feature this product in the admin's storefront"
 msgstr "حدّد لإبراز هذا المنتج في واجهة متجر الإدارة"
 
-#: dashboard/models.py:166 dashboard/models.py:431
+#: dashboard/models.py:183 dashboard/models.py:462
 #: dashboard/templates/orders/list.html:53
-#: dashboard/templates/products/edit.html:338
+#: dashboard/templates/products/edit.html:394
 #: dashboard/templates/users/affiliate_list.html:77
 #: dashboard/templates/users/details.html:293
 #: dashboard/templates/users/profile_edit.html:66
 #: dashboard/templates/wallets/wallet.html:119
 #: dashboard/templates/wallets/wallet.html:140
 #: dashboard/templates/wallets/withdrawal_list.html:121
-#: dashboard/templates/wallets/withdrawal_list.html:163
-#: user_auth/models.py:149
+#: dashboard/templates/wallets/withdrawal_list.html:163 user_auth/models.py:149
 msgid "Status"
 msgstr "الحالة"
 
-#: dashboard/models.py:169 dashboard/models.py:329
+#: dashboard/models.py:186 dashboard/models.py:360
 #: dashboard/templates/products/partner_price_list.html:114
 msgid "Purchase Price (DZD)"
 msgstr "سعر الشراء (DZD)"
 
-#: dashboard/models.py:170
+#: dashboard/models.py:187
 msgid "Price the supplier expects from Loft Design"
 msgstr "السعر الذي يطلبه المورّد من Loft Design"
 
-#: dashboard/models.py:173 dashboard/models.py:333
+#: dashboard/models.py:190 dashboard/models.py:364
 msgid "Wholesale Price (DZD)"
 msgstr "سعر الجملة (DZD)"
 
-#: dashboard/models.py:174
+#: dashboard/models.py:191
 msgid "Default wholesale price for affiliates (set by admin)"
 msgstr "سعر الجملة الافتراضي للمسوّقين بالعمولة (يحدده المسؤول)"
 
-#: dashboard/models.py:177 dashboard/models.py:274 dashboard/models.py:338
+#: dashboard/models.py:194 dashboard/models.py:305 dashboard/models.py:369
 msgid "Retail Price (DZD)"
 msgstr "سعر التجزئة (DZD)"
 
-#: dashboard/models.py:178
+#: dashboard/models.py:195
 msgid "Default retail price for end clients (set by admin)"
 msgstr "سعر التجزئة الافتراضي للعملاء النهائيين (يحدده المسؤول)"
 
-#: dashboard/models.py:180
+#: dashboard/models.py:197
 msgid "Rejection Reason"
 msgstr "سبب الرفض"
 
-#: dashboard/models.py:182 dashboard/templates/products/create.html:207
+#: dashboard/models.py:199 dashboard/templates/products/create.html:207
 #: dashboard/templates/products/edit.html:230
 msgid "Price (EUR, outside Algeria)"
 msgstr "السعر (EUR، خارج الجزائر)"
 
-#: dashboard/models.py:184
+#: dashboard/models.py:201
 msgid "Shown to visitors outside Algeria. Leave empty to show the DZD price."
 msgstr "يُعرض للزوار من خارج الجزائر. اتركه فارغًا لعرض السعر بـ DZD."
 
-#: dashboard/models.py:187
+#: dashboard/models.py:204
 msgid "Professional Price (DZD)"
 msgstr "سعر المحترفين (DZD)"
 
-#: dashboard/models.py:189
+#: dashboard/models.py:206
 msgid ""
 "Price for approved professional clients buying directly. Leave empty to use "
 "the retail price."
 msgstr ""
-"سعر العملاء المحترفين المعتمدين عند الشراء المباشر. اتركه فارغًا لاستخدام "
-"سعر التجزئة."
+"سعر العملاء المحترفين المعتمدين عند الشراء المباشر. اتركه فارغًا لاستخدام سعر "
+"التجزئة."
 
-#: dashboard/models.py:196 dashboard/models.py:228 dashboard/models.py:263
-#: dashboard/models.py:294 dashboard/models.py:318 dashboard/models.py:471
-#: dashboard/models.py:557 dashboard/models.py:576 dashboard/models.py:607
-#: dashboard/templates/orders/detail.html:160
+#: dashboard/models.py:213 dashboard/models.py:259 dashboard/models.py:294
+#: dashboard/models.py:325 dashboard/models.py:349 dashboard/models.py:502
+#: dashboard/models.py:588 dashboard/models.py:607 dashboard/models.py:638
+#: dashboard/models.py:705 dashboard/templates/orders/detail.html:160
 #: dashboard/templates/orders/list.html:206
 msgid "Product"
 msgstr "المنتج"
 
-#: dashboard/models.py:232 dashboard/templates/orders/list.html:206
+#: dashboard/models.py:263 dashboard/templates/orders/list.html:206
 msgid "Supplier"
 msgstr "المورّد"
 
-#: dashboard/models.py:235 dashboard/models.py:266
+#: dashboard/models.py:266 dashboard/models.py:297
 msgid "Loft Purchase Price (DZD)"
 msgstr "سعر شراء Loft (DZD)"
 
-#: dashboard/models.py:236
+#: dashboard/models.py:267
 msgid "Price Loft Design pays the supplier"
 msgstr "السعر الذي تدفعه Loft Design للمورّد"
 
-#: dashboard/models.py:239
+#: dashboard/models.py:270
 msgid "Affiliate Wholesale Price (DZD)"
 msgstr "سعر الجملة للمسوّقين بالعمولة (DZD)"
 
-#: dashboard/models.py:241
+#: dashboard/models.py:272
 msgid ""
 "Price the provider charges its own affiliates when reselling this product"
-msgstr ""
-"السعر الذي يفرضه المورّد على مسوّقيه بالعمولة عند إعادة بيع هذا المنتج"
+msgstr "السعر الذي يفرضه المورّد على مسوّقيه بالعمولة عند إعادة بيع هذا المنتج"
 
-#: dashboard/models.py:244
+#: dashboard/models.py:275
 msgid "Suggested Retail Price (DZD)"
 msgstr "سعر التجزئة المقترح (DZD)"
 
-#: dashboard/models.py:246
+#: dashboard/models.py:277
 msgid "Supplier's suggested retail price"
 msgstr "سعر التجزئة المقترح من المورّد"
 
-#: dashboard/models.py:252
+#: dashboard/models.py:283
 msgid "Supplier Price"
 msgstr "سعر المورّد"
 
-#: dashboard/models.py:253
+#: dashboard/models.py:284
 msgid "Supplier Prices"
 msgstr "أسعار المورّدين"
 
-#: dashboard/models.py:267
+#: dashboard/models.py:298
 msgid "Copied from supplier price at approval time"
 msgstr "منسوخ من سعر المورّد وقت الموافقة"
 
-#: dashboard/models.py:270
+#: dashboard/models.py:301
 msgid "Default Wholesale Price (DZD)"
 msgstr "سعر الجملة الافتراضي (DZD)"
 
-#: dashboard/models.py:271
+#: dashboard/models.py:302
 msgid "Default price for affiliates buying from Loft"
 msgstr "السعر الافتراضي للمسوّقين بالعمولة عند الشراء من Loft"
 
-#: dashboard/models.py:275
+#: dashboard/models.py:306
 msgid "Public retail price for end clients"
 msgstr "سعر التجزئة العام للعملاء النهائيين"
 
-#: dashboard/models.py:277 dashboard/models.py:342 dashboard/models.py:508
-#: dashboard/models.py:537 dashboard/templates/users/affiliate_list.html:105
+#: dashboard/models.py:308 dashboard/models.py:373 dashboard/models.py:539
+#: dashboard/models.py:568 dashboard/templates/users/affiliate_list.html:105
 #: dashboard/templates/users/list.html:119
 #: dashboard/templates/users/profile_edit.html:61
 #: dashboard/templates/users/semi_affiliate_list.html:61
-#: dashboard/views/dashboard.py:235
+#: dashboard/views/dashboard.py:241
 msgid "Active"
 msgstr "نشط"
 
-#: dashboard/models.py:282
+#: dashboard/models.py:313
 msgid "Loft Price"
 msgstr "سعر Loft"
 
-#: dashboard/models.py:283
+#: dashboard/models.py:314
 msgid "Loft Prices"
 msgstr "أسعار Loft"
 
-#: dashboard/models.py:296 dashboard/models.py:636
+#: dashboard/models.py:327 dashboard/models.py:671
 msgid "Image"
 msgstr "الصورة"
 
-#: dashboard/models.py:297 dashboard/models.py:436 dashboard/models.py:467
-#: dashboard/models.py:616 dashboard/models.py:637
+#: dashboard/models.py:328 dashboard/models.py:467 dashboard/models.py:498
+#: dashboard/models.py:651 dashboard/models.py:672
 #: dashboard/templates/orders/detail.html:21
 #: dashboard/templates/users/details.html:291
 #: dashboard/templates/wallets/wallet.html:226 user_auth/models.py:132
 msgid "Order"
 msgstr "الترتيب"
 
-#: dashboard/models.py:301
+#: dashboard/models.py:332
 msgid "Product Image"
 msgstr "صورة المنتج"
 
-#: dashboard/models.py:302
+#: dashboard/models.py:333
 msgid "Product Images"
 msgstr "صور المنتج"
 
-#: dashboard/models.py:322 dashboard/models.py:376
+#: dashboard/models.py:353 dashboard/models.py:407
 msgid "Seller"
 msgstr "البائع"
 
-#: dashboard/models.py:326 dashboard/models.py:372
+#: dashboard/models.py:357 dashboard/models.py:403
 msgid "Buyer"
 msgstr "المشتري"
 
-#: dashboard/models.py:330
+#: dashboard/models.py:361
 msgid "Price the buyer pays the seller"
 msgstr "السعر الذي يدفعه المشتري للبائع"
 
-#: dashboard/models.py:335
+#: dashboard/models.py:366
 msgid "Price at which buyer can resell (wholesale)"
 msgstr "السعر الذي يمكن للمشتري إعادة البيع به (جملة)"
 
-#: dashboard/models.py:340
+#: dashboard/models.py:371
 msgid "Price at which buyer can resell (retail)"
 msgstr "السعر الذي يمكن للمشتري إعادة البيع به (تجزئة)"
 
-#: dashboard/models.py:347
+#: dashboard/models.py:378
 msgid "Partner Price"
 msgstr "سعر الشريك"
 
-#: dashboard/models.py:348
+#: dashboard/models.py:379
 msgid "Partner Prices"
 msgstr "أسعار الشركاء"
 
-#: dashboard/models.py:360 dashboard/models.py:361
+#: dashboard/models.py:391 dashboard/models.py:392
 msgid "Validate"
 msgstr "مؤكَّد"
 
-#: dashboard/models.py:362
+#: dashboard/models.py:393
 msgid "Supplier Fulfilling"
 msgstr "قيد التنفيذ لدى المورّد"
 
-#: dashboard/models.py:363
+#: dashboard/models.py:394
 msgid "Shipped"
 msgstr "تم الشحن"
 
-#: dashboard/models.py:364 dashboard/templates/dash/client_home.html:41
-#: dashboard/views/dashboard.py:75 dashboard/views/dashboard.py:136
-#: dashboard/views/dashboard.py:155 dashboard/views/dashboard.py:186
-#: dashboard/views/dashboard.py:199 dashboard/views/dashboard.py:253
-#: dashboard/views/dashboard.py:260
+#: dashboard/models.py:395 dashboard/templates/dash/client_home.html:41
+#: dashboard/views/dashboard.py:81 dashboard/views/dashboard.py:142
+#: dashboard/views/dashboard.py:161 dashboard/views/dashboard.py:192
+#: dashboard/views/dashboard.py:205 dashboard/views/dashboard.py:259
+#: dashboard/views/dashboard.py:266
 msgid "Delivered"
 msgstr "تم التسليم"
 
-#: dashboard/models.py:365
+#: dashboard/models.py:396
 msgid "Cancelled"
 msgstr "ملغى"
 
-#: dashboard/models.py:368
+#: dashboard/models.py:399
 msgid "Order Number"
 msgstr "رقم الطلب"
 
-#: dashboard/models.py:379 dashboard/models.py:485
+#: dashboard/models.py:410 dashboard/models.py:516
 msgid "Order Items"
 msgstr "عناصر الطلب"
 
-#: dashboard/models.py:382
+#: dashboard/models.py:413
 msgid ""
 "List of products with title, price, quantity, thumbnail at time of order"
 msgstr "قائمة المنتجات مع العنوان والسعر والكمية والصورة المصغّرة وقت الطلب"
 
-#: dashboard/models.py:384
+#: dashboard/models.py:415
 msgid "Customer Name"
 msgstr "اسم العميل"
 
-#: dashboard/models.py:386 dashboard/templates/orders/detail.html:69
+#: dashboard/models.py:417 dashboard/templates/orders/detail.html:69
 #: dashboard/templates/users/partials/_details_info.html:30
 #: dashboard/templates/users/profile_edit.html:109
-#: frontend/templates/cart/checkout.html:98 user_auth/models.py:35
+#: frontend/templates/cart/checkout.html:106 user_auth/models.py:35
 msgid "Address"
 msgstr "العنوان"
 
-#: dashboard/models.py:387 frontend/templates/cart/checkout.html:59
+#: dashboard/models.py:418 frontend/templates/cart/checkout.html:65
 #: frontend/templates/products/admin_product_detail.html:256
 #: frontend/templates/products/affiliate_product_detail.html:260
-#: frontend/templates/products/product_detail.html:226
+#: frontend/templates/products/product_detail.html:239
 #: frontend/templates/products/provider_product_detail.html:258
 msgid "Wilaya"
 msgstr "الولاية"
 
-#: dashboard/models.py:388 frontend/templates/cart/checkout.html:79
+#: dashboard/models.py:419 frontend/templates/cart/checkout.html:86
 #: frontend/templates/products/admin_product_detail.html:276
 #: frontend/templates/products/affiliate_product_detail.html:280
-#: frontend/templates/products/product_detail.html:247
+#: frontend/templates/products/product_detail.html:260
 #: frontend/templates/products/provider_product_detail.html:278
 msgid "Commune"
 msgstr "البلدية"
 
-#: dashboard/models.py:390 dashboard/templates/orders/detail.html:76
+#: dashboard/models.py:421 dashboard/templates/orders/detail.html:76
 msgid "Referred By"
 msgstr "مُحال من طرف"
 
-#: dashboard/models.py:391
+#: dashboard/models.py:422
 msgid "Affiliate code that referred this order"
 msgstr "رمز المسوّق بالعمولة الذي أحال هذا الطلب"
 
-#: dashboard/models.py:394
+#: dashboard/models.py:425
 msgid "Commission Paid"
 msgstr "العمولة مدفوعة"
 
-#: dashboard/models.py:395
+#: dashboard/models.py:426
 msgid "Whether the affiliate commission for this order has been settled"
 msgstr "ما إذا تمت تسوية عمولة المسوّق بالعمولة لهذا الطلب"
 
-#: dashboard/models.py:399
+#: dashboard/models.py:430
 msgid "Supplier Share"
 msgstr "حصة المورّد"
 
-#: dashboard/models.py:400
+#: dashboard/models.py:431
 msgid "Amount paid to supplier for this order"
 msgstr "المبلغ المدفوع للمورّد عن هذا الطلب"
 
-#: dashboard/models.py:403
+#: dashboard/models.py:434
 msgid "Loft Share"
 msgstr "حصة Loft"
 
-#: dashboard/models.py:404
+#: dashboard/models.py:435
 msgid "Loft Design's profit from this order"
 msgstr "ربح Loft Design من هذا الطلب"
 
-#: dashboard/models.py:407
+#: dashboard/models.py:438
 msgid "Affiliate Share"
 msgstr "حصة المسوّق بالعمولة"
 
-#: dashboard/models.py:408
+#: dashboard/models.py:439
 msgid "Affiliate's profit from this order"
 msgstr "ربح المسوّق بالعمولة من هذا الطلب"
 
-#: dashboard/models.py:411
+#: dashboard/models.py:442
 msgid "Semi-Affiliate Share"
 msgstr "حصة المسوّق الفرعي"
 
-#: dashboard/models.py:412
+#: dashboard/models.py:443
 msgid "Semi-affiliate's profit from this order"
 msgstr "ربح المسوّق الفرعي من هذا الطلب"
 
-#: dashboard/models.py:415
+#: dashboard/models.py:446
 msgid "Provider Share"
 msgstr "حصة المورّد"
 
-#: dashboard/models.py:416
+#: dashboard/models.py:447
 msgid ""
 "Provider's network profit (provider_wholesale - supplier_base) from this "
 "order"
 msgstr "ربح شبكة المورّد (provider_wholesale - supplier_base) من هذا الطلب"
 
-#: dashboard/models.py:420
+#: dashboard/models.py:451
 msgid "Currency"
 msgstr "العملة"
 
-#: dashboard/models.py:421
+#: dashboard/models.py:452
 msgid "Currency shown to the customer (EUR for visitors outside Algeria)"
 msgstr "العملة المعروضة للعميل (EUR للزوار من خارج الجزائر)"
 
-#: dashboard/models.py:424
+#: dashboard/models.py:455
 msgid "Total (EUR)"
 msgstr "الإجمالي (EUR)"
 
-#: dashboard/models.py:442
+#: dashboard/models.py:473
 #, python-format
 msgid "Order %(num)s - %(name)s"
 msgstr "الطلب %(num)s - %(name)s"
 
-#: dashboard/models.py:473 frontend/templates/products/product_detail.html:220
+#: dashboard/models.py:504 frontend/templates/products/product_detail.html:233
 #: user_auth/models.py:146
 msgid "Quantity"
 msgstr "الكمية"
 
-#: dashboard/models.py:475 user_auth/models.py:143
+#: dashboard/models.py:506 user_auth/models.py:143
 msgid "Unit Price (DZD)"
 msgstr "سعر الوحدة (DZD)"
 
-#: dashboard/models.py:476
+#: dashboard/models.py:507
 msgid "Price applied at time of order"
 msgstr "السعر المطبّق وقت الطلب"
 
-#: dashboard/models.py:479
+#: dashboard/models.py:510
 msgid "Total Price (DZD)"
 msgstr "السعر الإجمالي (DZD)"
 
-#: dashboard/models.py:484
+#: dashboard/models.py:515
 msgid "Order Item"
 msgstr "عنصر الطلب"
 
-#: dashboard/models.py:495 dashboard/templates/orders/list.html:206
+#: dashboard/models.py:526 dashboard/templates/orders/list.html:206
 #: dashboard/templates/orders/list.html:227
 #: dashboard/templates/products/list.html:98
 #: dashboard/templates/products/partner_price_list.html:47
 #: dashboard/templates/products/partner_price_list.html:110
 #: dashboard/templates/users/affiliate_list.html:168
 #: dashboard/templates/wallets/wallet.html:316
-#: dashboard/templates/wallets/wallet_list.html:61
+#: dashboard/templates/wallets/wallet_list.html:60
 #: dashboard/views/wallets.py:321 frontend/templates/home.html:49
 #: user_auth/models.py:13
 msgid "Affiliate"
 msgstr "مسوّق بالعمولة"
 
-#: dashboard/models.py:497 dashboard/models.py:526
+#: dashboard/models.py:528 dashboard/models.py:557
 #: dashboard/templates/products/admin_store_settings.html:58
 #: dashboard/templates/users/details.html:372
 msgid "Store Name"
 msgstr "اسم المتجر"
 
-#: dashboard/models.py:499 dashboard/models.py:528
+#: dashboard/models.py:530 dashboard/models.py:559
 #: dashboard/templates/products/admin_store_settings.html:84
 #: dashboard/templates/users/details.html:391
 msgid "Store Logo"
 msgstr "شعار المتجر"
 
-#: dashboard/models.py:502 dashboard/models.py:531
+#: dashboard/models.py:533 dashboard/models.py:562
 #: dashboard/templates/products/admin_store_settings.html:108
 #: dashboard/templates/users/details.html:404
 msgid "Store Banner"
 msgstr "لافتة المتجر"
 
-#: dashboard/models.py:504 dashboard/models.py:533
+#: dashboard/models.py:535 dashboard/models.py:564
 #: dashboard/templates/users/details.html:376
 msgid "Store Description"
 msgstr "وصف المتجر"
 
-#: dashboard/models.py:506 dashboard/models.py:535
+#: dashboard/models.py:537 dashboard/models.py:566
 #: dashboard/templates/users/details.html:380
 msgid "Header Background Color"
 msgstr "لون خلفية الترويسة"
 
-#: dashboard/models.py:513 dashboard/templates/products/store_settings.html:25
+#: dashboard/models.py:544 dashboard/templates/products/store_settings.html:25
 msgid "Affiliate Store"
 msgstr "متجر المسوّق بالعمولة"
 
-#: dashboard/models.py:514
+#: dashboard/models.py:545
 msgid "Affiliate Stores"
 msgstr "متاجر المسوّقين بالعمولة"
 
-#: dashboard/models.py:524 dashboard/templates/wallets/wallet_list.html:59
+#: dashboard/models.py:555 dashboard/templates/wallets/wallet_list.html:58
 #: dashboard/views/wallets.py:320 user_auth/models.py:11
 msgid "Admin"
 msgstr "المسؤول"
 
-#: dashboard/models.py:542
+#: dashboard/models.py:573
 #: dashboard/templates/products/admin_store_catalog.html:73
 #: dashboard/templates/products/admin_store_settings.html:22
 msgid "Admin Store"
 msgstr "متجر الإدارة"
 
-#: dashboard/models.py:543
+#: dashboard/models.py:574
 msgid "Admin Stores"
 msgstr "متاجر الإدارة"
 
-#: dashboard/models.py:553
+#: dashboard/models.py:584
 msgid "Store"
 msgstr "المتجر"
 
-#: dashboard/models.py:559
+#: dashboard/models.py:590
 msgid "Visitor IP"
 msgstr "عنوان IP للزائر"
 
-#: dashboard/models.py:560
+#: dashboard/models.py:591
 msgid "Session"
 msgstr "الجلسة"
 
-#: dashboard/models.py:564
+#: dashboard/models.py:595
 msgid "Store Visit"
 msgstr "زيارة المتجر"
 
-#: dashboard/models.py:565
+#: dashboard/models.py:596
 msgid "Store Visits"
 msgstr "زيارات المتجر"
 
-#: dashboard/models.py:583
+#: dashboard/models.py:614
 msgid "Price Field"
 msgstr "حقل السعر"
 
-#: dashboard/models.py:584
+#: dashboard/models.py:615
 msgid ""
 "e.g. loft_purchase_price, loft_wholesale, loft_retail, partner_wholesale, "
 "partner_retail"
@@ -872,64 +910,112 @@ msgstr ""
 "مثال: loft_purchase_price، loft_wholesale، loft_retail، partner_wholesale، "
 "partner_retail"
 
-#: dashboard/models.py:587
+#: dashboard/models.py:618
 msgid "Old Value (DZD)"
 msgstr "القيمة القديمة (DZD)"
 
-#: dashboard/models.py:590
+#: dashboard/models.py:621
 msgid "New Value (DZD)"
 msgstr "القيمة الجديدة (DZD)"
 
-#: dashboard/models.py:592
+#: dashboard/models.py:623
 msgid "Changed At"
 msgstr "تاريخ التغيير"
 
-#: dashboard/models.py:595 dashboard/templates/products/edit.html:391
-#: dashboard/templates/products/edit.html:404
+#: dashboard/models.py:626 dashboard/templates/products/edit.html:447
+#: dashboard/templates/products/edit.html:460
 msgid "Price History"
 msgstr "سجل الأسعار"
 
-#: dashboard/models.py:596
+#: dashboard/models.py:627
 msgid "Price Histories"
 msgstr "سجلات الأسعار"
 
-#: dashboard/models.py:609
+#: dashboard/models.py:640
 msgid "Item Name"
 msgstr "اسم العنصر"
 
-#: dashboard/models.py:610 dashboard/templates/products/create.html:425
-#: dashboard/templates/products/items/form_modal.html:81
+#: dashboard/models.py:643
+msgid "Commercial reference of this variant, e.g. SKU-LUNA-BLK."
+msgstr "المرجع التجاري لهذا الخيار، مثل SKU-LUNA-BLK."
+
+#: dashboard/models.py:645 dashboard/templates/products/create.html:459
+#: dashboard/templates/products/items/form_modal.html:90
 msgid "Color"
 msgstr "اللون"
 
-#: dashboard/models.py:611 dashboard/templates/products/create.html:443
-#: dashboard/templates/products/items/form_modal.html:103
+#: dashboard/models.py:646 dashboard/templates/products/create.html:477
+#: dashboard/templates/products/items/form_modal.html:112
 msgid "Dimensions"
 msgstr "الأبعاد"
 
-#: dashboard/models.py:615 dashboard/templates/dash/client_catalog.html:56
+#: dashboard/models.py:650 dashboard/templates/dash/client_catalog.html:56
 msgid "Stock"
 msgstr "المخزون"
 
-#: dashboard/models.py:622
+#: dashboard/models.py:657
 msgid "Product Item"
 msgstr "عنصر المنتج"
 
-#: dashboard/models.py:623
+#: dashboard/models.py:658
 msgid "Product Items"
 msgstr "عناصر المنتج"
 
-#: dashboard/models.py:634
+#: dashboard/models.py:669
 msgid "Item"
 msgstr "العنصر"
 
-#: dashboard/models.py:640
+#: dashboard/models.py:675
 msgid "Item Image"
 msgstr "صورة العنصر"
 
-#: dashboard/models.py:641
+#: dashboard/models.py:676
 msgid "Item Images"
 msgstr "صور العنصر"
+
+#: dashboard/models.py:700
+msgid "Texture (JPG / PNG / PBR)"
+msgstr "خامة (JPG / PNG / PBR)"
+
+#: dashboard/models.py:701
+msgid "Technical sheet (PDF)"
+msgstr "البطاقة التقنية (PDF)"
+
+#: dashboard/models.py:702 frontend/templates/home.html:365
+msgid "Other"
+msgstr "أخرى"
+
+#: dashboard/models.py:707
+msgid "Variant"
+msgstr "الخيار"
+
+#: dashboard/models.py:708
+msgid "Format"
+msgstr "الصيغة"
+
+#: dashboard/models.py:709
+msgid "File"
+msgstr "الملف"
+
+#: dashboard/models.py:710
+msgid "Version"
+msgstr "الإصدار"
+
+#: dashboard/models.py:711
+msgid "Current version"
+msgstr "الإصدار الحالي"
+
+#: dashboard/models.py:712
+msgid "Notes"
+msgstr "ملاحظات"
+
+#: dashboard/models.py:716
+msgid "Product file"
+msgstr "ملف المنتج"
+
+#: dashboard/models.py:717
+msgid "Product files"
+msgstr "ملفات المنتج"
 
 #: dashboard/models_settings.py:6
 msgid "Slider Image 1"
@@ -986,8 +1072,8 @@ msgstr "نعم، احذفها"
 #: dashboard/templates/orders/affiliate_cart.html:183
 #: dashboard/templates/products/affiliate_catalog.html:79
 #: dashboard/templates/products/catalog_details.html:199
-#: dashboard/templates/products/create.html:339
-#: dashboard/templates/products/edit.html:396
+#: dashboard/templates/products/create.html:373
+#: dashboard/templates/products/edit.html:452
 #: dashboard/templates/products/my_catalog.html:87
 #: dashboard/templates/products/partner_price_list.html:85
 #: dashboard/templates/users/affiliate_list.html:161
@@ -1013,6 +1099,16 @@ msgid "Edit Category"
 msgstr "تعديل الفئة"
 
 #: dashboard/templates/categories/list.html:72
+#: dashboard/templates/categories/list.html:117
+msgid "Bilnov code (3 letters)"
+msgstr "رمز بيلنوف (3 أحرف)"
+
+#: dashboard/templates/categories/list.html:74
+#: dashboard/templates/categories/list.html:119
+msgid "Used in the Bilnov Object ID of new products, e.g. BLV-FUR-0000000125."
+msgstr "يُستعمل في معرّف بيلنوف للمنتجات الجديدة، مثل BLV-FUR-0000000125."
+
+#: dashboard/templates/categories/list.html:77
 #: dashboard/templates/products/admin_store_settings.html:133
 #: dashboard/templates/products/provider_store_settings.html:156
 #: dashboard/templates/products/store_settings.html:156
@@ -1021,15 +1117,15 @@ msgstr "تعديل الفئة"
 msgid "Save Changes"
 msgstr "حفظ التغييرات"
 
-#: dashboard/templates/categories/list.html:82
+#: dashboard/templates/categories/list.html:87
 msgid "No categories found."
 msgstr "لا توجد فئات."
 
-#: dashboard/templates/categories/list.html:97
+#: dashboard/templates/categories/list.html:102
 msgid "New Category"
 msgstr "فئة جديدة"
 
-#: dashboard/templates/categories/list.html:112
+#: dashboard/templates/categories/list.html:122
 #: dashboard/templates/products/list.html:33
 #: dashboard/templates/products/list.html:45
 msgid "Create Category"
@@ -1059,7 +1155,7 @@ msgstr "تعليم الكل كمقروء"
 #: dashboard/templates/components/pagination.html:9
 #: frontend/templates/products/admin_product_detail.html:83
 #: frontend/templates/products/affiliate_product_detail.html:83
-#: frontend/templates/products/product_detail.html:43
+#: frontend/templates/products/product_detail.html:50
 #: frontend/templates/products/provider_product_detail.html:83
 msgid "Previous"
 msgstr "السابق"
@@ -1067,7 +1163,7 @@ msgstr "السابق"
 #: dashboard/templates/components/pagination.html:39
 #: frontend/templates/products/admin_product_detail.html:84
 #: frontend/templates/products/affiliate_product_detail.html:84
-#: frontend/templates/products/product_detail.html:44
+#: frontend/templates/products/product_detail.html:51
 #: frontend/templates/products/provider_product_detail.html:84
 msgid "Next"
 msgstr "التالي"
@@ -1122,9 +1218,9 @@ msgstr "إليك نظرة عامة على طلباتك."
 msgid "Your agent"
 msgstr "وكيلك"
 
-#: dashboard/templates/dash/client_home.html:32
-#: dashboard/views/dashboard.py:66 dashboard/views/dashboard.py:124
-#: dashboard/views/dashboard.py:174 dashboard/views/dashboard.py:241
+#: dashboard/templates/dash/client_home.html:32 dashboard/views/dashboard.py:72
+#: dashboard/views/dashboard.py:130 dashboard/views/dashboard.py:180
+#: dashboard/views/dashboard.py:247
 msgid "Total Orders"
 msgstr "إجمالي الطلبات"
 
@@ -1133,8 +1229,8 @@ msgid "In Progress"
 msgstr "قيد التنفيذ"
 
 #: dashboard/templates/dash/client_home.html:56
-#: dashboard/views/dashboard.py:99 dashboard/views/dashboard.py:156
-#: dashboard/views/dashboard.py:200
+#: dashboard/views/dashboard.py:105 dashboard/views/dashboard.py:162
+#: dashboard/views/dashboard.py:206
 msgid "Recent Orders"
 msgstr "أحدث الطلبات"
 
@@ -1146,7 +1242,7 @@ msgstr "عرض الكل"
 #: dashboard/templates/dash/client_orders.html:50
 #: dashboard/templates/orders/detail.html:161
 #: dashboard/templates/orders/list.html:206
-#: frontend/templates/cart/checkout.html:120
+#: frontend/templates/cart/checkout.html:129
 msgid "Qty"
 msgstr "الكمية"
 
@@ -1220,6 +1316,10 @@ msgstr "عرض الموقع"
 msgid "Logout"
 msgstr "تسجيل الخروج"
 
+#: dashboard/templates/dash/dash_index.html:98
+msgid "Menu"
+msgstr "القائمة"
+
 #: dashboard/templates/dash/dash_index.html:119
 #: dashboard/templates/users/affiliate_list.html:113
 #: dashboard/templates/users/affiliate_list.html:146
@@ -1285,7 +1385,7 @@ msgstr "اختر المنتجات وحدّد الكميات وأدخل بيان�
 #: frontend/templates/admin_store.html:13
 #: frontend/templates/affiliate_store.html:13
 #: frontend/templates/cart/cart.html:11
-#: frontend/templates/cart/checkout.html:11
+#: frontend/templates/cart/checkout.html:13
 #: frontend/templates/products/admin_product_detail.html:10
 #: frontend/templates/products/affiliate_product_detail.html:10
 #: frontend/templates/products/provider_product_detail.html:10
@@ -1351,7 +1451,7 @@ msgstr "نعم، أزِل"
 #: dashboard/templates/orders/affiliate_cart.html:88
 #: dashboard/templates/products/affiliate_catalog.html:87
 #: frontend/templates/home.html:263
-#: frontend/templates/partials/product_card.html:18
+#: frontend/templates/partials/product_card.html:26
 msgid "Add"
 msgstr "إضافة"
 
@@ -1375,7 +1475,8 @@ msgstr "ملخص السلة"
 #: dashboard/templates/orders/affiliate_cart.html:150
 #: dashboard/templates/orders/detail.html:186
 #: dashboard/templates/orders/list.html:206
-#: frontend/templates/cart/checkout.html:128
+#: frontend/templates/cart/checkout.html:137
+#: frontend/templates/cart/order_success.html:25
 msgid "Total"
 msgstr "الإجمالي"
 
@@ -1516,7 +1617,7 @@ msgstr "إعادة تعيين الكل"
 #: dashboard/templates/users/affiliate_list.html:86
 #: dashboard/templates/users/list.html:92
 #: dashboard/templates/users/semi_affiliate_list.html:158
-#: frontend/templates/products/products_list.html:119
+#: frontend/templates/products/products_list.html:135
 msgid "Apply Filters"
 msgstr "تطبيق عوامل التصفية"
 
@@ -1569,8 +1670,9 @@ msgid "No chain data available."
 msgstr "لا توجد بيانات متاحة عن السلسلة."
 
 #: dashboard/templates/orders/list.html:227
+#: dashboard/templates/users/list.html:241
 #: dashboard/templates/wallets/wallet.html:316
-#: dashboard/templates/wallets/wallet_list.html:60
+#: dashboard/templates/wallets/wallet_list.html:59
 #: dashboard/views/wallets.py:323 user_auth/models.py:12
 msgid "Provider"
 msgstr "المورّد"
@@ -1582,7 +1684,7 @@ msgstr "Loft Design"
 
 #: dashboard/templates/orders/list.html:227
 #: dashboard/templates/wallets/wallet.html:316
-#: dashboard/templates/wallets/wallet_list.html:62
+#: dashboard/templates/wallets/wallet_list.html:61
 #: dashboard/views/wallets.py:322 user_auth/models.py:14
 msgid "Semi-Affiliate"
 msgstr "مسوّق فرعي"
@@ -1881,7 +1983,7 @@ msgid "Remove from Catalog"
 msgstr "إزالة من الكتالوج"
 
 #: dashboard/templates/products/create.html:5
-#: dashboard/templates/products/create.html:335
+#: dashboard/templates/products/create.html:369
 #: dashboard/templates/products/list.html:23
 msgid "Add Product"
 msgstr "إضافة منتج"
@@ -1910,7 +2012,7 @@ msgid "Remove this variant?"
 msgstr "إزالة هذا المتغير؟"
 
 #: dashboard/templates/products/create.html:22
-#: dashboard/templates/products/create.html:369
+#: dashboard/templates/products/create.html:403
 #: dashboard/templates/products/items/form_modal.html:10
 msgid "New Variant"
 msgstr "متغير جديد"
@@ -1920,11 +2022,10 @@ msgid "Edit Variant"
 msgstr "تعديل المتغير"
 
 #: dashboard/templates/products/create.html:24
-#: dashboard/templates/products/create.html:370
+#: dashboard/templates/products/create.html:404
 #: dashboard/templates/products/items/form_modal.html:11
 msgid ""
-"Configure a product variant with its own media, color, dimensions, and "
-"stock."
+"Configure a product variant with its own media, color, dimensions, and stock."
 msgstr "أعدّ متغيرًا للمنتج بوسائطه ولونه وأبعاده ومخزونه الخاص."
 
 #: dashboard/templates/products/create.html:25
@@ -1958,14 +2059,14 @@ msgid "Sales"
 msgstr "المبيعات"
 
 #: dashboard/templates/products/create.html:73
-#: dashboard/templates/products/create.html:255
+#: dashboard/templates/products/create.html:289
 #: dashboard/templates/products/edit.html:71
-#: dashboard/templates/products/edit.html:280
+#: dashboard/templates/products/edit.html:336
 msgid "Variants"
 msgstr "المتغيرات"
 
 #: dashboard/templates/products/create.html:78
-#: dashboard/templates/products/create.html:380
+#: dashboard/templates/products/create.html:414
 #: dashboard/templates/products/edit.html:76
 #: dashboard/templates/products/items/form_modal.html:26
 msgid "Media"
@@ -1980,14 +2081,14 @@ msgid "Product Details"
 msgstr "تفاصيل المنتج"
 
 #: dashboard/templates/products/create.html:105
-#: dashboard/templates/products/create.html:389
+#: dashboard/templates/products/create.html:423
 #: dashboard/templates/products/edit.html:123
 #: dashboard/templates/products/items/form_modal.html:38
 msgid "Drop thumbnail here"
 msgstr "أفلت الصورة المصغرة هنا"
 
 #: dashboard/templates/products/create.html:106
-#: dashboard/templates/products/create.html:390
+#: dashboard/templates/products/create.html:424
 #: dashboard/templates/products/edit.html:124
 #: dashboard/templates/products/items/form_modal.html:39
 msgid "or click to browse"
@@ -2088,16 +2189,15 @@ msgid ""
 "Price for approved professional clients (between wholesale and retail). "
 "Leave empty to use retail."
 msgstr ""
-"السعر للعملاء المحترفين المعتمدين (بين سعر الجملة وسعر التجزئة). اتركه "
-"فارغًا لاستخدام سعر التجزئة."
+"السعر للعملاء المحترفين المعتمدين (بين سعر الجملة وسعر التجزئة). اتركه فارغًا "
+"لاستخدام سعر التجزئة."
 
 #: dashboard/templates/products/create.html:213
 #: dashboard/templates/products/edit.html:237
 msgid ""
 "Shown to visitors outside Algeria. Leave empty to hide the product price "
 "abroad."
-msgstr ""
-"يظهر للزوار من خارج الجزائر. اتركه فارغًا لإخفاء سعر المنتج في الخارج."
+msgstr "يظهر للزوار من خارج الجزائر. اتركه فارغًا لإخفاء سعر المنتج في الخارج."
 
 #: dashboard/templates/products/create.html:226
 #: dashboard/templates/products/edit.html:250
@@ -2124,160 +2224,184 @@ msgstr "رابط خارجي"
 msgid "Optional affiliate / external URL."
 msgstr "رابط تسويق بالعمولة / خارجي اختياري."
 
-#: dashboard/templates/products/create.html:258
+#: dashboard/templates/products/create.html:255
+#: dashboard/templates/products/edit.html:280
+msgid "Bilnov referential"
+msgstr "مرجع بيلنوف"
+
+#: dashboard/templates/products/create.html:259
+#: dashboard/templates/products/edit.html:295
+msgid "Manufacturer / brand"
+msgstr "المصنّع / العلامة"
+
+#: dashboard/templates/products/create.html:267
+#: dashboard/templates/products/edit.html:303
+msgid "Design files (3D, BIM, CAD, textures)"
+msgstr "ملفات التصميم (ثلاثي الأبعاد، BIM، CAO، خامات)"
+
+#: dashboard/templates/products/create.html:278
+#: dashboard/templates/products/edit.html:325
+msgid ""
+"Each file keeps the product's Bilnov Object ID. Uploading a new file of the "
+"same format creates a new version; projects keep the version they use."
+msgstr ""
+"يحتفظ كل ملف بمعرّف بيلنوف للمنتج. رفع ملف جديد بنفس الصيغة ينشئ إصدارًا "
+"جديدًا، وتحتفظ المشاريع بالإصدار الذي تستخدمه."
+
+#: dashboard/templates/products/create.html:292
 #: dashboard/templates/products/items/section.html:5
 msgid "items"
 msgstr "عناصر"
 
-#: dashboard/templates/products/create.html:261
+#: dashboard/templates/products/create.html:295
 #: dashboard/templates/products/items/section.html:8
 msgid "Add Variant"
 msgstr "إضافة متغير"
 
-#: dashboard/templates/products/create.html:265
+#: dashboard/templates/products/create.html:299
 msgid "No variants yet. Click to add product options like colors or sizes."
 msgstr ""
 "لا توجد متغيرات بعد. انقر لإضافة خيارات المنتج مثل الألوان أو المقاسات."
 
-#: dashboard/templates/products/create.html:278
-#: dashboard/templates/products/create.html:399
-#: dashboard/templates/products/edit.html:294
+#: dashboard/templates/products/create.html:312
+#: dashboard/templates/products/create.html:433
+#: dashboard/templates/products/edit.html:350
 #: dashboard/templates/products/items/form_modal.html:51
 msgid "Gallery Images"
 msgstr "صور المعرض"
 
-#: dashboard/templates/products/create.html:282
-#: dashboard/templates/products/edit.html:315
+#: dashboard/templates/products/create.html:316
+#: dashboard/templates/products/edit.html:371
 msgid "Drop images here or click to select multiple"
 msgstr "أفلت الصور هنا أو انقر لاختيار عدة صور"
 
-#: dashboard/templates/products/create.html:291
+#: dashboard/templates/products/create.html:325
 msgid "Visibility"
 msgstr "الظهور"
 
-#: dashboard/templates/products/create.html:293
-#: dashboard/templates/products/edit.html:327
+#: dashboard/templates/products/create.html:327
+#: dashboard/templates/products/edit.html:383
 msgid "Active in Store"
 msgstr "نشط في المتجر"
 
-#: dashboard/templates/products/create.html:298
-#: dashboard/templates/products/edit.html:332
+#: dashboard/templates/products/create.html:332
+#: dashboard/templates/products/edit.html:388
 msgid "Featured Product"
 msgstr "منتج مميز"
 
-#: dashboard/templates/products/create.html:310
-#: dashboard/templates/products/edit.html:356
+#: dashboard/templates/products/create.html:344
+#: dashboard/templates/products/edit.html:412
 msgid "Upload GLB or GLTF"
 msgstr "رفع GLB أو GLTF"
 
-#: dashboard/templates/products/create.html:324
-#: dashboard/templates/products/edit.html:371
+#: dashboard/templates/products/create.html:358
+#: dashboard/templates/products/edit.html:427
 msgid "Supported: GLB, GLTF. Max 50MB."
 msgstr "الصيغ المدعومة: GLB، GLTF. الحد الأقصى 50MB."
 
-#: dashboard/templates/products/create.html:329
+#: dashboard/templates/products/create.html:363
 msgid "Submit"
 msgstr "إرسال"
 
-#: dashboard/templates/products/create.html:331
+#: dashboard/templates/products/create.html:365
 msgid "Review all fields before submitting."
 msgstr "راجع جميع الحقول قبل الإرسال."
 
-#: dashboard/templates/products/create.html:346
+#: dashboard/templates/products/create.html:380
 msgid "Tips"
 msgstr "نصائح"
 
-#: dashboard/templates/products/create.html:348
+#: dashboard/templates/products/create.html:382
 msgid "Use high-quality images (1200×1200px)"
 msgstr "استخدم صورًا عالية الجودة (1200×1200px)"
 
-#: dashboard/templates/products/create.html:349
+#: dashboard/templates/products/create.html:383
 msgid "Write detailed product descriptions"
 msgstr "اكتب أوصافًا مفصلة للمنتجات"
 
-#: dashboard/templates/products/create.html:350
+#: dashboard/templates/products/create.html:384
 msgid "Set competitive prices"
 msgstr "حدد أسعارًا تنافسية"
 
-#: dashboard/templates/products/create.html:351
+#: dashboard/templates/products/create.html:385
 msgid "Add tags for better search visibility"
 msgstr "أضف وسومًا لتحسين الظهور في البحث"
 
-#: dashboard/templates/products/create.html:352
+#: dashboard/templates/products/create.html:386
 msgid "Upload 3D models for AR preview"
 msgstr "ارفع نماذج 3D للمعاينة بالواقع المعزز"
 
-#: dashboard/templates/products/create.html:395
+#: dashboard/templates/products/create.html:429
 #: dashboard/templates/products/items/form_modal.html:45
 msgid "Square 1:1 ratio recommended"
 msgstr "يُنصح بنسبة مربعة 1:1"
 
-#: dashboard/templates/products/create.html:403
+#: dashboard/templates/products/create.html:437
 #: dashboard/templates/products/items/form_modal.html:57
 msgid "Drop images here"
 msgstr "أفلت الصور هنا"
 
-#: dashboard/templates/products/create.html:404
+#: dashboard/templates/products/create.html:438
 #: dashboard/templates/products/items/form_modal.html:58
 msgid "or click to select multiple"
 msgstr "أو انقر لاختيار عدة صور"
 
-#: dashboard/templates/products/create.html:417
+#: dashboard/templates/products/create.html:451
 #: dashboard/templates/products/items/form_modal.html:72
 msgid "Variant Name"
 msgstr "اسم المتغير"
 
-#: dashboard/templates/products/create.html:420
+#: dashboard/templates/products/create.html:454
 msgid "e.g. Matte Black, Walnut Finish, Brushed Steel"
 msgstr "مثال: أسود مطفي، تشطيب جوز، فولاذ مصقول"
 
-#: dashboard/templates/products/create.html:435
-#: dashboard/templates/products/items/form_modal.html:92
+#: dashboard/templates/products/create.html:469
+#: dashboard/templates/products/items/form_modal.html:101
 msgid "Color name (e.g. Midnight Black)"
 msgstr "اسم اللون (مثال: أسود داكن)"
 
-#: dashboard/templates/products/create.html:436
-#: dashboard/templates/products/items/form_modal.html:94
+#: dashboard/templates/products/create.html:470
+#: dashboard/templates/products/items/form_modal.html:103
 msgid "Leave blank to use hex value as name"
 msgstr "اتركه فارغًا لاستخدام القيمة السداسية كاسم"
 
-#: dashboard/templates/products/create.html:448
-#: dashboard/templates/products/items/form_modal.html:108
+#: dashboard/templates/products/create.html:482
+#: dashboard/templates/products/items/form_modal.html:117
 msgid "W"
 msgstr "ع"
 
-#: dashboard/templates/products/create.html:453
-#: dashboard/templates/products/items/form_modal.html:115
+#: dashboard/templates/products/create.html:487
+#: dashboard/templates/products/items/form_modal.html:124
 msgid "D"
 msgstr "عم"
 
-#: dashboard/templates/products/create.html:458
-#: dashboard/templates/products/items/form_modal.html:122
+#: dashboard/templates/products/create.html:492
+#: dashboard/templates/products/items/form_modal.html:131
 msgid "H"
 msgstr "ا"
 
-#: dashboard/templates/products/create.html:462
-#: dashboard/templates/products/items/form_modal.html:126
+#: dashboard/templates/products/create.html:496
+#: dashboard/templates/products/items/form_modal.html:135
 msgid "Unit"
 msgstr "الوحدة"
 
-#: dashboard/templates/products/create.html:474
-#: dashboard/templates/products/items/form_modal.html:140
+#: dashboard/templates/products/create.html:508
+#: dashboard/templates/products/items/form_modal.html:149
 msgid "Leave blank if dimensions don't apply"
 msgstr "اتركه فارغًا إذا كانت الأبعاد لا تنطبق"
 
-#: dashboard/templates/products/create.html:479
-#: dashboard/templates/products/items/form_modal.html:147
+#: dashboard/templates/products/create.html:513
+#: dashboard/templates/products/items/form_modal.html:156
 msgid "Stock Quantity"
 msgstr "كمية المخزون"
 
-#: dashboard/templates/products/create.html:485
-#: dashboard/templates/products/items/form_modal.html:153
+#: dashboard/templates/products/create.html:519
+#: dashboard/templates/products/items/form_modal.html:162
 msgid "units available"
 msgstr "وحدة متاحة"
 
-#: dashboard/templates/products/create.html:492
-#: dashboard/templates/products/items/form_modal.html:160
+#: dashboard/templates/products/create.html:526
+#: dashboard/templates/products/items/form_modal.html:169
 msgid "Save Variant"
 msgstr "حفظ المتغير"
 
@@ -2299,27 +2423,43 @@ msgstr "الشراء"
 msgid "Suggested Wholesale"
 msgstr "سعر الجملة المقترح"
 
-#: dashboard/templates/products/edit.html:324
+#: dashboard/templates/products/edit.html:284
+msgid "Bilnov Object ID (permanent)"
+msgstr "معرّف بيلنوف (دائم)"
+
+#: dashboard/templates/products/edit.html:288
+msgid "Copy"
+msgstr "نسخ"
+
+#: dashboard/templates/products/edit.html:290
+msgid "Model version"
+msgstr "إصدار النموذج"
+
+#: dashboard/templates/products/edit.html:380
 msgid "Visibility & Status"
 msgstr "الظهور والحالة"
 
-#: dashboard/templates/products/edit.html:353
+#: dashboard/templates/products/edit.html:409
 msgid "Click to replace"
 msgstr "انقر للاستبدال"
 
-#: dashboard/templates/products/edit.html:376
+#: dashboard/templates/products/edit.html:432
 #: dashboard/templates/products/partner_price_list.html:51
 msgid "Actions"
 msgstr "الإجراءات"
 
-#: dashboard/templates/products/edit.html:380
+#: dashboard/templates/products/edit.html:436
 msgid "Save"
 msgstr "حفظ"
 
-#: dashboard/templates/products/edit.html:385
+#: dashboard/templates/products/edit.html:441
 #: dashboard/templates/products/list.html:127
 msgid "Affiliate Pricing"
 msgstr "تسعير المسوّقين بالعمولة"
+
+#: dashboard/templates/products/items/form_modal.html:81
+msgid "SKU (commercial reference)"
+msgstr "SKU (المرجع التجاري)"
 
 #: dashboard/templates/products/items/item_list_partial.html:47
 #: dashboard/templates/settings/update.html:50
@@ -2336,8 +2476,7 @@ msgstr "لا توجد متغيرات بعد"
 msgid ""
 "Click 'Add Variant' to create product options like color, size, or finish."
 msgstr ""
-"انقر على \"إضافة متغير\" لإنشاء خيارات للمنتج مثل اللون أو المقاس أو "
-"التشطيب."
+"انقر على \"إضافة متغير\" لإنشاء خيارات للمنتج مثل اللون أو المقاس أو التشطيب."
 
 #: dashboard/templates/products/items/section.html:12
 msgid "No variants yet. Click 'Add Variant' to create product options."
@@ -2370,7 +2509,7 @@ msgstr "3D"
 #: dashboard/templates/products/list.html:104
 #: frontend/templates/products/admin_product_detail.html:135
 #: frontend/templates/products/affiliate_product_detail.html:139
-#: frontend/templates/products/product_detail.html:81
+#: frontend/templates/products/product_detail.html:88
 #: frontend/templates/products/provider_product_detail.html:135
 msgid "In Stock"
 msgstr "متوفر"
@@ -2378,7 +2517,7 @@ msgstr "متوفر"
 #: dashboard/templates/products/list.html:106
 #: frontend/templates/products/admin_product_detail.html:135
 #: frontend/templates/products/affiliate_product_detail.html:139
-#: frontend/templates/products/product_detail.html:81
+#: frontend/templates/products/product_detail.html:88
 #: frontend/templates/products/provider_product_detail.html:135
 msgid "Out of Stock"
 msgstr "نفد من المخزون"
@@ -2609,7 +2748,8 @@ msgid "Name, Email..."
 msgstr "الاسم، البريد الإلكتروني..."
 
 #: dashboard/templates/users/affiliate_list.html:77
-#: dashboard/views/users.py:478
+#: dashboard/views/users.py:489
+#: frontend/templates/products/products_list.html:54
 msgid "All"
 msgstr "الكل"
 
@@ -2778,8 +2918,7 @@ msgstr "حظر المستخدم؟"
 #: dashboard/templates/users/details.html:83
 #, python-format
 msgid ""
-"Are you sure you want to unblock %(name)s? They will be able to log in "
-"again."
+"Are you sure you want to unblock %(name)s? They will be able to log in again."
 msgstr ""
 "هل أنت متأكد أنك تريد إلغاء حظر %(name)s؟ سيتمكن من تسجيل الدخول مجددًا."
 
@@ -2840,7 +2979,7 @@ msgid "Pending Approval"
 msgstr "في انتظار الاعتماد"
 
 #: dashboard/templates/users/details.html:145
-#: dashboard/templates/wallets/wallet_list.html:48
+#: dashboard/templates/wallets/wallet_list.html:47
 #: dashboard/templates/wallets/withdrawal_list.html:53
 #: dashboard/templates/wallets/withdrawal_list.html:151 user_auth/models.py:19
 msgid "Role"
@@ -2982,8 +3121,8 @@ msgid "Filter Users"
 msgstr "تصفية المستخدمين"
 
 #: dashboard/templates/users/list.html:40
-msgid "New Provider"
-msgstr "مورّد جديد"
+msgid "New account"
+msgstr "حساب جديد"
 
 #: dashboard/templates/users/list.html:64
 msgid "Advanced Filter"
@@ -3006,8 +3145,8 @@ msgid "No providers found"
 msgstr "لم يتم العثور على مورّدين"
 
 #: dashboard/templates/users/list.html:212
-msgid "Add New Provider"
-msgstr "إضافة مورّد جديد"
+msgid "Add a provider or professional client"
+msgstr "إضافة مورّد أو عميل محترف"
 
 #: dashboard/templates/users/list.html:231
 #: user_auth/templates/auth/password_reset.html:51
@@ -3015,26 +3154,39 @@ msgid "Email Address"
 msgstr "عنوان البريد الإلكتروني"
 
 #: dashboard/templates/users/list.html:239
+msgid "Account type"
+msgstr "نوع الحساب"
+
+#: dashboard/templates/users/list.html:242 user_auth/models.py:15
+msgid "Professional Client"
+msgstr "عميل محترف"
+
+#: dashboard/templates/users/list.html:244
+msgid ""
+"Professional clients see the professional price of each product when they "
+"are logged in."
+msgstr "يرى العملاء المحترفون السعر المهني لكل منتج بعد تسجيل الدخول."
+
+#: dashboard/templates/users/list.html:247
 #, python-format
 msgid "Commission (%%)"
 msgstr "العمولة (%%)"
 
-#: dashboard/templates/users/list.html:243
+#: dashboard/templates/users/list.html:251
 msgid "Office Address"
 msgstr "عنوان المكتب"
 
-#: dashboard/templates/users/list.html:250
+#: dashboard/templates/users/list.html:258
 msgid "Mark as Trusted Provider"
 msgstr "تعيين كمورّد موثوق"
 
-#: dashboard/templates/users/list.html:258
+#: dashboard/templates/users/list.html:266
 msgid ""
 "The provider will receive an email with their generated login credentials "
 "automatically."
-msgstr ""
-"سيتلقى المورّد تلقائيًا بريدًا إلكترونيًا يتضمن بيانات الدخول الخاصة به."
+msgstr "سيتلقى المورّد تلقائيًا بريدًا إلكترونيًا يتضمن بيانات الدخول الخاصة به."
 
-#: dashboard/templates/users/list.html:263
+#: dashboard/templates/users/list.html:271
 msgid "Create Provider & Send Credentials"
 msgstr "إنشاء المورّد وإرسال بيانات الدخول"
 
@@ -3117,11 +3269,11 @@ msgid "semi-affiliates"
 msgstr "مسوّقون فرعيون"
 
 #: dashboard/templates/users/semi_affiliate_list.html:95
-#: frontend/templates/cart/cart.html:122 frontend/templates/home.html:275
-#: frontend/templates/partials/product_card.html:29
+#: frontend/templates/cart/cart.html:122 frontend/templates/home.html:274
+#: frontend/templates/partials/product_card.html:36
 #: frontend/templates/products/admin_product_detail.html:182
 #: frontend/templates/products/affiliate_product_detail.html:186
-#: frontend/templates/products/product_detail.html:129
+#: frontend/templates/products/product_detail.html:136
 #: frontend/templates/products/provider_product_detail.html:182
 msgid "View Details"
 msgstr "عرض التفاصيل"
@@ -3157,7 +3309,7 @@ msgstr "جميع المسوّقين بالعمولة"
 
 #: dashboard/templates/wallets/wallet.html:4
 #: dashboard/templates/wallets/wallet.html:25
-#: dashboard/templates/wallets/wallet_list.html:23
+#: dashboard/templates/wallets/wallet_list.html:22
 msgid "My Wallet"
 msgstr "محفظتي"
 
@@ -3171,7 +3323,7 @@ msgid "Submit Request"
 msgstr "إرسال الطلب"
 
 #: dashboard/templates/wallets/wallet.html:23
-#: dashboard/templates/wallets/wallet_list.html:18
+#: dashboard/templates/wallets/wallet_list.html:17
 #: dashboard/templates/wallets/withdrawal_list.html:28
 msgid "Finance"
 msgstr "المالية"
@@ -3266,7 +3418,7 @@ msgstr "نوع المعاملة"
 
 #: dashboard/templates/wallets/wallet.html:145
 #: dashboard/templates/wallets/withdrawal_list.html:177
-#: frontend/templates/products/products_list.html:116
+#: frontend/templates/products/products_list.html:132
 msgid "Reset"
 msgstr "إعادة تعيين"
 
@@ -3350,21 +3502,21 @@ msgid "No semi-affiliates found."
 msgstr "لم يتم العثور على مسوّقين فرعيين."
 
 #: dashboard/templates/wallets/wallet_list.html:4
-#: dashboard/templates/wallets/wallet_list.html:19
+#: dashboard/templates/wallets/wallet_list.html:18
 #: dashboard/templates/wallets/withdrawal_list.html:44
 #: dashboard/views/wallets.py:90 user_auth/models.py:99
 msgid "Wallets"
 msgstr "المحافظ"
 
-#: dashboard/templates/wallets/wallet_list.html:35
+#: dashboard/templates/wallets/wallet_list.html:34
 msgid "Search affiliates by name or email..."
 msgstr "ابحث عن المسوّقين بالاسم أو البريد الإلكتروني..."
 
-#: dashboard/templates/wallets/wallet_list.html:49
+#: dashboard/templates/wallets/wallet_list.html:48
 msgid "Balance"
 msgstr "الرصيد"
 
-#: dashboard/templates/wallets/wallet_list.html:77
+#: dashboard/templates/wallets/wallet_list.html:76
 msgid "No wallets found."
 msgstr "لم يتم العثور على محافظ."
 
@@ -3457,6 +3609,10 @@ msgstr "رفض"
 msgid "No withdrawal requests."
 msgstr "لا توجد طلبات سحب."
 
+#: dashboard/templatetags/tags.py:42 dashboard/views/dashboard.py:100
+msgid "Providers"
+msgstr "المورّدون"
+
 #: dashboard/templatetags/tags.py:44
 msgid "Affiliates Pending"
 msgstr "مسوّقون في الانتظار"
@@ -3465,7 +3621,7 @@ msgstr "مسوّقون في الانتظار"
 msgid "Pending Orders"
 msgstr "طلبات معلّقة"
 
-#: dashboard/templatetags/tags.py:56 dashboard/views/dashboard.py:229
+#: dashboard/templatetags/tags.py:56 dashboard/views/dashboard.py:235
 msgid "My Products"
 msgstr "منتجاتي"
 
@@ -3527,49 +3683,49 @@ msgstr "تنبيه انخفاض المخزون — متغيّر"
 msgid "\"%(product)s — %(variant)s\" has only %(qty)s units left."
 msgstr "لم يتبقَّ من \"%(product)s — %(variant)s\" سوى %(qty)s وحدة."
 
-#: dashboard/views/dashboard.py:54
+#: dashboard/views/dashboard.py:60
 msgid "Total Providers"
 msgstr "إجمالي المورّدين"
 
-#: dashboard/views/dashboard.py:60
+#: dashboard/views/dashboard.py:66
 msgid "Total Affiliates"
 msgstr "إجمالي المسوّقين بالعمولة"
 
-#: dashboard/views/dashboard.py:81
+#: dashboard/views/dashboard.py:87
 msgid "Revenue (DZD)"
 msgstr "الإيرادات (DZD)"
 
-#: dashboard/views/dashboard.py:87
+#: dashboard/views/dashboard.py:93
 msgid "Pending Products"
 msgstr "منتجات معلّقة"
 
-#: dashboard/views/dashboard.py:92
+#: dashboard/views/dashboard.py:98
 msgid "User Distribution"
 msgstr "توزيع المستخدمين"
 
-#: dashboard/views/dashboard.py:142 dashboard/views/dashboard.py:192
+#: dashboard/views/dashboard.py:148 dashboard/views/dashboard.py:198
 msgid "Catalog Items"
 msgstr "عناصر الكتالوج"
 
-#: dashboard/views/dashboard.py:153 dashboard/views/dashboard.py:197
-#: dashboard/views/dashboard.py:258
+#: dashboard/views/dashboard.py:159 dashboard/views/dashboard.py:203
+#: dashboard/views/dashboard.py:264
 msgid "Order Status"
 msgstr "حالة الطلب"
 
-#: dashboard/views/dashboard.py:247
+#: dashboard/views/dashboard.py:253
 msgid "To Fulfill"
 msgstr "قيد الانتظار للتجهيز"
 
-#: dashboard/views/dashboard.py:260
+#: dashboard/views/dashboard.py:266
 msgid "Fulfilling"
 msgstr "قيد التجهيز"
 
-#: dashboard/views/dashboard.py:261
+#: dashboard/views/dashboard.py:267
 msgid "My Recent Orders"
 msgstr "طلباتي الأخيرة"
 
-#: dashboard/views/orders.py:122 dashboard/views/products.py:87
-#: dashboard/views/products.py:290
+#: dashboard/views/orders.py:122 dashboard/views/products.py:94
+#: dashboard/views/products.py:309
 msgid "Only trusted providers can access this page."
 msgstr "لا يمكن الوصول إلى هذه الصفحة إلا للمورّدين الموثوقين."
 
@@ -3650,7 +3806,7 @@ msgstr "المنتج غير موجود في الكتالوج الخاص بك."
 msgid "No retail price configured for this product."
 msgstr "لم يتم تحديد سعر تجزئة لهذا المنتج."
 
-#: dashboard/views/orders.py:471 frontend/views/client.py:166
+#: dashboard/views/orders.py:471 frontend/views/client.py:169
 #, python-format
 msgid "Only %(qty)s available."
 msgstr "المتوفر %(qty)s فقط."
@@ -3688,11 +3844,11 @@ msgid "You can only validate pending orders."
 msgstr "يمكنك اعتماد الطلبات المعلّقة فقط."
 
 #: dashboard/views/orders.py:577 dashboard/views/orders.py:587
-#: dashboard/views/product_items.py:17 dashboard/views/product_items.py:55
-#: dashboard/views/product_items.py:101 dashboard/views/product_items.py:152
-#: dashboard/views/products.py:444 dashboard/views/products.py:463
-#: dashboard/views/users.py:788 dashboard/views/users.py:1006
-#: frontend/views/client.py:119
+#: dashboard/views/product_items.py:17 dashboard/views/product_items.py:64
+#: dashboard/views/product_items.py:116 dashboard/views/product_items.py:172
+#: dashboard/views/products.py:467 dashboard/views/products.py:486
+#: dashboard/views/users.py:799 dashboard/views/users.py:1017
+#: frontend/views/client.py:122
 msgid "Permission denied."
 msgstr "تم رفض الإذن."
 
@@ -3705,8 +3861,8 @@ msgid ""
 "The prices of this order are inconsistent (a commission would be negative). "
 "Fix the product prices, then try again."
 msgstr ""
-"أسعار هذا الطلب غير متسقة (ستكون إحدى العمولات سالبة). صحّح أسعار المنتجات "
-"ثم أعد المحاولة."
+"أسعار هذا الطلب غير متسقة (ستكون إحدى العمولات سالبة). صحّح أسعار المنتجات ثم "
+"أعد المحاولة."
 
 #: dashboard/views/orders.py:648 dashboard/views/orders.py:668
 #, python-format
@@ -3779,8 +3935,8 @@ msgstr "تم تسليم الطلب #%(num)s — تم كسب العمولة"
 #: dashboard/views/orders.py:728
 #, python-format
 msgid ""
-"Order #%(num)s has been delivered. Your commission has been credited to your"
-" wallet."
+"Order #%(num)s has been delivered. Your commission has been credited to your "
+"wallet."
 msgstr "تم تسليم الطلب #%(num)s. أُضيفت عمولتك إلى محفظتك."
 
 #: dashboard/views/orders.py:739 dashboard/views/orders.py:748
@@ -3837,7 +3993,8 @@ msgstr "تمت إضافة المنتج!"
 msgid ""
 "\"%(product)s\" has been added to your catalog with purchase price "
 "DZD%(price)s."
-msgstr "تمت إضافة \"%(product)s\" إلى الكتالوج الخاص بك بسعر شراء DZD%(price)s."
+msgstr ""
+"تمت إضافة \"%(product)s\" إلى الكتالوج الخاص بك بسعر شراء DZD%(price)s."
 
 #: dashboard/views/partner_prices.py:371
 msgid "New Catalog Addition"
@@ -3862,7 +4019,7 @@ msgstr "يجب ألا يقل سعر الجملة عن سعر الشراء الخ
 msgid "Retail price must be at least your purchase price (%(p)s DZD)."
 msgstr "يجب ألا يقل سعر التجزئة عن سعر الشراء الخاص بك (%(p)s DZD)."
 
-#: dashboard/views/partner_prices.py:425 dashboard/views/products.py:150
+#: dashboard/views/partner_prices.py:425 dashboard/views/products.py:157
 msgid "Retail price must be at least the wholesale price"
 msgstr "يجب ألا يقل سعر التجزئة عن سعر الجملة"
 
@@ -3896,141 +4053,145 @@ msgstr "طلب غير صالح."
 msgid "Product updated."
 msgstr "تم تحديث المنتج."
 
-#: dashboard/views/product_items.py:59 dashboard/views/product_items.py:105
+#: dashboard/views/product_items.py:44
+msgid "This SKU is already used by another variant."
+msgstr "هذا الـ SKU مستعمل لخيار آخر."
+
+#: dashboard/views/product_items.py:68 dashboard/views/product_items.py:120
 msgid "Item name is required."
 msgstr "اسم العنصر مطلوب."
 
-#: dashboard/views/product_items.py:80
+#: dashboard/views/product_items.py:94
 msgid "Item added."
 msgstr "تمت إضافة العنصر."
 
-#: dashboard/views/product_items.py:131
+#: dashboard/views/product_items.py:150
 msgid "Item updated."
 msgstr "تم تحديث العنصر."
 
-#: dashboard/views/product_items.py:156 frontend/views/cart.py:251
+#: dashboard/views/product_items.py:176 frontend/views/cart.py:251
 msgid "Item removed."
 msgstr "تمت إزالة العنصر."
 
-#: dashboard/views/products.py:34 dashboard/views/products.py:67
+#: dashboard/views/products.py:40 dashboard/views/products.py:74
 msgid "Category name is required"
 msgstr "اسم الفئة مطلوب"
 
-#: dashboard/views/products.py:40
+#: dashboard/views/products.py:47
 msgid "Category updated successfully"
 msgstr "تم تحديث الفئة بنجاح"
 
-#: dashboard/views/products.py:45 dashboard/views/products.py:78
-#: dashboard/views/settings.py:41 dashboard/views/users.py:132
-#: dashboard/views/users.py:345 dashboard/views/users.py:400
-#: dashboard/views/users.py:535 dashboard/views/users.py:660
-#: dashboard/views/users.py:773 dashboard/views/users.py:995
+#: dashboard/views/products.py:52 dashboard/views/products.py:85
+#: dashboard/views/settings.py:41 dashboard/views/users.py:138
+#: dashboard/views/users.py:356 dashboard/views/users.py:411
+#: dashboard/views/users.py:546 dashboard/views/users.py:671
+#: dashboard/views/users.py:784 dashboard/views/users.py:1006
 #: frontend/views/main.py:89 frontend/views/main.py:164
 #: frontend/views/orders.py:38 user_auth/views.py:78 user_auth/views.py:145
 #: user_auth/views.py:211 user_auth/views.py:339
 msgid "Something went wrong. Please try again."
 msgstr "حدث خطأ ما. يرجى المحاولة مرة أخرى."
 
-#: dashboard/views/products.py:56
+#: dashboard/views/products.py:63
 msgid "Category deleted successfully"
 msgstr "تم حذف الفئة بنجاح"
 
-#: dashboard/views/products.py:72
+#: dashboard/views/products.py:79
 msgid "Category created successfully"
 msgstr "تم إنشاء الفئة بنجاح"
 
-#: dashboard/views/products.py:105
+#: dashboard/views/products.py:112
 msgid "Product Management"
 msgstr "إدارة المنتجات"
 
-#: dashboard/views/products.py:115
+#: dashboard/views/products.py:122
 msgid "This field is required"
 msgstr "هذا الحقل مطلوب"
 
-#: dashboard/views/products.py:120
+#: dashboard/views/products.py:127
 msgid "Invalid number"
 msgstr "رقم غير صالح"
 
-#: dashboard/views/products.py:123
+#: dashboard/views/products.py:130
 msgid "Must be greater than zero"
 msgstr "يجب أن يكون أكبر من صفر"
 
-#: dashboard/views/products.py:148
+#: dashboard/views/products.py:155
 msgid "Wholesale price must be at least the purchase price"
 msgstr "يجب ألا يقل سعر الجملة عن سعر الشراء"
 
-#: dashboard/views/products.py:153
+#: dashboard/views/products.py:160
 msgid "Affiliate price must be between the purchase and retail prices"
 msgstr "يجب أن يكون سعر المسوّق بين سعر الشراء وسعر التجزئة"
 
-#: dashboard/views/products.py:156
+#: dashboard/views/products.py:163
 msgid "Professional price must be between the wholesale and retail prices"
 msgstr "يجب أن يكون سعر المحترف بين سعر الجملة وسعر التجزئة"
 
-#: dashboard/views/products.py:169
+#: dashboard/views/products.py:184
 msgid "Only trusted providers can create products."
 msgstr "لا يمكن إنشاء المنتجات إلا للمورّدين الموثوقين."
 
-#: dashboard/views/products.py:183
+#: dashboard/views/products.py:198
 msgid "Title is required"
 msgstr "العنوان مطلوب"
 
-#: dashboard/views/products.py:185
+#: dashboard/views/products.py:200
 msgid "Thumbnail is required"
 msgstr "الصورة المصغّرة مطلوبة"
 
-#: dashboard/views/products.py:272
+#: dashboard/views/products.py:290
 msgid "Product added successfully"
 msgstr "تمت إضافة المنتج بنجاح"
 
-#: dashboard/views/products.py:277 dashboard/views/products.py:428
+#: dashboard/views/products.py:295 dashboard/views/products.py:450
 msgid "The product could not be saved. Please try again."
 msgstr "تعذّر حفظ المنتج. يرجى المحاولة مرة أخرى."
 
-#: dashboard/views/products.py:337
+#: dashboard/views/products.py:358
 msgid "Product Approved!"
 msgstr "تمت الموافقة على المنتج!"
 
-#: dashboard/views/products.py:338
+#: dashboard/views/products.py:359
 #, python-format
 msgid "Your product '%(product)s' has been approved and is now live."
 msgstr "تمت الموافقة على منتجك '%(product)s' وهو متاح الآن."
 
-#: dashboard/views/products.py:423
+#: dashboard/views/products.py:445
 msgid "Product updated successfully"
 msgstr "تم تحديث المنتج بنجاح"
 
-#: dashboard/views/products.py:452
+#: dashboard/views/products.py:475
 msgid "Product removed"
 msgstr "تمت إزالة المنتج"
 
-#: dashboard/views/products.py:499
+#: dashboard/views/products.py:522
 msgid "Affiliate is required"
 msgstr "المسوّق بالعمولة مطلوب"
 
-#: dashboard/views/products.py:501
+#: dashboard/views/products.py:524
 msgid "Purchase price is required"
 msgstr "سعر الشراء مطلوب"
 
-#: dashboard/views/products.py:509
+#: dashboard/views/products.py:532
 msgid "User not found"
 msgstr "المستخدم غير موجود"
 
-#: dashboard/views/products.py:523
+#: dashboard/views/products.py:546
 msgid "Custom Price Set!"
 msgstr "تم تحديد سعر مخصّص!"
 
-#: dashboard/views/products.py:524
+#: dashboard/views/products.py:547
 #, python-format
 msgid "Admin set a custom price for \"%(product)s\" — DZD%(price)s."
 msgstr "حدّد المسؤول سعرًا مخصّصًا لـ \"%(product)s\" — DZD%(price)s."
 
-#: dashboard/views/products.py:532
+#: dashboard/views/products.py:555
 #, python-format
 msgid "Custom price set for %(name)s."
 msgstr "تم تحديد سعر مخصّص لـ %(name)s."
 
-#: dashboard/views/products.py:548
+#: dashboard/views/products.py:571
 msgid "Custom price removed."
 msgstr "تمت إزالة السعر المخصّص."
 
@@ -4042,162 +4203,170 @@ msgstr "تم تحديث إعدادات الموقع بنجاح."
 msgid "Contact request removed."
 msgstr "تم حذف طلب التواصل."
 
-#: dashboard/views/users.py:41 dashboard/views/users.py:369
-#: dashboard/views/users.py:583 dashboard/views/users.py:697
-#: dashboard/views/users.py:921
+#: dashboard/views/users.py:45 dashboard/views/users.py:380
+#: dashboard/views/users.py:594 dashboard/views/users.py:708
+#: dashboard/views/users.py:932
 msgid "First name is required"
 msgstr "الاسم مطلوب"
 
-#: dashboard/views/users.py:42 dashboard/views/users.py:585
-#: dashboard/views/users.py:698 dashboard/views/users.py:923
+#: dashboard/views/users.py:46 dashboard/views/users.py:596
+#: dashboard/views/users.py:709 dashboard/views/users.py:934
 msgid "Email is required"
 msgstr "البريد الإلكتروني مطلوب"
 
-#: dashboard/views/users.py:44
+#: dashboard/views/users.py:48
 msgid "Commission is required"
 msgstr "العمولة مطلوبة"
 
-#: dashboard/views/users.py:52
+#: dashboard/views/users.py:56
 msgid "Commission must be between 0 and 100 %"
 msgstr "يجب أن تكون العمولة بين 0 و100 %"
 
-#: dashboard/views/users.py:54
+#: dashboard/views/users.py:58
 msgid "This email is already in use"
 msgstr "هذا البريد الإلكتروني مستخدم بالفعل"
 
-#: dashboard/views/users.py:113 dashboard/views/users.py:643
-#: dashboard/views/users.py:756 dashboard/views/users.py:978
+#: dashboard/views/users.py:118 dashboard/views/users.py:654
+#: dashboard/views/users.py:767 dashboard/views/users.py:989
 msgid "Failed to send email. Account creation rolled back."
 msgstr "تعذّر إرسال البريد الإلكتروني. تم التراجع عن إنشاء الحساب."
 
-#: dashboard/views/users.py:121 dashboard/views/users.py:649
-#: dashboard/views/users.py:762
+#: dashboard/views/users.py:126 dashboard/views/users.py:660
+#: dashboard/views/users.py:773
 msgid ""
 "Account could not be created because the invitation email failed to send. "
 "Please check your SMTP settings."
 msgstr ""
 "تعذّر إنشاء الحساب لأن إرسال بريد الدعوة فشل. يرجى التحقق من إعدادات SMTP."
 
-#: dashboard/views/users.py:127
+#: dashboard/views/users.py:132
+msgid "Professional client account created and invitation sent successfully."
+msgstr "تم إنشاء حساب العميل المحترف وإرسال الدعوة."
+
+#: dashboard/views/users.py:133
 msgid "Provider account created and invitation sent successfully."
 msgstr "تم إنشاء حساب المورّد وإرسال الدعوة بنجاح."
 
-#: dashboard/views/users.py:166 dashboard/views/users.py:171
+#: dashboard/views/users.py:176 dashboard/views/users.py:181
 msgid "All Status"
 msgstr "جميع الحالات"
 
-#: dashboard/views/users.py:302
+#: dashboard/views/users.py:313
 #, python-format
 msgid "User %(name)s deleted successfully."
 msgstr "تم حذف المستخدم %(name)s بنجاح."
 
-#: dashboard/views/users.py:329
+#: dashboard/views/users.py:340
 msgid "Failed to send activation email. Approval cancelled."
 msgstr "تعذّر إرسال بريد التفعيل. تم إلغاء الموافقة."
 
-#: dashboard/views/users.py:335
+#: dashboard/views/users.py:346
 #, python-format
 msgid "User %(name)s approved successfully."
 msgstr "تمت الموافقة على المستخدم %(name)s بنجاح."
 
-#: dashboard/views/users.py:344
+#: dashboard/views/users.py:355
 #, python-format
 msgid "An error occurred during approval: %(error)s"
 msgstr "حدث خطأ أثناء الموافقة: %(error)s"
 
-#: dashboard/views/users.py:371
+#: dashboard/views/users.py:382
 msgid "Last name is required"
 msgstr "اللقب مطلوب"
 
-#: dashboard/views/users.py:393
+#: dashboard/views/users.py:404
 msgid "Profile updated successfully."
 msgstr "تم تحديث الملف الشخصي بنجاح."
 
-#: dashboard/views/users.py:417
+#: dashboard/views/users.py:428
 msgid "blocked"
 msgstr "محظور"
 
-#: dashboard/views/users.py:417
+#: dashboard/views/users.py:428
 msgid "unblocked"
 msgstr "غير محظور"
 
-#: dashboard/views/users.py:426
+#: dashboard/views/users.py:437
 msgid "LOFT Design - Account Blocked"
 msgstr "LOFT Design - تم حظر الحساب"
 
-#: dashboard/views/users.py:439
+#: dashboard/views/users.py:450
 #, python-format
 msgid "User %(name)s has been %(status)s."
 msgstr "تم تغيير حالة المستخدم %(name)s إلى: %(status)s."
 
-#: dashboard/views/users.py:517
+#: dashboard/views/users.py:528
 msgid "Failed to send activation email. Operation cancelled."
 msgstr "تعذّر إرسال بريد التفعيل. تم إلغاء العملية."
 
-#: dashboard/views/users.py:523
+#: dashboard/views/users.py:534
 #, python-format
 msgid "%(name)s approved successfully. Activation email sent."
 msgstr "تمت الموافقة على %(name)s بنجاح. تم إرسال بريد التفعيل."
 
-#: dashboard/views/users.py:529
+#: dashboard/views/users.py:540
 #, python-format
 msgid "%(name)s has been disapproved."
 msgstr "تم رفض %(name)s."
 
-#: dashboard/views/users.py:535
+#: dashboard/views/users.py:546
 #, python-format
 msgid "An error occurred: %(error)s"
 msgstr "حدث خطأ: %(error)s"
 
-#: dashboard/views/users.py:543
+#: dashboard/views/users.py:553
+msgid "LOFT Design"
+msgstr "LOFT Design"
+
+#: dashboard/views/users.py:554
 #, python-format
 msgid "Welcome to %(site)s — Your Affiliate Account is Active!"
 msgstr "مرحبًا بك في %(site)s — حسابك كمسوّق بالعمولة مفعّل!"
 
-#: dashboard/views/users.py:587 dashboard/views/users.py:700
-#: dashboard/views/users.py:925
+#: dashboard/views/users.py:598 dashboard/views/users.py:711
+#: dashboard/views/users.py:936
 msgid "This email is already registered"
 msgstr "هذا البريد الإلكتروني مسجّل بالفعل"
 
-#: dashboard/views/users.py:655
+#: dashboard/views/users.py:666
 #, python-format
 msgid "Affiliate '%(name)s' created. Invitation sent to %(email)s."
 msgstr "تم إنشاء المسوّق بالعمولة '%(name)s'. أُرسلت الدعوة إلى %(email)s."
 
-#: dashboard/views/users.py:673
+#: dashboard/views/users.py:684
 msgid "You can only delete affiliates you created."
 msgstr "يمكنك حذف المسوّقين الذين أنشأتهم فقط."
 
-#: dashboard/views/users.py:679
+#: dashboard/views/users.py:690
 #, python-format
 msgid "Affiliate %(name)s deleted successfully."
 msgstr "تم حذف المسوّق بالعمولة %(name)s بنجاح."
 
-#: dashboard/views/users.py:768
+#: dashboard/views/users.py:779
 #, python-format
 msgid "Semi-affiliate '%(name)s' created. Invitation sent to %(email)s."
 msgstr "تم إنشاء المسوّق الفرعي '%(name)s'. أُرسلت الدعوة إلى %(email)s."
 
-#: dashboard/views/users.py:793
+#: dashboard/views/users.py:804
 #, python-format
 msgid "Semi-affiliate %(name)s deleted successfully."
 msgstr "تم حذف المسوّق الفرعي %(name)s بنجاح."
 
-#: dashboard/views/users.py:904
+#: dashboard/views/users.py:915
 msgid "End Clients"
 msgstr "العملاء النهائيون"
 
-#: dashboard/views/users.py:984
+#: dashboard/views/users.py:995
 msgid ""
 "Account could not be created because the invitation email failed to send."
 msgstr "تعذّر إنشاء الحساب لأن إرسال بريد الدعوة فشل."
 
-#: dashboard/views/users.py:990
+#: dashboard/views/users.py:1001
 #, python-format
 msgid "End client '%(name)s' created. Invitation sent to %(email)s."
 msgstr "تم إنشاء العميل النهائي '%(name)s'. أُرسلت الدعوة إلى %(email)s."
 
-#: dashboard/views/users.py:1011
+#: dashboard/views/users.py:1022
 #, python-format
 msgid "End client %(name)s deleted successfully."
 msgstr "تم حذف العميل النهائي %(name)s بنجاح."
@@ -4308,7 +4477,7 @@ msgstr "تم سحب %(amount)s DZD من محفظة %(name)s."
 msgid "No valid items in cart."
 msgstr "لا توجد عناصر صالحة في السلة."
 
-#: frontend/checkout.py:30 frontend/views/client.py:136
+#: frontend/checkout.py:30 frontend/views/client.py:139
 #: frontend/views/orders.py:26
 msgid "Quantity must be at least 1"
 msgstr "يجب ألا تقل الكمية عن 1"
@@ -4335,25 +4504,50 @@ msgstr "يجري تحديث سعر أحد المنتجات. يرجى المحا�
 msgid "Name is required"
 msgstr "الاسم مطلوب"
 
-#: frontend/checkout.py:114
+#: frontend/checkout.py:115
 msgid "Phone is required"
 msgstr "رقم الهاتف مطلوب"
 
-#: frontend/checkout.py:116
+#: frontend/checkout.py:117
+msgid "Enter a valid phone number, e.g. 0550 12 34 56"
+msgstr "أدخل رقم هاتف صحيحًا، مثل 0550 12 34 56"
+
+#: frontend/checkout.py:119
+msgid "Address is required"
+msgstr "العنوان مطلوب"
+
+#: frontend/checkout.py:121
 msgid "Country is required"
 msgstr "الدولة مطلوبة"
 
-#: frontend/checkout.py:116
+#: frontend/checkout.py:121
 msgid "Wilaya is required"
 msgstr "الولاية مطلوبة"
 
-#: frontend/checkout.py:118
+#: frontend/checkout.py:123
 msgid "City is required"
 msgstr "المدينة مطلوبة"
 
-#: frontend/checkout.py:118
+#: frontend/checkout.py:123
 msgid "Commune is required"
 msgstr "البلدية مطلوبة"
+
+#: frontend/templates/404.html:3
+msgid "Page not found"
+msgstr "الصفحة غير موجودة"
+
+#: frontend/templates/404.html:10
+msgid "This page does not exist or is no longer available."
+msgstr "هذه الصفحة غير موجودة أو لم تعد متاحة."
+
+#: frontend/templates/404.html:12
+#: frontend/templates/products/products_list.html:32
+msgid "Search products"
+msgstr "ابحث عن منتج"
+
+#: frontend/templates/404.html:15
+msgid "Browse the shop"
+msgstr "تصفّح المتجر"
 
 #: frontend/templates/admin_store.html:53
 #: frontend/templates/affiliate_store.html:53
@@ -4369,10 +4563,10 @@ msgstr "عرض"
 
 #: frontend/templates/admin_store.html:91
 #: frontend/templates/affiliate_store.html:91
-#: frontend/templates/partials/product_card.html:17
+#: frontend/templates/partials/product_card.html:25
 #: frontend/templates/products/admin_product_detail.html:199
 #: frontend/templates/products/affiliate_product_detail.html:203
-#: frontend/templates/products/product_detail.html:160
+#: frontend/templates/products/product_detail.html:167
 #: frontend/templates/products/provider_product_detail.html:200
 #: frontend/templates/provider_store.html:92
 msgid "Add to Cart"
@@ -4451,15 +4645,15 @@ msgstr "ابدأ التسوق"
 #: frontend/templates/cart/cart.html:179
 #: frontend/templates/products/admin_product_detail.html:326
 #: frontend/templates/products/affiliate_product_detail.html:330
-#: frontend/templates/products/product_detail.html:288
+#: frontend/templates/products/product_detail.html:301
 #: frontend/templates/products/provider_product_detail.html:328
 msgid "Variant Details"
 msgstr "تفاصيل الخيار"
 
-#: frontend/templates/cart/cart.html:180
+#: frontend/templates/cart/cart.html:180 frontend/templates/index.html:148
 #: frontend/templates/products/admin_product_detail.html:327
 #: frontend/templates/products/affiliate_product_detail.html:331
-#: frontend/templates/products/product_detail.html:289
+#: frontend/templates/products/product_detail.html:302
 #: frontend/templates/products/provider_product_detail.html:329
 msgid "Close"
 msgstr "إغلاق"
@@ -4467,7 +4661,7 @@ msgstr "إغلاق"
 #: frontend/templates/cart/cart.html:202
 #: frontend/templates/products/admin_product_detail.html:349
 #: frontend/templates/products/affiliate_product_detail.html:353
-#: frontend/templates/products/product_detail.html:311
+#: frontend/templates/products/product_detail.html:324
 #: frontend/templates/products/provider_product_detail.html:351
 msgid "Select This Variant"
 msgstr "اختيار هذا الخيار"
@@ -4486,70 +4680,97 @@ msgid "View Cart & Checkout"
 msgstr "عرض السلة وإتمام الطلب"
 
 #: frontend/templates/cart/checkout.html:5
-#: frontend/templates/cart/checkout.html:30
+#: frontend/templates/cart/checkout.html:32
 msgid "Checkout"
 msgstr "إتمام الطلب"
 
-#: frontend/templates/cart/checkout.html:32
+#: frontend/templates/cart/checkout.html:34
 #: frontend/templates/products/admin_product_detail.html:234
 #: frontend/templates/products/affiliate_product_detail.html:238
-#: frontend/templates/products/product_detail.html:203
+#: frontend/templates/products/product_detail.html:216
 #: frontend/templates/products/provider_product_detail.html:235
 msgid "Please select a wilaya first"
 msgstr "يرجى اختيار الولاية أولاً"
 
-#: frontend/templates/cart/checkout.html:33
-#: frontend/templates/cart/checkout.html:82
+#: frontend/templates/cart/checkout.html:35
+#: frontend/templates/cart/checkout.html:89
 #: frontend/templates/products/admin_product_detail.html:235
 #: frontend/templates/products/affiliate_product_detail.html:239
-#: frontend/templates/products/product_detail.html:204
-#: frontend/templates/products/product_detail.html:250
+#: frontend/templates/products/product_detail.html:217
+#: frontend/templates/products/product_detail.html:263
 #: frontend/templates/products/provider_product_detail.html:236
 msgid "Select Commune"
 msgstr "اختر البلدية"
 
-#: frontend/templates/cart/checkout.html:38
+#: frontend/templates/cart/checkout.html:40
 msgid "Shipping Information"
 msgstr "معلومات الشحن"
 
-#: frontend/templates/cart/checkout.html:50 frontend/templates/index.html:26
+#: frontend/templates/cart/checkout.html:54 frontend/templates/index.html:26
 msgid "Country"
 msgstr "البلد"
 
-#: frontend/templates/cart/checkout.html:54 frontend/templates/index.html:26
+#: frontend/templates/cart/checkout.html:59 frontend/templates/index.html:26
 msgid "City"
 msgstr "المدينة"
 
-#: frontend/templates/cart/checkout.html:62
-#: frontend/templates/products/product_detail.html:229
+#: frontend/templates/cart/checkout.html:68
+#: frontend/templates/products/product_detail.html:242
 msgid "Select Wilaya"
 msgstr "اختر الولاية"
 
-#: frontend/templates/cart/checkout.html:67
+#: frontend/templates/cart/checkout.html:73
 #: frontend/templates/products/admin_product_detail.html:261
 #: frontend/templates/products/affiliate_product_detail.html:265
-#: frontend/templates/products/product_detail.html:234
+#: frontend/templates/products/product_detail.html:247
 #: frontend/templates/products/provider_product_detail.html:263
 msgid "Search wilaya..."
 msgstr "ابحث عن ولاية..."
 
-#: frontend/templates/cart/checkout.html:87
+#: frontend/templates/cart/checkout.html:94
 #: frontend/templates/products/admin_product_detail.html:281
 #: frontend/templates/products/affiliate_product_detail.html:285
-#: frontend/templates/products/product_detail.html:255
+#: frontend/templates/products/product_detail.html:268
 #: frontend/templates/products/provider_product_detail.html:283
 msgid "Search commune..."
 msgstr "ابحث عن بلدية..."
 
-#: frontend/templates/cart/checkout.html:106
+#: frontend/templates/cart/checkout.html:115
 msgid "Your Order"
 msgstr "طلبك"
 
-#: frontend/templates/cart/checkout.html:132
+#: frontend/templates/cart/checkout.html:142
+msgid "You pay on delivery. An advisor calls you to confirm the order."
+msgstr "تدفع عند الاستلام. يتصل بك مستشار لتأكيد الطلب."
+
+#: frontend/templates/cart/checkout.html:146
 msgid "Confirm Order (COD)"
 msgstr "تأكيد الطلب (الدفع عند الاستلام)"
 
-#: frontend/templates/home.html:40 frontend/templates/home.html:417
+#: frontend/templates/cart/order_success.html:4
+msgid "Order confirmed"
+msgstr "تم تأكيد الطلب"
+
+#: frontend/templates/cart/order_success.html:14
+msgid "Thank you, your order is registered!"
+msgstr "شكرًا، تم تسجيل طلبك!"
+
+#: frontend/templates/cart/order_success.html:16
+#, python-format
+msgid "Order number <strong>%(num)s</strong>"
+msgstr "رقم الطلب <strong>%(num)s</strong>"
+
+#: frontend/templates/cart/order_success.html:31
+msgid ""
+"You pay on delivery. An advisor will call you shortly to confirm the order "
+"and the delivery date."
+msgstr "تدفع عند الاستلام. سيتصل بك مستشار قريبًا لتأكيد الطلب وموعد التسليم."
+
+#: frontend/templates/cart/order_success.html:34
+msgid "Continue shopping"
+msgstr "مواصلة التسوق"
+
+#: frontend/templates/home.html:40 frontend/templates/home.html:415
 #: frontend/templates/partials/landing-nav.html:30
 msgid "About"
 msgstr "من نحن"
@@ -4647,8 +4868,8 @@ msgid ""
 "technologies, explore your future space in 360° and experience your project "
 "before it comes to life."
 msgstr ""
-"تخيّل نفسك قبل البناء. بفضل تقنياتنا الغامرة، استكشف مساحتك المستقبلية "
-"بزاوية 360° وعِش مشروعك قبل أن يتحقق."
+"تخيّل نفسك قبل البناء. بفضل تقنياتنا الغامرة، استكشف مساحتك المستقبلية بزاوية "
+"360° وعِش مشروعك قبل أن يتحقق."
 
 #: frontend/templates/home.html:205
 msgid "Projects Completed"
@@ -4665,8 +4886,8 @@ msgid ""
 "create a harmonious, functional, and pleasant atmosphere to live in."
 msgstr ""
 "في LOFT Design، نصمّم مساحات يلتقي فيها التصميم بالراحة اليومية. كل مشروع "
-"مصمَّم ليتكيف مع نمط حياتك، ويحسّن استغلال مساحاتك، ويخلق أجواءً متناغمة "
-"وعملية ومريحة للعيش."
+"مصمَّم ليتكيف مع نمط حياتك، ويحسّن استغلال مساحاتك، ويخلق أجواءً متناغمة وعملية "
+"ومريحة للعيش."
 
 #: frontend/templates/home.html:217
 msgid "Optimized layout for maximum comfort."
@@ -4696,24 +4917,24 @@ msgstr "مجموعات مميزة"
 msgid "Handpicked pieces from our latest interior projects."
 msgstr "قطع مختارة بعناية من أحدث مشاريعنا الداخلية."
 
-#: frontend/templates/home.html:281
-#: frontend/templates/partials/product_card.html:34
+#: frontend/templates/home.html:280
+#: frontend/templates/partials/product_card.html:41
 #: frontend/templates/products/admin_product_detail.html:103
 #: frontend/templates/products/affiliate_product_detail.html:103
-#: frontend/templates/products/product_detail.html:63
+#: frontend/templates/products/product_detail.html:70
 #: frontend/templates/products/provider_product_detail.html:103
 msgid "Show in your workspace"
 msgstr "اعرضه في مساحتك"
 
-#: frontend/templates/home.html:292
+#: frontend/templates/home.html:290
 msgid "View All Products"
 msgstr "عرض جميع المنتجات"
 
-#: frontend/templates/home.html:301
+#: frontend/templates/home.html:299
 msgid "Start Your Project Today"
 msgstr "ابدأ مشروعك اليوم"
 
-#: frontend/templates/home.html:303
+#: frontend/templates/home.html:301
 msgid ""
 "Ready to redefine your space? Fill out the form and our design specialists "
 "will get back to you within 24 hours."
@@ -4721,87 +4942,97 @@ msgstr ""
 "هل أنت مستعد لإعادة تصميم مساحتك؟ املأ النموذج وسيتواصل معك خبراء التصميم "
 "لدينا خلال 24 ساعة."
 
-#: frontend/templates/home.html:311 frontend/templates/home.html:320
+#: frontend/templates/home.html:309 frontend/templates/home.html:318
 msgid "Call Us"
 msgstr "اتصل بنا"
 
-#: frontend/templates/home.html:329
+#: frontend/templates/home.html:327
 msgid "Email Us"
 msgstr "راسلنا"
 
-#: frontend/templates/home.html:338
+#: frontend/templates/home.html:336
 msgid "try Bilnov"
 msgstr "جرّب Bilnov"
 
-#: frontend/templates/home.html:340
+#: frontend/templates/home.html:338
 msgid "Access Details"
 msgstr "تفاصيل الوصول"
 
-#: frontend/templates/home.html:365
+#: frontend/templates/home.html:363
 msgid "Residential"
 msgstr "سكني"
 
-#: frontend/templates/home.html:366
+#: frontend/templates/home.html:364
 msgid "Commercial"
 msgstr "تجاري"
 
-#: frontend/templates/home.html:367
-msgid "Other"
-msgstr "أخرى"
-
-#: frontend/templates/home.html:374
+#: frontend/templates/home.html:372
 msgid "Tell us about your dream space..."
 msgstr "حدّثنا عن المساحة التي تحلم بها..."
 
-#: frontend/templates/home.html:379
+#: frontend/templates/home.html:377
 #: frontend/templates/products/admin_product_detail.html:296
 #: frontend/templates/products/affiliate_product_detail.html:300
-#: frontend/templates/products/product_detail.html:271
 #: frontend/templates/products/provider_product_detail.html:298
 msgid "Send Inquiry"
 msgstr "إرسال الاستفسار"
 
-#: frontend/templates/home.html:409
+#: frontend/templates/home.html:407
 msgid ""
-"Redefining modern living through innovative design and premium "
-"craftsmanship."
+"Redefining modern living through innovative design and premium craftsmanship."
 msgstr "نعيد تعريف الحياة العصرية من خلال تصميم مبتكر وحرفية متميزة."
 
-#: frontend/templates/home.html:413
+#: frontend/templates/home.html:411
 msgid "Quick Links"
 msgstr "روابط سريعة"
 
-#: frontend/templates/home.html:421
+#: frontend/templates/home.html:419
 msgid "Services"
 msgstr "الخدمات"
 
-#: frontend/templates/home.html:425
+#: frontend/templates/home.html:423
 msgid "Projects"
 msgstr "المشاريع"
 
-#: frontend/templates/home.html:430
+#: frontend/templates/home.html:428
 msgid "Follow Us"
 msgstr "تابعنا"
 
-#: frontend/templates/home.html:447
+#: frontend/templates/home.html:445
 msgid "All rights reserved."
 msgstr "جميع الحقوق محفوظة."
 
-#: frontend/templates/index.html:102
+#: frontend/templates/index.html:103
 msgid "Home"
 msgstr "الرئيسية"
 
-#: frontend/templates/index.html:108
+#: frontend/templates/index.html:109
 msgid "Reports"
 msgstr "التقارير"
 
-#: frontend/templates/index.html:124
+#: frontend/templates/index.html:125
 msgid "Main Menu"
 msgstr "القائمة الرئيسية"
+
+#: frontend/templates/index.html:163
+msgid "by"
+msgstr "من"
+
+#: frontend/templates/index.html:166
+msgid "Cash on delivery · Delivery in all 58 wilayas"
+msgstr "الدفع عند الاستلام · التوصيل إلى 58 ولاية"
 
 #: frontend/templates/partials/custom_file_input.html:6
 msgid "Choose a file..."
 msgstr "اختر ملفاً..."
+
+#: frontend/templates/partials/product_card.html:15
+msgid "Out of stock"
+msgstr "نفدت الكمية"
+
+#: frontend/templates/partials/product_card.html:19
+msgid "Choose options"
+msgstr "اختر الخيار"
 
 #: frontend/templates/products/admin_product_detail.html:118
 #: frontend/templates/products/affiliate_product_detail.html:118
@@ -4811,7 +5042,7 @@ msgstr "العودة إلى المتجر"
 
 #: frontend/templates/products/admin_product_detail.html:142
 #: frontend/templates/products/affiliate_product_detail.html:146
-#: frontend/templates/products/product_detail.html:89
+#: frontend/templates/products/product_detail.html:96
 #: frontend/templates/products/provider_product_detail.html:142
 msgid "Select Variant"
 msgstr "اختر الخيار"
@@ -4834,84 +5065,95 @@ msgstr "اترك بياناتك وسنؤكد طلبك."
 msgid "Powered By"
 msgstr "مدعوم من"
 
-#: frontend/templates/products/product_detail.html:73
+#: frontend/templates/products/product_detail.html:80
 msgid "Market Valuation"
 msgstr "القيمة السوقية"
 
-#: frontend/templates/products/product_detail.html:77
+#: frontend/templates/products/product_detail.html:84
 msgid "Availability"
 msgstr "التوفر"
 
-#: frontend/templates/products/product_detail.html:171
+#: frontend/templates/products/product_detail.html:178
 msgid "Bespoke Collection"
 msgstr "مجموعة حسب الطلب"
 
-#: frontend/templates/products/product_detail.html:178
-msgid "The Narrative"
-msgstr "القصة"
+#: frontend/templates/products/product_detail.html:185
+msgid "Bilnov ref."
+msgstr "مرجع بيلنوف"
 
-#: frontend/templates/products/product_detail.html:186
-msgid "Design DNA"
-msgstr "هوية التصميم"
-
-#: frontend/templates/products/product_detail.html:197
-msgid "Direct Concierge"
-msgstr "خدمة كونسيرج مباشرة"
-
-#: frontend/templates/products/product_detail.html:198
-msgid ""
-"Connect with our design specialists for personalized acquisition support."
-msgstr "تواصل مع خبراء التصميم لدينا للحصول على مرافقة مخصصة في الشراء."
+#: frontend/templates/products/product_detail.html:210
+msgid "Quick order"
+msgstr "طلب سريع"
 
 #: frontend/templates/products/product_detail.html:211
+msgid ""
+"Leave your details: an advisor calls you to confirm. You pay on delivery."
+msgstr "اترك بياناتك: يتصل بك مستشار للتأكيد. الدفع عند الاستلام."
+
+#: frontend/templates/products/product_detail.html:224
 msgid "Your Name"
 msgstr "اسمك"
 
-#: frontend/templates/products/product_detail.html:266
+#: frontend/templates/products/product_detail.html:279
 msgid "Specific Address (Optional)"
 msgstr "العنوان التفصيلي (اختياري)"
 
-#: frontend/templates/products/product_detail.html:267
+#: frontend/templates/products/product_detail.html:280
 msgid "Street, Building..."
 msgstr "الشارع، العمارة..."
+
+#: frontend/templates/products/product_detail.html:284
+msgid "Order (pay on delivery)"
+msgstr "اطلب (الدفع عند الاستلام)"
 
 #: frontend/templates/products/product_viewer_3d.html:8
 msgid "3D View"
 msgstr "عرض ثلاثي الأبعاد 3D"
 
-#: frontend/templates/products/products_list.html:32
-msgid "Search projects or pieces..."
-msgstr "ابحث عن مشاريع أو قطع..."
+#: frontend/templates/products/products_list.html:60
+#, python-format
+msgid "%(n)s product"
+msgid_plural "%(n)s products"
+msgstr[0] "لا منتجات"
+msgstr[1] "منتج واحد"
+msgstr[2] "منتجان"
+msgstr[3] "%(n)s منتجات"
+msgstr[4] "%(n)s منتجًا"
+msgstr[5] "%(n)s منتج"
 
-#: frontend/templates/products/products_list.html:65
+#: frontend/templates/products/products_list.html:61
+msgid "Sort"
+msgstr "ترتيب"
+
+#: frontend/templates/products/products_list.html:81
 msgid "No products match your filters."
 msgstr "لا توجد منتجات تطابق عوامل التصفية."
 
-#: frontend/templates/products/products_list.html:66
+#: frontend/templates/products/products_list.html:82
 msgid "Clear Filters"
 msgstr "مسح عوامل التصفية"
 
-#: frontend/templates/products/products_list.html:84
+#: frontend/templates/products/products_list.html:100
 msgid "Refine Collection"
 msgstr "تصفية المجموعة"
 
-#: frontend/templates/products/products_list.html:93
+#: frontend/templates/products/products_list.html:109
 msgid "Collections"
 msgstr "المجموعات"
 
-#: frontend/templates/products/products_list.html:98
+#: frontend/templates/products/products_list.html:114
 msgid "Price Range (DZD)"
 msgstr "نطاق السعر (DZD)"
 
-#: frontend/templates/products/products_list.html:101
+#: frontend/templates/products/products_list.html:117
 msgid "Min"
 msgstr "الأدنى"
 
-#: frontend/templates/products/products_list.html:104
+#: frontend/templates/products/products_list.html:120
 msgid "Max"
 msgstr "الأقصى"
 
-#: frontend/templates/products/products_list.html:110
+#: frontend/templates/products/products_list.html:126
 msgid "Sort Preferences"
 msgstr "خيارات الترتيب"
 
@@ -4958,99 +5200,99 @@ msgstr "تم تحديث السلة."
 msgid "Item removed from cart."
 msgstr "تمت إزالة العنصر من السلة."
 
-#: frontend/views/cart.py:383
+#: frontend/views/cart.py:382
 msgid "New Order!"
 msgstr "طلب جديد!"
 
-#: frontend/views/cart.py:384
+#: frontend/views/cart.py:383
 #, python-format
 msgid "New order for %(products)s by %(name)s"
 msgstr "طلب جديد لـ %(products)s من %(name)s"
 
-#: frontend/views/cart.py:396
+#: frontend/views/cart.py:395
 msgid "New Order via Your Store"
 msgstr "طلب جديد عبر متجرك"
 
-#: frontend/views/cart.py:397
+#: frontend/views/cart.py:396
 #, python-format
 msgid "%(name)s placed an order for %(products)s through your store."
 msgstr "قام %(name)s بطلب %(products)s عبر متجرك."
 
-#: frontend/views/cart.py:405
+#: frontend/views/cart.py:404
 msgid "New Order via Semi-Affiliate"
 msgstr "طلب جديد عبر مسوّق فرعي"
 
-#: frontend/views/cart.py:406
+#: frontend/views/cart.py:405
 #, python-format
 msgid "%(name)s placed an order for %(products)s through %(semi)s's store."
 msgstr "قام %(name)s بطلب %(products)s عبر متجر %(semi)s."
 
-#: frontend/views/cart.py:418 frontend/views/client.py:253
-msgid "Order placed successfully!"
-msgstr "تم تقديم الطلب بنجاح!"
-
-#: frontend/views/client.py:39
+#: frontend/views/client.py:42
 msgid "My Dashboard"
 msgstr "لوحة التحكم"
 
-#: frontend/views/client.py:53 frontend/views/client.py:152
+#: frontend/views/client.py:56 frontend/views/client.py:155
 msgid "Your account is not linked to a store. Please contact us."
 msgstr "حسابك غير مرتبط بأي متجر. يرجى التواصل معنا."
 
-#: frontend/views/client.py:121
+#: frontend/views/client.py:124
 msgid "No associated partner."
 msgstr "لا يوجد شريك مرتبط."
 
-#: frontend/views/client.py:131
+#: frontend/views/client.py:134
 msgid "Product is required"
 msgstr "المنتج مطلوب"
 
-#: frontend/views/client.py:138
+#: frontend/views/client.py:141
 msgid "Invalid quantity"
 msgstr "كمية غير صالحة"
 
-#: frontend/views/client.py:145
+#: frontend/views/client.py:148
 msgid "Please update your profile with your full name first."
 msgstr "يرجى تحديث ملفك الشخصي بإضافة اسمك الكامل أولاً."
 
-#: frontend/views/client.py:161
+#: frontend/views/client.py:164
 msgid "Product not found."
 msgstr "المنتج غير موجود."
 
-#: frontend/views/client.py:172 frontend/views/client.py:183
-#: frontend/views/client.py:193
+#: frontend/views/client.py:175 frontend/views/client.py:186
+#: frontend/views/client.py:196
 msgid "Product not available."
 msgstr "المنتج غير متوفر."
 
-#: frontend/views/client.py:175 frontend/views/client.py:186
-#: frontend/views/client.py:196
+#: frontend/views/client.py:178 frontend/views/client.py:189
+#: frontend/views/client.py:199
 msgid "Price not configured."
 msgstr "السعر غير مُعدّ."
 
-#: frontend/views/client.py:229
+#: frontend/views/client.py:232
 msgid "New Order from End Client"
 msgstr "طلب جديد من عميل نهائي"
 
-#: frontend/views/client.py:230
+#: frontend/views/client.py:233
 #, python-format
 msgid "%(name)s ordered %(product)s x%(qty)s through %(creator)s."
 msgstr "طلب %(name)s المنتج %(product)s x%(qty)s عبر %(creator)s."
 
-#: frontend/views/client.py:244
+#: frontend/views/client.py:247
 msgid "New Order from Your Client"
 msgstr "طلب جديد من عميلك"
 
-#: frontend/views/client.py:245
+#: frontend/views/client.py:248
 #, python-format
 msgid "%(client)s ordered %(product)s x%(qty)s."
 msgstr "طلب %(client)s المنتج %(product)s x%(qty)s."
 
-#: frontend/views/client.py:258
+#: frontend/views/client.py:256
+msgid "Order placed successfully!"
+msgstr "تم تقديم الطلب بنجاح!"
+
+#: frontend/views/client.py:261
 msgid ""
 "This product's price is not configured correctly. Please contact the store."
 msgstr "سعر هذا المنتج غير مُعدّ بشكل صحيح. يرجى التواصل مع المتجر."
 
-#: frontend/views/client.py:261
+#: frontend/views/client.py:264
 msgid "The order could not be placed. Please try again."
 msgstr "تعذّر تقديم الطلب. يرجى المحاولة مرة أخرى."
 
@@ -5118,8 +5360,7 @@ msgstr "تسجيل مسوّق بالعمولة جديد"
 #: frontend/views/main.py:147
 #, python-format
 msgid ""
-"%(name)s (%(email)s) has registered as an affiliate and is awaiting "
-"approval."
+"%(name)s (%(email)s) has registered as an affiliate and is awaiting approval."
 msgstr "سجّل %(name)s (%(email)s) كمسوّق بالعمولة وهو في انتظار الموافقة."
 
 #: frontend/views/main.py:156
@@ -5166,27 +5407,27 @@ msgid ""
 "Your inquiry has been sent successfully. Our team will contact you soon."
 msgstr "تم إرسال استفسارك بنجاح. سيتواصل معك فريقنا قريباً."
 
-#: frontend/views/products.py:56 frontend/views/products.py:66
+#: frontend/views/products.py:66 frontend/views/products.py:76
 msgid "All Collections"
 msgstr "جميع المجموعات"
 
-#: frontend/views/products.py:60 frontend/views/products.py:73
+#: frontend/views/products.py:70 frontend/views/products.py:83
 msgid "Newest First"
 msgstr "الأحدث أولاً"
 
-#: frontend/views/products.py:61
+#: frontend/views/products.py:71
 msgid "Price: Low to High"
 msgstr "السعر: من الأقل إلى الأعلى"
 
-#: frontend/views/products.py:62
+#: frontend/views/products.py:72
 msgid "Price: High to Low"
 msgstr "السعر: من الأعلى إلى الأقل"
 
-#: frontend/views/products.py:63
+#: frontend/views/products.py:73
 msgid "Name: A-Z"
 msgstr "الاسم: أ-ي"
 
-#: frontend/views/products.py:183
+#: frontend/views/products.py:205
 msgid "No 3D model available for this product"
 msgstr "لا يتوفر نموذج 3D لهذا المنتج"
 
@@ -5213,10 +5454,6 @@ msgstr "أرباح من طلبات لم يتم توصيلها بعد"
 #: user_auth/models.py:88
 msgid "Pending Balance (DZD)"
 msgstr "الرصيد المعلّق (DZD)"
-
-#: user_auth/models.py:15
-msgid "Professional Client"
-msgstr "عميل محترف"
 
 #: user_auth/models.py:16
 msgid "Final Client"
@@ -5490,8 +5727,8 @@ msgstr "رابط غير صالح أو منتهي الصلاحية"
 
 #: user_auth/templates/auth/set_password.html:104
 msgid ""
-"This password setup link is invalid or has already been used. Please contact"
-" your administrator to request a new invitation."
+"This password setup link is invalid or has already been used. Please contact "
+"your administrator to request a new invitation."
 msgstr ""
 "رابط إعداد كلمة المرور هذا غير صالح أو تم استخدامه مسبقاً. يرجى التواصل مع "
 "المسؤول لطلب دعوة جديدة."
@@ -5623,3 +5860,28 @@ msgstr "تم إرسال رابط إعادة تعيين كلمة المرور إ�
 #: user_auth/views.py:334
 msgid "Password reset successfully."
 msgstr "تمت إعادة تعيين كلمة المرور بنجاح."
+
+#~ msgid "LOFT Design - High-end interior design and architectural solutions."
+#~ msgstr "LOFT Design - حلول راقية للتصميم الداخلي والهندسة المعمارية."
+
+#~ msgid "New Provider"
+#~ msgstr "مورّد جديد"
+
+#~ msgid "Add New Provider"
+#~ msgstr "إضافة مورّد جديد"
+
+#~ msgid "The Narrative"
+#~ msgstr "القصة"
+
+#~ msgid "Design DNA"
+#~ msgstr "هوية التصميم"
+
+#~ msgid "Direct Concierge"
+#~ msgstr "خدمة كونسيرج مباشرة"
+
+#~ msgid ""
+#~ "Connect with our design specialists for personalized acquisition support."
+#~ msgstr "تواصل مع خبراء التصميم لدينا للحصول على مرافقة مخصصة في الشراء."
+
+#~ msgid "Search projects or pieces..."
+#~ msgstr "ابحث عن مشاريع أو قطع..."

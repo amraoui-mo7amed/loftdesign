@@ -489,12 +489,12 @@ body {
 .navbar {
   background-color: var(--white-accent) !important;
   border-bottom: 2px solid var(--brand-primary);
-  width: 100vw;
+  width: 100%;
 }
 
 .navbar-brand {
   font-weight: bold;
-  color: var(--brand-primary) !important;
+  color: var(--brand-secondary) !important;
   font-size: 1.5rem;
 }
 
@@ -881,8 +881,37 @@ footer p {
     color: var(--brand-primary);
 }
 
-/* Hide cart FAB on pages that have the landing navbar */
-body:has(#landingNav) .cart-fab {
-    display: none !important;
+/* Hide cart FAB on desktop pages that have the landing navbar (the cart icon is
+   in the navbar). On mobile the navbar icon is hidden in the menu, so keep it. */
+@media (min-width: 992px) {
+    body:has(#landingNav) .cart-fab {
+        display: none !important;
+    }
 }
 
+
+
+/* ── UI fixes: contrast, overflow, footer, tap targets ───────── */
+:root { --brand-primary-text: #7a5f00; } /* dark yellow, 5:1 on white */
+.min-w-0 { min-width: 0 !important; }
+.landing-page .main-content { padding: 0; }
+/* Yellow stays for fills; as text on light backgrounds it was unreadable (1.4:1). */
+.bg-white .text-primary:not(.btn), .bg-light .text-primary:not(.btn), .card .text-primary:not(.btn),
+.products-section .text-primary:not(.btn), .product-details-content .text-primary:not(.btn),
+.dashContent .text-primary:not(.btn), .auth-card a.text-primary, .auth-card .text-primary:not(.btn) {
+    color: var(--brand-primary-text) !important;
+}
+.dashContent .bg-dark .text-primary, .card.bg-dark .text-primary, .bg-dark .card .text-primary { color: var(--brand-primary) !important; }
+.site-footer { background: var(--brand-secondary) !important; color: rgba(255,255,255,.85) !important; }
+.site-footer a { color: var(--brand-primary); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+.site-footer p { color: rgba(255,255,255,.6) !important; }
+@media (max-width: 991.98px) {
+    .navbar-toggler, .cart-fab, .navbar .nav-link, footer a { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; }
+    .navbar-toggler { justify-content: center; }
+    .btn { min-height: 40px; }
+}
+.smaller, .badge { font-size: max(0.75rem, 1em * 0.75); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+.messages-stack { position: fixed; top: 84px; left: 50%; transform: translateX(-50%); z-index: 2000; width: min(92vw, 520px); }
+.messages-stack .alert { box-shadow: 0 10px 30px rgba(0,0,0,.12); border: 0; }

@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Brand Colors
-    const socBlueDark = "#2A4B8C";
-    const socBlueMedium = "#6B8EBF";
-    const socBlueLight = "#9DBBDD";
+    // Brand colors (black / yellow identity)
+    const socBlueDark = "#212121";
+    const socBlueMedium = "#7a5f00";
+    const socBlueLight = "#FFD65A";
+    if (window.Chart) Chart.defaults.font.family = "Cairo, system-ui, sans-serif";
     const socGreen = "#28a745";
 
     // === Sales Week Chart ===
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     label: 'Sales',
                     data: weekSales,
                     fill: true,
-                    backgroundColor: 'rgba(42, 75, 140, 0.1)',
+                    backgroundColor: 'rgba(255, 214, 90, 0.18)',
                     borderColor: socBlueDark,
                     borderWidth: 3,
                     pointBackgroundColor: socBlueDark,
@@ -146,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 labels: userLabels,
                 datasets: [{
                     data: userValues,
-                    backgroundColor: [socBlueDark, socBlueLight],
+                    backgroundColor: [socBlueDark, socBlueLight, socBlueMedium, "#9e9e9e", socGreen],
                     borderWidth: 0,
                     hoverOffset: 10
                 }]

@@ -240,3 +240,8 @@
 .existing-image-wrapper:hover .image-overlay-label {
     transform: translateY(0);
 }
+
+@media (max-width: 768px) {
+    .editorial-item { flex-direction: column; align-items: stretch; flex-wrap: wrap; }
+    .editorial-item > * { max-width: 100%; }
+}

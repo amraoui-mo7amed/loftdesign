@@ -106,7 +106,10 @@
     min-height: 100vh;
     background-color: var(--brand-light);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 100%;
+    /* width:auto so the sidebar margin is taken from the width, not added to it
+       (width:100% + margin made every page wider than the phone screen). */
+    width: auto;
+    min-width: 0;
 }
 
 [dir="rtl"] .dashContent { 
@@ -292,3 +295,42 @@
     }
 }
 
+
+
+/* ── UI fixes (mobile overflow, sidebar, header) ───────────── */
+.dashContent img, .dashContent canvas { max-width: 100%; }
+.sidebar { display: flex; flex-direction: column; }
+.sidebar .sidebar-nav, .sidebar nav, .sidebar > ul { flex: 1 1 auto; overflow-y: auto; min-height: 0; }
+.dash-header h1, .dash-header h2, .dash-header h4, .dash-header .dash-title {
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+@media (max-width: 575.98px) {
+    .dash-header .lang-toggle span, .dash-header .language-dropdown .btn span { display: none; }
+    .dashContent .container, .dashContent .container-fluid { padding-left: 12px; padding-right: 12px; }
+}
+@media (max-width: 991.98px) {
+    .dashContent .btn, .sidebar .nav-link { min-height: 44px; }
+}
+
+/* Header: the title shrinks and truncates instead of pushing the page wider */
+.dash-header { gap: 8px; padding-left: 12px; padding-right: 12px; }
+.dash-header > div:first-child { min-width: 0; flex: 1 1 auto; }
+.dash-header > div:last-child { flex-shrink: 0; }
+.dash-header h4 { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: clamp(1rem, 4vw, 1.5rem); }
+.editorial-item .badge { white-space: normal; text-align: start; }
+.editorial-item * { min-width: 0; }
+
+/* Phones: the sidebar becomes an off-canvas menu opened by the ☰ button,
+   so the content gets the full screen width. */
+@media (max-width: 575.98px) {
+    .sidebar { width: 260px; transition: transform .3s ease; box-shadow: 0 0 40px rgba(0,0,0,.25); }
+    [dir="ltr"] .sidebar { transform: translateX(-105%); }
+    [dir="rtl"] .sidebar { transform: translateX(105%); }
+    .sidebar.show { transform: none !important; }
+    .sidebar span, .sidebar-brand-text { display: inline !important; }
+    .sidebar .nav-link { justify-content: flex-start; padding: .9rem 1.2rem; }
+    .sidebar .nav-link i { margin-inline-end: .75rem; }
+    [dir="ltr"] .dashContent, [dir="rtl"] .dashContent { margin-left: 0 !important; margin-right: 0 !important; }
+}
+/* Readable titles: brand yellow fails contrast on white. */
+.dash-header h4 { color: #7a5f00; }

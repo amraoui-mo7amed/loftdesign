@@ -1,0 +1,40 @@
+{% extends 'index.html' %}
+{% load i18n %}
+
+{% block title %} | {% trans "Order confirmed" %}{% endblock title %}
+{% block nav %}{% include "partials/landing-nav.html" %}{% endblock nav %}
+{% block sidebar %}{% endblock sidebar %}
+
+{% block content %}
+<section class="bg-light py-5" style="margin-top:70px;">
+    <div class="container" style="max-width:640px;">
+        <div class="bg-white rounded-4 shadow-sm p-4 p-md-5 text-center">
+            <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle bg-success text-white"
+                 style="width:64px;height:64px;"><i class="fas fa-check fa-lg"></i></div>
+            <h1 class="h3 fw-black mb-2">{% trans "Thank you, your order is registered!" %}</h1>
+            <p class="text-muted mb-4">
+                {% blocktrans with num=order.order_number|default:order.pk %}Order number <strong>{{ num }}</strong>{% endblocktrans %}
+            </p>
+            <ul class="list-group list-group-flush text-start mb-4">
+                {% for item in order.items %}
+                <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+                    <span class="min-w-0 text-truncate">{{ item.title }}{% if item.item_name %} · {{ item.item_name }}{% endif %} × {{ item.quantity }}</span>
+                </li>
+                {% endfor %}
+                <li class="list-group-item d-flex justify-content-between px-0 fw-bold">
+                    <span>{% trans "Total" %}</span>
+                    <span>{% if order.currency == "EUR" and order.total_eur %}{{ order.total_eur }} €{% else %}{{ order.total_price|floatformat:0 }} DZD{% endif %}</span>
+                </li>
+            </ul>
+            <p class="small text-muted mb-4">
+                <i class="fas fa-phone me-1"></i>
+                {% trans "You pay on delivery. An advisor will call you shortly to confirm the order and the delivery date." %}
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                <a href="{% url 'frontend:product_list' %}" class="btn btn-dark rounded-pill px-4">{% trans "Continue shopping" %}</a>
+                <a href="tel:{{ site_config.phone|cut:' ' }}" class="btn btn-outline-dark rounded-pill px-4"><bdi>{{ site_config.phone }}</bdi></a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -8,8 +8,9 @@ def _build_site_config(lang):
     """Build site config cached by language code."""
     return {
         "site_config": {
-            "name": _("LOFT Design"),
-            "ar_name": "لوفت ديزاين",
+            "name": "Store Bilnov",
+            "ar_name": "متجر بيلنوف",
+            "operator": "LOFT Design",
             "tagline": _("Elevate Your Space"),
             "logo": f"{settings.STATIC_URL}img/icon.jpeg",
             "favicon": f"{settings.STATIC_URL}img/icon.jpeg",
@@ -23,7 +24,7 @@ def _build_site_config(lang):
             },
             "seo": {
                 "description": _(
-                    "LOFT Design - High-end interior design and architectural solutions."
+                    "Store Bilnov by LOFT Design - furniture, materials, lighting and 3D/BIM objects for your projects."
                 ),
                 "keywords": _(
                     "interior design, loft, architecture, modern furniture, decor"

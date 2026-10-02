@@ -30,6 +30,8 @@ def product_list(request):
             Q(tags__icontains=query)
         )
     
+    if category_id and not str(category_id).isdigit():
+        category_id = None  # stale or hand-typed link: ignore instead of a 500
     if category_id:
         products = products.filter(category_id=category_id)
     
@@ -53,6 +55,13 @@ def product_list(request):
     if sort not in sort_fields:
         sort = "-created_at"
     products = products.order_by(sort_fields[sort])
+
+    from django.core.paginator import Paginator
+    total_count = products.count()
+    page_obj = Paginator(products, 24).get_page(request.GET.get("page"))
+    keep = request.GET.copy()
+    keep.pop("page", None)
+    base_url = "?" + (keep.urlencode() + "&" if keep else "")
     
     category_options = [{"value": "", "label": _("All Collections")}]
     category_options += [{"value": str(c.id), "label": c.name} for c in categories]
@@ -74,7 +83,10 @@ def product_list(request):
     current_sort_label = next((opt["label"] for opt in sort_options if opt["value"] == sort), _("Newest First"))
 
     context = {
-        "products": products,
+        "products": page_obj,
+        "page_obj": page_obj,
+        "base_url": base_url,
+        "total_count": total_count,
         "categories": categories,
         "category_options": category_options,
         "sort_options": sort_options,

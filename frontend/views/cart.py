@@ -359,14 +359,13 @@ def cart_checkout(request):
     if not cart:
         return redirect("frontend:cart")
 
-    foreign = visitor_currency(request) == "EUR"
+    # Foreign address form only when the order is really billed in euros.
+    foreign = _cart_in_eur(request, cart)
+    customer, errors = {}, {}
     if request.method == "POST":
         customer = {k: (request.POST.get(k) or "").strip() for k in ("name", "phone", "address", "wilaya", "commune")}
         errors = validate_customer(customer, foreign)
-        if errors:
-            for field_errors in errors.values():
-                messages.error(request, field_errors[0])
-            return redirect("frontend:checkout")
+    if request.method == "POST" and not errors:
         lines = [(i["product_id"], i.get("item_id"), i["quantity"]) for i in cart.values()]
         try:
             order = create_customer_order(request, lines, customer)
@@ -415,8 +414,8 @@ def cart_checkout(request):
         request.session.pop("affiliate_code", None)
         request.session.modified = True
 
-        messages.success(request, _("Order placed successfully!"))
-        return redirect("frontend:home")
+        request.session["last_order_id"] = order.pk
+        return redirect("frontend:order_success")
 
     items_data = _get_cart_items_data(request)
     wilaya_options, communes_data = get_algeria_locations()
@@ -427,4 +426,19 @@ def cart_checkout(request):
         "foreign": foreign,
         "wilaya_options": wilaya_options,
         "communes_data": communes_data,
-    })
+        "customer": customer,
+        "errors": errors,
+    }, status=400 if errors else 200)
+
+
+def order_success(request):
+    """Confirmation page shown once after checkout (order kept in the session)."""
+    from dashboard.models import Order
+
+    order = None
+    order_id = request.session.get("last_order_id")
+    if order_id:
+        order = Order.objects.filter(pk=order_id).first()
+    if order is None:
+        return redirect("frontend:home")
+    return render(request, "cart/order_success.html", {"order": order})

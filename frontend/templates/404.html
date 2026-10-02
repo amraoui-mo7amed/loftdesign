@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block title %} | {% trans "Page not found" %}{% endblock title %}
+{% block nav %}{% include "partials/landing-nav.html" %}{% endblock nav %}
+{% block sidebar %}{% endblock sidebar %}
+{% block content %}
+<section class="bg-light py-5" style="margin-top:70px;">
+    <div class="container text-center" style="max-width:560px;">
+        <p class="display-1 fw-black mb-0">404</p>
+        <h1 class="h4 fw-bold mb-3">{% trans "This page does not exist or is no longer available." %}</h1>
+        <form method="get" action="{% url 'frontend:product_list' %}" class="d-flex gap-2 mb-4">
+            <input type="search" name="q" class="form-control rounded-pill" placeholder="{% trans 'Search products' %}" aria-label="{% trans 'Search products' %}">
+            <button class="btn btn-dark rounded-pill px-4" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+        <a href="{% url 'frontend:product_list' %}" class="btn btn-outline-dark rounded-pill px-4">{% trans "Browse the shop" %}</a>
+    </div>
+</section>
+{% endblock content %}

@@ -30,9 +30,16 @@
 {% block content %}
 <section class="products-section bg-light" style="margin-top: 70px;">
     <div class="container">
-        <div class="row g-5">
+        <div class="row g-4 g-lg-5">
             <!-- 1. Interactive Product Gallery (Left) -->
             <div class="col-lg-7" data-aos="fade-right">
+                <!-- On phones the name comes before the photos and the price -->
+                <div class="d-lg-none mb-3">
+                    <span class="text-primary fw-bold text-uppercase small d-block mb-1">
+                        {% if product.category %}{{ product.category.name }}{% endif %}
+                    </span>
+                    <p class="h3 fw-black mb-0">{{ product.title }}</p>
+                </div>
                 <!-- Gallery — sticky -->
                 <div class="product-sticky-gallery">
                     <div class="viewer-container position-relative rounded-5 shadow-2xl overflow-hidden mb-4">
@@ -167,10 +174,10 @@
             <div class="col-lg-5" data-aos="fade-left">
                 <div class="product-details-content p-2">
                     <div class="mb-5">
-                        <span class="text-primary fw-bold text-uppercase small tracking-widest d-block mb-3">
+                        <span class="text-primary fw-bold text-uppercase small tracking-widest d-none d-lg-block mb-3">
                             {% if product.category %}{{ product.category.name }}{% else %}{% trans "Bespoke Collection" %}{% endif %}
                         </span>
-                        <h1 class="display-3 fw-black text-uppercase mb-4" style="line-height: 0.9;">{{ product.title }}</h1>
+                        <h1 class="d-none d-lg-block display-3 fw-black text-uppercase mb-4" style="line-height: 0.9;">{{ product.title }}</h1>
                         <div class="bg-primary" style="height: 5px; width: 80px;"></div>
                         {% if product.bilnov_object_id %}
                         <div class="small text-muted mt-3">
@@ -181,7 +188,7 @@
                     </div>
 
                     <div class="description-narrative mb-5">
-                        <h4 class="fw-black text-uppercase small mb-4 tracking-widest text-muted">{% trans "The Narrative" %}</h4>
+                        <h4 class="fw-black text-uppercase small mb-4 tracking-widest text-muted">{% trans "Description" %}</h4>
                         <div class="text-muted fs-4 line-height-relaxed">
                             {{ product.description|linebreaks }}
                         </div>
@@ -189,10 +196,10 @@
 
                     {% if product.tags %}
                     <div class="mb-5">
-                        <h4 class="fw-black text-uppercase small mb-4 tracking-widest text-muted">{% trans "Design DNA" %}</h4>
+                        <h4 class="fw-black text-uppercase small mb-4 tracking-widest text-muted">{% trans "Tags" %}</h4>
                         <div class="d-flex flex-wrap gap-2">
-                            {% for tag in product.tags.split %}
-                            <span class="badge bg-white text-dark rounded-pill px-4 py-3 small fw-bold border shadow-sm">{{ tag|cut:"," }}</span>
+                            {% for tag in product.tags|tags_list %}
+                            <span class="badge bg-white text-dark rounded-pill px-4 py-3 small fw-bold border shadow-sm">{{ tag }}</span>
                             {% endfor %}
                         </div>
                     </div>
@@ -200,8 +207,8 @@
 
                     <!-- Inquiry Form Card -->
                     <div class="inquiry-form-card shadow-lg">
-                        <h3 class="fw-black text-uppercase mb-4 h4">{% trans "Direct Concierge" %}</h3>
-                        <p class="text-muted small mb-4">{% trans "Connect with our design specialists for personalized acquisition support." %}</p>
+                        <h3 class="fw-black text-uppercase mb-4 h4">{% trans "Quick order" %}</h3>
+                        <p class="text-muted small mb-4">{% trans "Leave your details: an advisor calls you to confirm. You pay on delivery." %}</p>
                         
                         {% include "partials/errorList.html" with form_id="orderForm" %}
                         
@@ -274,7 +281,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-black text-uppercase tracking-wider shadow">
-                                {% trans "Send Inquiry" %}
+                                {% trans "Order (pay on delivery)" %}
                             </button>
                         </form>
                     </div>
@@ -298,7 +305,7 @@
                 <div class="row g-4">
                     <div class="col-md-7">
                         <div class="rounded-3 overflow-hidden mb-3 bg-light d-flex align-items-center justify-content-center" style="min-height: 250px;">
-                            <img src="" alt="" class="w-100 modal-variant-thumb" style="max-height: 350px; object-fit: cover; display: none;">
+                            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" class="w-100 modal-variant-thumb" style="max-height: 350px; object-fit: cover; display: none;">
                         </div>
                         <div class="d-flex gap-2 flex-wrap modal-variant-gallery-wrap">
                         </div>

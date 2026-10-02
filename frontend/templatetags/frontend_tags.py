@@ -56,3 +56,10 @@ def shop_price(context, product, css=""):
         return shop_amount(context, product.loft_retail_price, None, css)
     p = customer_price(request, product)
     return shop_amount(context, p["dzd"], p["eur"], css)
+
+
+
+@register.filter
+def tags_list(value):
+    """'sofa, velvet,living room' -> ['sofa', 'velvet', 'living room']."""
+    return [t.strip() for t in (value or "").split(",") if t.strip()]

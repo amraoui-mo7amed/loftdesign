@@ -1,12 +1,3 @@
-/* Section visibility management */
-#about {
-    display: none;
-}
-
-#about.show-section {
-    display: block;
-}
-
 /* Custom Interior Design Styles */
 
 :root {

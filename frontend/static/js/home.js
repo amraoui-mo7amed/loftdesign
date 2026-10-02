@@ -36,30 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Handle About Section Toggle
-    const aboutLink = document.querySelector('a[href*="#about"]');
-    const aboutSection = document.getElementById('about');
-
-    if (aboutLink && aboutSection) {
-        aboutLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            aboutSection.classList.add('show-section');
-            
-            // Allow display: block to apply before scrolling
-            setTimeout(() => {
-                aboutSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }, 10);
-        });
-
-        // If page loads with #about hash, show it immediately
-        if (window.location.hash === '#about') {
-            aboutSection.classList.add('show-section');
-        }
-    }
-
     // Scroll listener
     window.addEventListener('scroll', handleScroll);
 

@@ -15,6 +15,7 @@ def _build_site_config(lang):
             "logo": f"{settings.STATIC_URL}img/store-mark.png",
             "logo_full": f"{settings.STATIC_URL}img/store-logo.png",
             "favicon": f"{settings.STATIC_URL}img/store-favicon.png",
+            "loft_services_url": getattr(settings, "LOFT_SERVICES_URL", "https://loftdesign.bilnov.com/#composer"),
             "contact_email": "Loftdesign@live.fr",
             "phone": "+213 776139475",
             "mobile": "+213 541960603",

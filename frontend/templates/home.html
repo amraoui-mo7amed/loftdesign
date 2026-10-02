@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center gap-2">
                     <li class="nav-item">
-                        <a class="nav-link fw-bold" href="{% url 'frontend:home' %}#about">{% trans "About" %}</a>
+                        <a class="nav-link fw-bold" href="{{ site_config.loft_services_url }}">{% trans "Services" %}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="{% url 'frontend:product_list' %}">{% trans "Shop" %}</a>
@@ -137,90 +137,6 @@
             </div>
         </div>
     </header>
-    <!-- 2. Why Choose Us Section -->
-    <section id="about" class="py-10 bg-white">
-        <div class="container">
-            <div class="text-center mb-5 reveal reveal-up">
-                <span class="text-primary fw-bold text-uppercase tracking-widest mb-2 d-block">{% trans "Our Philosophy" %}</span>
-                <h2 class="display-3 fw-black mb-4">{% trans "Crafting Spaces, Shaping Emotions" %}</h2>
-                <div class="mx-auto bg-primary" style="height: 4px; width: 80px;"></div>
-            </div>
-            <div class="row g-4 mt-4">
-                <div class="col-lg-4">
-                    <div class="about-card p-5 border-0 rounded-4 h-100 transition-all hover-lift reveal reveal-up delay-100">
-                        <div class="mb-4 d-inline-block p-4 bg-light rounded-circle text-primary">
-                            <i class="fas fa-magic fa-2x"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">{% trans "Visionary Design" %}</h4>
-                        <p class="text-muted fs-6 line-height-relaxed">
-                            {% trans "We don't just follow trends; we create timeless environments that speak to your soul and elevate your daily experience." %}
-                        </p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="about-card p-5 border-0 rounded-4 h-100 transition-all hover-lift reveal reveal-up delay-200">
-                        <div class="mb-4 d-inline-block p-4 bg-light rounded-circle text-primary">
-                            <i class="fas fa-hand-holding-heart fa-2x"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">{% trans "Personal Touch" %}</h4>
-                        <p class="text-muted fs-6 line-height-relaxed">
-                            {% trans "Every client is unique. We dive deep into your lifestyle to ensure every corner of your space is functional and personalized." %}
-                        </p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="about-card p-5 border-0 rounded-4 h-100 transition-all hover-lift reveal reveal-up delay-300">
-                        <div class="mb-4 d-inline-block p-4 bg-light rounded-circle text-primary">
-                            <i class="fas fa-vr-cardboard fa-2x"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">{% trans "360° Immersion" %}</h4>
-                        <p class="text-muted fs-6 line-height-relaxed">
-                            {% trans "Project yourself even before the build. Thanks to our immersive technologies, explore your future space in 360° and experience your project before it comes to life." %}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-10 row align-items-start g-5">
-                <div class="col-lg-6">
-                    <div class="position-relative reveal reveal-right">
-                        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80"
-                             alt="Exquisite Interior"
-                             class="img-fluid rounded-4 shadow-2xl">
-                        <div class="stats-float bg-primary text-secondary p-4 rounded-4 shadow-lg position-absolute top-0 end-0 m-n4 d-none d-md-block">
-                            <span class="h1 fw-black mb-0">130+</span>
-                            <p class="mb-0 small fw-bold">{% trans "Projects Completed" %}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 reveal reveal-left">
-                    <h3 class="display-5 fw-bold mb-4">{% trans "Designing spaces crafted for your well-being" %}</h3>
-                    <p class="text-muted fs-5 mb-4">
-                        {% trans "At LOFT Design, we craft spaces where design meets everyday comfort. Every project is designed to adapt to your lifestyle, optimize your spaces, and create a harmonious, functional, and pleasant atmosphere to live in." %}
-                    </p>
-                    <ul class="list-unstyled d-flex flex-column gap-3 mb-5">
-                        <li class="d-flex align-items-center gap-3">
-                            <i class="fas fa-check-circle text-primary"></i>
-                            <span class="fw-bold text-dark">{% trans "Optimized layout for maximum comfort." %}</span>
-                        </li>
-                        <li class="d-flex align-items-center gap-3">
-                            <i class="fas fa-check-circle text-primary"></i>
-                            <span class="fw-bold text-dark">{% trans "Modern, clean, and functional design." %}</span>
-                        </li>
-                        <li class="d-flex align-items-center gap-3">
-                            <i class="fas fa-check-circle text-primary"></i>
-                            <span class="fw-bold text-dark">{% trans "Integration of smart and immersive solutions (360°, 3D visualization)." %}</span>
-                        </li>
-                        <li class="d-flex align-items-center gap-3">
-                            <i class="fas fa-check-circle text-primary"></i>
-                            <span class="fw-bold text-dark">{% trans "Personalized support, from concept to completion" %}</span>
-                        </li>
-                    </ul>
-                    <a href="{% url 'frontend:product_list' %}"
-                       class="btn btn-outline-dark rounded-pill px-5 py-3 fw-bold">{% trans "Discover Our Process" %}</a>
-                </div>
-            </div>
-        </div>
-    </section>
     <section id="products" class="py-10 bg-white">
         <div class="container text-center">
             <div class="d-flex justify-content-between align-items-end mb-5 reveal reveal-up">
@@ -360,11 +276,7 @@
                     <h6 class="text-white fw-bold mb-4 text-uppercase tracking-wider">{% trans "Quick Links" %}</h6>
                     <ul class="list-unstyled d-flex flex-column gap-2 text-white-50">
                         <li>
-                            <a href="#about"
-                               class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "About" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'frontend:product_list' %}"
+                            <a href="{{ site_config.loft_services_url }}"
                                class="text-decoration-none text-reset hover-text-primary transition-all">{% trans "Services" %}</a>
                         </li>
                         <li>

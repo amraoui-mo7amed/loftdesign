@@ -193,3 +193,6 @@ EVENTSTREAM_REDIS = {
     "port": int(os.getenv("REDIS_PORT", 6379)),
     "db": 0,
 }
+
+# Lien du bouton « Services » du Store vers les prestations Loft Design
+LOFT_SERVICES_URL = config("LOFT_SERVICES_URL", default="https://loftdesign.bilnov.com/#composer")

@@ -34,6 +34,10 @@ def product_list(request):
         category_id = None  # stale or hand-typed link: ignore instead of a 500
     if category_id:
         products = products.filter(category_id=category_id)
+
+    ar_only = request.GET.get("ar") == "1"
+    if ar_only:  # products that can be placed in the room (3D model)
+        products = products.exclude(model_3d="").exclude(model_3d__isnull=True)
     
     from decimal import Decimal, InvalidOperation
 
@@ -97,6 +101,7 @@ def product_list(request):
         "max_price": max_price,
         "sort": sort,
         "query": query,
+        "ar_only": ar_only,
     }
     return render(request, "products/products_list.html", context)
 

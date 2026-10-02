@@ -1,8 +1,9 @@
+from django.templatetags.static import static
 from django.shortcuts import render
-from dashboard.models import Product, SiteSettings, ContactRequest
+from dashboard.models import Product, ContactRequest
 from django.http import JsonResponse
 from django.urls import reverse
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language_bidi
 from dashboard.utils import notify_user
 from dashboard.models import Notification
 from django.contrib.auth.models import User
@@ -16,28 +17,15 @@ def home_view(request):
         del request.session["affiliate_code"]
         request.session.modified = True
 
-    latest_products = Product.objects.filter(is_active=True, is_featured=True, show_in_global_store=True)[:4]
+    latest_products = Product.objects.filter(is_active=True, is_featured=True, show_in_global_store=True, status=Product.ProductStatus.APPROVED)[:4]
     if not latest_products.exists():
-        latest_products = Product.objects.filter(is_active=True, show_in_global_store=True)[:4]
+        latest_products = Product.objects.filter(is_active=True, show_in_global_store=True, status=Product.ProductStatus.APPROVED)[:4]
 
-    settings_obj = SiteSettings.objects.first()
     
-    # Extract slider images if settings exist
-    slider_images = []
-    if settings_obj:
-        for img_row in settings_obj.slider_images.all():
-            if img_row.image:
-                slider_images.append(img_row.image.url)
-
-    # Fallback to static if no database settings slider images exist
-    if not slider_images:
-        slider_images = [
-            "/static/img/header_bg_1.jpeg",
-            "/static/img/header_bg_2.jpeg",
-            "/static/img/header_bg_3.jpeg",
-            "/static/img/header_bg_4.jpeg",
-            "/static/img/header_bg_5.jpeg",
-        ]
+    # The hero promotes "View in your space" (augmented reality).
+    # Right-to-left pages get the mirrored layout (phone on the left, text on the right).
+    suffix = "_rtl" if get_language_bidi() else ""
+    slider_images = [static(f"img/ar_hero_{i}{suffix}.jpg") for i in (1, 2, 3)]
 
     context = {
         "latest_products": latest_products,

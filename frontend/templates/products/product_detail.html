@@ -66,8 +66,8 @@
                         {% endwith %}
                         
                         {% if product.model_3d or product.external_link %}
-                        <a href="{% if product.model_3d %}{% url 'frontend:product_viewer_3d' product.pk %}{% else %}{{ product.external_link }}{% endif %}" {% if not product.model_3d %}target="_blank"{% endif %} class="luxury-visualize-btn">
-                            <i class="fas fa-vr-cardboard"></i> {% trans "Show in your workspace" %}
+                        <a href="{% if product.model_3d %}{% url 'frontend:product_viewer_3d' product.pk %}{% else %}{{ product.external_link }}{% endif %}" {% if not product.model_3d %}target="_blank"{% endif %} class="sb-ar-btn">
+                            <i class="fas fa-cube" aria-hidden="true"></i>{% trans "View in your space" %}<span class="sb-ar-tag">AR</span>
                         </a>
                         {% endif %}
                     </div>
@@ -77,8 +77,8 @@
                 <div class="product-spec-box shadow-sm bg-white p-5 rounded-4 border-0 scroll-reveal">
                     <div class="row align-items-center">
                         <div class="col-md-6">
-                            <span class="text-muted text-uppercase smaller fw-bold d-block mb-1">{% trans "Market Valuation" %}</span>
-                            <span class="display-5 fw-black text-dark">{% shop_price product %}</span>
+                            <span class="text-muted text-uppercase smaller fw-bold d-block mb-1">{% trans "Price" context "storefront" %}</span>
+                            <span class="pd-price">{% shop_price product %}</span>
                         </div>
                         <div class="col-md-6 mt-4 mt-md-0">
                             <span class="text-muted text-uppercase smaller fw-bold d-block mb-2">{% trans "Availability" %}</span>
@@ -177,8 +177,7 @@
                         <span class="text-primary fw-bold text-uppercase small tracking-widest d-none d-lg-block mb-3">
                             {% if product.category %}{{ product.category.name }}{% else %}{% trans "Bespoke Collection" %}{% endif %}
                         </span>
-                        <h1 class="d-none d-lg-block display-3 fw-black text-uppercase mb-4" style="line-height: 0.9;">{{ product.title }}</h1>
-                        <div class="bg-primary" style="height: 5px; width: 80px;"></div>
+                        <h1 class="d-none d-lg-block pd-title mb-3">{{ product.title }}</h1>
                         {% if product.bilnov_object_id %}
                         <div class="small text-muted mt-3">
                             {% if product.brand %}<span class="me-3">{{ product.brand }}{% if product.collection %} · {{ product.collection }}{% endif %}</span>{% endif %}
@@ -189,7 +188,7 @@
 
                     <div class="description-narrative mb-5">
                         <h4 class="fw-black text-uppercase small mb-4 tracking-widest text-muted">{% trans "Description" %}</h4>
-                        <div class="text-muted fs-4 line-height-relaxed">
+                        <div class="text-muted pd-desc">
                             {{ product.description|linebreaks }}
                         </div>
                     </div>

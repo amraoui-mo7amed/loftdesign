@@ -33,13 +33,13 @@ model-viewer::part(default-ar-button) {
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a1a; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: radial-gradient(circle at 50% 40%, #ffffff 0%, #ecebe7 70%); }
 .viewer-fullscreen { width: 100vw; height: 100dvh; }
 .viewer-fullscreen model-viewer { width: 100%; height: 100%; }
 .viewer-close {
     position: fixed; top: 1rem; z-index: 10;
     display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.6rem 1.25rem; background: rgba(0,0,0,0.6);
+    padding: 0.6rem 1.25rem; background: rgba(20,20,20,0.85); font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     color: #fff; border: none; border-radius: 2rem;
     font-size: 0.9rem; font-weight: 700; cursor: pointer;
     text-decoration: none; backdrop-filter: blur(4px);
@@ -48,3 +48,23 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a1a; }
 .viewer-close:hover { background: rgba(0,0,0,0.85); color: #fff; }
 [dir="ltr"] .viewer-close { left: 1rem; }
 [dir="rtl"] .viewer-close { right: 1rem; }
+
+/* "View in your space": minimal launcher and QR handoff for computers */
+.ar-launch {
+    position: absolute; left: 50%; bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: .6rem; height: 52px; padding: 0 1.5rem;
+    border: 0; border-radius: 999px; background: #fff; color: #141414;
+    font: 700 1rem/1 system-ui, -apple-system, "Segoe UI", sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,.25); cursor: pointer;
+}
+.ar-launch .fa-cube { color: #e00700; }
+.ar-qr[hidden] { display: none; }
+.ar-qr {
+    position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 10; display: flex; gap: 1rem; align-items: center;
+    max-width: 340px; padding: 1rem; border-radius: 16px; background: #fff; color: #141414;
+    font: 400 .9rem/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; box-shadow: 0 12px 40px rgba(0,0,0,.3);
+}
+[dir="rtl"] .ar-qr { right: auto; left: 1.25rem; }
+.ar-qr #arQrCode { width: 96px; height: 96px; flex: 0 0 96px; }
+.ar-qr #arQrCode svg { width: 100%; height: 100%; }
+.ar-qr strong { display: block; margin-bottom: .25rem; }
+.ar-qr p { color: #6b6b6b; }

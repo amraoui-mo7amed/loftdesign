@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 04:07+0000\n"
+"POT-Creation-Date: 2026-10-02 09:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,19 +22,19 @@ msgstr ""
 msgid "Elevate Your Space"
 msgstr "Élevez votre espace"
 
-#: core/context_processors.py:20
+#: core/context_processors.py:21
 msgid "Lun-Ven: 09h - 18h"
 msgstr "Lun-Ven: 09h - 18h"
 
-#: core/context_processors.py:27
+#: core/context_processors.py:28
 msgid ""
 "Store Bilnov by LOFT Design - furniture, materials, lighting and 3D/BIM "
 "objects for your projects."
 msgstr ""
-"Store Bilnov par LOFT Design : mobilier, matériaux, éclairage et objets 3D/"
-"BIM pour vos projets."
+"Store Bilnov par LOFT Design : mobilier, matériaux, éclairage et objets "
+"3D/BIM pour vos projets."
 
-#: core/context_processors.py:30
+#: core/context_processors.py:31
 msgid "interior design, loft, architecture, modern furniture, decor"
 msgstr "design d'intérieur, loft, architecture, mobilier moderne, décoration"
 
@@ -56,8 +56,8 @@ msgstr "Arabe"
 #: dashboard/templates/products/admin_store_settings.html:18
 #: dashboard/templates/products/provider_store_settings.html:20
 #: dashboard/templates/products/store_settings.html:20
-#: frontend/templates/home.html:105
-#: frontend/templates/partials/landing-nav.html:92
+#: frontend/templates/home.html:94
+#: frontend/templates/partials/landing-nav.html:81
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
@@ -68,7 +68,8 @@ msgstr "Tableau de bord"
 #: dashboard/templates/products/admin_store_catalog.html:89
 #: dashboard/templates/products/list.html:19 dashboard/templatetags/tags.py:43
 #: frontend/templates/admin_store.html:52
-#: frontend/templates/affiliate_store.html:52 frontend/templates/index.html:106
+#: frontend/templates/affiliate_store.html:52
+#: frontend/templates/index.html:107
 #: frontend/templates/products/products_list.html:5
 #: frontend/templates/provider_store.html:52 frontend/views/client.py:114
 msgid "Products"
@@ -143,7 +144,7 @@ msgstr "Fournisseurs et clients pros"
 
 #: dashboard/context_processors.py:109 dashboard/models.py:113
 #: dashboard/templates/categories/list.html:11
-#: frontend/templates/products/products_list.html:53
+#: frontend/templates/products/products_list.html:54
 msgid "Categories"
 msgstr "Catégories"
 
@@ -181,7 +182,7 @@ msgid "Site Settings"
 msgstr "Paramètres du site"
 
 #: dashboard/models.py:28 dashboard/templates/dash/dash_index.html:159
-#: frontend/templates/index.html:112
+#: frontend/templates/index.html:113
 msgid "Settings"
 msgstr "Paramètres"
 
@@ -199,10 +200,10 @@ msgstr "Images du diaporama des paramètres du site"
 
 #: dashboard/models.py:44 dashboard/models_settings.py:23
 #: dashboard/templates/orders/affiliate_cart.html:186
-#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:353
+#: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:302
 #: frontend/templates/products/admin_product_detail.html:241
 #: frontend/templates/products/affiliate_product_detail.html:245
-#: frontend/templates/products/product_detail.html:223
+#: frontend/templates/products/product_detail.html:222
 #: frontend/templates/products/provider_product_detail.html:243
 msgid "Full Name"
 msgstr "Nom complet"
@@ -214,22 +215,22 @@ msgstr "Nom complet"
 #: dashboard/templates/users/list.html:235
 #: dashboard/templates/users/partials/_details_info.html:15
 #: dashboard/templates/users/profile_edit.html:102
-#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:357
+#: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:306
 #: frontend/templates/products/admin_product_detail.html:246
 #: frontend/templates/products/affiliate_product_detail.html:250
-#: frontend/templates/products/product_detail.html:229
+#: frontend/templates/products/product_detail.html:228
 #: frontend/templates/products/provider_product_detail.html:248
 #: user_auth/models.py:34
 msgid "Phone Number"
 msgstr "Numéro de téléphone"
 
 #: dashboard/models.py:46 dashboard/models_settings.py:25
-#: frontend/templates/home.html:361
+#: frontend/templates/home.html:310
 msgid "Project Type"
 msgstr "Type de projet"
 
 #: dashboard/models.py:47 dashboard/models_settings.py:26
-#: frontend/templates/home.html:369
+#: frontend/templates/home.html:318
 msgid "Message"
 msgstr "Message"
 
@@ -346,7 +347,8 @@ msgstr "En attente"
 msgid "Approved"
 msgstr "Approuvé"
 
-#: dashboard/models.py:125 dashboard/templates/wallets/withdrawal_list.html:204
+#: dashboard/models.py:125
+#: dashboard/templates/wallets/withdrawal_list.html:204
 #: dashboard/templates/wallets/withdrawal_list.html:223
 #: dashboard/views/wallets.py:371
 msgid "Rejected"
@@ -388,7 +390,7 @@ msgstr "Importer un fichier de modèle 3D GLB ou GLTF"
 #: dashboard/templates/products/edit.html:151
 #: frontend/templates/products/admin_product_detail.html:207
 #: frontend/templates/products/affiliate_product_detail.html:211
-#: frontend/templates/products/product_detail.html:191
+#: frontend/templates/products/product_detail.html:190
 #: frontend/templates/products/provider_product_detail.html:208
 #: user_auth/models.py:128
 msgid "Description"
@@ -404,7 +406,7 @@ msgstr "Lien d'achat externe"
 
 #: dashboard/models.py:155 dashboard/templates/products/create.html:230
 #: dashboard/templates/products/edit.html:254
-#: frontend/templates/products/product_detail.html:199
+#: frontend/templates/products/product_detail.html:198
 msgid "Tags"
 msgstr "Étiquettes"
 
@@ -475,7 +477,8 @@ msgstr "Cocher pour mettre ce produit en avant dans la vitrine de l'admin"
 #: dashboard/templates/wallets/wallet.html:119
 #: dashboard/templates/wallets/wallet.html:140
 #: dashboard/templates/wallets/withdrawal_list.html:121
-#: dashboard/templates/wallets/withdrawal_list.html:163 user_auth/models.py:149
+#: dashboard/templates/wallets/withdrawal_list.html:163
+#: user_auth/models.py:149
 msgid "Status"
 msgstr "Statut"
 
@@ -531,8 +534,8 @@ msgid ""
 "Price for approved professional clients buying directly. Leave empty to use "
 "the retail price."
 msgstr ""
-"Prix pour les clients professionnels approuvés achetant directement. Laisser "
-"vide pour utiliser le prix de détail."
+"Prix pour les clients professionnels approuvés achetant directement. Laisser"
+" vide pour utiliser le prix de détail."
 
 #: dashboard/models.py:213 dashboard/models.py:259 dashboard/models.py:294
 #: dashboard/models.py:325 dashboard/models.py:349 dashboard/models.py:502
@@ -562,8 +565,8 @@ msgstr "Prix de gros affilié (DZD)"
 msgid ""
 "Price the provider charges its own affiliates when reselling this product"
 msgstr ""
-"Prix facturé par le fournisseur à ses propres affiliés pour la revente de ce "
-"produit"
+"Prix facturé par le fournisseur à ses propres affiliés pour la revente de ce"
+" produit"
 
 #: dashboard/models.py:275
 msgid "Suggested Retail Price (DZD)"
@@ -715,7 +718,7 @@ msgstr "Adresse"
 #: dashboard/models.py:418 frontend/templates/cart/checkout.html:65
 #: frontend/templates/products/admin_product_detail.html:256
 #: frontend/templates/products/affiliate_product_detail.html:260
-#: frontend/templates/products/product_detail.html:239
+#: frontend/templates/products/product_detail.html:238
 #: frontend/templates/products/provider_product_detail.html:258
 msgid "Wilaya"
 msgstr "Wilaya"
@@ -723,7 +726,7 @@ msgstr "Wilaya"
 #: dashboard/models.py:419 frontend/templates/cart/checkout.html:86
 #: frontend/templates/products/admin_product_detail.html:276
 #: frontend/templates/products/affiliate_product_detail.html:280
-#: frontend/templates/products/product_detail.html:260
+#: frontend/templates/products/product_detail.html:259
 #: frontend/templates/products/provider_product_detail.html:278
 msgid "Commune"
 msgstr "Commune"
@@ -805,7 +808,7 @@ msgstr "Total (EUR)"
 msgid "Order %(num)s - %(name)s"
 msgstr "Commande %(num)s - %(name)s"
 
-#: dashboard/models.py:504 frontend/templates/products/product_detail.html:233
+#: dashboard/models.py:504 frontend/templates/products/product_detail.html:232
 #: user_auth/models.py:146
 msgid "Quantity"
 msgstr "Quantité"
@@ -834,7 +837,7 @@ msgstr "Article de commande"
 #: dashboard/templates/users/affiliate_list.html:168
 #: dashboard/templates/wallets/wallet.html:316
 #: dashboard/templates/wallets/wallet_list.html:60
-#: dashboard/views/wallets.py:321 frontend/templates/home.html:49
+#: dashboard/views/wallets.py:321 frontend/templates/home.html:38
 #: user_auth/models.py:13
 msgid "Affiliate"
 msgstr "Affilié"
@@ -993,7 +996,7 @@ msgstr "Texture (JPG / PNG / PBR)"
 msgid "Technical sheet (PDF)"
 msgstr "Fiche technique (PDF)"
 
-#: dashboard/models.py:702 frontend/templates/home.html:365
+#: dashboard/models.py:702 frontend/templates/home.html:314
 msgid "Other"
 msgstr "Autre"
 
@@ -1232,9 +1235,9 @@ msgstr "Voici l'aperçu de vos commandes."
 msgid "Your agent"
 msgstr "Votre agent"
 
-#: dashboard/templates/dash/client_home.html:32 dashboard/views/dashboard.py:72
-#: dashboard/views/dashboard.py:130 dashboard/views/dashboard.py:180
-#: dashboard/views/dashboard.py:247
+#: dashboard/templates/dash/client_home.html:32
+#: dashboard/views/dashboard.py:72 dashboard/views/dashboard.py:130
+#: dashboard/views/dashboard.py:180 dashboard/views/dashboard.py:247
 msgid "Total Orders"
 msgstr "Total des commandes"
 
@@ -1355,7 +1358,8 @@ msgstr "Aide & Support"
 #: dashboard/templates/leads/list.html:16
 msgid "Inquiries captured from landing page contact form."
 msgstr ""
-"Demandes capturées depuis le formulaire de contact de la page d'atterrissage."
+"Demandes capturées depuis le formulaire de contact de la page "
+"d'atterrissage."
 
 #: dashboard/templates/leads/list.html:36
 #: dashboard/templates/orders/detail.html:60
@@ -1468,8 +1472,6 @@ msgstr "Oui, supprimer"
 
 #: dashboard/templates/orders/affiliate_cart.html:88
 #: dashboard/templates/products/affiliate_catalog.html:87
-#: frontend/templates/home.html:263
-#: frontend/templates/partials/product_card.html:26
 msgid "Add"
 msgstr "Ajouter"
 
@@ -1543,7 +1545,7 @@ msgid "Back to Cart"
 msgstr "Retour au panier"
 
 #: dashboard/templates/orders/detail.html:18
-#: frontend/templates/products/product_viewer_3d.html:14
+#: frontend/templates/products/product_viewer_3d.html:15
 msgid "Back"
 msgstr "Retour"
 
@@ -1635,7 +1637,7 @@ msgstr "Réinitialiser tout"
 #: dashboard/templates/users/affiliate_list.html:86
 #: dashboard/templates/users/list.html:92
 #: dashboard/templates/users/semi_affiliate_list.html:158
-#: frontend/templates/products/products_list.html:135
+#: frontend/templates/products/products_list.html:137
 msgid "Apply Filters"
 msgstr "Appliquer les filtres"
 
@@ -2044,7 +2046,8 @@ msgstr "Modifier la variante"
 #: dashboard/templates/products/create.html:404
 #: dashboard/templates/products/items/form_modal.html:11
 msgid ""
-"Configure a product variant with its own media, color, dimensions, and stock."
+"Configure a product variant with its own media, color, dimensions, and "
+"stock."
 msgstr ""
 "Configurez une variante de produit avec ses propres médias, couleurs, "
 "dimensions et stock."
@@ -2507,8 +2510,8 @@ msgstr "Aucune variante pour le moment"
 msgid ""
 "Click 'Add Variant' to create product options like color, size, or finish."
 msgstr ""
-"Cliquez sur « Ajouter une variante » pour créer des options de produit comme "
-"la couleur, la taille ou la finition."
+"Cliquez sur « Ajouter une variante » pour créer des options de produit comme"
+" la couleur, la taille ou la finition."
 
 #: dashboard/templates/products/items/section.html:12
 msgid "No variants yet. Click 'Add Variant' to create product options."
@@ -2787,7 +2790,7 @@ msgstr "Nom, Email..."
 
 #: dashboard/templates/users/affiliate_list.html:77
 #: dashboard/views/users.py:489
-#: frontend/templates/products/products_list.html:54
+#: frontend/templates/products/products_list.html:56
 msgid "All"
 msgstr "Tous"
 
@@ -2958,7 +2961,8 @@ msgstr "Bloquer l'utilisateur ?"
 #: dashboard/templates/users/details.html:83
 #, python-format
 msgid ""
-"Are you sure you want to unblock %(name)s? They will be able to log in again."
+"Are you sure you want to unblock %(name)s? They will be able to log in "
+"again."
 msgstr ""
 "Êtes‑vous sûr de vouloir débloquer %(name)s ? Ils pourront se reconnecter."
 
@@ -2968,8 +2972,8 @@ msgid ""
 "Are you sure you want to block %(name)s? They will not be able to log in "
 "until unblocked."
 msgstr ""
-"Êtes‑vous sûr de vouloir bloquer %(name)s ? Ils ne pourront pas se connecter "
-"tant qu'ils ne seront pas débloqués."
+"Êtes‑vous sûr de vouloir bloquer %(name)s ? Ils ne pourront pas se connecter"
+" tant qu'ils ne seront pas débloqués."
 
 #: dashboard/templates/users/details.html:84
 msgid "Yes, unblock!"
@@ -3315,8 +3319,7 @@ msgid "semi-affiliates"
 msgstr "semi-affiliés"
 
 #: dashboard/templates/users/semi_affiliate_list.html:95
-#: frontend/templates/cart/cart.html:122 frontend/templates/home.html:274
-#: frontend/templates/partials/product_card.html:36
+#: frontend/templates/cart/cart.html:122
 #: frontend/templates/products/admin_product_detail.html:182
 #: frontend/templates/products/affiliate_product_detail.html:186
 #: frontend/templates/products/product_detail.html:136
@@ -3427,7 +3430,7 @@ msgstr "Total retiré à ce jour"
 #: dashboard/templates/wallets/withdrawal_list.html:38
 #: dashboard/templates/wallets/withdrawal_list.html:105
 #: dashboard/templates/wallets/withdrawal_list.html:141
-#: frontend/templates/products/products_list.html:43
+#: frontend/templates/products/products_list.html:44
 msgid "Filters"
 msgstr "Filtres"
 
@@ -3465,7 +3468,7 @@ msgstr "Type de transaction"
 
 #: dashboard/templates/wallets/wallet.html:145
 #: dashboard/templates/wallets/withdrawal_list.html:177
-#: frontend/templates/products/products_list.html:132
+#: frontend/templates/products/products_list.html:134
 msgid "Reset"
 msgstr "Réinitialiser"
 
@@ -3994,11 +3997,11 @@ msgstr "Commande #%(num)s livrée — Commission perçue"
 #: dashboard/views/orders.py:728
 #, python-format
 msgid ""
-"Order #%(num)s has been delivered. Your commission has been credited to your "
-"wallet."
+"Order #%(num)s has been delivered. Your commission has been credited to your"
+" wallet."
 msgstr ""
-"La commande #%(num)s a été livrée. Votre commission a été créditée sur votre "
-"portefeuille."
+"La commande #%(num)s a été livrée. Votre commission a été créditée sur votre"
+" portefeuille."
 
 #: dashboard/views/orders.py:739 dashboard/views/orders.py:748
 #: dashboard/views/orders.py:758
@@ -4150,7 +4153,7 @@ msgstr "Catégorie mise à jour avec succès"
 #: dashboard/views/users.py:356 dashboard/views/users.py:411
 #: dashboard/views/users.py:546 dashboard/views/users.py:671
 #: dashboard/views/users.py:784 dashboard/views/users.py:1006
-#: frontend/views/main.py:89 frontend/views/main.py:164
+#: frontend/views/main.py:75 frontend/views/main.py:150
 #: frontend/views/orders.py:38 user_auth/views.py:78 user_auth/views.py:145
 #: user_auth/views.py:211 user_auth/views.py:339
 msgid "Something went wrong. Please try again."
@@ -4222,7 +4225,8 @@ msgstr "Produit approuvé!"
 #: dashboard/views/products.py:359
 #, python-format
 msgid "Your product '%(product)s' has been approved and is now live."
-msgstr "Votre produit '%(product)s' a été approuvé et est maintenant en ligne."
+msgstr ""
+"Votre produit '%(product)s' a été approuvé et est maintenant en ligne."
 
 #: dashboard/views/products.py:445
 msgid "Product updated successfully"
@@ -4639,7 +4643,7 @@ msgstr "Voir"
 
 #: frontend/templates/admin_store.html:91
 #: frontend/templates/affiliate_store.html:91
-#: frontend/templates/partials/product_card.html:25
+#: frontend/templates/partials/product_card.html:21
 #: frontend/templates/products/admin_product_detail.html:199
 #: frontend/templates/products/affiliate_product_detail.html:203
 #: frontend/templates/products/product_detail.html:167
@@ -4721,15 +4725,15 @@ msgstr "Commencer vos achats"
 #: frontend/templates/cart/cart.html:179
 #: frontend/templates/products/admin_product_detail.html:326
 #: frontend/templates/products/affiliate_product_detail.html:330
-#: frontend/templates/products/product_detail.html:301
+#: frontend/templates/products/product_detail.html:300
 #: frontend/templates/products/provider_product_detail.html:328
 msgid "Variant Details"
 msgstr "Détails de la variante"
 
-#: frontend/templates/cart/cart.html:180 frontend/templates/index.html:148
+#: frontend/templates/cart/cart.html:180 frontend/templates/index.html:149
 #: frontend/templates/products/admin_product_detail.html:327
 #: frontend/templates/products/affiliate_product_detail.html:331
-#: frontend/templates/products/product_detail.html:302
+#: frontend/templates/products/product_detail.html:301
 #: frontend/templates/products/provider_product_detail.html:329
 msgid "Close"
 msgstr "Fermer"
@@ -4737,13 +4741,13 @@ msgstr "Fermer"
 #: frontend/templates/cart/cart.html:202
 #: frontend/templates/products/admin_product_detail.html:349
 #: frontend/templates/products/affiliate_product_detail.html:353
-#: frontend/templates/products/product_detail.html:324
+#: frontend/templates/products/product_detail.html:323
 #: frontend/templates/products/provider_product_detail.html:351
 msgid "Select This Variant"
 msgstr "Sélectionner cette variante"
 
-#: frontend/templates/cart/cart_drawer.html:4 frontend/templates/home.html:95
-#: frontend/templates/partials/landing-nav.html:82
+#: frontend/templates/cart/cart_drawer.html:4 frontend/templates/home.html:84
+#: frontend/templates/partials/landing-nav.html:71
 msgid "Open Cart"
 msgstr "Ouvrir le panier"
 
@@ -4763,7 +4767,7 @@ msgstr "Passer à la caisse"
 #: frontend/templates/cart/checkout.html:34
 #: frontend/templates/products/admin_product_detail.html:234
 #: frontend/templates/products/affiliate_product_detail.html:238
-#: frontend/templates/products/product_detail.html:216
+#: frontend/templates/products/product_detail.html:215
 #: frontend/templates/products/provider_product_detail.html:235
 msgid "Please select a wilaya first"
 msgstr "Veuillez d'abord sélectionner une wilaya"
@@ -4772,8 +4776,8 @@ msgstr "Veuillez d'abord sélectionner une wilaya"
 #: frontend/templates/cart/checkout.html:89
 #: frontend/templates/products/admin_product_detail.html:235
 #: frontend/templates/products/affiliate_product_detail.html:239
-#: frontend/templates/products/product_detail.html:217
-#: frontend/templates/products/product_detail.html:263
+#: frontend/templates/products/product_detail.html:216
+#: frontend/templates/products/product_detail.html:262
 #: frontend/templates/products/provider_product_detail.html:236
 msgid "Select Commune"
 msgstr "Sélectionner la commune"
@@ -4791,14 +4795,14 @@ msgid "City"
 msgstr "Ville"
 
 #: frontend/templates/cart/checkout.html:68
-#: frontend/templates/products/product_detail.html:242
+#: frontend/templates/products/product_detail.html:241
 msgid "Select Wilaya"
 msgstr "Sélectionner la wilaya"
 
 #: frontend/templates/cart/checkout.html:73
 #: frontend/templates/products/admin_product_detail.html:261
 #: frontend/templates/products/affiliate_product_detail.html:265
-#: frontend/templates/products/product_detail.html:247
+#: frontend/templates/products/product_detail.html:246
 #: frontend/templates/products/provider_product_detail.html:263
 msgid "Search wilaya..."
 msgstr "Rechercher une wilaya..."
@@ -4806,7 +4810,7 @@ msgstr "Rechercher une wilaya..."
 #: frontend/templates/cart/checkout.html:94
 #: frontend/templates/products/admin_product_detail.html:281
 #: frontend/templates/products/affiliate_product_detail.html:285
-#: frontend/templates/products/product_detail.html:268
+#: frontend/templates/products/product_detail.html:267
 #: frontend/templates/products/provider_product_detail.html:283
 msgid "Search commune..."
 msgstr "Rechercher une commune..."
@@ -4850,76 +4854,92 @@ msgstr ""
 msgid "Continue shopping"
 msgstr "Continuer mes achats"
 
-#: frontend/templates/home.html:40 frontend/templates/home.html:415
-#: frontend/templates/partials/landing-nav.html:30
+#: frontend/templates/home.html:29 frontend/templates/home.html:364
+#: frontend/templates/partials/landing-nav.html:19
 msgid "About"
 msgstr "À propos"
 
-#: frontend/templates/home.html:43
-#: frontend/templates/partials/landing-nav.html:33
+#: frontend/templates/home.html:32
+#: frontend/templates/partials/landing-nav.html:22
 msgid "Shop"
 msgstr "Boutique"
 
-#: frontend/templates/home.html:46
-#: frontend/templates/partials/landing-nav.html:36
+#: frontend/templates/home.html:35
+#: frontend/templates/partials/landing-nav.html:25
 msgid "Contact"
 msgstr "Contact"
 
-#: frontend/templates/home.html:52
-#: frontend/templates/partials/landing-nav.html:39
+#: frontend/templates/home.html:41
+#: frontend/templates/partials/landing-nav.html:28
 msgid "Bilnov"
 msgstr "Bilnov"
 
-#: frontend/templates/home.html:62
-#: frontend/templates/partials/landing-nav.html:49
+#: frontend/templates/home.html:51
+#: frontend/templates/partials/landing-nav.html:38
 msgid "Language"
 msgstr "Langue"
 
-#: frontend/templates/home.html:111
-#: frontend/templates/partials/landing-nav.html:98
+#: frontend/templates/home.html:100
+#: frontend/templates/partials/landing-nav.html:87
 #: user_auth/templates/auth/login.html:10
 #: user_auth/templates/auth/login.html:96
 #: user_auth/templates/auth/signup.html:151
 msgid "Login"
 msgstr "Connexion"
 
-#: frontend/templates/home.html:138
-msgid "Transform Your Space Into a "
-msgstr "Transformez votre espace en un "
+#: frontend/templates/home.html:123
+msgid "Augmented reality"
+msgstr "Réalité augmentée"
 
-#: frontend/templates/home.html:138
-msgid "Masterpiece"
-msgstr "Chef-d'œuvre"
+#: frontend/templates/home.html:124
+msgid "See it in your home"
+msgstr "Voyez-le chez vous"
 
-#: frontend/templates/home.html:141
+#: frontend/templates/home.html:124
+msgid "before you buy it."
+msgstr "avant de l'acheter."
+
+#: frontend/templates/home.html:125
 msgid ""
-"We combine elegance, functionality, and modern aesthetics to create living "
-"environments that reflect your personality."
+"Point your phone at the floor and place our furniture at real size in your "
+"room. No app to install."
 msgstr ""
-"Nous combinons élégance, fonctionnalité et esthétique moderne pour créer des "
-"environnements de vie qui reflètent votre personnalité."
+"Pointez votre téléphone vers le sol et placez nos meubles en taille réelle "
+"dans votre pièce. Aucune application à installer."
 
-#: frontend/templates/home.html:146
-msgid "Book a Consultation"
-msgstr "Réserver une consultation"
+#: frontend/templates/home.html:128
+msgid "Try it in AR"
+msgstr "Essayer en AR"
 
-#: frontend/templates/home.html:149
-msgid "Explore Gallery"
-msgstr "Explorer la galerie"
+#: frontend/templates/home.html:130
+msgid "Browse the store"
+msgstr "Parcourir la boutique"
 
-#: frontend/templates/home.html:158
+#: frontend/templates/home.html:133
+msgid "Choose a product"
+msgstr "Choisissez un produit"
+
+#: frontend/templates/home.html:134
+msgid "Scan your floor"
+msgstr "Scannez le sol"
+
+#: frontend/templates/home.html:135
+msgid "Place it at real size"
+msgstr "Placez-le en taille réelle"
+
+#: frontend/templates/home.html:144
 msgid "Our Philosophy"
 msgstr "Notre philosophie"
 
-#: frontend/templates/home.html:159
+#: frontend/templates/home.html:145
 msgid "Crafting Spaces, Shaping Emotions"
 msgstr "Concevoir des espaces, façonner les émotions"
 
-#: frontend/templates/home.html:168
+#: frontend/templates/home.html:154
 msgid "Visionary Design"
 msgstr "Design visionnaire"
 
-#: frontend/templates/home.html:170
+#: frontend/templates/home.html:156
 msgid ""
 "We don't just follow trends; we create timeless environments that speak to "
 "your soul and elevate your daily experience."
@@ -4928,11 +4948,11 @@ msgstr ""
 "environnements intemporels qui parlent à votre âme et élèvent votre "
 "quotidien."
 
-#: frontend/templates/home.html:179
+#: frontend/templates/home.html:165
 msgid "Personal Touch"
 msgstr "Touche personnelle"
 
-#: frontend/templates/home.html:181
+#: frontend/templates/home.html:167
 msgid ""
 "Every client is unique. We dive deep into your lifestyle to ensure every "
 "corner of your space is functional and personalized."
@@ -4940,11 +4960,11 @@ msgstr ""
 "Chaque client est unique. Nous plongeons au cœur de votre mode de vie pour "
 "garantir que chaque recoin de votre espace soit fonctionnel et personnalisé."
 
-#: frontend/templates/home.html:190
+#: frontend/templates/home.html:176
 msgid "360° Immersion"
 msgstr "Immersion à 360°"
 
-#: frontend/templates/home.html:192
+#: frontend/templates/home.html:178
 msgid ""
 "Project yourself even before the build. Thanks to our immersive "
 "technologies, explore your future space in 360° and experience your project "
@@ -4954,15 +4974,15 @@ msgstr ""
 "immersives, explorez votre futur espace en 360° et vivez votre projet avant "
 "qu'il ne prenne forme."
 
-#: frontend/templates/home.html:205
+#: frontend/templates/home.html:191
 msgid "Projects Completed"
 msgstr "Projets réalisés"
 
-#: frontend/templates/home.html:210
+#: frontend/templates/home.html:196
 msgid "Designing spaces crafted for your well-being"
 msgstr "Concevoir des espaces conçus pour votre bien-être"
 
-#: frontend/templates/home.html:212
+#: frontend/templates/home.html:198
 msgid ""
 "At LOFT Design, we craft spaces where design meets everyday comfort. Every "
 "project is designed to adapt to your lifestyle, optimize your spaces, and "
@@ -4973,140 +4993,132 @@ msgstr ""
 "optimiser vos espaces et créer une atmosphère harmonieuse, fonctionnelle et "
 "agréable à vivre."
 
-#: frontend/templates/home.html:217
+#: frontend/templates/home.html:203
 msgid "Optimized layout for maximum comfort."
 msgstr "Disposition optimisée pour un confort maximal."
 
-#: frontend/templates/home.html:221
+#: frontend/templates/home.html:207
 msgid "Modern, clean, and functional design."
 msgstr "Design moderne, épuré et fonctionnel."
 
-#: frontend/templates/home.html:225
+#: frontend/templates/home.html:211
 msgid "Integration of smart and immersive solutions (360°, 3D visualization)."
 msgstr ""
 "Intégration de solutions intelligentes et immersives (360°, visualisation "
 "3D)."
 
-#: frontend/templates/home.html:229
+#: frontend/templates/home.html:215
 msgid "Personalized support, from concept to completion"
 msgstr "Accompagnement personnalisé, du concept à la réalisation."
 
-#: frontend/templates/home.html:233
+#: frontend/templates/home.html:219
 msgid "Discover Our Process"
 msgstr "Découvrez notre processus"
 
-#: frontend/templates/home.html:242
+#: frontend/templates/home.html:228
 msgid "Featured Collections"
 msgstr "Collections en vedette"
 
-#: frontend/templates/home.html:243
+#: frontend/templates/home.html:229
 msgid "Handpicked pieces from our latest interior projects."
 msgstr "Pièces sélectionnées parmi nos derniers projets d'intérieur."
 
-#: frontend/templates/home.html:280
-#: frontend/templates/partials/product_card.html:41
-#: frontend/templates/products/admin_product_detail.html:103
-#: frontend/templates/products/affiliate_product_detail.html:103
-#: frontend/templates/products/product_detail.html:70
-#: frontend/templates/products/provider_product_detail.html:103
-msgid "Show in your workspace"
-msgstr "Afficher dans votre espace de travail"
-
-#: frontend/templates/home.html:290
+#: frontend/templates/home.html:239
 msgid "View All Products"
 msgstr "Voir tous les produits"
 
-#: frontend/templates/home.html:299
+#: frontend/templates/home.html:248
 msgid "Start Your Project Today"
 msgstr "Commencez votre projet dès aujourd'hui"
 
-#: frontend/templates/home.html:301
+#: frontend/templates/home.html:250
 msgid ""
 "Ready to redefine your space? Fill out the form and our design specialists "
 "will get back to you within 24 hours."
 msgstr ""
-"Prêt à redéfinir votre espace ? Remplissez le formulaire et nos spécialistes "
-"du design vous répondront sous 24 heures."
+"Prêt à redéfinir votre espace ? Remplissez le formulaire et nos spécialistes"
+" du design vous répondront sous 24 heures."
 
-#: frontend/templates/home.html:309 frontend/templates/home.html:318
+#: frontend/templates/home.html:258 frontend/templates/home.html:267
 msgid "Call Us"
 msgstr "Appelez-nous"
 
-#: frontend/templates/home.html:327
+#: frontend/templates/home.html:276
 msgid "Email Us"
 msgstr "Envoyez-nous un e‑mail"
 
-#: frontend/templates/home.html:336
+#: frontend/templates/home.html:285
 msgid "try Bilnov"
 msgstr "essayez Bilnov"
 
-#: frontend/templates/home.html:338
+#: frontend/templates/home.html:287
 msgid "Access Details"
 msgstr "Détails d'accès"
 
-#: frontend/templates/home.html:363
+#: frontend/templates/home.html:312
 msgid "Residential"
 msgstr "Résidentiel"
 
-#: frontend/templates/home.html:364
+#: frontend/templates/home.html:313
 msgid "Commercial"
 msgstr "Commercial"
 
-#: frontend/templates/home.html:372
+#: frontend/templates/home.html:321
 msgid "Tell us about your dream space..."
 msgstr "Parlez-nous de votre espace de rêve..."
 
-#: frontend/templates/home.html:377
+#: frontend/templates/home.html:326
 #: frontend/templates/products/admin_product_detail.html:296
 #: frontend/templates/products/affiliate_product_detail.html:300
 #: frontend/templates/products/provider_product_detail.html:298
 msgid "Send Inquiry"
 msgstr "Envoyer la demande"
 
-#: frontend/templates/home.html:407
+#: frontend/templates/home.html:356
 msgid ""
-"Redefining modern living through innovative design and premium craftsmanship."
+"Redefining modern living through innovative design and premium "
+"craftsmanship."
 msgstr ""
 "Redéfinir le mode de vie moderne grâce à un design innovant et un artisanat "
 "haut de gamme."
 
-#: frontend/templates/home.html:411
+#: frontend/templates/home.html:360
 msgid "Quick Links"
 msgstr "Liens rapides"
 
-#: frontend/templates/home.html:419
+#: frontend/templates/home.html:368
 msgid "Services"
 msgstr "Services"
 
-#: frontend/templates/home.html:423
+#: frontend/templates/home.html:372
 msgid "Projects"
 msgstr "Projets"
 
-#: frontend/templates/home.html:428
+#: frontend/templates/home.html:377
 msgid "Follow Us"
 msgstr "Suivez‑nous"
 
-#: frontend/templates/home.html:445
+#: frontend/templates/home.html:394
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
-#: frontend/templates/index.html:103
+#: frontend/templates/index.html:104
 msgid "Home"
 msgstr "Accueil"
 
-#: frontend/templates/index.html:109
+#: frontend/templates/index.html:110
 msgid "Reports"
 msgstr "Rapports"
 
-#: frontend/templates/index.html:125
+#: frontend/templates/index.html:126
 msgid "Main Menu"
 msgstr "Menu principal"
 
-#: frontend/templates/index.html:163
+#: frontend/templates/index.html:164
 msgid "by"
 msgstr "par"
 
-#: frontend/templates/index.html:166
+#: frontend/templates/index.html:167
 msgid "Cash on delivery · Delivery in all 58 wilayas"
 msgstr "Paiement à la livraison · Livraison dans les 58 wilayas"
 
@@ -5114,11 +5126,23 @@ msgstr "Paiement à la livraison · Livraison dans les 58 wilayas"
 msgid "Choose a file..."
 msgstr "Choisissez un fichier…"
 
-#: frontend/templates/partials/product_card.html:15
+#: frontend/templates/partials/product_card.html:9
+#: frontend/templates/partials/product_card.html:10
+#: frontend/templates/products/admin_product_detail.html:103
+#: frontend/templates/products/affiliate_product_detail.html:103
+#: frontend/templates/products/product_detail.html:70
+#: frontend/templates/products/product_viewer_3d.html:30
+#: frontend/templates/products/product_viewer_3d.html:36
+#: frontend/templates/products/products_list.html:55
+#: frontend/templates/products/provider_product_detail.html:103
+msgid "View in your space"
+msgstr "Voir chez vous"
+
+#: frontend/templates/partials/product_card.html:14
 msgid "Out of stock"
 msgstr "Épuisé"
 
-#: frontend/templates/partials/product_card.html:19
+#: frontend/templates/partials/product_card.html:16
 msgid "Choose options"
 msgstr "Choisir"
 
@@ -5154,8 +5178,9 @@ msgid "Powered By"
 msgstr "Propulsé par"
 
 #: frontend/templates/products/product_detail.html:80
-msgid "Market Valuation"
-msgstr "Évaluation du marché"
+msgctxt "storefront"
+msgid "Price"
+msgstr "Prix"
 
 #: frontend/templates/products/product_detail.html:84
 msgid "Availability"
@@ -5165,34 +5190,34 @@ msgstr "Disponibilité"
 msgid "Bespoke Collection"
 msgstr "Collection sur mesure"
 
-#: frontend/templates/products/product_detail.html:185
+#: frontend/templates/products/product_detail.html:184
 msgid "Bilnov ref."
 msgstr "Réf. Bilnov"
 
-#: frontend/templates/products/product_detail.html:210
+#: frontend/templates/products/product_detail.html:209
 msgid "Quick order"
 msgstr "Commande rapide"
 
-#: frontend/templates/products/product_detail.html:211
+#: frontend/templates/products/product_detail.html:210
 msgid ""
 "Leave your details: an advisor calls you to confirm. You pay on delivery."
 msgstr ""
 "Laissez vos coordonnées : un conseiller vous appelle pour confirmer. "
 "Paiement à la livraison."
 
-#: frontend/templates/products/product_detail.html:224
+#: frontend/templates/products/product_detail.html:223
 msgid "Your Name"
 msgstr "Votre nom"
 
-#: frontend/templates/products/product_detail.html:279
+#: frontend/templates/products/product_detail.html:278
 msgid "Specific Address (Optional)"
 msgstr "Adresse spécifique (facultatif)"
 
-#: frontend/templates/products/product_detail.html:280
+#: frontend/templates/products/product_detail.html:279
 msgid "Street, Building..."
 msgstr "Rue, bâtiment..."
 
-#: frontend/templates/products/product_detail.html:284
+#: frontend/templates/products/product_detail.html:283
 msgid "Order (pay on delivery)"
 msgstr "Commander (paiement à la livraison)"
 
@@ -5200,46 +5225,52 @@ msgstr "Commander (paiement à la livraison)"
 msgid "3D View"
 msgstr "Vue 3D"
 
-#: frontend/templates/products/products_list.html:60
+#: frontend/templates/products/product_viewer_3d.html:37
+msgid "Scan with your phone to place this product at real size in your room."
+msgstr ""
+"Scannez avec votre téléphone pour placer ce produit en taille réelle dans "
+"votre pièce."
+
+#: frontend/templates/products/products_list.html:62
 #, python-format
 msgid "%(n)s product"
 msgid_plural "%(n)s products"
 msgstr[0] "%(n)s produit"
 msgstr[1] "%(n)s produits"
 
-#: frontend/templates/products/products_list.html:61
+#: frontend/templates/products/products_list.html:63
 msgid "Sort"
 msgstr "Trier"
 
-#: frontend/templates/products/products_list.html:81
+#: frontend/templates/products/products_list.html:83
 msgid "No products match your filters."
 msgstr "Aucun produit ne correspond à vos filtres."
 
-#: frontend/templates/products/products_list.html:82
+#: frontend/templates/products/products_list.html:84
 msgid "Clear Filters"
 msgstr "Effacer les filtres"
 
-#: frontend/templates/products/products_list.html:100
+#: frontend/templates/products/products_list.html:102
 msgid "Refine Collection"
 msgstr "Affiner la collection"
 
-#: frontend/templates/products/products_list.html:109
+#: frontend/templates/products/products_list.html:111
 msgid "Collections"
 msgstr "Collections"
 
-#: frontend/templates/products/products_list.html:114
+#: frontend/templates/products/products_list.html:116
 msgid "Price Range (DZD)"
 msgstr "Fourchette de prix (DZD)"
 
-#: frontend/templates/products/products_list.html:117
+#: frontend/templates/products/products_list.html:119
 msgid "Min"
 msgstr "Min"
 
-#: frontend/templates/products/products_list.html:120
+#: frontend/templates/products/products_list.html:122
 msgid "Max"
 msgstr "Max"
 
-#: frontend/templates/products/products_list.html:126
+#: frontend/templates/products/products_list.html:128
 msgid "Sort Preferences"
 msgstr "Préférences de tri"
 
@@ -5385,28 +5416,28 @@ msgstr ""
 msgid "The order could not be placed. Please try again."
 msgstr "La commande n'a pas pu être passée. Veuillez réessayer."
 
-#: frontend/views/main.py:57
+#: frontend/views/main.py:43
 msgid "Full Name is required"
 msgstr "Le nom complet est requis"
 
-#: frontend/views/main.py:58
+#: frontend/views/main.py:44
 msgid "Phone Number is required"
 msgstr "Le numéro de téléphone est requis"
 
-#: frontend/views/main.py:59
+#: frontend/views/main.py:45
 msgid "Message is required"
 msgstr "Le message est requis"
 
-#: frontend/views/main.py:77
+#: frontend/views/main.py:63
 msgid "New Contact Request"
 msgstr "Nouvelle demande de contact"
 
-#: frontend/views/main.py:78
+#: frontend/views/main.py:64
 #, python-format
 msgid "New contact lead from %(name)s"
 msgstr "Nouveau lead de contact de %(name)s"
 
-#: frontend/views/main.py:85
+#: frontend/views/main.py:71
 msgid ""
 "Your contact request has been sent successfully. We will get back to you "
 "shortly."
@@ -5414,49 +5445,50 @@ msgstr ""
 "Votre demande de contact a été envoyée avec succès. Nous reviendrons vers "
 "vous sous peu."
 
-#: frontend/views/main.py:106 user_auth/views.py:103
+#: frontend/views/main.py:92 user_auth/views.py:103
 msgid "First name is required."
 msgstr "Le prénom est obligatoire."
 
-#: frontend/views/main.py:108 user_auth/views.py:105
+#: frontend/views/main.py:94 user_auth/views.py:105
 msgid "Last name is required."
 msgstr "Le nom de famille est obligatoire."
 
-#: frontend/views/main.py:110 user_auth/views.py:107 user_auth/views.py:229
+#: frontend/views/main.py:96 user_auth/views.py:107 user_auth/views.py:229
 msgid "Email is required."
 msgstr "L'e-mail est obligatoire."
 
-#: frontend/views/main.py:112 user_auth/views.py:109 user_auth/views.py:181
+#: frontend/views/main.py:98 user_auth/views.py:109 user_auth/views.py:181
 #: user_auth/views.py:320
 msgid "Password is required."
 msgstr "Le mot de passe est obligatoire."
 
-#: frontend/views/main.py:114
+#: frontend/views/main.py:100
 msgid "Password must be at least 8 characters."
 msgstr "Le mot de passe doit contenir au moins 8 caractères."
 
-#: frontend/views/main.py:116 user_auth/views.py:111 user_auth/views.py:185
+#: frontend/views/main.py:102 user_auth/views.py:111 user_auth/views.py:185
 #: user_auth/views.py:324
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: frontend/views/main.py:124 user_auth/views.py:120
+#: frontend/views/main.py:110 user_auth/views.py:120
 msgid "This email is already registered."
 msgstr "Cet e-mail est déjà enregistré."
 
-#: frontend/views/main.py:145
+#: frontend/views/main.py:131
 msgid "New Affiliate Signup"
 msgstr "Nouvelle inscription d'affilié"
 
-#: frontend/views/main.py:147
+#: frontend/views/main.py:133
 #, python-format
 msgid ""
-"%(name)s (%(email)s) has registered as an affiliate and is awaiting approval."
+"%(name)s (%(email)s) has registered as an affiliate and is awaiting "
+"approval."
 msgstr ""
 "%(name)s (%(email)s) s'est inscrit en tant qu'affilié et attend "
 "l'approbation."
 
-#: frontend/views/main.py:156
+#: frontend/views/main.py:142
 msgid ""
 "Your affiliate account has been created! An admin will review and activate "
 "your account. You will receive an email once approved."
@@ -5503,27 +5535,27 @@ msgstr ""
 "Votre demande a été envoyée avec succès. Notre équipe vous contactera "
 "bientôt."
 
-#: frontend/views/products.py:66 frontend/views/products.py:76
+#: frontend/views/products.py:70 frontend/views/products.py:80
 msgid "All Collections"
 msgstr "Toutes les collections"
 
-#: frontend/views/products.py:70 frontend/views/products.py:83
+#: frontend/views/products.py:74 frontend/views/products.py:87
 msgid "Newest First"
 msgstr "Les plus récents d'abord"
 
-#: frontend/views/products.py:71
+#: frontend/views/products.py:75
 msgid "Price: Low to High"
 msgstr "Prix : du plus bas au plus élevé"
 
-#: frontend/views/products.py:72
+#: frontend/views/products.py:76
 msgid "Price: High to Low"
 msgstr "Prix : du plus élevé au plus bas"
 
-#: frontend/views/products.py:73
+#: frontend/views/products.py:77
 msgid "Name: A-Z"
 msgstr "Nom : A‑Z"
 
-#: frontend/views/products.py:205
+#: frontend/views/products.py:210
 msgid "No 3D model available for this product"
 msgstr "Aucun modèle 3D disponible pour ce produit"
 
@@ -5765,8 +5797,8 @@ msgid ""
 "We've emailed you instructions for setting your password, if an account "
 "exists with the email you entered."
 msgstr ""
-"Nous vous avons envoyé par e‑mail les instructions pour définir votre mot de "
-"passe, si un compte existe avec l'e‑mail que vous avez saisi."
+"Nous vous avons envoyé par e‑mail les instructions pour définir votre mot de"
+" passe, si un compte existe avec l'e‑mail que vous avez saisi."
 
 #: user_auth/templates/auth/password_reset_email.txt:2
 #, python-format
@@ -5777,8 +5809,7 @@ msgid ""
 msgstr ""
 "Bonjour %(user.get_short_name|default:user.get_username)s,\n"
 "\n"
-"Vous avez demandé une réinitialisation du mot de passe pour votre compte "
-"LOFT Design."
+"Vous avez demandé une réinitialisation du mot de passe pour votre compte LOFT Design."
 
 #: user_auth/templates/auth/password_reset_email.txt:6
 msgid "Your username:"
@@ -5794,8 +5825,7 @@ msgid ""
 "\n"
 "The LOFT Design team"
 msgstr ""
-"Si vous n'êtes pas à l'origine de cette réinitialisation, veuillez ignorer "
-"cet e‑mail.\n"
+"Si vous n'êtes pas à l'origine de cette réinitialisation, veuillez ignorer cet e‑mail.\n"
 "\n"
 "L'équipe LOFT Design"
 
@@ -5829,11 +5859,11 @@ msgstr "Lien invalide ou expiré"
 
 #: user_auth/templates/auth/set_password.html:104
 msgid ""
-"This password setup link is invalid or has already been used. Please contact "
-"your administrator to request a new invitation."
+"This password setup link is invalid or has already been used. Please contact"
+" your administrator to request a new invitation."
 msgstr ""
-"Ce lien de configuration du mot de passe est invalide ou a déjà été utilisé. "
-"Veuillez contacter votre administrateur pour demander une nouvelle "
+"Ce lien de configuration du mot de passe est invalide ou a déjà été utilisé."
+" Veuillez contacter votre administrateur pour demander une nouvelle "
 "invitation."
 
 #: user_auth/templates/auth/set_password.html:107
@@ -5918,7 +5948,8 @@ msgstr "Votre compte a été bloqué. Veuillez contacter le support."
 
 #: user_auth/views.py:72
 msgid "Invalid username/email or password. Please try again."
-msgstr "Nom d'utilisateur/e‑mail ou mot de passe invalide. Veuillez réessayer."
+msgstr ""
+"Nom d'utilisateur/e‑mail ou mot de passe invalide. Veuillez réessayer."
 
 #: user_auth/views.py:113 user_auth/views.py:183 user_auth/views.py:322
 msgid "Password must be at least 8 characters long."
@@ -5965,10 +5996,31 @@ msgstr ""
 msgid "Password reset successfully."
 msgstr "Mot de passe réinitialisé avec succès."
 
+#~ msgid "Market Valuation"
+#~ msgstr "Évaluation du marché"
+
+#~ msgid "Transform Your Space Into a "
+#~ msgstr "Transformez votre espace en un "
+
+#~ msgid "Masterpiece"
+#~ msgstr "Chef-d'œuvre"
+
+#~ msgid ""
+#~ "We combine elegance, functionality, and modern aesthetics to create living "
+#~ "environments that reflect your personality."
+#~ msgstr ""
+#~ "Nous combinons élégance, fonctionnalité et esthétique moderne pour créer des"
+#~ " environnements de vie qui reflètent votre personnalité."
+
+#~ msgid "Book a Consultation"
+#~ msgstr "Réserver une consultation"
+
+#~ msgid "Explore Gallery"
+#~ msgstr "Explorer la galerie"
+
 #~ msgid "LOFT Design - High-end interior design and architectural solutions."
 #~ msgstr ""
-#~ "LOFT Design - Design d'intérieur haut de gamme et solutions "
-#~ "architecturales."
+#~ "LOFT Design - Design d'intérieur haut de gamme et solutions architecturales."
 
 #~ msgid "New Provider"
 #~ msgstr "Nouveau fournisseur"
@@ -5988,8 +6040,8 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgid ""
 #~ "Connect with our design specialists for personalized acquisition support."
 #~ msgstr ""
-#~ "Contactez nos spécialistes du design pour un accompagnement personnalisé "
-#~ "à l'acquisition."
+#~ "Contactez nos spécialistes du design pour un accompagnement personnalisé à "
+#~ "l'acquisition."
 
 #~ msgid "Search projects or pieces..."
 #~ msgstr "Rechercher des projets ou des pièces..."
@@ -6139,14 +6191,13 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgid ""
 #~ "After submission, an admin will review your product before it goes live."
 #~ msgstr ""
-#~ "Après la soumission, un administrateur examinera votre produit et "
-#~ "définira les prix de gros/de détail avant sa mise en ligne."
+#~ "Après la soumission, un administrateur examinera votre produit et définira "
+#~ "les prix de gros/de détail avant sa mise en ligne."
 
 #~ msgid "Submit for Review"
 #~ msgstr "Soumettre pour examen"
 
-#~ msgid ""
-#~ "Set wholesale & retail prices and click Save to approve this product."
+#~ msgid "Set wholesale & retail prices and click Save to approve this product."
 #~ msgstr ""
 #~ "Définissez les prix de gros et de détail et cliquez sur Enregistrer pour "
 #~ "approuver ce produit."
@@ -6225,8 +6276,7 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgstr "Commission gagnée"
 
 #, python-format
-#~ msgid ""
-#~ "You earned DZD%(amount)s commission on \"%(products)s\" for order %(num)s."
+#~ msgid "You earned DZD%(amount)s commission on \"%(products)s\" for order %(num)s."
 #~ msgstr ""
 #~ "Vous avez gagné DZD%(amount)s de commission sur \"%(products)s\" pour la "
 #~ "commande %(num)s."
@@ -6256,8 +6306,8 @@ msgstr "Mot de passe réinitialisé avec succès."
 #~ msgid ""
 #~ "%(name)s added '%(product)s' — set wholesale/retail prices to activate."
 #~ msgstr ""
-#~ "%(name)s a ajouté '%(product)s' — définissez les prix de gros/de détail "
-#~ "pour activer."
+#~ "%(name)s a ajouté '%(product)s' — définissez les prix de gros/de détail pour"
+#~ " activer."
 
 #~ msgid "Product submitted for review."
 #~ msgstr "Produit soumis pour examen."
@@ -6433,8 +6483,8 @@ msgstr "Mot de passe réinitialisé avec succès."
 
 #~ msgid "You can only view your own billing or your semi-affiliates."
 #~ msgstr ""
-#~ "Vous ne pouvez consulter que votre propre facturation ou celle de vos "
-#~ "semi-affiliés."
+#~ "Vous ne pouvez consulter que votre propre facturation ou celle de vos semi-"
+#~ "affiliés."
 
 #, python-format
 #~ msgid "%(provider)s changed order #%(id)s from «%(old)s» to «%(new)s»"

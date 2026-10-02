@@ -3,21 +3,10 @@
 <nav class="navbar navbar-expand-lg bg-white navbar-light fixed-top transition-all"
      id="landingNav">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
-            {% if site_config.logo %}
-                <img src="{{ site_config.logo }}"
-                     alt="Logo"
-                     style="height: 40px"
-                     class="rounded">
-            {% endif %}
-            <span class="fw-black fs-4 {% if not site_config.logo %}text-dark{% endif %}">
-                {% if IS_RTL %}
-                    {{ site_config.ar_name }}
-                {% else %}
-                    {{ site_config.name }}
-                {% endif %}
-            </span>
-        </a>
+        <a class="navbar-brand sb-brand" href="/" aria-label="{{ site_config.name }}">
+                <img src="{{ site_config.logo }}" alt="" width="31" height="30">
+                <span class="sb-word">{% if IS_RTL %}{{ site_config.ar_name }}{% else %}Store <b>Bilnov</b>{% endif %}</span>
+            </a>
         <button class="navbar-toggler border-0 shadow-none"
                 type="button"
                 data-bs-toggle="collapse"

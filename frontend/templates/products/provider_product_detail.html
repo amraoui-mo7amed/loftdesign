@@ -99,8 +99,8 @@
                         {% endwith %}
 
                         {% if product.model_3d or product.external_link %}
-                        <a href="{% if product.model_3d %}{% url 'frontend:product_viewer_3d' product.pk %}?back=provider&code={{ profile.user.username }}{% else %}{{ product.external_link }}{% endif %}" {% if not product.model_3d %}target="_blank"{% endif %} class="luxury-visualize-btn" style="--btn-hover-bg:{{ store.header_bg_color }};">
-                            <i class="fas fa-vr-cardboard"></i> {% trans "Show in your workspace" %}
+                        <a href="{% if product.model_3d %}{% url 'frontend:product_viewer_3d' product.pk %}?back=provider&code={{ profile.user.username }}{% else %}{{ product.external_link }}{% endif %}" {% if not product.model_3d %}target="_blank"{% endif %} class="sb-ar-btn" style="--btn-hover-bg:{{ store.header_bg_color }};">
+                            <i class="fas fa-cube" aria-hidden="true"></i>{% trans "View in your space" %}<span class="sb-ar-tag">AR</span>
                         </a>
                         {% endif %}
                     </div>

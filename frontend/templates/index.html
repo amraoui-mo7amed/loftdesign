@@ -70,6 +70,7 @@
         {% endblock extra_css %}
         {# Core CSS #}
         <link rel="stylesheet" href="{% static "css/index.css" %}?v={{ ASSET_VERSION }}" />
+        <link rel="stylesheet" href="{% static "css/storefront.css" %}?v={{ ASSET_VERSION }}" />
     </head>
     <body class="{% block body_class %}{% endblock body_class %}">
         <!-- Navigation Bar -->
@@ -159,7 +160,7 @@
                 <div class="container">
                     <div class="row g-3 align-items-center small">
                         <div class="col-md-4 text-center text-md-start">
-                            <strong>{% if IS_RTL %}{{ site_config.ar_name }}{% else %}{{ site_config.name }}{% endif %}</strong>
+                            <span class="sb-brand align-middle me-1"><img src="{{ site_config.logo }}" alt="" width="23" height="22" style="height:22px"><span class="sb-word" style="font-size:1rem">{% if IS_RTL %}{{ site_config.ar_name }}{% else %}Store <b>Bilnov</b>{% endif %}</span></span>
                             <span class="opacity-75">· {% trans "by" %} {{ site_config.operator }}</span>
                         </div>
                         <div class="col-md-4 text-center">

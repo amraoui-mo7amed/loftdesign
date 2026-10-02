@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>{{ product.title }} — {% trans "3D View" %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="{% static "css/product_viewer.css" %}?v={{ ASSET_VERSION }}">
     <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.3.0/dist/model-viewer.min.js"></script>
 </head>
@@ -22,7 +23,34 @@
             auto-rotate
             shadow-intensity="1"
             environment-image="neutral"
-        ></model-viewer>
+            alt="{{ product.title }}"
+            id="arViewer"
+        >
+            <button slot="ar-button" class="ar-launch" type="button">
+                <i class="fas fa-cube" aria-hidden="true"></i>{% trans "View in your space" %}
+            </button>
+        </model-viewer>
+        <aside class="ar-qr" id="arQr" hidden>
+            <div id="arQrCode" aria-hidden="true"></div>
+            <div>
+                <strong>{% trans "View in your space" %}</strong>
+                <p>{% trans "Scan with your phone to place this product at real size in your room." %}</p>
+            </div>
+        </aside>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+(function () {
+    // Phones get the native AR button; on a computer, show a QR code to continue on the phone.
+    var mv = document.getElementById('arViewer'), box = document.getElementById('arQr');
+    if (!mv || !box) return;
+    mv.addEventListener('load', function () {
+        if (mv.canActivateAR || typeof qrcode === 'undefined') return;
+        var qr = qrcode(0, 'M'); qr.addData(location.href); qr.make();
+        document.getElementById('arQrCode').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+        box.hidden = false;
+    });
+})();
+</script>
 </body>
 </html>

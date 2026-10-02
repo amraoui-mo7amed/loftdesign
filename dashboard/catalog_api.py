@@ -97,8 +97,15 @@ def _variants(product):
     ]
 
 
+def _size(field):
+    try:
+        return field.size
+    except (OSError, ValueError):
+        return None
+
+
 def _assets(request, product, all_versions=False):
-    qs = product.assets.all()
+    qs = product.assets.select_related("variant")
     if not all_versions:
         qs = qs.filter(is_current=True)
     files = [
@@ -109,12 +116,21 @@ def _assets(request, product, all_versions=False):
             "current": a.is_current,
             "variantId": a.variant.variant_id if a.variant_id else None,
             "url": _abs(request, a.file.url),
+            "unit": a.unit,
+            "scale": a.scale,
+            "polygons": a.polygon_count,
+            "size": a.file_size,
+            "sha256": a.sha256 or None,
+            "compatibility": a.compatibility or None,
+            "date": a.created_at.isoformat(),
         }
         for a in qs
     ]
     if product.model_3d and not any(f["format"] == ProductAsset.Format.GLB for f in files):
         files.append({"format": "glb", "label": "GLB / GLTF", "version": product.model_version,
-                      "current": True, "variantId": None, "url": _abs(request, product.model_3d.url)})
+                      "current": True, "variantId": None, "url": _abs(request, product.model_3d.url),
+                      "unit": "m", "scale": "1:1", "polygons": None, "size": _size(product.model_3d),
+                      "sha256": None, "compatibility": None, "date": product.updated_at.isoformat() if product.updated_at else None})
     return files
 
 

@@ -1,0 +1,30 @@
+{% load i18n %}
+            <div class="row g-2 align-items-end">
+              <div class="col-md-4">
+                <select name="asset_format" class="form-select">
+                  {% for value, label in asset_formats %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="col-md-8">
+                <input type="file" name="asset_file" class="form-control">
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">{% trans "Unit" %}</label>
+                <select name="asset_unit" class="form-select">
+                  {% for value, label in asset_units %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">{% trans "Scale" %}</label>
+                <input type="text" name="asset_scale" maxlength="20" class="form-control" value="1:1">
+              </div>
+              <div class="col-6 col-md-3">
+                <label class="form-label small mb-1">{% trans "Polygons" %}</label>
+                <input type="number" name="asset_polygons" min="0" class="form-control" placeholder="45000">
+              </div>
+              <div class="col-6 col-md-5">
+                <label class="form-label small mb-1">{% trans "Compatibility" %}</label>
+                <input type="text" name="asset_compatibility" maxlength="120" class="form-control" placeholder="SketchUp 2021+">
+              </div>
+            </div>
+            <div class="form-text-hint mt-2">{% trans "Each file keeps the product's BPID. Uploading a new file of the same format creates a new version; projects keep the version they use." %}</div>

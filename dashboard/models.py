@@ -731,7 +731,7 @@ class ProductItemImage(models.Model):
 class ProductAsset(models.Model):
     """Digital file of a catalog product (3D, BIM, CAD, texture, documentation).
 
-    Every file is tied to the product's permanent Bilnov Object ID. Uploading a
+    Every file is tied to the product's permanent BPID. Uploading a
     new file of the same format creates a new version; old versions stay
     downloadable so existing projects are never changed behind the architect's back.
     """
@@ -757,7 +757,20 @@ class ProductAsset(models.Model):
     file = models.FileField(_("File"), upload_to="products/assets/")
     version = models.PositiveIntegerField(_("Version"), default=1, editable=False)
     is_current = models.BooleanField(_("Current version"), default=True, editable=False)
+    class Unit(models.TextChoices):
+        MM = "mm", _("Millimetres")
+        CM = "cm", _("Centimetres")
+        M = "m", _("Metres")
+        IN = "in", _("Inches")
+
     notes = models.CharField(_("Notes"), max_length=255, blank=True)
+    unit = models.CharField(_("Unit"), max_length=2, choices=Unit.choices, default=Unit.MM)
+    scale = models.CharField(_("Scale"), max_length=20, default="1:1")
+    polygon_count = models.PositiveIntegerField(_("Polygons"), null=True, blank=True)
+    compatibility = models.CharField(_("Compatibility"), max_length=120, blank=True,
+                                     help_text=_("Software and minimum version, e.g. SketchUp 2021+, Revit 2022+."))
+    file_size = models.PositiveBigIntegerField(_("File size (bytes)"), default=0, editable=False)
+    sha256 = models.CharField(_("SHA-256"), max_length=64, blank=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -774,6 +787,7 @@ class ProductAsset(models.Model):
 
         if self.pk:
             return super().save(*args, **kwargs)
+        self.fill_file_metadata()
         with transaction.atomic():
             same = ProductAsset.objects.select_for_update().filter(
                 product=self.product, file_format=self.file_format, variant=self.variant
@@ -784,3 +798,26 @@ class ProductAsset(models.Model):
             super().save(*args, **kwargs)
             if last and self.file_format not in (self.Format.PDF, self.Format.OTHER):
                 Product.objects.filter(pk=self.product_id).update(model_version=F("model_version") + 1)
+
+    def fill_file_metadata(self):
+        """Size and SHA-256 of the file, so BILNOV and the desktop app can tell an update from a copy."""
+        import hashlib
+
+        digest = hashlib.sha256()
+        f = self.file
+        f.open("rb")
+        try:
+            f.seek(0)
+            for chunk in f.chunks():
+                digest.update(chunk)
+            f.seek(0)
+        finally:
+            if getattr(f, "_committed", False):
+                f.close()
+        self.sha256 = digest.hexdigest()
+        self.file_size = f.size or 0
+
+    @property
+    def extension(self):
+        import os
+        return os.path.splitext(self.file.name)[1].lstrip(".").lower()

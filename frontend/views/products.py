@@ -182,8 +182,11 @@ def product_detail(request, pk):
         template = "products/product_detail.html"
 
     items = product.items.filter(is_active=True).prefetch_related("gallery_images")
+    bim_assets = list(product.assets.filter(is_current=True).select_related("variant"))
 
     return render(request, template, {
+        "bim_assets": bim_assets,
+        "has_glb": any(a.file_format == "glb" for a in bim_assets),
         "product": product,
         "wilaya_options": wilaya_options,
         "communes_data": communes_data,

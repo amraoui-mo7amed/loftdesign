@@ -314,6 +314,32 @@ class BilnovReferentialTests(TestCase):
         self.product.refresh_from_db()
         self.assertEqual(self.product.model_version, 2)
 
+    def test_file_metadata_and_bim_block(self):
+        import hashlib
+
+        from dashboard.models import ProductAsset
+
+        content = b"ISO-10303-21;"
+        asset = ProductAsset.objects.create(
+            product=self.product, file_format="ifc", file=SimpleUploadedFile("nora.ifc", content),
+            unit="cm", polygon_count=1200, compatibility="IFC 4",
+        )
+        self.assertEqual(asset.file_size, len(content))
+        self.assertEqual(asset.sha256, hashlib.sha256(content).hexdigest())
+
+        data = self.client.get(reverse("catalog:assets", args=[self.product.bpid])).json()
+        ifc = next(a for a in data["assets"] if a["format"] == "ifc")
+        self.assertEqual((ifc["unit"], ifc["polygons"], ifc["size"], ifc["compatibility"]), ("cm", 1200, len(content), "IFC 4"))
+        self.assertEqual(ifc["sha256"], asset.sha256)
+
+        self.product.status = Product.ProductStatus.APPROVED
+        self.product.is_active = True
+        self.product.save()
+        page = self.client.get(reverse("frontend:product_detail", args=[self.product.pk]))
+        self.assertContains(page, 'id="bim"')
+        self.assertContains(page, self.variant.variant_id)
+        self.assertContains(page, asset.file.url)
+
     def test_catalog_api(self):
         import json
 

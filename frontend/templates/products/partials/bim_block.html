@@ -1,0 +1,63 @@
+{% load i18n %}
+{% if product.bpid %}
+<div class="sb-bim" id="bim">
+    <div class="sb-bim-head">
+        <span class="sb-bim-eyebrow"><i class="fas fa-drafting-compass"></i> {% trans "Architect & BIM space" %}</span>
+        <h2>{% trans "Technical data and design files" %}</h2>
+        <p>{% trans "Place this exact product in your projects: SketchUp, Revit, Archicad, IFC and BILNOV keep its BPID, so the client always finds the real product in the Store." %}</p>
+    </div>
+    <div class="sb-bim-grid">
+        <dl class="sb-bim-ids">
+            <div><dt>BPID</dt><dd><code id="bimBpid">{{ product.bpid }}</code> <button type="button" class="sb-bim-copy" data-copy="{{ product.bpid }}" data-done="{% trans 'Copied' %}" title="{% trans 'Copy' %}"><i class="far fa-copy"></i></button></dd></div>
+            {% if product.manufacturer or product.brand %}<div><dt>{% trans "Manufacturer" %}</dt><dd>{% if product.manufacturer %}{{ product.manufacturer.name }} <small>{{ product.manufacturer.manufacturer_id }}</small>{% else %}{{ product.brand }}{% endif %}</dd></div>{% endif %}
+            {% if product.manufacturer_reference %}<div><dt>{% trans "Manufacturer reference" %}</dt><dd>{{ product.manufacturer_reference }}</dd></div>{% endif %}
+            {% if product.sku %}<div><dt>SKU</dt><dd>{{ product.sku }}</dd></div>{% endif %}
+            {% if product.category.code %}<div><dt>{% trans "Category code" %}</dt><dd>{{ product.category.code }}</dd></div>{% endif %}
+            <div><dt>{% trans "Model version" %}</dt><dd>v{{ product.model_version }}</dd></div>
+            {% if items %}
+            <div class="sb-bim-variants"><dt>{% trans "Variants" %}</dt>
+                <dd><ul>{% for item in items %}<li><code>{{ item.variant_id }}</code> {{ item.name }}{% if item.sku %} · {{ item.sku }}{% endif %}{% if item.manufacturer_reference %} · {{ item.manufacturer_reference }}{% endif %}</li>{% endfor %}</ul></dd>
+            </div>
+            {% endif %}
+        </dl>
+        <div class="sb-bim-files">
+            {% if bim_assets or product.model_3d %}
+            <div class="sb-bim-table" role="table">
+                <div class="sb-bim-row sb-bim-th" role="row">
+                    <span role="columnheader">{% trans "Format" %}</span>
+                    <span role="columnheader">{% trans "Version" %}</span>
+                    <span role="columnheader">{% trans "Details" %}</span>
+                    <span role="columnheader"></span>
+                </div>
+                {% for a in bim_assets %}
+                <div class="sb-bim-row" role="row">
+                    <span role="cell"><b class="sb-bim-fmt">{{ a.extension|default:a.file_format|upper }}</b><small>{{ a.get_file_format_display }}</small></span>
+                    <span role="cell">v{{ a.version }}<small>{{ a.created_at|date:"d/m/Y" }}</small></span>
+                    <span role="cell" class="sb-bim-meta">
+                        {% if a.variant %}<em>{{ a.variant.name }}</em>{% endif %}
+                        <em>{{ a.file_size|filesizeformat }}</em>
+                        {% if a.file_format != "pdf" and a.file_format != "texture" %}<em>{{ a.get_unit_display }} · {{ a.scale }}</em>{% endif %}
+                        {% if a.polygon_count %}<em>{{ a.polygon_count }} {% trans "polygons" %}</em>{% endif %}
+                        {% if a.compatibility %}<em dir="ltr">{{ a.compatibility }}</em>{% endif %}
+                    </span>
+                    <span role="cell"><a class="sb-bim-dl" href="{{ a.file.url }}" download><i class="fas fa-download"></i><span>{% trans "Download" %}</span></a></span>
+                </div>
+                {% endfor %}
+                {% if product.model_3d and not has_glb %}
+                <div class="sb-bim-row" role="row">
+                    <span role="cell"><b class="sb-bim-fmt">GLB</b><small>GLB / GLTF</small></span>
+                    <span role="cell">v{{ product.model_version }}</span>
+                    <span role="cell" class="sb-bim-meta"><em>{{ product.model_3d.size|filesizeformat }}</em><em>{% trans "Metres" %} · 1:1</em></span>
+                    <span role="cell"><a class="sb-bim-dl" href="{{ product.model_3d.url }}" download><i class="fas fa-download"></i><span>{% trans "Download" %}</span></a></span>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <p class="sb-bim-empty"><i class="fas fa-cube"></i> {% trans "No design file for this product yet. Ask us: we can send the model on request." %}</p>
+            {% endif %}
+            <p class="sb-bim-note">{% blocktrans %}Each file carries the BPID in its metadata (SketchUp attributes, IFC Pset_BilnovProduct, GLB extras). A new version never replaces the one already placed in a project.{% endblocktrans %}
+                <a href="{% url 'catalog:product' product.bpid %}" target="_blank" rel="noopener">{% trans "JSON data (API)" %}</a></p>
+        </div>
+    </div>
+</div>
+{% endif %}

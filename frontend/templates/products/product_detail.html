@@ -181,7 +181,8 @@
                         {% if product.bpid %}
                         <div class="small text-muted mt-3">
                             {% if product.brand %}<span class="me-3">{{ product.brand }}{% if product.collection %} · {{ product.collection }}{% endif %}</span>{% endif %}
-                            <span>BPID <code>{{ product.bpid }}</code></span>
+                            <span class="me-3">BPID <code>{{ product.bpid }}</code></span>
+                            <a href="#bim" class="pd-bim-link"><i class="fas fa-drafting-compass me-1"></i>{% trans "Architect & BIM space" %}</a>
                         </div>
                         {% endif %}
                     </div>
@@ -287,6 +288,7 @@
                 </div>
             </div>
         </div>
+        {% include "products/partials/bim_block.html" %}
     </div>
 </section>
 

@@ -178,8 +178,18 @@ def _save_asset(request, product):
     """Attach the uploaded design file (if any) as a new version."""
     upload = request.FILES.get("asset_file")
     fmt = request.POST.get("asset_format")
-    if upload and fmt in ProductAsset.Format.values:
-        ProductAsset.objects.create(product=product, file_format=fmt, file=upload)
+    if not upload or fmt not in ProductAsset.Format.values:
+        return
+    post = request.POST
+    unit = post.get("asset_unit")
+    polygons = (post.get("asset_polygons") or "").strip()
+    ProductAsset.objects.create(
+        product=product, file_format=fmt, file=upload,
+        unit=unit if unit in ProductAsset.Unit.values else ProductAsset.Unit.MM,
+        scale=(post.get("asset_scale") or "1:1").strip()[:20] or "1:1",
+        polygon_count=int(polygons) if polygons.isdigit() else None,
+        compatibility=(post.get("asset_compatibility") or "").strip()[:120],
+    )
 
 
 @role_required(allowed_roles=[UserProfile.roleChoices.ADMIN, UserProfile.roleChoices.PROVIDER])
@@ -309,6 +319,7 @@ def product_create(request):
     return render(request, "products/create.html", {
         "categories": categories, "values": {}, "is_provider": is_provider,
         "asset_formats": ProductAsset.Format.choices,
+        "asset_units": ProductAsset.Unit.choices,
         "manufacturers": Manufacturer.objects.values_list("name", flat=True),
     })
 
@@ -470,6 +481,7 @@ def product_update(request, pk):
         "product": product, "categories": categories, "is_admin": is_admin,
         "price_history": price_history, "items": items,
         "asset_formats": ProductAsset.Format.choices,
+        "asset_units": ProductAsset.Unit.choices,
         "manufacturers": Manufacturer.objects.values_list("name", flat=True),
     })
 

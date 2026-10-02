@@ -190,3 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+
+// Copy a permanent identifier (BPID) from the architect & BIM block.
+document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".sb-bim-copy");
+    if (!btn || !navigator.clipboard) return;
+    navigator.clipboard.writeText(btn.dataset.copy).then(() => {
+        btn.classList.add("done");
+        btn.title = btn.dataset.done;
+        setTimeout(() => btn.classList.remove("done"), 1500);
+    });
+});

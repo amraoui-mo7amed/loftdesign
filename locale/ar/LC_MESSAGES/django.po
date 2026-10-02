@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 11:42+0000\n"
+"POT-Creation-Date: 2026-10-02 11:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,7 +203,7 @@ msgstr "صور شريط العرض لإعدادات الموقع"
 #: frontend/templates/cart/checkout.html:43 frontend/templates/home.html:193
 #: frontend/templates/products/admin_product_detail.html:241
 #: frontend/templates/products/affiliate_product_detail.html:245
-#: frontend/templates/products/product_detail.html:222
+#: frontend/templates/products/product_detail.html:223
 #: frontend/templates/products/provider_product_detail.html:243
 msgid "Full Name"
 msgstr "الاسم الكامل"
@@ -218,7 +218,7 @@ msgstr "الاسم الكامل"
 #: frontend/templates/cart/checkout.html:48 frontend/templates/home.html:195
 #: frontend/templates/products/admin_product_detail.html:246
 #: frontend/templates/products/affiliate_product_detail.html:250
-#: frontend/templates/products/product_detail.html:228
+#: frontend/templates/products/product_detail.html:229
 #: frontend/templates/products/provider_product_detail.html:248
 #: user_auth/models.py:34
 msgid "Phone Number"
@@ -312,7 +312,8 @@ msgstr "رمز بيلنوف"
 msgid ""
 "3-letter category code shared with Bilnov, e.g. FUR (furniture), LGT "
 "(lighting), TIL (tiles)."
-msgstr "رمز الفئة من 3 أحرف مشترك مع بيلنوف، مثل FUR (أثاث) وLGT (إنارة) وTIL (بلاط)."
+msgstr ""
+"رمز الفئة من 3 أحرف مشترك مع بيلنوف، مثل FUR (أثاث) وLGT (إنارة) وTIL (بلاط)."
 
 #: dashboard/models.py:112 dashboard/models.py:167
 #: dashboard/templates/products/create.html:123
@@ -340,6 +341,7 @@ msgstr "الموقع الإلكتروني"
 #: dashboard/models.py:130 dashboard/models.py:191
 #: dashboard/templates/products/create.html:263
 #: dashboard/templates/products/edit.html:299
+#: frontend/templates/products/partials/bim_block.html:12
 msgid "Manufacturer"
 msgstr "المصنّع"
 
@@ -392,14 +394,14 @@ msgstr "العنوان"
 
 #: dashboard/models.py:169 dashboard/models.py:685
 #: dashboard/templates/products/create.html:100
-#: dashboard/templates/products/create.html:427
+#: dashboard/templates/products/create.html:417
 #: dashboard/templates/products/edit.html:118
 #: dashboard/templates/products/items/form_modal.html:31
 msgid "Thumbnail"
 msgstr "الصورة المصغّرة"
 
-#: dashboard/models.py:172 dashboard/templates/products/create.html:349
-#: dashboard/templates/products/edit.html:412
+#: dashboard/models.py:172 dashboard/templates/products/create.html:339
+#: dashboard/templates/products/edit.html:402
 msgid "3D Model"
 msgstr "نموذج 3D"
 
@@ -414,7 +416,7 @@ msgstr "ارفع ملف نموذج 3D بصيغة GLB أو GLTF"
 #: dashboard/templates/products/edit.html:151
 #: frontend/templates/products/admin_product_detail.html:207
 #: frontend/templates/products/affiliate_product_detail.html:211
-#: frontend/templates/products/product_detail.html:190
+#: frontend/templates/products/product_detail.html:191
 #: frontend/templates/products/provider_product_detail.html:208
 #: user_auth/models.py:128
 msgid "Description"
@@ -430,7 +432,7 @@ msgstr "رابط شراء خارجي"
 
 #: dashboard/models.py:180 dashboard/templates/products/create.html:230
 #: dashboard/templates/products/edit.html:254
-#: frontend/templates/products/product_detail.html:198
+#: frontend/templates/products/product_detail.html:199
 msgid "Tags"
 msgstr "الوسوم"
 
@@ -452,6 +454,7 @@ msgstr "معرّف منتج BILNOV (BPID)"
 #: dashboard/templates/products/create.html:268
 #: dashboard/templates/products/edit.html:304
 #: dashboard/templates/products/items/form_modal.html:90
+#: frontend/templates/products/partials/bim_block.html:13
 msgid "Manufacturer reference"
 msgstr "مرجع المصنّع"
 
@@ -502,7 +505,7 @@ msgstr "حدّد لإبراز هذا المنتج في واجهة متجر ال�
 
 #: dashboard/models.py:213 dashboard/models.py:495
 #: dashboard/templates/orders/list.html:53
-#: dashboard/templates/products/edit.html:403
+#: dashboard/templates/products/edit.html:393
 #: dashboard/templates/users/affiliate_list.html:77
 #: dashboard/templates/users/details.html:293
 #: dashboard/templates/users/profile_edit.html:66
@@ -740,7 +743,7 @@ msgstr "العنوان"
 #: dashboard/models.py:451 frontend/templates/cart/checkout.html:65
 #: frontend/templates/products/admin_product_detail.html:256
 #: frontend/templates/products/affiliate_product_detail.html:260
-#: frontend/templates/products/product_detail.html:238
+#: frontend/templates/products/product_detail.html:239
 #: frontend/templates/products/provider_product_detail.html:258
 msgid "Wilaya"
 msgstr "الولاية"
@@ -748,7 +751,7 @@ msgstr "الولاية"
 #: dashboard/models.py:452 frontend/templates/cart/checkout.html:86
 #: frontend/templates/products/admin_product_detail.html:276
 #: frontend/templates/products/affiliate_product_detail.html:280
-#: frontend/templates/products/product_detail.html:259
+#: frontend/templates/products/product_detail.html:260
 #: frontend/templates/products/provider_product_detail.html:278
 msgid "Commune"
 msgstr "البلدية"
@@ -828,7 +831,7 @@ msgstr "الإجمالي (EUR)"
 msgid "Order %(num)s - %(name)s"
 msgstr "الطلب %(num)s - %(name)s"
 
-#: dashboard/models.py:537 frontend/templates/products/product_detail.html:232
+#: dashboard/models.py:537 frontend/templates/products/product_detail.html:233
 #: user_auth/models.py:146
 msgid "Quantity"
 msgstr "الكمية"
@@ -957,8 +960,8 @@ msgstr "القيمة الجديدة (DZD)"
 msgid "Changed At"
 msgstr "تاريخ التغيير"
 
-#: dashboard/models.py:659 dashboard/templates/products/edit.html:456
-#: dashboard/templates/products/edit.html:469
+#: dashboard/models.py:659 dashboard/templates/products/edit.html:446
+#: dashboard/templates/products/edit.html:459
 msgid "Price History"
 msgstr "سجل الأسعار"
 
@@ -982,12 +985,12 @@ msgstr "معرّف المتغيّر"
 msgid "Commercial reference of this variant, e.g. SKU-LUNA-BLK."
 msgstr "المرجع التجاري لهذا الخيار، مثل SKU-LUNA-BLK."
 
-#: dashboard/models.py:682 dashboard/templates/products/create.html:468
+#: dashboard/models.py:682 dashboard/templates/products/create.html:458
 #: dashboard/templates/products/items/form_modal.html:98
 msgid "Color"
 msgstr "اللون"
 
-#: dashboard/models.py:683 dashboard/templates/products/create.html:486
+#: dashboard/models.py:683 dashboard/templates/products/create.html:476
 #: dashboard/templates/products/items/form_modal.html:120
 msgid "Dimensions"
 msgstr "الأبعاد"
@@ -1033,6 +1036,7 @@ msgid "Variant"
 msgstr "الخيار"
 
 #: dashboard/models.py:756
+#: frontend/templates/products/partials/bim_block.html:27
 msgid "Format"
 msgstr "الصيغة"
 
@@ -1041,6 +1045,7 @@ msgid "File"
 msgstr "الملف"
 
 #: dashboard/models.py:758
+#: frontend/templates/products/partials/bim_block.html:28
 msgid "Version"
 msgstr "الإصدار"
 
@@ -1048,15 +1053,66 @@ msgstr "الإصدار"
 msgid "Current version"
 msgstr "الإصدار الحالي"
 
-#: dashboard/models.py:760
+#: dashboard/models.py:761
+msgid "Millimetres"
+msgstr "مليمتر"
+
+#: dashboard/models.py:762
+msgid "Centimetres"
+msgstr "سنتيمتر"
+
+#: dashboard/models.py:763
+#: frontend/templates/products/partials/bim_block.html:50
+msgid "Metres"
+msgstr "متر"
+
+#: dashboard/models.py:764
+msgid "Inches"
+msgstr "بوصة"
+
+#: dashboard/models.py:766
 msgid "Notes"
 msgstr "ملاحظات"
 
-#: dashboard/models.py:764
+#: dashboard/models.py:767 dashboard/templates/products/create.html:495
+#: dashboard/templates/products/items/form_modal.html:143
+#: dashboard/templates/products/partials/asset_upload.html:12
+msgid "Unit"
+msgstr "الوحدة"
+
+#: dashboard/models.py:768
+#: dashboard/templates/products/partials/asset_upload.html:18
+msgid "Scale"
+msgstr "المقياس"
+
+#: dashboard/models.py:769
+#: dashboard/templates/products/partials/asset_upload.html:22
+msgid "Polygons"
+msgstr "المضلّعات"
+
+#: dashboard/models.py:770
+#: dashboard/templates/products/partials/asset_upload.html:26
+#
+msgid "Compatibility"
+msgstr "التوافق"
+
+#: dashboard/models.py:771
+msgid "Software and minimum version, e.g. SketchUp 2021+, Revit 2022+."
+msgstr "البرنامج والإصدار الأدنى، مثل SketchUp 2021+ وRevit 2022+."
+
+#: dashboard/models.py:772
+msgid "File size (bytes)"
+msgstr "حجم الملف (بايت)"
+
+#: dashboard/models.py:773
+msgid "SHA-256"
+msgstr "SHA-256"
+
+#: dashboard/models.py:777
 msgid "Product file"
 msgstr "ملف المنتج"
 
-#: dashboard/models.py:765
+#: dashboard/models.py:778
 msgid "Product files"
 msgstr "ملفات المنتج"
 
@@ -1115,8 +1171,8 @@ msgstr "نعم، احذفها"
 #: dashboard/templates/orders/affiliate_cart.html:183
 #: dashboard/templates/products/affiliate_catalog.html:79
 #: dashboard/templates/products/catalog_details.html:199
-#: dashboard/templates/products/create.html:382
-#: dashboard/templates/products/edit.html:461
+#: dashboard/templates/products/create.html:372
+#: dashboard/templates/products/edit.html:451
 #: dashboard/templates/products/my_catalog.html:87
 #: dashboard/templates/products/partner_price_list.html:85
 #: dashboard/templates/users/affiliate_list.html:161
@@ -1442,6 +1498,7 @@ msgstr "السلة"
 #: dashboard/templates/products/create.html:58
 #: dashboard/templates/products/edit.html:56
 #: dashboard/templates/users/details.html:197
+#: frontend/templates/products/partials/bim_block.html:29
 msgid "Details"
 msgstr "التفاصيل"
 
@@ -2020,7 +2077,7 @@ msgid "Remove from Catalog"
 msgstr "إزالة من الكتالوج"
 
 #: dashboard/templates/products/create.html:5
-#: dashboard/templates/products/create.html:378
+#: dashboard/templates/products/create.html:368
 #: dashboard/templates/products/list.html:23
 msgid "Add Product"
 msgstr "إضافة منتج"
@@ -2049,7 +2106,7 @@ msgid "Remove this variant?"
 msgstr "إزالة هذا المتغير؟"
 
 #: dashboard/templates/products/create.html:22
-#: dashboard/templates/products/create.html:412
+#: dashboard/templates/products/create.html:402
 #: dashboard/templates/products/items/form_modal.html:10
 msgid "New Variant"
 msgstr "متغير جديد"
@@ -2059,7 +2116,7 @@ msgid "Edit Variant"
 msgstr "تعديل المتغير"
 
 #: dashboard/templates/products/create.html:24
-#: dashboard/templates/products/create.html:413
+#: dashboard/templates/products/create.html:403
 #: dashboard/templates/products/items/form_modal.html:11
 msgid ""
 "Configure a product variant with its own media, color, dimensions, and stock."
@@ -2096,14 +2153,15 @@ msgid "Sales"
 msgstr "المبيعات"
 
 #: dashboard/templates/products/create.html:73
-#: dashboard/templates/products/create.html:298
+#: dashboard/templates/products/create.html:288
 #: dashboard/templates/products/edit.html:71
-#: dashboard/templates/products/edit.html:345
+#: dashboard/templates/products/edit.html:335
+#: frontend/templates/products/partials/bim_block.html:18
 msgid "Variants"
 msgstr "المتغيرات"
 
 #: dashboard/templates/products/create.html:78
-#: dashboard/templates/products/create.html:423
+#: dashboard/templates/products/create.html:413
 #: dashboard/templates/products/edit.html:76
 #: dashboard/templates/products/items/form_modal.html:26
 msgid "Media"
@@ -2118,14 +2176,14 @@ msgid "Product Details"
 msgstr "تفاصيل المنتج"
 
 #: dashboard/templates/products/create.html:105
-#: dashboard/templates/products/create.html:432
+#: dashboard/templates/products/create.html:422
 #: dashboard/templates/products/edit.html:123
 #: dashboard/templates/products/items/form_modal.html:38
 msgid "Drop thumbnail here"
 msgstr "أفلت الصورة المصغرة هنا"
 
 #: dashboard/templates/products/create.html:106
-#: dashboard/templates/products/create.html:433
+#: dashboard/templates/products/create.html:423
 #: dashboard/templates/products/edit.html:124
 #: dashboard/templates/products/items/form_modal.html:39
 msgid "or click to browse"
@@ -2271,168 +2329,154 @@ msgstr "مرجع بيلنوف"
 msgid "Design files (3D, BIM, CAD, textures)"
 msgstr "ملفات التصميم (ثلاثي الأبعاد، BIM، CAO، خامات)"
 
-#: dashboard/templates/products/create.html:287
-#: dashboard/templates/products/edit.html:334
-msgid ""
-"Each file keeps the product's Bilnov Object ID. Uploading a new file of the "
-"same format creates a new version; projects keep the version they use."
-msgstr ""
-"يحتفظ كل ملف بمعرّف بيلنوف للمنتج. رفع ملف جديد بنفس الصيغة ينشئ إصدارًا "
-"جديدًا، وتحتفظ المشاريع بالإصدار الذي تستخدمه."
-
-#: dashboard/templates/products/create.html:301
+#: dashboard/templates/products/create.html:291
 #: dashboard/templates/products/items/section.html:5
 msgid "items"
 msgstr "عناصر"
 
-#: dashboard/templates/products/create.html:304
+#: dashboard/templates/products/create.html:294
 #: dashboard/templates/products/items/section.html:8
 msgid "Add Variant"
 msgstr "إضافة متغير"
 
-#: dashboard/templates/products/create.html:308
+#: dashboard/templates/products/create.html:298
 msgid "No variants yet. Click to add product options like colors or sizes."
 msgstr ""
 "لا توجد متغيرات بعد. انقر لإضافة خيارات المنتج مثل الألوان أو المقاسات."
 
-#: dashboard/templates/products/create.html:321
-#: dashboard/templates/products/create.html:442
-#: dashboard/templates/products/edit.html:359
+#: dashboard/templates/products/create.html:311
+#: dashboard/templates/products/create.html:432
+#: dashboard/templates/products/edit.html:349
 #: dashboard/templates/products/items/form_modal.html:51
 msgid "Gallery Images"
 msgstr "صور المعرض"
 
-#: dashboard/templates/products/create.html:325
-#: dashboard/templates/products/edit.html:380
+#: dashboard/templates/products/create.html:315
+#: dashboard/templates/products/edit.html:370
 msgid "Drop images here or click to select multiple"
 msgstr "أفلت الصور هنا أو انقر لاختيار عدة صور"
 
-#: dashboard/templates/products/create.html:334
+#: dashboard/templates/products/create.html:324
 msgid "Visibility"
 msgstr "الظهور"
 
-#: dashboard/templates/products/create.html:336
-#: dashboard/templates/products/edit.html:392
+#: dashboard/templates/products/create.html:326
+#: dashboard/templates/products/edit.html:382
 msgid "Active in Store"
 msgstr "نشط في المتجر"
 
-#: dashboard/templates/products/create.html:341
-#: dashboard/templates/products/edit.html:397
+#: dashboard/templates/products/create.html:331
+#: dashboard/templates/products/edit.html:387
 msgid "Featured Product"
 msgstr "منتج مميز"
 
-#: dashboard/templates/products/create.html:353
-#: dashboard/templates/products/edit.html:421
+#: dashboard/templates/products/create.html:343
+#: dashboard/templates/products/edit.html:411
 msgid "Upload GLB or GLTF"
 msgstr "رفع GLB أو GLTF"
 
-#: dashboard/templates/products/create.html:367
-#: dashboard/templates/products/edit.html:436
+#: dashboard/templates/products/create.html:357
+#: dashboard/templates/products/edit.html:426
 msgid "Supported: GLB, GLTF. Max 50MB."
 msgstr "الصيغ المدعومة: GLB، GLTF. الحد الأقصى 50MB."
 
-#: dashboard/templates/products/create.html:372
+#: dashboard/templates/products/create.html:362
 msgid "Submit"
 msgstr "إرسال"
 
-#: dashboard/templates/products/create.html:374
+#: dashboard/templates/products/create.html:364
 msgid "Review all fields before submitting."
 msgstr "راجع جميع الحقول قبل الإرسال."
 
-#: dashboard/templates/products/create.html:389
+#: dashboard/templates/products/create.html:379
 msgid "Tips"
 msgstr "نصائح"
 
-#: dashboard/templates/products/create.html:391
+#: dashboard/templates/products/create.html:381
 msgid "Use high-quality images (1200×1200px)"
 msgstr "استخدم صورًا عالية الجودة (1200×1200px)"
 
-#: dashboard/templates/products/create.html:392
+#: dashboard/templates/products/create.html:382
 msgid "Write detailed product descriptions"
 msgstr "اكتب أوصافًا مفصلة للمنتجات"
 
-#: dashboard/templates/products/create.html:393
+#: dashboard/templates/products/create.html:383
 msgid "Set competitive prices"
 msgstr "حدد أسعارًا تنافسية"
 
-#: dashboard/templates/products/create.html:394
+#: dashboard/templates/products/create.html:384
 msgid "Add tags for better search visibility"
 msgstr "أضف وسومًا لتحسين الظهور في البحث"
 
-#: dashboard/templates/products/create.html:395
+#: dashboard/templates/products/create.html:385
 msgid "Upload 3D models for AR preview"
 msgstr "ارفع نماذج 3D للمعاينة بالواقع المعزز"
 
-#: dashboard/templates/products/create.html:438
+#: dashboard/templates/products/create.html:428
 #: dashboard/templates/products/items/form_modal.html:45
 msgid "Square 1:1 ratio recommended"
 msgstr "يُنصح بنسبة مربعة 1:1"
 
-#: dashboard/templates/products/create.html:446
+#: dashboard/templates/products/create.html:436
 #: dashboard/templates/products/items/form_modal.html:57
 msgid "Drop images here"
 msgstr "أفلت الصور هنا"
 
-#: dashboard/templates/products/create.html:447
+#: dashboard/templates/products/create.html:437
 #: dashboard/templates/products/items/form_modal.html:58
 msgid "or click to select multiple"
 msgstr "أو انقر لاختيار عدة صور"
 
-#: dashboard/templates/products/create.html:460
+#: dashboard/templates/products/create.html:450
 #: dashboard/templates/products/items/form_modal.html:72
 msgid "Variant Name"
 msgstr "اسم المتغير"
 
-#: dashboard/templates/products/create.html:463
+#: dashboard/templates/products/create.html:453
 msgid "e.g. Matte Black, Walnut Finish, Brushed Steel"
 msgstr "مثال: أسود مطفي، تشطيب جوز، فولاذ مصقول"
 
-#: dashboard/templates/products/create.html:478
+#: dashboard/templates/products/create.html:468
 #: dashboard/templates/products/items/form_modal.html:109
 msgid "Color name (e.g. Midnight Black)"
 msgstr "اسم اللون (مثال: أسود داكن)"
 
-#: dashboard/templates/products/create.html:479
+#: dashboard/templates/products/create.html:469
 #: dashboard/templates/products/items/form_modal.html:111
 msgid "Leave blank to use hex value as name"
 msgstr "اتركه فارغًا لاستخدام القيمة السداسية كاسم"
 
-#: dashboard/templates/products/create.html:491
+#: dashboard/templates/products/create.html:481
 #: dashboard/templates/products/items/form_modal.html:125
 msgid "W"
 msgstr "ع"
 
-#: dashboard/templates/products/create.html:496
+#: dashboard/templates/products/create.html:486
 #: dashboard/templates/products/items/form_modal.html:132
 msgid "D"
 msgstr "عم"
 
-#: dashboard/templates/products/create.html:501
+#: dashboard/templates/products/create.html:491
 #: dashboard/templates/products/items/form_modal.html:139
 msgid "H"
 msgstr "ا"
 
-#: dashboard/templates/products/create.html:505
-#: dashboard/templates/products/items/form_modal.html:143
-msgid "Unit"
-msgstr "الوحدة"
-
-#: dashboard/templates/products/create.html:517
+#: dashboard/templates/products/create.html:507
 #: dashboard/templates/products/items/form_modal.html:157
 msgid "Leave blank if dimensions don't apply"
 msgstr "اتركه فارغًا إذا كانت الأبعاد لا تنطبق"
 
-#: dashboard/templates/products/create.html:522
+#: dashboard/templates/products/create.html:512
 #: dashboard/templates/products/items/form_modal.html:164
 msgid "Stock Quantity"
 msgstr "كمية المخزون"
 
-#: dashboard/templates/products/create.html:528
+#: dashboard/templates/products/create.html:518
 #: dashboard/templates/products/items/form_modal.html:170
 msgid "units available"
 msgstr "وحدة متاحة"
 
-#: dashboard/templates/products/create.html:535
+#: dashboard/templates/products/create.html:525
 #: dashboard/templates/products/items/form_modal.html:177
 msgid "Save Variant"
 msgstr "حفظ المتغير"
@@ -2460,31 +2504,38 @@ msgid "BILNOV Product ID (permanent)"
 msgstr "معرّف منتج BILNOV (دائم)"
 
 #: dashboard/templates/products/edit.html:288
+#: frontend/templates/products/partials/bim_block.html:11
 msgid "Copy"
 msgstr "نسخ"
 
 #: dashboard/templates/products/edit.html:290
+#: frontend/templates/products/partials/bim_block.html:16
 msgid "Model version"
 msgstr "إصدار النموذج"
 
-#: dashboard/templates/products/edit.html:389
+#: dashboard/templates/products/edit.html:319
+#: frontend/templates/products/partials/bim_block.html:40
+msgid "polygons"
+msgstr "مضلّع"
+
+#: dashboard/templates/products/edit.html:379
 msgid "Visibility & Status"
 msgstr "الظهور والحالة"
 
-#: dashboard/templates/products/edit.html:418
+#: dashboard/templates/products/edit.html:408
 msgid "Click to replace"
 msgstr "انقر للاستبدال"
 
-#: dashboard/templates/products/edit.html:441
+#: dashboard/templates/products/edit.html:431
 #: dashboard/templates/products/partner_price_list.html:51
 msgid "Actions"
 msgstr "الإجراءات"
 
-#: dashboard/templates/products/edit.html:445
+#: dashboard/templates/products/edit.html:435
 msgid "Save"
 msgstr "حفظ"
 
-#: dashboard/templates/products/edit.html:450
+#: dashboard/templates/products/edit.html:440
 #: dashboard/templates/products/list.html:127
 msgid "Affiliate Pricing"
 msgstr "تسعير المسوّقين بالعمولة"
@@ -2577,6 +2628,13 @@ msgstr "تكلفتك"
 #: dashboard/templates/products/my_catalog.html:108
 msgid "Browse available products and add them to your catalog."
 msgstr "تصفّح المنتجات المتاحة وأضفها إلى الكتالوج الخاص بك."
+
+#: dashboard/templates/products/partials/asset_upload.html:30
+#
+msgid ""
+"Each file keeps the product's BPID. Uploading a new file of the same format "
+"creates a new version; projects keep the version they use."
+msgstr "يحتفظ كل ملف بمعرّف BPID للمنتج. رفع ملف جديد بنفس الصيغة يُنشئ إصدارًا جديدًا، وتحتفظ المشاريع بالإصدار الذي تستعمله."
 
 #: dashboard/templates/products/partner_price_list.html:5
 #: dashboard/templates/products/partner_price_list.html:17
@@ -3756,7 +3814,7 @@ msgid "My Recent Orders"
 msgstr "طلباتي الأخيرة"
 
 #: dashboard/views/orders.py:122 dashboard/views/products.py:94
-#: dashboard/views/products.py:321
+#: dashboard/views/products.py:332
 msgid "Only trusted providers can access this page."
 msgstr "لا يمكن الوصول إلى هذه الصفحة إلا للمورّدين الموثوقين."
 
@@ -3877,7 +3935,7 @@ msgstr "يمكنك اعتماد الطلبات المعلّقة فقط."
 #: dashboard/views/orders.py:577 dashboard/views/orders.py:587
 #: dashboard/views/product_items.py:17 dashboard/views/product_items.py:66
 #: dashboard/views/product_items.py:119 dashboard/views/product_items.py:176
-#: dashboard/views/products.py:482 dashboard/views/products.py:501
+#: dashboard/views/products.py:494 dashboard/views/products.py:513
 #: dashboard/views/users.py:799 dashboard/views/users.py:1017
 #: frontend/views/client.py:122
 msgid "Permission denied."
@@ -4159,70 +4217,70 @@ msgstr "يجب أن يكون سعر المسوّق بين سعر الشراء و
 msgid "Professional price must be between the wholesale and retail prices"
 msgstr "يجب أن يكون سعر المحترف بين سعر الجملة وسعر التجزئة"
 
-#: dashboard/views/products.py:193
+#: dashboard/views/products.py:203
 msgid "Only trusted providers can create products."
 msgstr "لا يمكن إنشاء المنتجات إلا للمورّدين الموثوقين."
 
-#: dashboard/views/products.py:207
+#: dashboard/views/products.py:217
 msgid "Title is required"
 msgstr "العنوان مطلوب"
 
-#: dashboard/views/products.py:209
+#: dashboard/views/products.py:219
 msgid "Thumbnail is required"
 msgstr "الصورة المصغّرة مطلوبة"
 
-#: dashboard/views/products.py:301
+#: dashboard/views/products.py:311
 msgid "Product added successfully"
 msgstr "تمت إضافة المنتج بنجاح"
 
-#: dashboard/views/products.py:306 dashboard/views/products.py:464
+#: dashboard/views/products.py:316 dashboard/views/products.py:475
 msgid "The product could not be saved. Please try again."
 msgstr "تعذّر حفظ المنتج. يرجى المحاولة مرة أخرى."
 
-#: dashboard/views/products.py:372
+#: dashboard/views/products.py:383
 msgid "Product Approved!"
 msgstr "تمت الموافقة على المنتج!"
 
-#: dashboard/views/products.py:373
+#: dashboard/views/products.py:384
 #, python-format
 msgid "Your product '%(product)s' has been approved and is now live."
 msgstr "تمت الموافقة على منتجك '%(product)s' وهو متاح الآن."
 
-#: dashboard/views/products.py:459
+#: dashboard/views/products.py:470
 msgid "Product updated successfully"
 msgstr "تم تحديث المنتج بنجاح"
 
-#: dashboard/views/products.py:490
+#: dashboard/views/products.py:502
 msgid "Product removed"
 msgstr "تمت إزالة المنتج"
 
-#: dashboard/views/products.py:537
+#: dashboard/views/products.py:549
 msgid "Affiliate is required"
 msgstr "المسوّق بالعمولة مطلوب"
 
-#: dashboard/views/products.py:539
+#: dashboard/views/products.py:551
 msgid "Purchase price is required"
 msgstr "سعر الشراء مطلوب"
 
-#: dashboard/views/products.py:547
+#: dashboard/views/products.py:559
 msgid "User not found"
 msgstr "المستخدم غير موجود"
 
-#: dashboard/views/products.py:561
+#: dashboard/views/products.py:573
 msgid "Custom Price Set!"
 msgstr "تم تحديد سعر مخصّص!"
 
-#: dashboard/views/products.py:562
+#: dashboard/views/products.py:574
 #, python-format
 msgid "Admin set a custom price for \"%(product)s\" — DZD%(price)s."
 msgstr "حدّد المسؤول سعرًا مخصّصًا لـ \"%(product)s\" — DZD%(price)s."
 
-#: dashboard/views/products.py:570
+#: dashboard/views/products.py:582
 #, python-format
 msgid "Custom price set for %(name)s."
 msgstr "تم تحديد سعر مخصّص لـ %(name)s."
 
-#: dashboard/views/products.py:586
+#: dashboard/views/products.py:598
 msgid "Custom price removed."
 msgstr "تمت إزالة السعر المخصّص."
 
@@ -4674,26 +4732,26 @@ msgid "Start Shopping"
 msgstr "ابدأ التسوق"
 
 #: frontend/templates/cart/cart.html:179
-#: frontend/templates/products/admin_product_detail.html:326
-#: frontend/templates/products/affiliate_product_detail.html:330
-#: frontend/templates/products/product_detail.html:300
-#: frontend/templates/products/provider_product_detail.html:328
+#: frontend/templates/products/admin_product_detail.html:327
+#: frontend/templates/products/affiliate_product_detail.html:331
+#: frontend/templates/products/product_detail.html:302
+#: frontend/templates/products/provider_product_detail.html:329
 msgid "Variant Details"
 msgstr "تفاصيل الخيار"
 
 #: frontend/templates/cart/cart.html:180 frontend/templates/index.html:149
-#: frontend/templates/products/admin_product_detail.html:327
-#: frontend/templates/products/affiliate_product_detail.html:331
-#: frontend/templates/products/product_detail.html:301
-#: frontend/templates/products/provider_product_detail.html:329
+#: frontend/templates/products/admin_product_detail.html:328
+#: frontend/templates/products/affiliate_product_detail.html:332
+#: frontend/templates/products/product_detail.html:303
+#: frontend/templates/products/provider_product_detail.html:330
 msgid "Close"
 msgstr "إغلاق"
 
 #: frontend/templates/cart/cart.html:202
-#: frontend/templates/products/admin_product_detail.html:349
-#: frontend/templates/products/affiliate_product_detail.html:353
-#: frontend/templates/products/product_detail.html:323
-#: frontend/templates/products/provider_product_detail.html:351
+#: frontend/templates/products/admin_product_detail.html:350
+#: frontend/templates/products/affiliate_product_detail.html:354
+#: frontend/templates/products/product_detail.html:325
+#: frontend/templates/products/provider_product_detail.html:352
 msgid "Select This Variant"
 msgstr "اختيار هذا الخيار"
 
@@ -4718,7 +4776,7 @@ msgstr "إتمام الطلب"
 #: frontend/templates/cart/checkout.html:34
 #: frontend/templates/products/admin_product_detail.html:234
 #: frontend/templates/products/affiliate_product_detail.html:238
-#: frontend/templates/products/product_detail.html:215
+#: frontend/templates/products/product_detail.html:216
 #: frontend/templates/products/provider_product_detail.html:235
 msgid "Please select a wilaya first"
 msgstr "يرجى اختيار الولاية أولاً"
@@ -4727,8 +4785,8 @@ msgstr "يرجى اختيار الولاية أولاً"
 #: frontend/templates/cart/checkout.html:89
 #: frontend/templates/products/admin_product_detail.html:235
 #: frontend/templates/products/affiliate_product_detail.html:239
-#: frontend/templates/products/product_detail.html:216
-#: frontend/templates/products/product_detail.html:262
+#: frontend/templates/products/product_detail.html:217
+#: frontend/templates/products/product_detail.html:263
 #: frontend/templates/products/provider_product_detail.html:236
 msgid "Select Commune"
 msgstr "اختر البلدية"
@@ -4742,14 +4800,14 @@ msgid "City"
 msgstr "المدينة"
 
 #: frontend/templates/cart/checkout.html:68
-#: frontend/templates/products/product_detail.html:241
+#: frontend/templates/products/product_detail.html:242
 msgid "Select Wilaya"
 msgstr "اختر الولاية"
 
 #: frontend/templates/cart/checkout.html:73
 #: frontend/templates/products/admin_product_detail.html:261
 #: frontend/templates/products/affiliate_product_detail.html:265
-#: frontend/templates/products/product_detail.html:246
+#: frontend/templates/products/product_detail.html:247
 #: frontend/templates/products/provider_product_detail.html:263
 msgid "Search wilaya..."
 msgstr "ابحث عن ولاية..."
@@ -4757,7 +4815,7 @@ msgstr "ابحث عن ولاية..."
 #: frontend/templates/cart/checkout.html:94
 #: frontend/templates/products/admin_product_detail.html:281
 #: frontend/templates/products/affiliate_product_detail.html:285
-#: frontend/templates/products/product_detail.html:267
+#: frontend/templates/products/product_detail.html:268
 #: frontend/templates/products/provider_product_detail.html:283
 msgid "Search commune..."
 msgstr "ابحث عن بلدية..."
@@ -5014,11 +5072,59 @@ msgstr "طلب سريع"
 msgid "Leave your details and we will confirm your order."
 msgstr "اترك بياناتك وسنؤكد طلبك."
 
-#: frontend/templates/products/admin_product_detail.html:313
-#: frontend/templates/products/affiliate_product_detail.html:317
-#: frontend/templates/products/provider_product_detail.html:315
+#: frontend/templates/products/admin_product_detail.html:314
+#: frontend/templates/products/affiliate_product_detail.html:318
+#: frontend/templates/products/provider_product_detail.html:316
 msgid "Powered By"
 msgstr "مدعوم من"
+
+#: frontend/templates/products/partials/bim_block.html:5
+#: frontend/templates/products/product_detail.html:185
+msgid "Architect & BIM space"
+msgstr "فضاء المهندس المعماري و BIM"
+
+#: frontend/templates/products/partials/bim_block.html:6
+msgid "Technical data and design files"
+msgstr "البيانات التقنية وملفات التصميم"
+
+#: frontend/templates/products/partials/bim_block.html:7
+msgid ""
+"Place this exact product in your projects: SketchUp, Revit, Archicad, IFC "
+"and BILNOV keep its BPID, so the client always finds the real product in the "
+"Store."
+msgstr "ضع هذا المنتج بعينه في مشاريعك: يحتفظ SketchUp وRevit وArchicad وIFC وBILNOV بمعرّفه BPID، فيجد العميل دائمًا المنتج الحقيقي في المتجر."
+
+#: frontend/templates/products/partials/bim_block.html:11
+#
+msgid "Copied"
+msgstr "تم النسخ"
+
+#: frontend/templates/products/partials/bim_block.html:15
+#
+msgid "Category code"
+msgstr "رمز الفئة"
+
+#: frontend/templates/products/partials/bim_block.html:43
+#: frontend/templates/products/partials/bim_block.html:51
+msgid "Download"
+msgstr "تحميل"
+
+#: frontend/templates/products/partials/bim_block.html:56
+msgid ""
+"No design file for this product yet. Ask us: we can send the model on "
+"request."
+msgstr "لا يوجد ملف تصميم لهذا المنتج بعد. اطلبه منا: يمكننا إرسال النموذج عند الطلب."
+
+#: frontend/templates/products/partials/bim_block.html:58
+msgid ""
+"Each file carries the BPID in its metadata (SketchUp attributes, IFC "
+"Pset_BilnovProduct, GLB extras). A new version never replaces the one "
+"already placed in a project."
+msgstr "يحمل كل ملف معرّف BPID في بياناته الوصفية (سمات SketchUp، و Pset_BilnovProduct في IFC، و extras في GLB). لا يحلّ إصدار جديد أبدًا محلّ الإصدار الموضوع في مشروع."
+
+#: frontend/templates/products/partials/bim_block.html:59
+msgid "JSON data (API)"
+msgstr "بيانات JSON (API)"
 
 #: frontend/templates/products/product_detail.html:80
 msgctxt "storefront"
@@ -5033,28 +5139,28 @@ msgstr "التوفر"
 msgid "Bespoke Collection"
 msgstr "مجموعة حسب الطلب"
 
-#: frontend/templates/products/product_detail.html:209
+#: frontend/templates/products/product_detail.html:210
 msgid "Quick order"
 msgstr "طلب سريع"
 
-#: frontend/templates/products/product_detail.html:210
+#: frontend/templates/products/product_detail.html:211
 msgid ""
 "Leave your details: an advisor calls you to confirm. You pay on delivery."
 msgstr "اترك بياناتك: يتصل بك مستشار للتأكيد. الدفع عند الاستلام."
 
-#: frontend/templates/products/product_detail.html:223
+#: frontend/templates/products/product_detail.html:224
 msgid "Your Name"
 msgstr "اسمك"
 
-#: frontend/templates/products/product_detail.html:278
+#: frontend/templates/products/product_detail.html:279
 msgid "Specific Address (Optional)"
 msgstr "العنوان التفصيلي (اختياري)"
 
-#: frontend/templates/products/product_detail.html:279
+#: frontend/templates/products/product_detail.html:280
 msgid "Street, Building..."
 msgstr "الشارع، العمارة..."
 
-#: frontend/templates/products/product_detail.html:283
+#: frontend/templates/products/product_detail.html:284
 msgid "Order (pay on delivery)"
 msgstr "اطلب (الدفع عند الاستلام)"
 
@@ -5383,7 +5489,7 @@ msgstr "السعر: من الأعلى إلى الأقل"
 msgid "Name: A-Z"
 msgstr "الاسم: أ-ي"
 
-#: frontend/views/products.py:210
+#: frontend/views/products.py:213
 msgid "No 3D model available for this product"
 msgstr "لا يتوفر نموذج 3D لهذا المنتج"
 

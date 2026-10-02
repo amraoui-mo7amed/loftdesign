@@ -6,7 +6,7 @@ from .models import Category, Manufacturer, Product, ProductAsset, ProductItem
 class ProductAssetInline(admin.TabularInline):
     model = ProductAsset
     extra = 1
-    fields = ("file_format", "variant", "file", "version", "is_current", "notes")
+    fields = ("file_format", "variant", "file", "unit", "scale", "polygon_count", "compatibility", "version", "is_current", "notes")
     readonly_fields = ("version", "is_current")
 
 
@@ -34,8 +34,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(ProductAsset)
 class ProductAssetAdmin(admin.ModelAdmin):
-    list_display = ("product", "file_format", "version", "is_current", "created_at")
+    list_display = ("product", "file_format", "version", "is_current", "unit", "polygon_count", "file_size", "created_at")
     list_filter = ("file_format", "is_current")
+    readonly_fields = ("version", "is_current", "file_size", "sha256")
     search_fields = ("product__bpid", "product__title")
 
 
